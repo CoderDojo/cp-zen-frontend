@@ -19,4 +19,4 @@ deployment:
   staging:
     branch: staging
     commands:
-      - curl -X POST https://circleci.com/api/v1.1/project/gh/CoderDojo/cp-zen-platform/tree/staging?circle-token=$CIRCLE_TOKEN
+      - curl -X POST https://circleci.com/api/v1.1/project/github/CoderDojo/cp-zen-platform/tree/staging?circle-token=$CIRCLE_TOKEN
