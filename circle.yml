@@ -1,6 +1,6 @@
 machine:
   node:
-    version: lts/boron
+    version: v6.10.3
   environment:
     LANG: en_US.utf8
 dependencies:
