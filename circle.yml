@@ -1,0 +1,22 @@
+machine:
+  node:
+    version: lts/boron
+  environment:
+    LANG: en_US.utf8
+dependencies:
+  pre:
+    - if [ "$CIRCLE_BRANCH" = "master" ]; then cd ~/ && git clone git@github.com:CoderDojo/cp-translations.git && cd cp-translations && ./build.sh; fi
+  override:
+    - npm install
+test:
+  override:
+    - npm run test
+deployment:
+  production:
+    branch: master
+    commands:
+      - curl -X POST https://circleci.com/api/v1.1/project/gh/CoderDojo/cp-zen-platform/tree/master?circle-token=$CIRCLE_TOKEN
+  staging:
+    branch: staging
+    commands:
+      - curl -X POST https://circleci.com/api/v1.1/project/gh/CoderDojo/cp-zen-platform/tree/staging?circle-token=$CIRCLE_TOKEN

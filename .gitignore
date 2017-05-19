@@ -1,3 +1,6 @@
+# System Files
+.DS_Store
+
 # Logs
 logs
 *.log
@@ -57,3 +60,5 @@ typings/
 # dotenv environment variables file
 .env
 
+# Built files
+dist/
