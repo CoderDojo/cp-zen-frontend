@@ -9,7 +9,7 @@ export default {
   name: 'hello',
   data() {
     return {
-      msg: 'Welcome to the brand new Zen! Powered by Vue.js 2.0! Awesomeness!',
+      msg: 'Welcome to the brand new Zen! Powered by Vue.js 2.0!',
     };
   },
 };
