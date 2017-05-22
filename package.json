@@ -15,6 +15,7 @@
     "bootstrap": "^3.3.7",
     "cd-common": "git+https://github.com/CoderDojo/cd-common.git#1.1.5",
     "font-awesome": "^4.7.0",
+    "lodash": "^4.17.4",
     "vue": "^2.2.6",
     "vue-awesome": "^2.3.1",
     "vue-router": "^2.3.1"
