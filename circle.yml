@@ -6,6 +6,7 @@ machine:
 dependencies:
   pre:
     - if [ "$CIRCLE_BRANCH" = "master" ]; then cd ~/ && git clone git@github.com:CoderDojo/cp-translations.git && cd cp-translations && ./build.sh; fi
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
   override:
     - npm install
 test:
@@ -15,8 +16,13 @@ deployment:
   production:
     branch: master
     commands:
-      - curl -X POST https://circleci.com/api/v1.1/project/gh/CoderDojo/cp-zen-platform/tree/master?circle-token=$CIRCLE_TOKEN
+      - npm version patch
+      - git push
+      - npm publish 
+      - curl -X POST https://circleci.com/api/v1.1/project/github/CoderDojo/cp-zen-platform/tree/master?circle-token=$CIRCLE_TOKEN
   staging:
     branch: staging
     commands:
+      - npm version `node build/get-version.js`-`git rev-parse --short HEAD`
+      - npm publish --tag=staging
       - curl -X POST https://circleci.com/api/v1.1/project/github/CoderDojo/cp-zen-platform/tree/staging?circle-token=$CIRCLE_TOKEN

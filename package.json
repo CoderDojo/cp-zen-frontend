@@ -2,16 +2,14 @@
   "name": "cp-zen-frontend",
   "version": "1.0.0",
   "description": "Frontend for CoderDojo Community Platform (Zen)",
-  "author": "Daniel Brierton <daniel@coderdojo.org>",
-  "private": true,
+  "author": "CoderDojo Foundation <webteam@coderdojo.com>",
   "scripts": {
     "dev": "node build/dev-watcher.js",
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
-    "lint": "eslint --ext .js,.vue src test/unit/specs",
-    "postinstall": "node build/build.js"
+    "lint": "eslint --ext .js,.vue src test/unit/specs"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
