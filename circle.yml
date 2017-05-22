@@ -12,6 +12,7 @@ dependencies:
 test:
   override:
     - npm run test
+    - npm run build
 deployment:
   production:
     branch: master
