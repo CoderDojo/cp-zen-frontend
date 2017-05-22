@@ -16,6 +16,8 @@ deployment:
   production:
     branch: master
     commands:
+      - git config --global user.email "webteam@coderdojo.com"
+      - git config --global user.name "CoderDojo Foundation"
       - npm version patch
       - git push
       - npm publish 
@@ -23,6 +25,6 @@ deployment:
   staging:
     branch: staging
     commands:
-      - npm version `node build/get-version.js`-`git rev-parse --short HEAD`
+      - npm --no-git-tag-version version `node build/get-version.js`-`git rev-parse --short HEAD`
       - npm publish --tag=staging
       - curl -X POST https://circleci.com/api/v1.1/project/github/CoderDojo/cp-zen-platform/tree/staging?circle-token=$CIRCLE_TOKEN
