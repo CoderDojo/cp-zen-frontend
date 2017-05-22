@@ -18,7 +18,7 @@ deployment:
     commands:
       - git config --global user.email "webteam@coderdojo.com"
       - git config --global user.name "CoderDojo Foundation"
-      - npm version patch
+      - npm version patch -m "[skip ci] Update to %s"
       - git push
       - npm publish 
       - curl -X POST https://circleci.com/api/v1.1/project/github/CoderDojo/cp-zen-platform/tree/master?circle-token=$CIRCLE_TOKEN
