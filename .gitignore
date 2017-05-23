@@ -62,3 +62,8 @@ typings/
 
 # Built files
 dist/
+allure-results/
+errorShots/
+
+#idea
+.idea/
