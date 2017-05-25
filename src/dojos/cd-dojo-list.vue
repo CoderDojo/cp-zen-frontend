@@ -2,7 +2,7 @@
   <div class="cd-dojo-list">
     <ul>
       <li v-for="dojo in dojos" class="cd-dojo-list__list-item">
-        {{dojo.name}}
+        {{dojo.name}} ({{ dojo.private | cd-dojo-private }})
       </li>
     </ul>
   </div>

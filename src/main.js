@@ -6,6 +6,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import router from './router';
+import './dojos/filters';
 
 Vue.config.productionTip = false;
 Vue.config.apiBase = process.env.API_BASE;
