@@ -1,5 +1,5 @@
 exports.config = {
-    
+
     //
     // ==================
     // Specify Test Files
@@ -44,7 +44,7 @@ exports.config = {
         // 5 instances get started at a time.
         maxInstances: 5,
         //
-        browserName: 'firefox'
+        browserName: 'phantomjs'
     }],
     //
     // ===================
@@ -72,7 +72,7 @@ exports.config = {
     //
     // Set a base URL in order to shorten url command calls. If your url parameter starts
     // with "/", then the base url gets prepended.
-    baseUrl: 'http://localhost',
+    baseUrl: process.env.TARGET_URL_BASE || "http://localhost:8000/v2",
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 10000,
@@ -106,7 +106,7 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['selenium-standalone'],
+    services: ['selenium-standalone', 'phantomjs'],
     //
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -120,7 +120,7 @@ exports.config = {
     // The only one supported by default is 'dot'
     // see also: http://webdriver.io/guide/testrunner/reporters.html
     reporters: ['allure'],
-    
+
     //
     // Options to be passed to Jasmine.
     jasmineNodeOpts: {
@@ -135,7 +135,7 @@ exports.config = {
             // do something
         }
     },
-    
+
     //
     // =====
     // Hooks
@@ -166,8 +166,11 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
-    // before: function (capabilities, specs) {
-    // },
+    before: function (capabilities, specs) {
+      var chai = require('chai');
+      global.expect = chai.expect;
+      global.should = chai.Should();
+    },
     //
     /**
      * Hook that gets executed before the suite starts
