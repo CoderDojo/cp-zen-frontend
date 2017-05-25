@@ -9,14 +9,14 @@
 </template>
 
 <script>
-  import CDHeader from './components/CDHeader';
-  import CDFooter from './components/CDFooter';
+  import cdHeader from './common/cd-header';
+  import cdFooter from './common/cd-footer';
 
   export default {
     name: 'app',
     components: {
-      'cd-header': CDHeader,
-      'cd-footer': CDFooter,
+      'cd-header': cdHeader,
+      'cd-footer': cdFooter,
     },
   };
 </script>
