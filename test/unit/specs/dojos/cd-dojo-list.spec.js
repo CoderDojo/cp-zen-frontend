@@ -37,6 +37,13 @@ define('The Dojo List vue ', () => {
     id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
   }];
 
+  it('should load the dojo list on creation', () => {
+    const cdDojosWithMocks = cdDojoList();
+    sinon.stub(cdDojosWithMocks.methods, 'getDojos');
+    const vm = new Vue(cdDojosWithMocks);
+    expect(cdDojosWithMocks.methods.getDojos.callCount).to.equal(1);
+  });
+
   it('should show the list of dojos', (done) => {
     const mock = {
       getDojos: () => Promise.resolve({ body: expectedDojos }),
@@ -44,11 +51,10 @@ define('The Dojo List vue ', () => {
     const cdDojosWithMocks = cdDojoList({
       './service': mock,
     });
-    const vm = new Vue(cdDojosWithMocks).$mount();
+    const vm = new Vue(cdDojosWithMocks);
+    vm.getDojos();
 
     requestAnimationFrame(() => {
-      vm.getDojos();
-
       expect(vm.dojos).to.deep.equal(expectedDojos);
       done();
     });
