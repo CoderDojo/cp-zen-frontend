@@ -1,19 +1,19 @@
-var BasePage = require('./base-page');
+const BasePage = require('./base-page');
 
-var DojoListPage = Object.create(BasePage, {
+const DojoListPage = Object.create(BasePage, {
   /**
    * define elements
    */
   dojoListItems: {
-    get: function () {
+    get() {
       return $$('.cd-dojo-list__list-item');
-    }
+    },
   },
   open: {
-    value: function () {
+    value() {
       return BasePage.open.call(this, '/dojos');
-    }
-  }
+    },
+  },
 });
 
 module.exports = DojoListPage;
