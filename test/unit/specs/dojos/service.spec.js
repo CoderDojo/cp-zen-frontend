@@ -1,7 +1,16 @@
-import Vue from 'vue';
+/* eslint-disable */
 import DojosService from '@/dojos/service';
+import Vue from 'vue';
 
-define('Dojos Service', () => {
+describe('Dojos Service', () => {
+  const sandbox = sinon.sandbox.create();
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  let expectedResult = {name: 'Cool Dojo'};
+
   const expectedDojos = [{
     entity$: '-/cd/dojos',
     name: 'CD ROM',
@@ -37,19 +46,25 @@ define('Dojos Service', () => {
     id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
   }];
 
+  it('should call the api', (done) => {
+    const httpStub = sandbox.stub(Vue.http, 'post');
+    httpStub.withArgs(
+      `${Vue.config.apiBase}/dojos/find`,
+      {
+        "query": {
+          "urlSlug": "aUrlSlug"
+        }
+      }).returns(Promise.resolve(expectedResult));
+
+    DojosService.getByUrlSlug('aUrlSlug').then((dojo) => {
+      expect(dojo).to.deep.equal(expectedResult);
+      done();
+    });
+  });
+
   define('getDojos()', () => {
-    let sandbox;
-    let postMock;
-    beforeEach(() => {
-      sandbox = sinon.sandbox.create();
-      postMock = sandbox.stub(Vue.http, 'post');
-    });
-
-    afterEach(() => {
-      sandbox.restore();
-    });
-
     it('should get dojos', (done) => {
+      const postMock = sandbox.stub(Vue.http, 'post');
       postMock.withArgs(`${Vue.config.apiBase}/dojos`).returns(Promise.resolve({ body: expectedDojos }));
       DojosService.getDojos().then((res) => {
         expect(res.body).to.deep.equal(expectedDojos);
@@ -65,6 +80,7 @@ define('Dojos Service', () => {
           radius: 50000,
         },
       };
+      const postMock = sandbox.stub(Vue.http, 'post');
       postMock.withArgs(`${Vue.config.apiBase}/dojos/search-bounding-box`, expectedQuery).returns(Promise.resolve({ body: expectedDojos }));
       DojosService.getDojosByLatLong(10, 89).then((res) => {
         expect(res.body).to.deep.equal(expectedDojos);
