@@ -12,23 +12,22 @@
 
   export default {
     name: 'dojoList',
-
+    props: ['coordinates'],
     data() {
       return {
         dojos: [],
       };
     },
-
     methods: {
       getDojos() {
-        DojosService.getDojos().then((response) => {
-          this.dojos = response.body;
-        });
+        DojosService.getDojosByLatLong(this.coordinates.latitude, this.coordinates.longitude)
+          .then((response) => {
+            this.dojos = response.body;
+          });
       },
     },
     created() {
       this.getDojos();
     },
   };
-
 </script>

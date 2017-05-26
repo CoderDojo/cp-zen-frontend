@@ -38,10 +38,35 @@ define('Dojos Service', () => {
   }];
 
   define('getDojos()', () => {
+    let sandbox;
+    let postMock;
+    beforeEach(() => {
+      sandbox = sinon.sandbox.create();
+      postMock = sandbox.stub(Vue.http, 'post');
+    });
+
+    afterEach(() => {
+      sandbox.restore();
+    });
+
     it('should get dojos', (done) => {
-      const postMock = sinon.stub(Vue.http, 'post');
       postMock.withArgs(`${Vue.config.apiBase}/dojos`).returns(Promise.resolve({ body: expectedDojos }));
       DojosService.getDojos().then((res) => {
+        expect(res.body).to.deep.equal(expectedDojos);
+        done();
+      });
+    });
+
+    it('should get dojos by latitude and longitude', (done) => {
+      const expectedQuery = {
+        query: {
+          lat: 10,
+          long: 89,
+          radius: 50,
+        },
+      };
+      postMock.withArgs(`${Vue.config.apiBase}/dojos/search-bounding-box`, expectedQuery).returns(Promise.resolve({ body: expectedDojos }));
+      DojosService.getDojosByLatLong(10, 89).then((res) => {
         expect(res.body).to.deep.equal(expectedDojos);
         done();
       });
