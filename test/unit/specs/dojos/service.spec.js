@@ -62,7 +62,7 @@ define('Dojos Service', () => {
         query: {
           lat: 10,
           lon: 89,
-          radius: 50,
+          radius: 50000,
         },
       };
       postMock.withArgs(`${Vue.config.apiBase}/dojos/search-bounding-box`, expectedQuery).returns(Promise.resolve({ body: expectedDojos }));
