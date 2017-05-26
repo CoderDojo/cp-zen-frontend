@@ -11,7 +11,7 @@ export default new Router({
     {
       path: '/',
       name: 'FindDojo',
-      component: FindDojo
+      component: FindDojo,
     },
     {
       path: '/:lat/:long',
