@@ -46,12 +46,25 @@ define('The Dojo List vue ', () => {
 
   it('should show the list of dojos', (done) => {
     const mock = {
-      getDojos: () => Promise.resolve({ body: expectedDojos }),
+      getDojosByLatLong: (lat, long) => {
+        expect(lat).to.be.equal(10);
+        expect(long).to.be.equal(89);
+        return Promise.resolve({ body: expectedDojos });
+      },
     };
     const cdDojosWithMocks = cdDojoList({
       './service': mock,
     });
-    const vm = new Vue(cdDojosWithMocks);
+
+    const Constructor = Vue.extend(cdDojosWithMocks);
+    const vm = new Constructor({
+      propsData: {
+        coordinates: {
+          latitude: 10,
+          longitude: 89,
+        },
+      },
+    });
     vm.getDojos();
 
     requestAnimationFrame(() => {

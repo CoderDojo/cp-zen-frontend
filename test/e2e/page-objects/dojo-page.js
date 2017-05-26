@@ -16,6 +16,11 @@ const DojoPage = Object.create(BasePage, {
       return BasePage.open.call(this, '/');
     },
   },
+  openWithLatLong: {
+    value(lat, long) {
+      return BasePage.open.call(this, `/${lat}/${long}`);
+    },
+  },
   dojoListItems: {
     get() {
       return $$('.cd-dojo-list__list-item');
