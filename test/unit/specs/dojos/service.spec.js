@@ -61,7 +61,7 @@ define('Dojos Service', () => {
       const expectedQuery = {
         query: {
           lat: 10,
-          long: 89,
+          lon: 89,
           radius: 50,
         },
       };
