@@ -10,7 +10,17 @@
       "stage": 0,
       "urlSlug": "ie/dublin/cd-rom",
       "private": 1,
-      "id": "b850b40e-1e10-4e3a-8a46-d076c94946c6"
+      "id": "b850b40e-1e10-4e3a-8a46-d076c94946c6",
+      "address1": "Pivotal Labs, CHQ building, Dublin 1",
+      "countryName": "Ireland",
+      "email": "",
+      "facebook": null,
+      "googleGroup": null,
+      "twitter": null,
+      "notes": "<h2>Suggested Notes:<br />\n<br />\nPlease bring:</h2>\n\n<ul>\n\t<li>\n\t<h2>A laptop. Borrow one from somebody if needs be.</h2>\n\t</li>\n\t<li>\n\t<h2><strong>A parent! (Very important). If you are 12 or under, your parent must stay with you during the session.</strong></h2>\n\t</li>\n</ul>\n\n<h2>&nbsp;</h2>\n",
+      "placeName": "Dublin",
+      "time": "Sunday 10am",
+      "website": null
     },
     {
       "entity$": "-/cd/dojos",
@@ -22,7 +32,17 @@
       "stage": 0,
       "urlSlug": "ie/smithfield/smithfield-awesome-dojo",
       "private": 0,
-      "id": "4e591bbe-667b-4782-bc9c-180c6d321883"
+      "id": "4e591bbe-667b-4782-bc9c-180c6d321883",
+      "address1": "The square",
+      "countryName": "Ireland",
+      "email": "smithfield-awesome-dojo.ie@coderdojo.com",
+      "facebook": null,
+      "googleGroup": null,
+      "twitter": null,
+      "notes": "<p>Suggested Notes:<br />\n<br />\nPlease bring:</p>\n\n<ul>\n\t<li>\n\t<p>A laptop. Borrow one from somebody if needs be.</p>\n\t</li>\n\t<li>\n\t<p><strong>A parent! (Very important). If you are 12 or under, your parent must stay with you during the session.</strong></p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n",
+      "placeName": "Smithfield",
+      "time": "Saturdays, 5-7pm",
+      "website": null
     },
     {
       "entity$": "-/cd/dojos",
@@ -34,7 +54,17 @@
       "stage": 0,
       "urlSlug": "ie/dublin/dublin-ninja-kids",
       "private": 1,
-      "id": "3ed47c6d-a689-46a0-883b-1f3fd46e9c77"
+      "id": "3ed47c6d-a689-46a0-883b-1f3fd46e9c77",
+      "address1": "CHQ Building,1 Custom House Quay, North Dock",
+      "countryName": "Ireland",
+      "email": "dublinninjakids@gmail.com",
+      "facebook": "https://www.facebook.com/CoderDojo",
+      "googleGroup": "dublinninjakids@google.group.com",
+      "twitter": "https://twitter.com/CoderDojo",
+      "notes": "<p>This is the Dojo details section</p>\n",
+      "placeName": "Dublin",
+      "time": "Saturdays 11 am - 1 pm",
+      "website": "www.dublinninjakids.com"
     }
   ]
 }

@@ -40,7 +40,7 @@ define('The Dojo List vue ', () => {
   it('should load the dojo list on creation', () => {
     const cdDojosWithMocks = cdDojoList();
     sinon.stub(cdDojosWithMocks.methods, 'getDojos');
-    const vm = new Vue(cdDojosWithMocks);
+    new Vue(cdDojosWithMocks);
     expect(cdDojosWithMocks.methods.getDojos.callCount).to.equal(1);
   });
 
