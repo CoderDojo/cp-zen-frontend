@@ -2,9 +2,14 @@
   <div class="cd-find-dojo">
     <button @click="getCurrentLocation" class="cd-find-dojo__detect-location">Detect My Location</button>
     <p v-if="latitude && longitude">Latitude: {{ latitude }}, Longitude: {{ longitude }}</p>
+
+    <dojoList></dojoList>
   </div>
+
 </template>
 <script>
+  import DojoList from '@/dojos/cd-dojo-list';
+
   export default {
     name: 'findDojo',
     data() {
@@ -20,6 +25,9 @@
           this.longitude = position.coords.longitude;
         });
       },
+    },
+    components: {
+      dojoList: DojoList,
     },
   };
 </script>
