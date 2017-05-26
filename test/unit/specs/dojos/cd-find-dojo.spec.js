@@ -4,9 +4,9 @@ import cdFindDojo from '@/dojos/cd-find-dojo';
 define('The Find dojo vue ', () => {
   it('should get the user current location', (done) => {
     navigator.geolocation = navigator.geolocation || {
-        getCurrentPosition() {
-        },
-      };
+      getCurrentPosition() {
+      },
+    };
     sinon.stub(navigator.geolocation, 'getCurrentPosition').callsFake((cb) => {
       cb({
         coords: {
