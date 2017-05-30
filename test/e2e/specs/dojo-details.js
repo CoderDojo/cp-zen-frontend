@@ -32,4 +32,21 @@ describe('Dojo details page', () => {
     const googleGroup = DojoDetailsPage.googleGroup.getText();
     expect(googleGroup).to.equal('dublinninjakids@google.group.com');
   });
+
+  it('should show dojo\'s events', function () {
+    DojoDetailsPage.open('ie/dublin/dublin-ninja-kids');
+    DojoDetailsPage.name.waitForVisible();
+
+    const firstEventName = DojoDetailsPage.eventNames(0).getText();
+    expect(firstEventName).to.equal('My First Amazing Event');
+    expect(DojoDetailsPage.eventDates(0).getText()).to.equal('2017-06-06T16:30:00.000Z');
+
+    const secondEventName = DojoDetailsPage.eventNames(1).getText();
+    expect(secondEventName).to.equal('My Second Amazing Event');
+    expect(DojoDetailsPage.eventDates(1).getText()).to.equal('2017-06-03T10:00:00.000Z');
+    expect(DojoDetailsPage.eventDates(2).getText()).to.equal('2017-06-17T10:00:00.000Z');
+    expect(DojoDetailsPage.eventDates(3).getText()).to.equal('2017-07-01T10:00:00.000Z');
+    expect(DojoDetailsPage.eventDates(4).getText()).to.equal('2017-07-15T10:00:00.000Z');
+    expect(DojoDetailsPage.eventDates(5).getText()).to.equal('2017-07-29T10:00:00.000Z');
+  });
 });
