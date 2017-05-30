@@ -1,12 +1,12 @@
 import Vue from 'vue';
-import dojoDetails from '!!vue-loader?inject!@/dojos/components/cd-dojo-details';
+import dojoDetails from '!!vue-loader?inject!@/dojos/cd-dojo-details';
 
 function setUpDojoDetailsComponent(mockBody) {
   const mock = {
     getByUrlSlug: (/* urlSlug */) => Promise.resolve({ body: mockBody }),
   };
   const dojoDetailsWithMocks = dojoDetails({
-    '../service': mock,
+    './service': mock,
   });
   return dojoDetailsWithMocks;
 }
@@ -40,24 +40,7 @@ describe('Dojo details component', () => {
     });
   });
 
-  // Keeping this temporarily to use in discussion on testing
-  it.skip('should build the urlSlug from path parameters', (done) => {
-    const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
-    const expectedUrlSlug = 'ie/dublin/dublin-ninja-kids';
-
-    const vm = new Vue(DojoDetailsWithMock);
-    vm.$props.country = 'ie';
-    vm.$props.region = 'dublin';
-    vm.$props.dojoName = 'dublin-ninja-kids';
-
-    vm.buildUrlSlug();
-    requestAnimationFrame(() => {
-      expect(vm.urlSlug).to.equal(expectedUrlSlug);
-      done();
-    });
-  });
-
-  it('should build the urlSlug from path parameters (using bind)', () => {
+  it('should build the urlSlug from path parameters', () => {
     const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
 
     const urlParts = {
@@ -73,19 +56,12 @@ describe('Dojo details component', () => {
   describe('computed.address()', () => {
     it('should return undefined when address1 is falsey', () => {
       const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithoutAddress);
-      const vm = new Vue(DojoDetailsWithMock);
-      expect(vm.address).to.be.undefined;
+      const mockDojoDetails = {};
+      const address = DojoDetailsWithMock.computed.address.bind({ dojoDetails: mockDojoDetails })();
+      expect(address).to.be.undefined;
     });
 
     it('should return computed address when address1 is truthy', () => {
-      const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
-      const vm = new Vue(DojoDetailsWithMock);
-      requestAnimationFrame(() => {
-        expect(vm.address).to.not.be.undefined;
-      });
-    });
-
-    it('should return computed address when address1 is truthy (with bind)', () => {
       const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
       const mockDojoDetails = {
         address1: 'CHQ',
