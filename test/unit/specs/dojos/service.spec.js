@@ -62,7 +62,7 @@ describe('Dojos Service', () => {
     });
   });
 
-  define('getDojos()', () => {
+  describe('getDojos()', () => {
     it('should get dojos', (done) => {
       const postMock = sandbox.stub(Vue.http, 'post');
       postMock.withArgs(`${Vue.config.apiBase}/dojos`).returns(Promise.resolve({ body: expectedDojos }));

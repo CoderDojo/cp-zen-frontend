@@ -55,6 +55,16 @@ const DojoDetailsPage = Object.create(BasePage, {
       return $('.cd-dojo-details__error-message');
     },
   },
+  eventNames: {
+    value(index) {
+      return $$('.cd-event-list__event-name')[index];
+    }
+  },
+  eventDates: {
+    value(index) {
+      return $$('.cd-event-list__event-date')[index];
+    }
+  },
   open: {
     value(urlSlug) {
       return BasePage.open.call(this, path.join('/dojos', urlSlug));

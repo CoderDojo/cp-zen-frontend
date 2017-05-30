@@ -9,25 +9,25 @@
     <p class="cd-dojo-details__facebook">{{dojoDetails.facebook}}</p>
     <p class="cd-dojo-details__twitter">{{dojoDetails.twitter}}</p>
     <p class="cd-dojo-details__google-group">{{dojoDetails.googleGroup}}</p>
+
+    <events-list :dojoId="dojoDetails.id"></events-list>
   </div>
-
-
 </template>
 <script>
-  /* eslint-disable */
   import service from './service';
+  import eventsList from '../events/cd-event-list';
 
   export default {
     name: 'dojo-details',
-
+    components: {
+      'events-list': eventsList,
+    },
     props: ['country', 'region', 'dojoName'],
-
     data() {
       return {
         dojoDetails: {},
       };
     },
-
     computed: {
       address() {
         return !this.dojoDetails.address1 ? undefined : `
@@ -40,7 +40,6 @@
         return `${this.country}/${this.region}/${this.dojoName}`;
       },
     },
-
     methods: {
       loadDojoDetails() {
         service.getByUrlSlug(this.urlSlug).then((response) => {
@@ -51,9 +50,6 @@
     created() {
       this.loadDojoDetails();
     },
-
-
   };
-
 </script>
 <style scoped></style>
