@@ -10,7 +10,7 @@
     <p class="cd-dojo-details__twitter">{{dojoDetails.twitter}}</p>
     <p class="cd-dojo-details__google-group">{{dojoDetails.googleGroup}}</p>
 
-    <events-list :dojoId="dojoDetails.id"></events-list>
+    <events-list v-if="dojoDetails.id" v-bind:dojoId="dojoDetails.id"></events-list>
   </div>
 </template>
 <script>
