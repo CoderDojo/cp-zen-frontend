@@ -1,8 +1,11 @@
+const DojoPage = require('../page-objects/dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
 
 describe('Dojo details page', () => {
   it('should show dojo details', () => {
-    DojoDetailsPage.open('ie/dublin/dublin-ninja-kids');
+    DojoPage.openWithLatLong(10, 89);
+    DojoPage.dojoListItems[2].waitForVisible();
+    DojoPage.dojoListItems[2].click();
     DojoDetailsPage.name.waitForVisible();
 
     const name = DojoDetailsPage.name.getText();

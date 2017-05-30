@@ -72,4 +72,19 @@ define('The Dojo List vue ', () => {
       done();
     });
   });
+
+  it('should build a valid details page url', () => {
+    const Constructor = Vue.extend(cdDojoList());
+    const vm = new Constructor({
+      propsData: {
+        coordinates: {
+          latitude: 10,
+          longitude: 89,
+        },
+      },
+    });
+    expect(vm.buildDetailsPageUrl('foo')).to.equal('/dojos/foo');
+    expect(vm.buildDetailsPageUrl('foo')).to.equal('/dojos/foo');
+    expect(vm.buildDetailsPageUrl('foo')).to.equal('/dojos/foo');
+  });
 });
