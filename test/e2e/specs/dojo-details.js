@@ -4,7 +4,6 @@ const DojoDetailsPage = require('../page-objects/dojo-details');
 describe('Dojo details page', () => {
   it('should show dojo details', () => {
     DojoPage.openWithLatLong(10, 89);
-    DojoPage.dojoListItems[2].waitForVisible();
     DojoPage.dojoListItems[2].click();
     DojoDetailsPage.name.waitForVisible();
 

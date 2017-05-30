@@ -23,6 +23,7 @@ const DojoPage = Object.create(BasePage, {
   },
   dojoListItems: {
     get() {
+      $('.cd-dojo-list__list-item').waitForVisible();
       return $$('.cd-dojo-list__list-item');
     },
   },

@@ -3,7 +3,6 @@ const DojoPage = require('../page-objects/dojo-page');
 describe('The dojo list', () => {
   it('should list all the dojos', () => {
     DojoPage.openWithLatLong(10, 89);
-    DojoPage.dojoListItems[2].waitForVisible();
     const dojosList = DojoPage.dojoListItems;
     expect(dojosList.length).to.equal(3);
     expect(dojosList[0].getText()).to.have.string('CD ROM');
