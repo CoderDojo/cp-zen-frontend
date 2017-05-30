@@ -15,7 +15,7 @@
 </template>
 <script>
   /* eslint-disable */
-  import service from '../service';
+  import service from './service';
 
   export default {
     name: 'dojo-details',

@@ -1,7 +1,6 @@
 const DojoDetailsPage = require('../page-objects/dojo-details');
 
 describe('Dojo details page', () => {
-
   it('should show dojo details', () => {
     DojoDetailsPage.open('ie/dublin/dublin-ninja-kids');
     DojoDetailsPage.name.waitForVisible();
@@ -33,5 +32,4 @@ describe('Dojo details page', () => {
     const googleGroup = DojoDetailsPage.googleGroup.getText();
     expect(googleGroup).to.equal('dublinninjakids@google.group.com');
   });
-
 });
