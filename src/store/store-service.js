@@ -1,14 +1,12 @@
-import { clone } from 'lodash';
-
 export default {
-  _store: {},
   save(key, data) {
-    this._store[key] = clone(data);
+    window.sessionStorage.setItem(key, JSON.stringify(data));
   },
   load(key) {
-    return this._store[key];
+    const dataString = window.sessionStorage.getItem(key);
+    return JSON.parse(dataString);
   },
   delete(key) {
-    delete this._store[key];
+    window.sessionStorage.removeItem(key);
   },
 };

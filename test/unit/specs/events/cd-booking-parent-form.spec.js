@@ -26,6 +26,6 @@ describe('Booking Parent Form', () => {
     expect(MockStoreService.save).to.be.calledOnce;
     expect(MockStoreService.save).to.have.been.calledWith(`booking-${parentData.eventId}`, { parent: pick(parentData, ['firstName', 'lastName', 'phoneNumber', 'email']) });
     expect(parentData.$router.push).to.be.calledOnce;
-    expect(parentData.$router.push).to.have.been.calledWith(`/events/${parentData.eventId}/confirmation`);
+    expect(parentData.$router.push).to.have.been.calledWith(`/events/${parentData.eventId}/create-account`);
   });
 });

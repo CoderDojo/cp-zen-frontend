@@ -34,16 +34,21 @@ server.use((req, res, next) => {
   next();
 });
 server.use((req, res, next) => {
-  const send = res.send;
-  res.send = function (string) {
-    let body = string instanceof Buffer ? string.toString() : string;
-    const json = JSON.parse(body);
-    if (pathsToReturnSingular.indexOf(req.originalUrl.split('?')[0]) > -1 && json.length && json.length > 0) {
-      body = JSON.stringify(json[0]);
-    }
-    send.call(this, body);
-  };
+  if (pathsToReturnSingular.indexOf(req.originalUrl.split('?')[0]) > -1) {
+    const send = res.send;
+    res.send = function (string) {
+      let body = string instanceof Buffer ? string.toString() : string;
+      const json = JSON.parse(body);
+      if (json.length && json.length > 0) {
+        body = JSON.stringify(json[0]);
+      }
+      send.call(this, body);
+    };
+  }
   next();
+});
+server.post('/api/2.0/users/register', (req, res) => {
+  res.send();
 });
 server.use('/api/2.0', router);
 
