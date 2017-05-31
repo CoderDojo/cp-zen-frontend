@@ -9,6 +9,9 @@ const EventsService = {
       },
     );
   },
+  loadEvent(eventId) {
+    return Vue.http.get(`${Vue.config.apiBase}/events/${eventId}`);
+  },
 };
 
 export default EventsService;

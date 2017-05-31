@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import DojoDetails from '@/dojos/cd-dojo-details';
 import FindDojo from '@/dojos/cd-find-dojo';
+import EventDetails from '@/events/cd-event-details';
 import BookingParentForm from '@/events/cd-booking-parent-form';
 import BookingCreateAccount from '@/events/cd-booking-create-account';
 import BookingConfirmation from '@/events/cd-booking-confirmation';
@@ -27,6 +28,12 @@ export default new Router({
       path: '/dojos/:country/:region/:dojoName',
       name: 'DojoDetails',
       component: DojoDetails,
+      props: true,
+    },
+    {
+      path: '/events/:eventId',
+      name: 'EventDetails',
+      component: EventDetails,
       props: true,
     },
     {

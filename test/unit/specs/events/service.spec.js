@@ -39,10 +39,22 @@ describe('Events Service', () => {
         query: {
           dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
         },
-      }).returns(Promise.resolve(expectedEvents));
+      }).returns(Promise.resolve({ body: expectedEvents }));
 
     EventsService.loadEvents('3ed47c6d-a689-46a0-883b-1f3fd46e9c77').then((events) => {
-      expect(events).to.deep.equal(expectedEvents);
+      expect(events.body).to.deep.equal(expectedEvents);
+      done();
+    });
+  });
+
+  it('should get specific event details by id', (done) => {
+    const eventId = 1;
+    const getMock = sandbox.stub(Vue.http, 'get');
+    getMock.withArgs(`${Vue.config.apiBase}/events/${eventId}`)
+      .returns(Promise.resolve({ body: expectedEvents[0] }));
+
+    EventsService.loadEvent(eventId).then((event) => {
+      expect(event.body).to.deep.equal(expectedEvents[0]);
       done();
     });
   });

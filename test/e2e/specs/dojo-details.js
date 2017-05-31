@@ -1,10 +1,15 @@
 const DojoPage = require('../page-objects/dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
+const EventDetailsPage = require('../page-objects/event-details');
+
+function openDojoWithLatLong() {
+  DojoPage.openWithLatLong(10, 89);
+  DojoPage.dojoListItems[2].click();
+}
 
 describe('Dojo details page', () => {
   it('should show dojo details', () => {
-    DojoPage.openWithLatLong(10, 89);
-    DojoPage.dojoListItems[2].click();
+    openDojoWithLatLong();
     DojoDetailsPage.name.waitForVisible();
 
     const name = DojoDetailsPage.name.getText();
@@ -36,7 +41,7 @@ describe('Dojo details page', () => {
   });
 
   it('should show dojo\'s events', () => {
-    DojoDetailsPage.open('ie/dublin/dublin-ninja-kids');
+    openDojoWithLatLong();
     DojoDetailsPage.name.waitForVisible();
 
     const firstEventName = DojoDetailsPage.eventNames(0).getText();
@@ -50,5 +55,13 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.eventDates(3).getText()).to.equal('2017-07-01T10:00:00.000Z');
     expect(DojoDetailsPage.eventDates(4).getText()).to.equal('2017-07-15T10:00:00.000Z');
     expect(DojoDetailsPage.eventDates(5).getText()).to.equal('2017-07-29T10:00:00.000Z');
+  });
+
+  it('should show event details after clicking on an event', () => {
+    openDojoWithLatLong();
+    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.eventNames(0).click();
+    EventDetailsPage.name.waitForVisible();
+    expect(EventDetailsPage.name.getText()).to.equal('My First Amazing Event');
   });
 });
