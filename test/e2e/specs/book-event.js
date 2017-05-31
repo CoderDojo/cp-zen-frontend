@@ -5,9 +5,10 @@ const BookingConfirmation = require('../page-objects/booking-confirmation');
 describe('Book event page', () => {
   it('should collect parent data', () => {
     BookingParentData.open(1);
-    expect(BookingParentData.nameLabel.getText()).to.equal('Name');
-    expect(BookingParentData.phoneNumberLabel.getText()).to.equal('Phone Number');
-    expect(BookingParentData.emailLabel.getText()).to.equal('Email Address');
+    expect(BookingParentData.firstNameLabel.getText()).to.equal('First name');
+    expect(BookingParentData.lastNameLabel.getText()).to.equal('Last name');
+    expect(BookingParentData.phoneNumberLabel.getText()).to.equal('Phone number');
+    expect(BookingParentData.emailLabel.getText()).to.equal('Email address');
 
     BookingParentData.firstName.setValue('John');
     BookingParentData.lastName.setValue('Doe');

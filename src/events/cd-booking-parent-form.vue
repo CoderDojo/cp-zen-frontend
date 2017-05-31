@@ -1,7 +1,7 @@
 <template>
   <div class="cd-booking-parent-form">
     <form @submit.prevent="submitBooking">
-      <label for="firstName">First Name</label>
+      <label for="firstName">First name</label>
       <input type="text" name="firstName" id="firstName" v-validate="firstName" data-vv-rules="required" v-model="firstName"><br/>
       <p class="text-danger" v-show="formValidated && errors.has('firstName')">{{ errors.first('firstName') }}</p>
 
@@ -9,11 +9,11 @@
       <input type="text" name="lastName" id="lastName" v-validate="lastName" data-vv-rules="required"  v-model="lastName"><br/>
       <p class="text-danger" v-show="formValidated && errors.has('lastName')">{{ errors.first('lastName') }}</p>
 
-      <label for="phoneNumber">Phone Number</label>
+      <label for="phoneNumber">Phone number</label>
       <input type="text" name="phoneNumber" id="phoneNumber" v-validate="phoneNumber" data-vv-rules="required|numeric"  v-model="phoneNumber"><br/>
       <p class="text-danger" v-show="formValidated && errors.has('phoneNumber')">{{ errors.first('phoneNumber') }}</p>
 
-      <label for="email">Email Address</label>
+      <label for="email">Email address</label>
       <input type="text" name="email" v-validate="email" id="email" data-vv-rules="required|email" v-model="email"><br/>
       <p class="text-danger" v-show="formValidated && errors.has('email')">{{ errors.first('email') }}</p>
 
