@@ -22,9 +22,19 @@ const BookingParentData = Object.create(BasePage, {
       return $('input[name=firstName]');
     },
   },
+  firstNameValidationError: {
+    get() {
+      return $('p[id=firstNameValidationError]');
+    },
+  },
   lastName: {
     get() {
       return $('input[name=lastName]');
+    },
+  },
+  lastNameValidationError: {
+    get() {
+      return $('p[id=lastNameValidationError]');
     },
   },
   phoneNumberLabel: {
@@ -37,6 +47,11 @@ const BookingParentData = Object.create(BasePage, {
       return $('input[name=phoneNumber]');
     },
   },
+  phoneNumberValidationError: {
+    get() {
+      return $('p[id=phoneNumberValidationError]');
+    },
+  },
   emailLabel: {
     get() {
       return $('label[for=email]');
@@ -45,6 +60,11 @@ const BookingParentData = Object.create(BasePage, {
   email: {
     get() {
       return $('input[name=email]');
+    },
+  },
+  emailValidationError: {
+    get() {
+      return $('p[id=emailValidationError]');
     },
   },
   submitBookingButton: {
