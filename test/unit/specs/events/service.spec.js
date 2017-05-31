@@ -43,6 +43,8 @@ describe('Events Service', () => {
 
     EventsService.loadEvents('3ed47c6d-a689-46a0-883b-1f3fd46e9c77').then((events) => {
       expect(events.body).to.deep.equal(expectedEvents);
+      const mockCall = postMock.getCall(0).args[0];
+      expect(mockCall).to.equal(`${Vue.config.apiBase}/events/search`);
       done();
     });
   });
