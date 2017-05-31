@@ -2,7 +2,9 @@
   <div class="cd-event-list">
     <h1>Upcoming Events</h1>
     <div v-for="event in events">
-      <h3 class="cd-event-list__event-name">{{ event.name }}</h3> <br/>
+      <h3>
+        <router-link :to="{name: 'EventDetails', params: {eventId: event.id}}" class="cd-event-list__event-name">{{ event.name }}</router-link>
+      </h3>
       <span>Dates:</span> <br/>
       <ul v-for="date in event.dates">
         <li>
