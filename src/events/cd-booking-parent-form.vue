@@ -1,13 +1,22 @@
 <template>
   <div class="cd-booking-parent-form">
     <form @submit.prevent="submitBooking">
-      <label for="firstName">Name</label>
-      <input type="text" name="firstName" id="firstName" v-model="firstName">
-      <input type="text" name="lastName" id="lastName" v-model="lastName">
+      <label for="firstName">First Name</label>
+      <input type="text" name="firstName" id="firstName" v-validate="firstName" data-vv-rules="required" v-model="firstName"><br/>
+      <p class="text-danger" v-show="formValidated && errors.has('firstName')">{{ errors.first('firstName') }}</p>
+
+      <label for="lastName">Last name</label>
+      <input type="text" name="lastName" id="lastName" v-validate="lastName" data-vv-rules="required"  v-model="lastName"><br/>
+      <p class="text-danger" v-show="formValidated && errors.has('lastName')">{{ errors.first('lastName') }}</p>
+
       <label for="phoneNumber">Phone Number</label>
-      <input type="text" name="phoneNumber" id="phoneNumber" v-model="phoneNumber">
+      <input type="text" name="phoneNumber" id="phoneNumber" v-validate="phoneNumber" data-vv-rules="required|numeric"  v-model="phoneNumber"><br/>
+      <p class="text-danger" v-show="formValidated && errors.has('phoneNumber')">{{ errors.first('phoneNumber') }}</p>
+
       <label for="email">Email Address</label>
-      <input type="text" name="email" id="email" v-model="email">
+      <input type="text" name="email" v-validate="email" id="email" data-vv-rules="required|email" v-model="email"><br/>
+      <p class="text-danger" v-show="formValidated && errors.has('email')">{{ errors.first('email') }}</p>
+
       <input type="submit" value="Submit Booking"/>
     </form>
   </div>
@@ -25,12 +34,19 @@
         lastName: null,
         phoneNumber: null,
         email: null,
+        formValidated: false,
       };
     },
     methods: {
       submitBooking() {
         StoreService.save(`booking-${this.eventId}`, { parent: pick(this, ['firstName', 'lastName', 'phoneNumber', 'email']) });
         this.$router.push(`/events/${this.eventId}/create-account`);
+      },
+      doValidate() {
+        this.formValidated = true;
+        if (!this.errors.any()) {
+          this.submitBooking();
+        }
       },
     },
   };
