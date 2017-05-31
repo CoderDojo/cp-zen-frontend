@@ -7,9 +7,14 @@ const BookingParentData = Object.create(BasePage, {
       return BasePage.open.call(this, `/events/${eventId}/book`);
     },
   },
-  nameLabel: {
+  firstNameLabel: {
     get() {
       return $('label[for=firstName]');
+    },
+  },
+  lastNameLabel: {
+    get() {
+      return $('label[for=lastName]');
     },
   },
   firstName: {
