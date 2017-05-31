@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
 import VueResource from 'vue-resource';
+import VeeValidate from 'vee-validate';
 import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
@@ -12,6 +13,7 @@ Vue.config.productionTip = false;
 Vue.config.apiBase = process.env.API_BASE;
 
 Vue.use(VueResource);
+Vue.use(VeeValidate);
 
 /* eslint-disable no-new */
 new Vue({
