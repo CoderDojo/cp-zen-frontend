@@ -35,7 +35,7 @@ describe('Dojo details page', () => {
     expect(googleGroup).to.equal('dublinninjakids@google.group.com');
   });
 
-  it('should show dojo\'s events', function () {
+  it('should show dojo\'s events', () => {
     DojoDetailsPage.open('ie/dublin/dublin-ninja-kids');
     DojoDetailsPage.name.waitForVisible();
 
