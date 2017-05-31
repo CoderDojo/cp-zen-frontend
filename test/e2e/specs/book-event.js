@@ -12,7 +12,7 @@ describe('Book event page', () => {
 
     BookingParentData.firstName.setValue('John');
     BookingParentData.lastName.setValue('Doe');
-    BookingParentData.phoneNumber.setValue('+1-555-123456');
+    BookingParentData.phoneNumber.setValue('1555123456');
     BookingParentData.email.setValue('john.doe@example.com');
 
     BookingParentData.submitBookingButton.click();
@@ -29,7 +29,52 @@ describe('Book event page', () => {
     expect(BookingConfirmation.accountCreationConfirmation.getText()).to.equal('Account created');
     expect(BookingConfirmation.firstName.getText()).to.equal('John');
     expect(BookingConfirmation.lastName.getText()).to.equal('Doe');
-    expect(BookingConfirmation.phoneNumber.getText()).to.equal('+1-555-123456');
+    expect(BookingConfirmation.phoneNumber.getText()).to.equal('1555123456');
     expect(BookingConfirmation.email.getText()).to.equal('john.doe@example.com');
+  });
+
+  it('should report validation errors for invalid phone number', () => {
+    BookingParentData.open(1);
+
+    BookingParentData.firstName.setValue('John');
+    BookingParentData.lastName.setValue('Doe');
+    BookingParentData.phoneNumber.setValue('+1-555-12-3456');
+    BookingParentData.email.setValue('john.doe@example.com');
+
+    BookingParentData.submitBookingButton.waitForVisible();
+    BookingParentData.submitBookingButton.click();
+
+    expect(BookingParentData.phoneNumberValidationError.getText()).to.equal('The phoneNumber may only contain numeric characters.');
+  });
+
+  it('should report validation errors for invalid email', () => {
+    BookingParentData.open(1);
+
+    BookingParentData.firstName.setValue('John');
+    BookingParentData.lastName.setValue('Doe');
+    BookingParentData.phoneNumber.setValue('1555123456');
+    BookingParentData.email.setValue('john.doe');
+
+    BookingParentData.submitBookingButton.waitForVisible();
+    BookingParentData.submitBookingButton.click();
+
+    expect(BookingParentData.emailValidationError.getText()).to.equal('The email must be a valid email.');
+  });
+
+  it('should report validation errors missing required fields', () => {
+    BookingParentData.open(1);
+
+    // BookingParentData.firstName.setValue('John');
+    // BookingParentData.lastName.setValue('Doe');
+    // BookingParentData.phoneNumber.setValue('+1-555-12-3456');
+    // BookingParentData.email.setValue('john.doe@example.com');
+
+    BookingParentData.submitBookingButton.waitForVisible();
+    BookingParentData.submitBookingButton.click();
+
+    expect(BookingParentData.phoneNumberValidationError.getText()).to.equal('The phoneNumber is required.');
+    expect(BookingParentData.firstNameValidationError.getText()).to.equal('The firstName is required.');
+    expect(BookingParentData.lastNameValidationError.getText()).to.equal('The lastName is required.');
+    expect(BookingParentData.emailValidationError.getText()).to.equal('The email is required.');
   });
 });

@@ -4,6 +4,7 @@ import { pick } from 'lodash';
 
 describe('Booking Parent Form', () => {
   it('should store parent data and navigate to confirmation page', () => {
+    // ARRANGE
     const MockStoreService = {
       save: sinon.spy(),
     };
@@ -15,15 +16,19 @@ describe('Booking Parent Form', () => {
       eventId: 1,
       firstName: 'John',
       lastName: 'Doe',
-      phoneNumber: '+1-555-123456',
+      phoneNumber: '1555123456',
       email: 'john.doe@example.com',
       $router: {
         push: sinon.spy(),
       },
     };
 
-    BookingParentFormComponentWithMocks.methods.submitBooking.bind(parentData)();
+    const vm = vueUnitHelper(BookingParentFormComponentWithMocks);
 
+    // ACT
+    vm.submitBooking.bind(parentData)();
+
+    // ASSERT
     expect(MockStoreService.save).to.be.calledOnce;
     expect(MockStoreService.save).to.have.been.calledWith(`booking-${parentData.eventId}`,
       { parent: pick(parentData, ['firstName', 'lastName', 'phoneNumber', 'email']) });
