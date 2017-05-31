@@ -60,4 +60,24 @@ describe('Events Service', () => {
       done();
     });
   });
+
+  it('should get specific event sessions by id', (done) => {
+    const eventId = 1;
+    const mockSessions = [
+      {
+        name: 'Scratch',
+      },
+      {
+        name: 'Arduino',
+      },
+    ];
+    const getMock = sandbox.stub(Vue.http, 'get');
+    getMock.withArgs(`${Vue.config.apiBase}/events/${eventId}/sessions`)
+      .returns(Promise.resolve({ body: mockSessions }));
+
+    EventsService.loadSessions(eventId).then((sessions) => {
+      expect(sessions.body).to.deep.equal(mockSessions);
+      done();
+    });
+  });
 });

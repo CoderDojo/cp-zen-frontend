@@ -63,5 +63,11 @@ describe('Dojo details page', () => {
     DojoDetailsPage.eventNames(0).click();
     EventDetailsPage.name.waitForVisible();
     expect(EventDetailsPage.name.getText()).to.equal('My First Amazing Event');
+
+    expect(EventDetailsPage.eventSessions(0).getText()).to.have.string('Scratch');
+    expect(EventDetailsPage.eventSessions(0).getText()).to.have.string('Beginners welcome');
+
+    expect(EventDetailsPage.eventSessions(1).getText()).to.have.string('Arduino');
+    expect(EventDetailsPage.eventSessions(1).getText()).to.have.string('Intermediate');
   });
 });

@@ -7,6 +7,11 @@ const EventDetailsPage = Object.create(BasePage, {
       return $('.cd-event-details__name');
     },
   },
+  eventSessions: {
+    value(index) {
+      return $$('.cd-event-sessions__item')[index];
+    },
+  },
   open: {
     value(eventId) {
       return BasePage.open.call(this, `/events/${eventId}`);
