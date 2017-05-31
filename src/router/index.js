@@ -19,12 +19,6 @@ export default new Router({
       component: FindDojo,
     },
     {
-      path: '/:lat/:long',
-      name: 'FindDojoWithLatAndLong',
-      component: FindDojo,
-      props: true,
-    },
-    {
       path: '/dojos/:country/:region/:dojoName',
       name: 'DojoDetails',
       component: DojoDetails,
@@ -52,6 +46,12 @@ export default new Router({
       path: '/events/:eventId/confirmation',
       name: 'EventBookingConfirmation',
       component: BookingConfirmation,
+      props: true,
+    },
+    {
+      path: '/:lat/:long',
+      name: 'FindDojoWithLatAndLong',
+      component: FindDojo,
       props: true,
     },
   ],
