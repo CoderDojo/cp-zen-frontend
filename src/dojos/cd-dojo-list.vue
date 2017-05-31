@@ -2,9 +2,9 @@
   <div class="cd-dojo-list">
     <ul>
       <li v-for="dojo in dojos">
-        <a :href="buildDetailsPageUrl(dojo.url_slug || dojo.urlSlug)" class="cd-dojo-list__list-item">
+        <router-link :to="buildDetailsPageUrl(dojo.url_slug || dojo.urlSlug)" class="cd-dojo-list__list-item">
           {{dojo.name}} ({{ dojo.private | cd-dojo-private }})
-        </a>
+        </router-link>
       </li>
     </ul>
   </div>
