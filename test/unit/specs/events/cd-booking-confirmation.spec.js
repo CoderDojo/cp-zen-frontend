@@ -12,6 +12,7 @@ describe('Booking Confirmation Component', () => {
         phoneNumber: '+1-555-123456',
         email: 'john.doe@example.com',
       },
+      accountCreated: true,
     };
 
     MockStoreService.load.returns(bookingData);
@@ -28,5 +29,6 @@ describe('Booking Confirmation Component', () => {
     expect(MockStoreService.load).to.be.calledOnce;
     expect(MockStoreService.load).to.have.been.calledWith(`booking-${data.eventId}`);
     expect(data.parent).to.deep.equal(bookingData.parent);
+    expect(data.accountCreated).to.deep.equal(bookingData.accountCreated);
   });
 });

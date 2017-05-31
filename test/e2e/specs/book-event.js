@@ -1,4 +1,5 @@
 const BookingParentData = require('../page-objects/booking-parent-data');
+const BookingCreateAccount = require('../page-objects/booking-create-account');
 const BookingConfirmation = require('../page-objects/booking-confirmation');
 
 describe('Book event page', () => {
@@ -15,8 +16,16 @@ describe('Book event page', () => {
 
     BookingParentData.submitBookingButton.click();
 
+    BookingCreateAccount.password.waitForVisible();
+    BookingCreateAccount.password.setValue('Passw0rd');
+    BookingCreateAccount.confirmPassword.setValue('Passw0rd');
+    BookingCreateAccount.termsAndConditions.click();
+    BookingCreateAccount.checkRecaptcha();
+    BookingCreateAccount.createAccount.click();
+
     BookingConfirmation.firstName.waitForVisible();
 
+    expect(BookingConfirmation.accountCreationConfirmation.getText()).to.equal('Account created');
     expect(BookingConfirmation.firstName.getText()).to.equal('John');
     expect(BookingConfirmation.lastName.getText()).to.equal('Doe');
     expect(BookingConfirmation.phoneNumber.getText()).to.equal('+1-555-123456');

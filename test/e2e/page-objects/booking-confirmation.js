@@ -21,6 +21,11 @@ const BookingConfirmation = Object.create(BasePage, {
       return $('.cd-booking-confirmation__email');
     },
   },
+  accountCreationConfirmation: {
+    get() {
+      return $('.cd-booking-confirmation__account-creation-confirmation');
+    },
+  },
 });
 
 module.exports = BookingConfirmation;

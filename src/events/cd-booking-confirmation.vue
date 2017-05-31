@@ -1,5 +1,6 @@
 <template>
   <div class="cd-booking-confirmation">
+    <p class="cd-booking-confirmation__account-creation-confirmation" v-if="accountCreated">Account created</p>
     <ul v-if="parent.firstName">
       <li class="cd-booking-confirmation__first-name">{{ parent.firstName }}</li>
       <li class="cd-booking-confirmation__last-name">{{ parent.lastName }}</li>
@@ -17,12 +18,14 @@
     data() {
       return {
         parent: {},
+        accountCreated: false,
       };
     },
     methods: {
       loadBookingData() {
         const bookingData = StoreService.load(`booking-${this.eventId}`);
         this.parent = bookingData.parent;
+        this.accountCreated = bookingData.accountCreated;
       },
     },
     created() {

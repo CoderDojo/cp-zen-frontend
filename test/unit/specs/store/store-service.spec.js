@@ -1,23 +1,28 @@
 import StoreService from '@/store/store-service';
-import { clone } from 'lodash';
 
 describe('Store Service', () => {
+  const sandbox = sinon.sandbox.create();
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   it('should save parent data', () => {
     const data = { key: 'value' };
-    StoreService.save('parent', data);
-    expect(StoreService._store.parent).to.deep.equal(data);
+    sandbox.stub(window.sessionStorage, 'setItem');
+    StoreService.save('parent-save', data);
+    expect(window.sessionStorage.setItem).to.have.been.calledWith('parent-save', JSON.stringify(data));
   });
 
   it('should load parent data', () => {
     const data = { key: 'value' };
-    StoreService._store.parent = clone(data);
-    expect(StoreService.load('parent')).to.deep.equal(data);
+    sandbox.stub(window.sessionStorage, 'getItem').withArgs('parent-load').returns(JSON.stringify(data));
+    expect(StoreService.load('parent-load')).to.deep.equal(data);
   });
 
   it('should delete parent data', () => {
-    const data = { key: 'value' };
-    StoreService._store.parent = clone(data);
-    StoreService.delete('parent');
-    expect(StoreService._store.parent).to.equal(undefined);
+    sandbox.stub(window.sessionStorage, 'removeItem');
+    StoreService.delete('parent-delete');
+    expect(window.sessionStorage.removeItem).to.have.been.calledWith('parent-delete');
   });
 });

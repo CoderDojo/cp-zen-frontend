@@ -30,7 +30,7 @@
     methods: {
       submitBooking() {
         StoreService.save(`booking-${this.eventId}`, { parent: pick(this, ['firstName', 'lastName', 'phoneNumber', 'email']) });
-        this.$router.push(`/events/${this.eventId}/confirmation`);
+        this.$router.push(`/events/${this.eventId}/create-account`);
       },
     },
   };
