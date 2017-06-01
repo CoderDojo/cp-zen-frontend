@@ -1,6 +1,7 @@
 const DojoPage = require('../page-objects/dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
 const EventDetailsPage = require('../page-objects/event-details');
+const EventSessionsPage = require('../page-objects/event-sessions');
 
 function openDojoWithLatLong() {
   DojoPage.openWithLatLong(10, 89);
@@ -64,30 +65,36 @@ describe('Dojo details page', () => {
     EventDetailsPage.name.waitForVisible();
     expect(EventDetailsPage.name.getText()).to.equal('My First Amazing Event');
 
-    expect(EventDetailsPage.eventSessions(0).getText()).to.have.string('Scratch');
-    expect(EventDetailsPage.eventSessions(0).getText()).to.have.string('Beginners welcome');
-    expect(EventDetailsPage.eventTickets(0).getText()).to.have.string('Laptop Required');
-    expect(EventDetailsPage.eventTickets(1).getText()).to.have.string('Parent');
-    expect(EventDetailsPage.eventTickets(2).getText()).to.have.string('Mentor');
-    expect(EventDetailsPage.eventTickets(3).getText()).to.have.string('Bringing a laptop');
+    EventDetailsPage.dateOfBirthInput.setValue('dob');
+    EventDetailsPage.nextButton.click();
 
-    expect(EventDetailsPage.eventSessions(1).getText()).to.have.string('Arduino');
-    expect(EventDetailsPage.eventSessions(1).getText()).to.have.string('Intermediate');
-    expect(EventDetailsPage.eventTickets(4).getText()).to.have.string('Laptop required');
+    expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+    EventSessionsPage.name.waitForVisible();
+    expect(EventSessionsPage.name.getText()).to.equal('My First Amazing Event');
+    expect(EventSessionsPage.eventSessions(0).getText()).to.have.string('Scratch');
+    expect(EventSessionsPage.eventSessions(0).getText()).to.have.string('Beginners welcome');
+    expect(EventSessionsPage.eventTickets(0).getText()).to.have.string('Laptop Required');
+    expect(EventSessionsPage.eventTickets(1).getText()).to.have.string('Parent');
+    expect(EventSessionsPage.eventTickets(2).getText()).to.have.string('Mentor');
+    expect(EventSessionsPage.eventTickets(3).getText()).to.have.string('Bringing a laptop');
 
-    expect(EventDetailsPage.ticketCounterValues.length).to.equal(8);
-    EventDetailsPage.ticketCounterValues.forEach((counterValue) => {
+    expect(EventSessionsPage.eventSessions(1).getText()).to.have.string('Arduino');
+    expect(EventSessionsPage.eventSessions(1).getText()).to.have.string('Intermediate');
+    expect(EventSessionsPage.eventTickets(4).getText()).to.have.string('Laptop required');
+
+    expect(EventSessionsPage.ticketCounterValues.length).to.equal(8);
+    EventSessionsPage.ticketCounterValues.forEach((counterValue) => {
       expect(counterValue.getValue()).to.equal('0');
     });
 
-    EventDetailsPage.ticketCounterIncrement(0).click();
-    expect(EventDetailsPage.ticketCounterValue(0).getValue()).to.equal('1');
+    EventSessionsPage.ticketCounterIncrement(0).click();
+    expect(EventSessionsPage.ticketCounterValue(0).getValue()).to.equal('1');
 
-    EventDetailsPage.ticketCounterIncrement(2).click();
-    EventDetailsPage.ticketCounterIncrement(2).click();
-    expect(EventDetailsPage.ticketCounterValue(2).getValue()).to.equal('2');
+    EventSessionsPage.ticketCounterIncrement(2).click();
+    EventSessionsPage.ticketCounterIncrement(2).click();
+    expect(EventSessionsPage.ticketCounterValue(2).getValue()).to.equal('2');
 
-    EventDetailsPage.ticketCounterDecrement(2).click();
-    expect(EventDetailsPage.ticketCounterValue(2).getValue()).to.equal('1');
+    EventSessionsPage.ticketCounterDecrement(2).click();
+    expect(EventSessionsPage.ticketCounterValue(2).getValue()).to.equal('1');
   });
 });

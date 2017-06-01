@@ -6,8 +6,12 @@ describe('Event details', () => {
   const MockEventService = {
     loadEvent: sandbox.stub(),
   };
+  const MockStoreService = {
+    save: sinon.stub(),
+  };
   const EventDetailsWithMocks = EventDetails({
     './service': MockEventService,
+    '@/store/store-service': MockStoreService,
   });
 
   afterEach(() => {
@@ -32,5 +36,27 @@ describe('Event details', () => {
       expect(vm.eventDetails).to.deep.equal(mockEventData);
       done();
     });
+  });
+
+  it('should save selected event and go to next page', () => {
+    const mockEventData = {
+      key: 'val',
+    };
+    const vm = vueUnitHelper(EventDetailsWithMocks);
+    vm.eventId = 1;
+
+    const data = {
+      $router: {
+        push: sinon.spy(),
+      },
+      eventDetails: mockEventData,
+    };
+
+    vm.next.bind(data)();
+    expect(MockStoreService.save).to.be.calledOnce;
+    expect(MockStoreService.save).to.have.been.calledWith('selected-event', mockEventData);
+
+    expect(data.$router.push).to.be.calledOnce;
+    expect(data.$router.push).to.have.been.calledWith(`/events/${data.eventId}/sessions`);
   });
 });
