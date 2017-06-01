@@ -44,7 +44,7 @@ describe('Book event page', () => {
     BookingParentData.submitBookingButton.waitForVisible();
     BookingParentData.submitBookingButton.click();
 
-    expect(BookingParentData.phoneNumberValidationError.getText()).to.equal('The phone number may only contain numeric characters.');
+    expect(BookingParentData.phoneNumberValidationError.getText()).to.equal('The phone number field may only contain numeric characters.');
   });
 
   it('should report validation errors for invalid email', () => {
@@ -58,7 +58,7 @@ describe('Book event page', () => {
     BookingParentData.submitBookingButton.waitForVisible();
     BookingParentData.submitBookingButton.click();
 
-    expect(BookingParentData.emailValidationError.getText()).to.equal('The email must be a valid email.');
+    expect(BookingParentData.emailValidationError.getText()).to.equal('The email field must be a valid email.');
   });
 
   it('should report validation errors missing required fields', () => {
@@ -67,9 +67,9 @@ describe('Book event page', () => {
     BookingParentData.submitBookingButton.waitForVisible();
     BookingParentData.submitBookingButton.click();
 
-    expect(BookingParentData.phoneNumberValidationError.getText()).to.equal('The phone number is required.');
-    expect(BookingParentData.firstNameValidationError.getText()).to.equal('The first name is required.');
-    expect(BookingParentData.lastNameValidationError.getText()).to.equal('The last name is required.');
-    expect(BookingParentData.emailValidationError.getText()).to.equal('The email is required.');
+    expect(BookingParentData.phoneNumberValidationError.getText()).to.equal('The phone number field is required.');
+    expect(BookingParentData.firstNameValidationError.getText()).to.equal('The first name field is required.');
+    expect(BookingParentData.lastNameValidationError.getText()).to.equal('The last name field is required.');
+    expect(BookingParentData.emailValidationError.getText()).to.equal('The email field is required.');
   });
 });
