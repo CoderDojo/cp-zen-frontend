@@ -2,19 +2,19 @@
   <div class="cd-booking-parent-form">
     <form @submit.prevent="doValidate">
       <label for="firstName">First name</label>
-      <input type="text" name="firstName" id="firstName" v-validate="firstName" data-vv-rules="required" v-model="firstName"><br/>
+      <input type="text" name="firstName" id="firstName" data-vv-as="first name" v-validate="firstName" data-vv-rules="required" v-model="firstName"><br/>
       <p id="firstNameValidationError" class="text-danger" v-show="formValidated && errors.has('firstName')">{{ errors.first('firstName') }}</p>
 
       <label for="lastName">Last name</label>
-      <input type="text" name="lastName" id="lastName" v-validate="lastName" data-vv-rules="required"  v-model="lastName"><br/>
+      <input type="text" name="lastName" id="lastName" data-vv-as="last name" v-validate="lastName" data-vv-rules="required"  v-model="lastName"><br/>
       <p id="lastNameValidationError" class="text-danger" v-show="formValidated && errors.has('lastName')">{{ errors.first('lastName') }}</p>
 
       <label for="phoneNumber">Phone number</label>
-      <input type="text" name="phoneNumber" id="phoneNumber" v-validate="phoneNumber" data-vv-rules="required|numeric"  v-model="phoneNumber"><br/>
+      <input type="text" name="phoneNumber" id="phoneNumber" data-vv-as="phone number" v-validate="phoneNumber" data-vv-rules="required|numeric"  v-model="phoneNumber"><br/>
       <p id="phoneNumberValidationError" class="text-danger" v-show="formValidated && errors.has('phoneNumber')">{{ errors.first('phoneNumber') }}</p>
 
       <label for="email">Email address</label>
-      <input type="text" name="email" v-validate="email" id="email" data-vv-rules="required|email" v-model="email"><br/>
+      <input type="text" name="email" id="email" data-vv-as="email" v-validate="email" data-vv-rules="required|email" v-model="email"><br/>
       <p id="emailValidationError" class="text-danger" v-show="formValidated && errors.has('email')">{{ errors.first('email') }}</p>
 
       <input type="submit" value="Submit Booking"/>
