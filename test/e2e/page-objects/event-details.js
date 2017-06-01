@@ -1,4 +1,3 @@
-var path = require('path');
 const BasePage = require('./base-page');
 
 const EventDetailsPage = Object.create(BasePage, {
@@ -7,34 +6,14 @@ const EventDetailsPage = Object.create(BasePage, {
       return $('.cd-event-details__name');
     },
   },
-  eventSessions: {
-    value(index) {
-      return $$('.cd-event-sessions__item')[index];
-    },
-  },
-  eventTickets: {
-    value(index) {
-      return $$('.cd-event-tickets__item')[index];
-    },
-  },
-  ticketCounterValue: {
-    value(index) {
-      return $$('.cd-number-spinner__value')[index];
-    },
-  },
-  ticketCounterValues: {
+  dateOfBirthInput: {
     get() {
-      return $$('.cd-number-spinner__value');
+      return $('.cd-event-details__dob');
     },
   },
-  ticketCounterIncrement: {
-    value(index) {
-      return $$('.cd-number-spinner__increment')[index];
-    },
-  },
-  ticketCounterDecrement: {
-    value(index) {
-      return $$('.cd-number-spinner__decrement')[index];
+  nextButton: {
+    get() {
+      return $('.cd-event-details__next');
     },
   },
   open: {
