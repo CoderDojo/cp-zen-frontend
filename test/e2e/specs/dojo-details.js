@@ -65,7 +65,9 @@ describe('Dojo details page', () => {
     EventDetailsPage.name.waitForVisible();
     expect(EventDetailsPage.name.getText()).to.equal('My First Amazing Event');
 
-    EventDetailsPage.dateOfBirthInput.setValue('dob');
+    EventDetailsPage.dateOfBirthDayInput.setValue('27');
+    EventDetailsPage.dateOfBirthMonthInput.setValue('03');
+    EventDetailsPage.dateOfBirthYearInput.setValue('1980');
     EventDetailsPage.nextButton.click();
 
     expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
@@ -96,5 +98,18 @@ describe('Dojo details page', () => {
 
     EventSessionsPage.ticketCounterDecrement(2).click();
     expect(EventSessionsPage.ticketCounterValue(2).getValue()).to.equal('1');
+  });
+
+  it('should not allow an underage person to proceed in the flow', () => {
+    openDojoWithLatLong();
+    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.eventNames(0).click();
+
+    EventDetailsPage.dateOfBirthDayInput.setValue('25');
+    EventDetailsPage.dateOfBirthMonthInput.setValue('05');
+    EventDetailsPage.dateOfBirthYearInput.setValue('2017');
+    EventDetailsPage.nextButton.click();
+    EventDetailsPage.dateOfBirthError.waitForVisible();
+    expect(EventDetailsPage.dateOfBirthError.getText()).to.equal('You will need your parent to carry out the registration.');
   });
 });

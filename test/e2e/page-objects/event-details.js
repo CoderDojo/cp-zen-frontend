@@ -6,14 +6,29 @@ const EventDetailsPage = Object.create(BasePage, {
       return $('.cd-event-details__name');
     },
   },
-  dateOfBirthInput: {
+  dateOfBirthDayInput: {
     get() {
-      return $('.cd-event-details__dob');
+      return $('.cd-event-details__dob-day');
+    },
+  },
+  dateOfBirthMonthInput: {
+    get() {
+      return $('.cd-event-details__dob-month');
+    },
+  },
+  dateOfBirthYearInput: {
+    get() {
+      return $('.cd-event-details__dob-year');
     },
   },
   nextButton: {
     get() {
       return $('.cd-event-details__next');
+    },
+  },
+  dateOfBirthError: {
+    get() {
+      return $('.cd-event-details__dob-error');
     },
   },
   open: {
