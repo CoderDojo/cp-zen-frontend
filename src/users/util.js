@@ -13,6 +13,6 @@ export default {
     if (birthMonth - 1 === todayMonth && todayDay < birthDay) {
       age -= 1;
     }
-    return age <= 13;
+    return age < 13;
   },
 };
