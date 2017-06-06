@@ -98,6 +98,10 @@ describe('Dojo details page', () => {
 
     EventSessionsPage.ticketCounterDecrement(2).click();
     expect(EventSessionsPage.ticketCounterValue(2).getValue()).to.equal('1');
+
+    expect(EventSessionsPage.nextButton.isVisible()).to.equal(true);
+    EventSessionsPage.nextButton.click();
+    expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/book');
   });
 
   it('should not allow an underage person to proceed in the flow', () => {
@@ -112,4 +116,5 @@ describe('Dojo details page', () => {
     EventDetailsPage.dateOfBirthError.waitForVisible();
     expect(EventDetailsPage.dateOfBirthError.getText()).to.equal('You will need your parent to carry out the registration.');
   });
+
 });

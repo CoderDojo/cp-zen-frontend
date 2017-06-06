@@ -6,6 +6,11 @@ const EventDetailsPage = Object.create(BasePage, {
       return $('.cd-event-session__event-name');
     },
   },
+  nextButton: {
+    get() {
+      return $('.cd-event-sessions__next');
+    },
+  },
   eventSessions: {
     value(index) {
       return $$('.cd-event-sessions__item')[index];
@@ -36,7 +41,6 @@ const EventDetailsPage = Object.create(BasePage, {
       return $$('.cd-number-spinner__decrement')[index];
     },
   },
-
 });
 
 module.exports = EventDetailsPage;
