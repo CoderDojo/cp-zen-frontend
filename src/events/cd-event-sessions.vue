@@ -6,6 +6,7 @@
       <h3 class="cd-event-sessions__item">{{ session.name }} - {{ session.description }}</h3>
       <event-tickets :tickets="session.tickets"></event-tickets>
     </div>
+    <router-link :to="{name: 'EventBookingForm', params: {eventId: event.id}}" class="cd-event-sessions__next" tag="button">{{ event.name }}</router-link>
   </div>
 </template>
 <script>
