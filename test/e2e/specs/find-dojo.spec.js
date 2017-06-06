@@ -6,4 +6,16 @@ describe('Find Dojo page', () => {
     browser.pause(2000);
     expect(DojoPage.detectLocationButton.isVisible()).to.equal(true);
   });
+
+  it('should allow search by address string', () => {
+    DojoPage.open();
+    DojoPage.addressSearchInput.waitForVisible();
+    DojoPage.addressSearchInput.setValue('CHQ');
+    DojoPage.addressSearchButton.click();
+    const dojosList = DojoPage.dojoListItems;
+    expect(dojosList.length).to.equal(3);
+    expect(dojosList[0].getText()).to.have.string('CD ROM');
+    expect(dojosList[1].getText()).to.have.string('Smithfield Awesome Dojo');
+    expect(dojosList[2].getText()).to.have.string('Dublin Ninja Kids');
+  });
 });

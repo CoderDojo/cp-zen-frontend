@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import GeolocationService from '@/geolocation/service';
 
 const radius = 50000;
 
@@ -19,6 +20,19 @@ const DojosService = {
       radius,
     },
   }),
+
+  getDojosByAddress(address) {
+    return GeolocationService.getIpCountryDetails()
+      .then(response => GeolocationService.geocode({
+        address,
+        region: response.body.country && response.body.country.iso_code,
+      }))
+      .then((results) => {
+        const lat = results[0].geometry.location.lat();
+        const long = results[0].geometry.location.lng();
+        return this.getDojosByLatLong(lat, long);
+      });
+  },
 };
 
 export default DojosService;

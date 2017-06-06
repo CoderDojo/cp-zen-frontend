@@ -1,15 +1,27 @@
-/* eslint-disable */
-import DojosService from '@/dojos/service';
+import DojosService from 'inject-loader!@/dojos/service';
 import Vue from 'vue';
 
 describe('Dojos Service', () => {
-  const sandbox = sinon.sandbox.create();
+  let sandbox;
+  let MockGeolocationService;
+  let DojosServiceWithMocks;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    MockGeolocationService = {
+      getIpCountryDetails: sandbox.stub(),
+      geocode: sandbox.stub(),
+    };
+    DojosServiceWithMocks = DojosService({
+      '@/geolocation/service': MockGeolocationService,
+    }).default;
+  });
 
   afterEach(() => {
     sandbox.restore();
   });
 
-  let expectedResult = {name: 'Cool Dojo'};
+  const expectedResult = { name: 'Cool Dojo' };
 
   const expectedDojos = [{
     entity$: '-/cd/dojos',
@@ -46,17 +58,64 @@ describe('Dojos Service', () => {
     id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
   }];
 
+  const expectedIpCountryDetails = {
+    continent: {
+      code: 'EU',
+      geoname_id: 6255148,
+      names: {
+        de: 'Europa',
+        en: 'Europe',
+        es: 'Europa',
+        fr: 'Europe',
+        ja: 'ヨーロッパ',
+        'pt-BR': 'Europa',
+        ru: 'Европа',
+        'zh-CN': '欧洲',
+      },
+    },
+    country: {
+      geoname_id: 2963597,
+      iso_code: 'IE',
+      names: {
+        de: 'Irland',
+        en: 'Ireland',
+        es: 'Irlanda',
+        fr: 'Irlande',
+        ja: 'アイルランド',
+        'pt-BR': 'Irlanda',
+        ru: 'Ирландия',
+        'zh-CN': '爱尔兰',
+      },
+      tld: '.ie',
+    },
+    registered_country: {
+      geoname_id: 2963597,
+      iso_code: 'IE',
+      names: {
+        de: 'Irland',
+        en: 'Ireland',
+        es: 'Irlanda',
+        fr: 'Irlande',
+        ja: 'アイルランド',
+        'pt-BR': 'Irlanda',
+        ru: 'Ирландия',
+        'zh-CN': '爱尔兰',
+      },
+      tld: '.ie',
+    },
+  };
+
   it('should call the api', (done) => {
     const httpStub = sandbox.stub(Vue.http, 'post');
     httpStub.withArgs(
       `${Vue.config.apiBase}/dojos/find`,
       {
-        "query": {
-          "urlSlug": "aUrlSlug"
-        }
+        query: {
+          urlSlug: 'aUrlSlug',
+        },
       }).returns(Promise.resolve(expectedResult));
 
-    DojosService.getByUrlSlug('aUrlSlug').then((dojo) => {
+    DojosServiceWithMocks.getByUrlSlug('aUrlSlug').then((dojo) => {
       expect(dojo).to.deep.equal(expectedResult);
       done();
     });
@@ -66,12 +125,14 @@ describe('Dojos Service', () => {
     it('should get dojos', (done) => {
       const postMock = sandbox.stub(Vue.http, 'post');
       postMock.withArgs(`${Vue.config.apiBase}/dojos`).returns(Promise.resolve({ body: expectedDojos }));
-      DojosService.getDojos().then((res) => {
+      DojosServiceWithMocks.getDojos().then((res) => {
         expect(res.body).to.deep.equal(expectedDojos);
         done();
       });
     });
+  });
 
+  describe('getDojosByLatLong', () => {
     it('should get dojos by latitude and longitude', (done) => {
       const expectedQuery = {
         query: {
@@ -82,9 +143,51 @@ describe('Dojos Service', () => {
       };
       const postMock = sandbox.stub(Vue.http, 'post');
       postMock.withArgs(`${Vue.config.apiBase}/dojos/search-bounding-box`, expectedQuery).returns(Promise.resolve({ body: expectedDojos }));
-      DojosService.getDojosByLatLong(10, 89).then((res) => {
+      DojosServiceWithMocks.getDojosByLatLong(10, 89).then((res) => {
         expect(res.body).to.deep.equal(expectedDojos);
         done();
+      });
+    });
+  });
+
+  describe('getDojosByAddress', () => {
+    it('should get dojos by address', (done) => {
+      // ARRANGE
+      MockGeolocationService.getIpCountryDetails
+        .returns(Promise.resolve({ body: expectedIpCountryDetails }));
+
+      const mockGeocoderResults = [{
+        geometry: {
+          location: {
+            lat: () => 10,
+            lng: () => 89,
+          },
+        },
+      }];
+      MockGeolocationService.geocode.withArgs({
+        address: 'CHQ',
+        region: 'IE',
+      }).returns(Promise.resolve(mockGeocoderResults));
+
+      sandbox.stub(DojosServiceWithMocks, 'getDojosByLatLong').returns(Promise.resolve({ body: expectedDojos }));
+
+      // ACT
+      const result = DojosServiceWithMocks.getDojosByAddress('CHQ');
+
+      // ASSERT
+      requestAnimationFrame(() => {
+        expect(MockGeolocationService.getIpCountryDetails).to.have.been.calledOnce;
+        expect(MockGeolocationService.geocode).to.have.been.calledOnce;
+        expect(MockGeolocationService.geocode).to.have.been.calledWith({
+          address: 'CHQ',
+          region: 'IE',
+        });
+        expect(DojosServiceWithMocks.getDojosByLatLong).to.have.been.calledOnce;
+        expect(DojosServiceWithMocks.getDojosByLatLong).to.have.been.calledWith(10, 89);
+        result.then((response) => {
+          expect(response).to.deep.equal({ body: expectedDojos });
+          done();
+        });
       });
     });
   });

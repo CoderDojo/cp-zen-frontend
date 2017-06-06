@@ -11,6 +11,26 @@ const DojoPage = Object.create(BasePage, {
       return $('.cd-find-dojo__coordinates');
     },
   },
+  latitudeValue: {
+    get() {
+      return $('.cd-find-dojo__latitude');
+    },
+  },
+  longitudeValue: {
+    get() {
+      return $('.cd-find-dojo__longitude');
+    },
+  },
+  addressSearchInput: {
+    get() {
+      return $('input[name=addressSearch]');
+    },
+  },
+  addressSearchButton: {
+    get() {
+      return $('input[value="Search Dojos"]');
+    },
+  },
   open: {
     value() {
       return BasePage.open.call(this, '/');
