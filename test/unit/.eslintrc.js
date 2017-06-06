@@ -3,7 +3,7 @@ module.exports = {
     mocha: true
   },
   globals: {
-    define: true,
+    describe: true,
     it: true,
     expect: true,
     sinon: true,

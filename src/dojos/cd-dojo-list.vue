@@ -11,29 +11,14 @@
 </template>
 <script>
   import path from 'path';
-  import DojosService from './service';
 
   export default {
     name: 'dojoList',
-    props: ['coordinates'],
-    data() {
-      return {
-        dojos: [],
-      };
-    },
+    props: ['dojos'],
     methods: {
-      getDojos() {
-        DojosService.getDojosByLatLong(this.coordinates.latitude, this.coordinates.longitude)
-          .then((response) => {
-            this.dojos = response.body;
-          });
-      },
       buildDetailsPageUrl(urlSlug) {
         return path.join('/dojos/', urlSlug);
       },
-    },
-    created() {
-      this.getDojos();
     },
   };
 </script>
