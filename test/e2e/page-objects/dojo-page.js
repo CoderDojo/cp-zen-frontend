@@ -31,6 +31,12 @@ const DojoPage = Object.create(BasePage, {
       return $('input[value="Search Dojos"]');
     },
   },
+  dojoListItems: {
+    get() {
+      $('.cd-dojo-list__list-item').waitForVisible();
+      return $$('.cd-dojo-list__list-item');
+    },
+  },
   open: {
     value() {
       return BasePage.open.call(this, '/');
@@ -41,10 +47,10 @@ const DojoPage = Object.create(BasePage, {
       return BasePage.open.call(this, `/${lat}/${long}`);
     },
   },
-  dojoListItems: {
-    get() {
-      $('.cd-dojo-list__list-item').waitForVisible();
-      return $$('.cd-dojo-list__list-item');
+  openDojoWithLatLong: {
+    value(lat, long) {
+      this.openWithLatLong(lat, long);
+      this.dojoListItems[2].click();
     },
   },
 });

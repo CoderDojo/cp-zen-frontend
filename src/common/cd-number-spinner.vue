@@ -19,11 +19,13 @@
       increment() {
         if (this.value + 1 <= this.max) {
           this.value += 1;
+          this.$emit('update', this.value);
         }
       },
       decrement() {
         if (this.value - 1 >= this.min) {
           this.value -= 1;
+          this.$emit('update', this.value);
         }
       },
     },

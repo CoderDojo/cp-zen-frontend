@@ -12,11 +12,6 @@ const BookingParentData = Object.create(BasePage, {
       return $('label[for=firstName]');
     },
   },
-  lastNameLabel: {
-    get() {
-      return $('label[for=lastName]');
-    },
-  },
   firstName: {
     get() {
       return $('input[name=firstName]');
@@ -65,6 +60,23 @@ const BookingParentData = Object.create(BasePage, {
   emailValidationError: {
     get() {
       return $('p[id=emailValidationError]');
+    },
+  },
+  tickets: {
+    value(index) {
+      $('.cd-booking-tickets').waitForVisible();
+      return $$('.cd-booking-tickets')[index];
+    },
+  },
+  allTickets: {
+    value() {
+      $('.cd-booking-tickets').waitForVisible();
+      return $$('.cd-booking-tickets');
+    },
+  },
+  lastNameLabel: {
+    get() {
+      return $('label[for=lastName]');
     },
   },
   submitBookingButton: {

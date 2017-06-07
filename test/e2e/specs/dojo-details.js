@@ -3,14 +3,9 @@ const DojoDetailsPage = require('../page-objects/dojo-details');
 const EventDetailsPage = require('../page-objects/event-details');
 const EventSessionsPage = require('../page-objects/event-sessions');
 
-function openDojoWithLatLong() {
-  DojoPage.openWithLatLong(10, 89);
-  DojoPage.dojoListItems[2].click();
-}
-
 describe('Dojo details page', () => {
   it('should show dojo details', () => {
-    openDojoWithLatLong();
+    DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
 
     const name = DojoDetailsPage.name.getText();
@@ -42,7 +37,7 @@ describe('Dojo details page', () => {
   });
 
   it('should show dojo\'s events', () => {
-    openDojoWithLatLong();
+    DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
 
     const firstEventName = DojoDetailsPage.eventNames(0).getText();
@@ -59,7 +54,7 @@ describe('Dojo details page', () => {
   });
 
   it('should show event details after clicking on an event', () => {
-    openDojoWithLatLong();
+    DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.eventNames(0).click();
     EventDetailsPage.name.waitForVisible();
@@ -105,7 +100,7 @@ describe('Dojo details page', () => {
   });
 
   it('should not allow an underage person to proceed in the flow', () => {
-    openDojoWithLatLong();
+    DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.eventNames(0).click();
 

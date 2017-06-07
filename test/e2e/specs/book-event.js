@@ -1,21 +1,46 @@
-const BookingParentData = require('../page-objects/booking-parent-data');
+const Booking = require('../page-objects/booking');
 const BookingCreateAccount = require('../page-objects/booking-create-account');
 const BookingConfirmation = require('../page-objects/booking-confirmation');
+const DojoPage = require('../page-objects/dojo-page');
+const DojoDetailsPage = require('../page-objects/dojo-details');
+const EventDetailsPage = require('../page-objects/event-details');
+const EventSessionsPage = require('../page-objects/event-sessions');
+
+function startBooking() {
+  DojoPage.openDojoWithLatLong(10, 89);
+  DojoDetailsPage.name.waitForVisible();
+  DojoDetailsPage.eventNames(0).click();
+
+  EventDetailsPage.dateOfBirthDayInput.setValue('27');
+  EventDetailsPage.dateOfBirthMonthInput.setValue('03');
+  EventDetailsPage.dateOfBirthYearInput.setValue('1980');
+  EventDetailsPage.nextButton.click();
+
+  EventSessionsPage.ticketCounterIncrement(1).click();
+  EventSessionsPage.ticketCounterIncrement(4).click();
+
+  EventSessionsPage.nextButton.click();
+}
 
 describe('Book event page', () => {
   it('should collect parent data', () => {
-    BookingParentData.open(1);
-    expect(BookingParentData.firstNameLabel.getText()).to.equal('First name');
-    expect(BookingParentData.lastNameLabel.getText()).to.equal('Last name');
-    expect(BookingParentData.phoneNumberLabel.getText()).to.equal('Phone number');
-    expect(BookingParentData.emailLabel.getText()).to.equal('Email address');
+    startBooking();
 
-    BookingParentData.firstName.setValue('John');
-    BookingParentData.lastName.setValue('Doe');
-    BookingParentData.phoneNumber.setValue('1555123456');
-    BookingParentData.email.setValue('john.doe@example.com');
+    expect(Booking.allTickets().length).to.equal(2);
+    expect(Booking.tickets(0).getText()).to.equal('1 X Parent (Scratch)');
+    expect(Booking.tickets(1).getText()).to.equal('1 X Laptop required (Arduino)');
 
-    BookingParentData.submitBookingButton.click();
+    expect(Booking.firstNameLabel.getText()).to.equal('First name');
+    expect(Booking.lastNameLabel.getText()).to.equal('Last name');
+    expect(Booking.phoneNumberLabel.getText()).to.equal('Phone number');
+    expect(Booking.emailLabel.getText()).to.equal('Email address');
+
+    Booking.firstName.setValue('John');
+    Booking.lastName.setValue('Doe');
+    Booking.phoneNumber.setValue('1555123456');
+    Booking.email.setValue('john.doe@example.com');
+
+    Booking.submitBookingButton.click();
 
     BookingCreateAccount.password.waitForVisible();
     BookingCreateAccount.password.setValue('Passw0rd');
@@ -34,42 +59,42 @@ describe('Book event page', () => {
   });
 
   it('should report validation errors for invalid phone number', () => {
-    BookingParentData.open(1);
+    startBooking();
 
-    BookingParentData.firstName.setValue('John');
-    BookingParentData.lastName.setValue('Doe');
-    BookingParentData.phoneNumber.setValue('+1-555-12-3456');
-    BookingParentData.email.setValue('john.doe@example.com');
+    Booking.firstName.setValue('John');
+    Booking.lastName.setValue('Doe');
+    Booking.phoneNumber.setValue('+1-555-12-3456');
+    Booking.email.setValue('john.doe@example.com');
 
-    BookingParentData.submitBookingButton.waitForVisible();
-    BookingParentData.submitBookingButton.click();
+    Booking.submitBookingButton.waitForVisible();
+    Booking.submitBookingButton.click();
 
-    expect(BookingParentData.phoneNumberValidationError.getText()).to.equal('The phone number field may only contain numeric characters.');
+    expect(Booking.phoneNumberValidationError.getText()).to.equal('The phone number field may only contain numeric characters.');
   });
 
   it('should report validation errors for invalid email', () => {
-    BookingParentData.open(1);
+    startBooking();
 
-    BookingParentData.firstName.setValue('John');
-    BookingParentData.lastName.setValue('Doe');
-    BookingParentData.phoneNumber.setValue('1555123456');
-    BookingParentData.email.setValue('john.doe');
+    Booking.firstName.setValue('John');
+    Booking.lastName.setValue('Doe');
+    Booking.phoneNumber.setValue('1555123456');
+    Booking.email.setValue('john.doe');
 
-    BookingParentData.submitBookingButton.waitForVisible();
-    BookingParentData.submitBookingButton.click();
+    Booking.submitBookingButton.waitForVisible();
+    Booking.submitBookingButton.click();
 
-    expect(BookingParentData.emailValidationError.getText()).to.equal('The email field must be a valid email.');
+    expect(Booking.emailValidationError.getText()).to.equal('The email field must be a valid email.');
   });
 
   it('should report validation errors missing required fields', () => {
-    BookingParentData.open(1);
+    startBooking();
 
-    BookingParentData.submitBookingButton.waitForVisible();
-    BookingParentData.submitBookingButton.click();
+    Booking.submitBookingButton.waitForVisible();
+    Booking.submitBookingButton.click();
 
-    expect(BookingParentData.phoneNumberValidationError.getText()).to.equal('The phone number field is required.');
-    expect(BookingParentData.firstNameValidationError.getText()).to.equal('The first name field is required.');
-    expect(BookingParentData.lastNameValidationError.getText()).to.equal('The last name field is required.');
-    expect(BookingParentData.emailValidationError.getText()).to.equal('The email field is required.');
+    expect(Booking.phoneNumberValidationError.getText()).to.equal('The phone number field is required.');
+    expect(Booking.firstNameValidationError.getText()).to.equal('The first name field is required.');
+    expect(Booking.lastNameValidationError.getText()).to.equal('The last name field is required.');
+    expect(Booking.emailValidationError.getText()).to.equal('The email field is required.');
   });
 });

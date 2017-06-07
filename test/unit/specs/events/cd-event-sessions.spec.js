@@ -1,13 +1,14 @@
 import vueUnitHelper from 'vue-unit-helper';
 import SessionList from '!!vue-loader?inject!@/events/cd-event-sessions';
 
-describe('Event list component', () => {
+describe('Event sessions component', () => {
   const sandbox = sinon.sandbox.create();
   const mockService = {
     loadSessions: sandbox.stub(),
   };
   const MockStoreService = {
     load: sinon.stub(),
+    save: sinon.stub(),
   };
   const SessionListWithMocks = SessionList({
     './service': mockService,
@@ -52,6 +53,9 @@ describe('Event list component', () => {
 
     const vm = vueUnitHelper(SessionListWithMocks);
     vm.eventId = '123';
+    vm.event = {
+      name: 'Scratch',
+    };
     mockService.loadSessions.withArgs(vm.eventId)
       .returns(Promise.resolve({ body: mockSessionDataResponse }));
 
@@ -61,6 +65,10 @@ describe('Event list component', () => {
     // ASSERT
     requestAnimationFrame(() => {
       expect(vm.sessions).to.deep.equal(mockSessionDataResponse);
+      expect(MockStoreService.save).to.have.been.calledWith('selected-event', {
+        name: 'Scratch',
+        sessions: mockSessionDataResponse,
+      });
       done();
     });
   });

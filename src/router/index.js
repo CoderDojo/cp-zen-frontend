@@ -4,7 +4,7 @@ import DojoDetails from '@/dojos/cd-dojo-details';
 import FindDojo from '@/dojos/cd-find-dojo';
 import EventDetails from '@/events/cd-event-details';
 import EventSessions from '@/events/cd-event-sessions';
-import BookingParentForm from '@/events/cd-booking-parent-form';
+import Booking from '@/events/cd-booking';
 import BookingCreateAccount from '@/events/cd-booking-create-account';
 import BookingConfirmation from '@/events/cd-booking-confirmation';
 
@@ -40,7 +40,7 @@ export default new Router({
     {
       path: '/events/:eventId/book',
       name: 'EventBookingForm',
-      component: BookingParentForm,
+      component: Booking,
       props: true,
     },
     {
