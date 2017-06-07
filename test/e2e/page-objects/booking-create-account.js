@@ -8,7 +8,7 @@ const BookingCreateAccount = Object.create(BasePage, {
   },
   passwordError: {
     get() {
-      return $('.password-error');
+      return $('.cd-booking-create-account__password-error');
     },
   },
   confirmPassword: {
@@ -18,7 +18,7 @@ const BookingCreateAccount = Object.create(BasePage, {
   },
   confirmPasswordError: {
     get() {
-      return $('.password-confirmation-error');
+      return $('.cd-booking-create-account__password-confirmation-error');
     },
   },
   createAccount: {
@@ -33,7 +33,7 @@ const BookingCreateAccount = Object.create(BasePage, {
   },
   termsAndConditionsError: {
     get() {
-      return $('.terms-conditions-error');
+      return $('.cd-booking-create-account__terms-conditions-error');
     },
   },
   dataConsent: {
@@ -43,12 +43,17 @@ const BookingCreateAccount = Object.create(BasePage, {
   },
   dataConsentError: {
     get() {
-      return $('.data-consent-error');
+      return $('.cd-booking-create-account__data-consent-error');
     },
   },
   dataUsageLink: {
     get() {
-      return $('.data-usage-link');
+      return $('.cd-booking-create-account__data-usage-link');
+    },
+  },
+  termsAndConditionsLink: {
+    get() {
+      return $('.cd-booking-create-account__terms-conditions-link');
     },
   },
   checkRecaptcha: {
