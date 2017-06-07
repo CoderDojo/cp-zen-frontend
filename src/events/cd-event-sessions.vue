@@ -4,9 +4,11 @@
     <h1>Sessions</h1>
     <div v-for="session in sessions">
       <h3 class="cd-event-sessions__item">{{ session.name }} - {{ session.description }}</h3>
-      <event-tickets :tickets="session.tickets"></event-tickets>
+      <event-tickets :tickets="session.tickets" :session-id="session.id"></event-tickets>
     </div>
-    <router-link :to="{name: 'EventBookingForm', params: {eventId: event.id}}" class="cd-event-sessions__next" tag="button">Proceed</router-link>
+    <router-link :to="{name: 'EventBookingForm', params: {eventId: event.id}}" class="cd-event-sessions__next"
+                 tag="button">Proceed
+    </router-link>
   </div>
 </template>
 <script>
@@ -30,6 +32,8 @@
       loadSessions() {
         service.loadSessions(this.eventId).then((response) => {
           this.sessions = response.body;
+          this.event.sessions = this.sessions;
+          StoreService.save('selected-event', this.event);
         });
       },
       loadEvent() {
