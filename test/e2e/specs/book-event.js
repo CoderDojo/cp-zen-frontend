@@ -44,6 +44,7 @@ describe('Book event page', () => {
 
     BookingCreateAccount.password.waitForVisible();
     expect(BookingCreateAccount.dataUsageLink.isVisible()).to.be.true;
+    expect(BookingCreateAccount.termsAndConditionsLink.isVisible()).to.be.true;
     BookingCreateAccount.password.setValue('Passw0rd');
     BookingCreateAccount.confirmPassword.setValue('Passw0rd');
     BookingCreateAccount.termsAndConditions.click();
