@@ -43,9 +43,11 @@ describe('Book event page', () => {
     Booking.submitBookingButton.click();
 
     BookingCreateAccount.password.waitForVisible();
+    expect(BookingCreateAccount.dataUsageLink.isVisible()).to.be.true;
     BookingCreateAccount.password.setValue('Passw0rd');
     BookingCreateAccount.confirmPassword.setValue('Passw0rd');
     BookingCreateAccount.termsAndConditions.click();
+    BookingCreateAccount.dataConsent.click();
     BookingCreateAccount.checkRecaptcha();
     BookingCreateAccount.createAccount.click();
 
@@ -56,6 +58,29 @@ describe('Book event page', () => {
     expect(BookingConfirmation.lastName.getText()).to.equal('Doe');
     expect(BookingConfirmation.phoneNumber.getText()).to.equal('1555123456');
     expect(BookingConfirmation.email.getText()).to.equal('john.doe@example.com');
+  });
+
+  it('should report validation errors for not filling in required fields', () => {
+    startBooking();
+
+    Booking.firstName.setValue('John');
+    Booking.lastName.setValue('Doe');
+    Booking.phoneNumber.setValue('1555123456');
+    Booking.email.setValue('john.doe@example.com');
+
+    Booking.submitBookingButton.click();
+
+    BookingCreateAccount.checkRecaptcha();
+    BookingCreateAccount.createAccount.click();
+    expect(BookingCreateAccount.passwordError.getText()).to.equal('The password field is required.');
+    expect(BookingCreateAccount.confirmPasswordError.getText()).to.equal('The password confirmation field is required.');
+    expect(BookingCreateAccount.termsAndConditionsError.getText()).to.equal('You must accept the terms and conditions before proceeding.');
+    expect(BookingCreateAccount.dataConsentError.getText()).to.equal('You must consent to the use of your data before proceeding.');
+
+    BookingCreateAccount.password.setValue('Passw0rd');
+    BookingCreateAccount.confirmPassword.setValue('No-Passw0rd');
+
+    expect(BookingCreateAccount.passwordError.getText()).to.equal('The password confirmation does not match.');
   });
 
   it('should report validation errors for invalid phone number', () => {
