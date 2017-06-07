@@ -3,7 +3,7 @@ const BasePage = require('./base-page');
 const DojoPage = Object.create(BasePage, {
   detectLocationButton: {
     get() {
-      return $('.cd-find-dojo__detect-location');
+      return $('.cd-find-dojo__panel-form-detect-location');
     },
   },
   coordinates: {
