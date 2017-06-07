@@ -107,10 +107,9 @@ describe('The Find dojo vue ', () => {
 
   it('should get the user current location', (done) => {
     navigator.geolocation = navigator.geolocation || {
-      getCurrentPosition() {
-      },
+      getCurrentPosition() {},
     };
-    sinon.stub(navigator.geolocation, 'getCurrentPosition').callsFake((cb) => {
+    sandbox.stub(navigator.geolocation, 'getCurrentPosition').callsFake((cb) => {
       cb({
         coords: {
           latitude: 10,
@@ -121,8 +120,26 @@ describe('The Find dojo vue ', () => {
     const vm = new Vue(cdFindDojo());
     vm.getCurrentLocation();
     requestAnimationFrame(() => {
+      expect(vm.detectingLocation).to.equal(true);
       expect(vm.coordinates.latitude).to.equal(10);
       expect(vm.coordinates.longitude).to.equal(89);
+      done();
+    });
+  });
+
+  it('should stop he loading animation when user location not granted', (done) => {
+    navigator.geolocation = navigator.geolocation || {
+      getCurrentPosition() {},
+    };
+    sandbox.stub(navigator.geolocation, 'getCurrentPosition').callsFake((success, error) => {
+      error();
+    });
+    const vm = new Vue(cdFindDojo());
+    vm.getCurrentLocation();
+    requestAnimationFrame(() => {
+      expect(vm.detectingLocation).to.equal(false);
+      expect(vm.coordinates.latitude).to.equal(null);
+      expect(vm.coordinates.longitude).to.equal(null);
       done();
     });
   });
@@ -135,6 +152,7 @@ describe('The Find dojo vue ', () => {
 
     vm.$lifecycleMethods.created();
 
+    expect(vm.detectingLocation).to.equal(false);
     expect(vm.coordinates.latitude).to.equal(11);
     expect(vm.coordinates.longitude).to.equal(88);
     expect(vm.getDojosByLatLong).to.have.been.calledOnce;
@@ -178,6 +196,7 @@ describe('The Find dojo vue ', () => {
 
     // ASSERT
     requestAnimationFrame(() => {
+      expect(vm.detectingLocation).to.equal(false);
       expect(vm.dojos).to.deep.equal(expectedDojosForLatLong);
       done();
     });
