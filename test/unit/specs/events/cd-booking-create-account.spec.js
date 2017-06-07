@@ -98,63 +98,56 @@ describe('Booking Create Account Form', () => {
     });
   });
 
-  describe('onSubmit()', () => {
-    it('should fail when recaptchaResponse exists, but passwords dont match', () => {
+  describe('onValidate()', () => {
+    it('should call register if there is no error', () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.password = 'foo';
-      vm.confirmPassword = 'bar';
-      vm.termsConditionsAccepted = true;
-      sandbox.stub(window, 'alert');
+      vm.recaptchaResponse = 'foo';
+      vm.errors = {
+        any: () => false,
+      };
 
-      // ACT
-      vm.onSubmit();
-
-      // ASSERT
-      expect(window.alert).to.have.been.calledWith('Passwords do not match');
-    });
-    it('should fail without recaptchaResponse', () => {
-      // ARRANGE
-      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.password = 'foo';
-      vm.confirmPassword = 'foo';
-      vm.termsConditionsAccepted = true;
-      sandbox.stub(window, 'alert');
-
-      // ACT
-      vm.onSubmit();
-
-      // ASSERT
-      expect(window.alert).to.have.been.calledWith('Please complete reCAPTCHA');
-    });
-    it('should fail when recaptchaResponse exists, but passwords dont match', () => {
-      // ARRANGE
-      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.password = 'foo';
-      vm.confirmPassword = 'foo';
-      vm.recaptchaResponse = 'abc123';
-      sandbox.stub(window, 'alert');
-
-      // ACT
-      vm.onSubmit();
-
-      // ASSERT
-      expect(window.alert).to.have.been.calledWith('Please read and accept T&Cs');
-    });
-    it('should call register when passwords match and recaptchaResponse exists', () => {
-      // ARRANGE
-      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.password = 'foo';
-      vm.confirmPassword = 'foo';
-      vm.recaptchaResponse = 'abc123';
-      vm.termsConditionsAccepted = true;
       sandbox.stub(vm, 'register');
 
       // ACT
-      vm.onSubmit();
+      vm.onValidate();
 
       // ASSERT
       expect(vm.register).to.have.been.calledOnce;
+    });
+
+    it('should validate recaptcha', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+      vm.errors = {
+        any: () => false,
+      };
+
+      sandbox.stub(vm, 'register');
+      sandbox.stub(window, 'alert');
+
+      vm.onValidate();
+
+      // ASSERT
+      expect(vm.register).not.to.have.been.called;
+      expect(window.alert).to.have.been.calledWith('Please complete reCAPTCHA');
+    });
+
+    it('should not call register if there is an error', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+      vm.recaptchaResponse = 'foo';
+      vm.errors = {
+        any: () => true,
+      };
+
+      sandbox.stub(vm, 'register');
+
+      // ACT
+      vm.onValidate();
+
+      // ASSERT
+      expect(vm.register).not.to.have.been.called;
     });
   });
 

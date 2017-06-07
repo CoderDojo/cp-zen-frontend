@@ -6,9 +6,19 @@ const BookingCreateAccount = Object.create(BasePage, {
       return $('input[name=password]');
     },
   },
+  passwordError: {
+    get() {
+      return $('.password-error');
+    },
+  },
   confirmPassword: {
     get() {
       return $('input[name=confirmPassword]');
+    },
+  },
+  confirmPasswordError: {
+    get() {
+      return $('.password-confirmation-error');
     },
   },
   createAccount: {
@@ -19,6 +29,26 @@ const BookingCreateAccount = Object.create(BasePage, {
   termsAndConditions: {
     get() {
       return $('input[name=termsConditionsAccepted]');
+    },
+  },
+  termsAndConditionsError: {
+    get() {
+      return $('.terms-conditions-error');
+    },
+  },
+  dataConsent: {
+    get() {
+      return $('input[name=dataConsentAccepted]');
+    },
+  },
+  dataConsentError: {
+    get() {
+      return $('.data-consent-error');
+    },
+  },
+  dataUsageLink: {
+    get() {
+      return $('.data-usage-link');
     },
   },
   checkRecaptcha: {
