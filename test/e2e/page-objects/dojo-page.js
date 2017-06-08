@@ -33,8 +33,13 @@ const DojoPage = Object.create(BasePage, {
   },
   dojoListItems: {
     get() {
-      $('.cd-dojo-list__list-item').waitForVisible();
-      return $$('.cd-dojo-list__list-item');
+      $('.cd-dojo-list-item__name').waitForVisible();
+      return $$('.cd-dojo-list-item__name');
+    },
+  },
+  showDojoListCount: {
+    get() {
+      return $('.cd-dojo-list__show-dojo-list-count');
     },
   },
   open: {
