@@ -16,7 +16,7 @@ describe('Booking Parent Form', () => {
       eventId: 1,
       firstName: 'John',
       lastName: 'Doe',
-      phoneNumber: '1555123456',
+      phone: '1555123456',
       email: 'john.doe@example.com',
       $router: {
         push: sinon.spy(),
@@ -31,7 +31,7 @@ describe('Booking Parent Form', () => {
     // ASSERT
     expect(MockStoreService.save).to.be.calledOnce;
     expect(MockStoreService.save).to.have.been.calledWith(`booking-${parentData.eventId}`,
-      { parent: pick(parentData, ['firstName', 'lastName', 'phoneNumber', 'email']) });
+      { parent: pick(parentData, ['firstName', 'lastName', 'phone', 'email']) });
     expect(parentData.$router.push).to.be.calledOnce;
     expect(parentData.$router.push).to.have.been.calledWith(`/events/${parentData.eventId}/create-account`);
   });

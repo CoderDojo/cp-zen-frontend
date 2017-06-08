@@ -1,4 +1,5 @@
 import vueUnitHelper from 'vue-unit-helper';
+import { clone } from 'lodash';
 import BookingCreateAccountComponent from '!!vue-loader?inject!@/events/cd-booking-create-account';
 
 describe('Booking Create Account Form', () => {
@@ -24,7 +25,7 @@ describe('Booking Create Account Form', () => {
     const expectedUser = {
       firstName: 'John',
       lastName: 'Doe',
-      phoneNumber: '+1-555-123456',
+      phone: '+1-555-123456',
       email: 'john.doe@example.com',
       password: 'Passw0rd',
       'g-recaptcha-response': 'abc123',
@@ -34,13 +35,14 @@ describe('Booking Create Account Form', () => {
       },
       termsConditionsAccepted: true,
     };
-    const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-    vm.parent = {
+    const parent = {
       firstName: 'John',
       lastName: 'Doe',
-      phoneNumber: '+1-555-123456',
+      phone: '+1-555-123456',
       email: 'john.doe@example.com',
     };
+    const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+    vm.parent = clone(parent);
     vm.password = 'Passw0rd';
     vm.recaptchaResponse = 'abc123';
     vm.termsConditionsAccepted = true;
@@ -50,6 +52,7 @@ describe('Booking Create Account Form', () => {
 
     // ASSERT
     expect(user).to.deep.equal(expectedUser);
+    expect(vm.parent).to.deep.equal(parent);
   });
 
   it('should register the user', (done) => {
@@ -58,7 +61,7 @@ describe('Booking Create Account Form', () => {
       parent: {
         firstName: 'Foo',
         lastName: 'Bar',
-        phoneNumber: '012345678',
+        phone: '012345678',
         email: 'foo.bar@baz.com',
       },
     };
@@ -68,7 +71,7 @@ describe('Booking Create Account Form', () => {
     vm.user = {
       firstName: 'Foo',
       lastName: 'Bar',
-      phoneNumber: '012345678',
+      phone: '012345678',
       email: 'foo.bar@baz.com',
       password: 'Passw0rd',
       'g-recaptcha-response': 'abc123',
