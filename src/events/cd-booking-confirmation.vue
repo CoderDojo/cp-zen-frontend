@@ -4,7 +4,7 @@
     <ul v-if="parent.firstName">
       <li class="cd-booking-confirmation__first-name">{{ parent.firstName }}</li>
       <li class="cd-booking-confirmation__last-name">{{ parent.lastName }}</li>
-      <li class="cd-booking-confirmation__phone-number">{{ parent.phoneNumber }}</li>
+      <li class="cd-booking-confirmation__phone-number">{{ parent.phone }}</li>
       <li class="cd-booking-confirmation__email">{{ parent.email }}</li>
     </ul>
   </div>

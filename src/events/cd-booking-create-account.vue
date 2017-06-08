@@ -24,7 +24,7 @@
   </div>
 </template>
 <script>
-  import { extend } from 'lodash';
+  import { extend, clone } from 'lodash';
   import VueRecaptcha from 'vue-recaptcha';
   import UserService from '@/users/service';
   import StoreService from '@/store/store-service';
@@ -49,7 +49,7 @@
     },
     computed: {
       user() {
-        return extend(this.parent, {
+        return extend(clone(this.parent), {
           password: this.password,
           'g-recaptcha-response': this.recaptchaResponse,
           initUserType: {

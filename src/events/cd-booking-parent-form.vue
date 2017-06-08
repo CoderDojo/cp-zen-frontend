@@ -6,11 +6,11 @@
       <p id="firstNameValidationError" class="text-danger" v-show="formValidated && errors.has('firstName')">{{ errors.first('firstName') }}</p>
 
       <label for="lastName">Last name</label>
-      <input type="text" name="lastName" id="lastName" data-vv-as="last name" v-validate.initial="'required'"  v-model="lastName"><br/>
+      <input type="text" name="lastName" id="lastName" data-vv-as="last name" v-validate.initial="'required'" v-model="lastName"><br/>
       <p id="lastNameValidationError" class="text-danger" v-show="formValidated && errors.has('lastName')">{{ errors.first('lastName') }}</p>
 
       <label for="phoneNumber">Phone number</label>
-      <input type="text" name="phoneNumber" id="phoneNumber" data-vv-as="phone number" v-validate.initial="'required|numeric'"  v-model="phoneNumber"><br/>
+      <input type="text" name="phoneNumber" id="phoneNumber" data-vv-as="phone number" v-validate.initial="'required|numeric'" v-model="phone"><br/>
       <p id="phoneNumberValidationError" class="text-danger" v-show="formValidated && errors.has('phoneNumber')">{{ errors.first('phoneNumber') }}</p>
 
       <label for="email">Email address</label>
@@ -32,14 +32,14 @@
       return {
         firstName: null,
         lastName: null,
-        phoneNumber: null,
+        phone: null,
         email: null,
         formValidated: false,
       };
     },
     methods: {
       submitBooking() {
-        StoreService.save(`booking-${this.eventId}`, { parent: pick(this, ['firstName', 'lastName', 'phoneNumber', 'email']) });
+        StoreService.save(`booking-${this.eventId}`, { parent: pick(this, ['firstName', 'lastName', 'phone', 'email']) });
         this.$router.push(`/events/${this.eventId}/create-account`);
       },
       doValidate() {

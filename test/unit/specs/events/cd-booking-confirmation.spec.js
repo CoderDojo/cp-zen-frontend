@@ -9,7 +9,7 @@ describe('Booking Confirmation Component', () => {
       parent: {
         firstName: 'John',
         lastName: 'Doe',
-        phoneNumber: '+1-555-123456',
+        phone: '+1-555-123456',
         email: 'john.doe@example.com',
       },
       accountCreated: true,
