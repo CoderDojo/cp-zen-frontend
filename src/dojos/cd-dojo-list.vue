@@ -1,24 +1,30 @@
 <template>
   <div class="cd-dojo-list">
-    <ul>
-      <li v-for="dojo in dojos">
-        <router-link :to="buildDetailsPageUrl(dojo.url_slug || dojo.urlSlug)" class="cd-dojo-list__list-item">
-          {{dojo.name}} ({{ dojo.private | cd-dojo-private }})
-        </router-link>
-      </li>
-    </ul>
+    <p class="cd-dojo-list__show-dojo-list-count">Showing {{dojos.length}} of {{dojos.length}} Dojos</p>
+    <dojo-list-item v-for="dojo in dojos" :dojo="dojo"></dojo-list-item>
   </div>
 </template>
 <script>
-  import path from 'path';
+  // import path from 'path';
+  import DojoListItem from './cd-dojo-list-item';
 
   export default {
     name: 'dojoList',
     props: ['dojos'],
-    methods: {
-      buildDetailsPageUrl(urlSlug) {
-        return path.join('/dojos/', urlSlug);
-      },
+    components: {
+      DojoListItem,
     },
   };
 </script>
+<style scoped lang="less">
+  .cd-dojo-list {
+    padding-top: 34px;
+
+    &__show-dojo-list-count {
+      font-size: 14px;
+      color: #a2a1a0;
+      font-weight: 200;
+      border-bottom: solid 1px #bebebe;
+    }
+  }
+</style>

@@ -1,6 +1,19 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
 
+/* eslint-disable no-extend-native, no-param-reassign, func-names */
+if (!String.prototype.endsWith) {
+  String.prototype.endsWith = function (searchString, position) {
+    const subjectString = this.toString();
+    if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
+      position = subjectString.length;
+    }
+    position -= searchString.length;
+    const lastIndex = subjectString.lastIndexOf(searchString, position);
+    return lastIndex !== -1 && lastIndex === position;
+  };
+}
+
 Vue.use(VueResource);
 
 Vue.config.productionTip = false;
