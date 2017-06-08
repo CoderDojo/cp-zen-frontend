@@ -50,6 +50,9 @@ server.use((req, res, next) => {
 server.post('/api/2.0/users/register', (req, res) => {
   res.send();
 });
+server.post('/api/2.0/users/login', (req, res) => {
+  res.send();
+});
 server.use('/api/2.0', router);
 
 server.listen(3000, () => {

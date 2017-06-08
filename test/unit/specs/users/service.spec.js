@@ -8,7 +8,7 @@ describe('UserService', () => {
     sandbox.restore();
   });
 
-  it('should register an account', () => {
+  it('should register an account', (done) => {
     const profile = {};
 
     const user = {
@@ -24,10 +24,15 @@ describe('UserService', () => {
       'g-recaptcha-response': 'abc123',
     };
 
-    sandbox.stub(Vue.http, 'post');
-    UserService.register(user, profile);
+    sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
+    UserService.register(user, profile).then(() => {
+      expect(Vue.http.post.firstCall.args[0]).to.equal(`${Vue.config.apiBase}/users/register`);
+      expect(Vue.http.post.firstCall.args[1]).to.deep.equal({ profile, user });
 
-    expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiBase}/users/register`,
-      { profile, user });
+      expect(Vue.http.post.secondCall.args[0]).to.equal(`${Vue.config.apiBase}/users/login`);
+      expect(Vue.http.post.secondCall.args[1])
+        .to.deep.equal({ email: user.email, password: user.password });
+      done();
+    });
   });
 });
