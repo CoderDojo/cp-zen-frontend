@@ -12,7 +12,7 @@ describe('Find Dojo page', () => {
     DojoPage.addressSearchInput.waitForVisible();
     DojoPage.addressSearchInput.setValue('CHQ');
     DojoPage.addressSearchButton.click();
-    expect(DojoPage.showDojoListCount.isVisible()).to.be.true;
+    DojoPage.showDojoListCount.waitForVisible();
     expect(DojoPage.showDojoListCount.getText()).to.have.string('Showing 3 of 3 Dojos');
     const dojosList = DojoPage.dojoListItems;
     expect(dojosList.length).to.equal(3);
