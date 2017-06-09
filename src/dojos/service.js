@@ -33,6 +33,17 @@ const DojosService = {
         return this.getDojosByLatLong(lat, long);
       });
   },
+
+  joinDojo(userId, dojoId, userTypes) {
+    return Vue.http.post(`${Vue.config.apiBase}/dojos/save-usersdojos`, {
+      userDojo: {
+        userId,
+        dojoId,
+        userTypes,
+        owner: 0,
+      },
+    });
+  },
 };
 
 export default DojosService;

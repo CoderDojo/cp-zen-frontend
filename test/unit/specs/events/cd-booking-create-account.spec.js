@@ -10,10 +10,15 @@ describe('Booking Create Account Form', () => {
   };
   const MockUsersService = {
     register: sandbox.stub(),
+    getCurrentUser: sandbox.stub(),
+  };
+  const MockDojoService = {
+    joinDojo: sandbox.stub(),
   };
   const BookingCreateAccountComponentWithMocks = BookingCreateAccountComponent({
     '@/store/store-service': MockStoreService,
     '@/users/service': MockUsersService,
+    '@/dojos/service': MockDojoService,
   });
 
   afterEach(() => {
@@ -81,9 +86,6 @@ describe('Booking Create Account Form', () => {
       },
     };
     vm.eventId = 1;
-    vm.$router = {
-      push: sinon.stub(),
-    };
     MockUsersService.register.returns(Promise.resolve());
 
     // ACT
@@ -96,27 +98,36 @@ describe('Booking Create Account Form', () => {
         parent: storedBookingData.parent,
         accountCreated: true,
       });
-      expect(vm.$router.push).to.have.been.calledWith(`/events/${vm.eventId}/confirmation`);
       done();
     });
   });
 
   describe('onValidate()', () => {
-    it('should call register if there is no error', () => {
+    it('should call register if there is no error', (done) => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.recaptchaResponse = 'foo';
       vm.errors = {
         any: () => false,
       };
+      vm.eventId = 1;
+      vm.$router = {
+        push: sinon.stub(),
+      };
 
-      sandbox.stub(vm, 'register');
+      sandbox.stub(vm, 'register').returns(Promise.resolve());
+      sandbox.stub(vm, 'joinDojo').returns(Promise.resolve());
 
       // ACT
       vm.onValidate();
 
       // ASSERT
-      expect(vm.register).to.have.been.calledOnce;
+      requestAnimationFrame(() => {
+        expect(vm.register).to.have.been.calledOnce;
+        expect(vm.joinDojo).to.have.been.calledOnce;
+        expect(vm.$router.push).to.have.been.calledWith(`/events/${vm.eventId}/confirmation`);
+        done();
+      });
     });
 
     it('should validate recaptcha', () => {
@@ -163,5 +174,38 @@ describe('Booking Create Account Form', () => {
 
     // ASSERT
     expect(vm.recaptchaResponse).to.equal('foo');
+  });
+
+  describe('joinDojo', () => {
+    it('should join the logged in user to the dojo', (done) => {
+      // ARRANGE
+      const userId = '74afa4b8-8449-46e4-a553-8febda8614ad';
+      const dojoId = '4e591bbe-667b-4782-bc9c-180c6d321883';
+      const eventId = '1c4a3f87-7a8e-4101-b332-b02b021a42f7';
+      const userTypes = ['parent-guardian'];
+      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+      vm.eventId = eventId;
+
+      const currentUserResponseMock = {
+        login: {},
+        user: {
+          id: userId,
+        },
+        ok: true,
+      };
+
+      // tell getcurrentuser what to return
+      MockUsersService.getCurrentUser.returns(Promise.resolve({ body: currentUserResponseMock }));
+
+      // tell storeservice what to return for dojoId
+      MockStoreService.load.withArgs('selected-event').returns({ dojoId });
+
+      // ACT
+      vm.joinDojo().then(() => {
+        // ASSERT
+        expect(MockDojoService.joinDojo).to.have.been.calledWith(userId, dojoId, userTypes);
+        done();
+      });
+    });
   });
 });

@@ -428,5 +428,15 @@
       },
       "tld": ".ie"
     }
-  }
+  },
+  "users": [
+    {
+      "id": "instance",
+      "login": {},
+      "ok": true,
+      "user": {
+        "id": "a8a2b3e7-aafb-453d-8dd4-2b1b44352226"
+      }
+    }
+  ]
 }

@@ -27,6 +27,7 @@
   import { extend, clone } from 'lodash';
   import VueRecaptcha from 'vue-recaptcha';
   import UserService from '@/users/service';
+  import DojoService from '@/dojos/service';
   import StoreService from '@/store/store-service';
 
   export default {
@@ -64,7 +65,11 @@
       onValidate() {
         this.formValidated = true;
         if (!this.errors.any() && this.recaptchaResponse) {
-          this.register();
+          this.register()
+            .then(this.joinDojo)
+            .then(() => {
+              this.$router.push(`/events/${this.eventId}/confirmation`);
+            });
         } else if (!this.recaptchaResponse) {
           // eslint-disable-next-line
           alert('Please complete reCAPTCHA');
@@ -72,14 +77,21 @@
       },
       register() {
         this.parent = StoreService.load(`booking-${this.eventId}`).parent;
-        UserService.register(this.user, this.parent)
+        return UserService.register(this.user, this.parent)
           .then(() => {
             StoreService.save(`booking-${this.eventId}`, {
               parent: this.parent,
               accountCreated: true,
             });
-            this.$router.push(`/events/${this.eventId}/confirmation`);
+            return Promise.resolve();
           });
+      },
+      joinDojo() {
+        return UserService.getCurrentUser().then((response) => {
+          const user = response.body.user;
+          const selectedEvent = StoreService.load('selected-event');
+          return DojoService.joinDojo(user.id, selectedEvent.dojoId, [this.user.initUserType.name]);
+        });
       },
       onRecaptchaVerify(response) {
         this.recaptchaResponse = response;
