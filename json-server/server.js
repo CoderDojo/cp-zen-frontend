@@ -53,6 +53,9 @@ server.post('/api/2.0/users/register', (req, res) => {
 server.post('/api/2.0/users/login', (req, res) => {
   res.send();
 });
+server.post('/api/2.0/dojos/save-usersdojos', (req, res) => {
+  res.send();
+});
 server.use('/api/2.0', router);
 
 server.listen(3000, () => {

@@ -191,4 +191,30 @@ describe('Dojos Service', () => {
       });
     });
   });
+
+  describe('joinDojo', () => {
+    it('should join a user to a dojo, based off userId, dojoId and roles', (done) => {
+      // ARRANGE
+      const userId = '74afa4b8-8449-46e4-a553-8febda8614ad';
+      const dojoId = '4e591bbe-667b-4782-bc9c-180c6d321883';
+      const userTypes = ['parent-guardian'];
+      const expectedPayload = {
+        userDojo: {
+          owner: 0,
+          userId,
+          dojoId,
+          userTypes,
+        },
+      };
+
+      const postMock = sandbox.stub(Vue.http, 'post');
+      postMock.withArgs(`${Vue.config.apiBase}/dojos/save-usersdojos`, expectedPayload).returns(Promise.resolve());
+
+      // ACT
+      DojosServiceWithMocks.joinDojo(userId, dojoId, userTypes)
+        .then(() => {
+          done();
+        });
+    });
+  });
 });
