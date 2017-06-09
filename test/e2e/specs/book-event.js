@@ -78,9 +78,12 @@ describe('Book event page', () => {
     expect(BookingCreateAccount.termsAndConditionsError.getText()).to.equal('You must accept the terms and conditions before proceeding.');
     expect(BookingCreateAccount.dataConsentError.getText()).to.equal('You must consent to the use of your data before proceeding.');
 
+    BookingCreateAccount.password.setValue('foo');
+    BookingCreateAccount.confirmPassword.setValue('foo');
+    expect(BookingCreateAccount.passwordError.getText()).to.equal('The password should be at least 8 characters and contain at least one numeric character.');
+
     BookingCreateAccount.password.setValue('Passw0rd');
     BookingCreateAccount.confirmPassword.setValue('No-Passw0rd');
-
     expect(BookingCreateAccount.passwordError.getText()).to.equal('The password confirmation does not match.');
   });
 
