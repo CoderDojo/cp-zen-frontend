@@ -2,7 +2,7 @@
   <div class="cd-booking-create-account">
     <form @submit.prevent="onValidate">
       <label for="password">Password</label>
-      <input type="password" name="password" id="password" data-vv-as="password" v-validate.initial="'required|confirmed:confirmPassword'" v-model="password" />
+      <input type="password" name="password" id="password" data-vv-as="password" v-validate.initial="'required|confirmed:confirmPassword|cd-password'" v-model="password" />
       <label class="text-danger cd-booking-create-account__password-error" v-show="formValidated && errors.has('password')">{{ errors.first('password') }}</label>
       <label for="password">Confirm Password</label>
       <input type="password" name="confirmPassword" id="confirmPassword" data-vv-as="password confirmation" v-validate.initial="'required'" v-model="confirmPassword" />

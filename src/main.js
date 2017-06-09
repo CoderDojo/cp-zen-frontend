@@ -1,8 +1,10 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+/* eslint-disable */
 import Vue from 'vue';
 import VueResource from 'vue-resource';
 import VeeValidate from 'vee-validate';
+import PasswordValidator from '@/common/directives/cd-password-validator';
 import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
@@ -22,3 +24,5 @@ new Vue({
   template: '<App/>',
   components: { App },
 });
+
+VeeValidate.Validator.extend('cd-password', PasswordValidator);
