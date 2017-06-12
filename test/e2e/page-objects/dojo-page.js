@@ -37,6 +37,11 @@ const DojoPage = Object.create(BasePage, {
       return $$('.cd-dojo-list-item__name');
     },
   },
+  dojoListItemImages: {
+    get() {
+      return $$('.cd-dojo-list-item__dojo-image');
+    },
+  },
   showDojoListCount: {
     get() {
       return $('.cd-dojo-list__show-dojo-list-count');
