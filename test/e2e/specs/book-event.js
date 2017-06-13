@@ -9,7 +9,7 @@ const EventSessionsPage = require('../page-objects/event-sessions');
 function startBooking() {
   DojoPage.openDojoWithLatLong(10, 89);
   DojoDetailsPage.name.waitForVisible();
-  DojoDetailsPage.eventNames(0).click();
+  DojoDetailsPage.eventViewButtons(0).click();
 
   EventDetailsPage.dateOfBirthDayInput.setValue('27');
   EventDetailsPage.dateOfBirthMonthInput.setValue('03');
