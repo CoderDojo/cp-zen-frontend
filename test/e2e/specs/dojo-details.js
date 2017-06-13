@@ -73,7 +73,7 @@ describe('Dojo details page', () => {
   it('should show event details after clicking on an event', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
-    DojoDetailsPage.eventNames(0).click();
+    DojoDetailsPage.eventViewButtons(0).click();
     EventDetailsPage.name.waitForVisible();
     expect(EventDetailsPage.name.getText()).to.equal('My First Amazing Event');
 
@@ -119,7 +119,7 @@ describe('Dojo details page', () => {
   it('should not allow an underage person to proceed in the flow', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
-    DojoDetailsPage.eventNames(0).click();
+    DojoDetailsPage.eventViewButtons(0).click();
 
     EventDetailsPage.dateOfBirthDayInput.setValue('25');
     EventDetailsPage.dateOfBirthMonthInput.setValue('05');
