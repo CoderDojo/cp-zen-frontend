@@ -5,9 +5,19 @@ const DojoDetailsPage = Object.create(BasePage, {
   /**
    * define elements
    */
+  dojoImage: {
+    get() {
+      return $('.cd-dojo-details__dojo-image');
+    },
+  },
   name: {
     get() {
       return $('.cd-dojo-details__name');
+    },
+  },
+  timeLabel: {
+    get() {
+      return $('.cd-dojo-details__time-label');
     },
   },
   time: {
@@ -15,9 +25,19 @@ const DojoDetailsPage = Object.create(BasePage, {
       return $('.cd-dojo-details__time');
     },
   },
+  addressLabel: {
+    get() {
+      return $('.cd-dojo-details__address-label');
+    },
+  },
   address: {
     get() {
       return $('.cd-dojo-details__address');
+    },
+  },
+  detailsLabel: {
+    get() {
+      return $('.cd-dojo-details__details-label');
     },
   },
   details: {
@@ -25,9 +45,19 @@ const DojoDetailsPage = Object.create(BasePage, {
       return $('.cd-dojo-details__details');
     },
   },
+  emailLabel: {
+    get() {
+      return $('.cd-dojo-details__email-label');
+    },
+  },
   email: {
     get() {
       return $('.cd-dojo-details__email');
+    },
+  },
+  websiteLabel: {
+    get() {
+      return $('.cd-dojo-details__website-label');
     },
   },
   website: {
@@ -37,17 +67,17 @@ const DojoDetailsPage = Object.create(BasePage, {
   },
   facebook: {
     get() {
-      return $('.cd-dojo-details__facebook');
+      return $('.cd-dojo-details__facebook').getAttribute('href');
     },
   },
   twitter: {
     get() {
-      return $('.cd-dojo-details__twitter');
+      return $('.cd-dojo-details__twitter').getAttribute('href');;
     },
   },
   googleGroup: {
     get() {
-      return $('.cd-dojo-details__google-group');
+      return $('.cd-dojo-details__google-group').getAttribute('href');;
     },
   },
   errorMessage: {

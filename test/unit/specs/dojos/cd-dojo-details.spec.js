@@ -53,6 +53,19 @@ describe('Dojo details component', () => {
     expect(urlSlug).to.equal('za/gauteng/johannesburg-rock-stars');
   });
 
+  it('should compute an image url for given dojo id', (done) => {
+    // ARRANGE
+    const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
+    const vm = new Vue(DojoDetailsWithMock);
+
+    // ASSERT
+    vm.loadDojoDetails();
+    requestAnimationFrame(() => {
+      expect(vm.imageUrl).to.equal(`https://s3-eu-west-1.amazonaws.com/zen-dojo-images/${dojoDetailsWithAddress.id}`);
+      done();
+    });
+  });
+
   describe('computed.address()', () => {
     it('should return undefined when address1 is falsey', () => {
       const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithoutAddress);

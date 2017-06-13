@@ -8,32 +8,49 @@ describe('Dojo details page', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
 
+    DojoDetailsPage.dojoImage.waitForVisible();
+
     const name = DojoDetailsPage.name.getText();
     expect(name).to.equal('Dublin Ninja Kids');
+
+    const timeLabel = DojoDetailsPage.timeLabel.getText();
+    expect(timeLabel).to.equal('TIME');
 
     const time = DojoDetailsPage.time.getText();
     expect(time).to.equal('Saturdays 11 am - 1 pm');
 
+    const addressLabel = DojoDetailsPage.addressLabel.getText();
+    expect(addressLabel).to.equal('LOCATION');
+
     const address = DojoDetailsPage.address.getText();
     expect(address).to.equal('CHQ Building,1 Custom House Quay, North Dock, Dublin, Ireland');
+
+    const detailsLabel = DojoDetailsPage.detailsLabel.getText();
+    expect(detailsLabel).to.equal('DETAILS');
 
     const details = DojoDetailsPage.details.getHTML(false);
     expect(details).to.equal('<p>This is the Dojo details section</p>\n');
 
+    const emailLabel = DojoDetailsPage.emailLabel.getText();
+    expect(emailLabel).to.equal('EMAIL');
+
     const email = DojoDetailsPage.email.getText();
     expect(email).to.equal('dublinninjakids@gmail.com');
+
+    const websiteLabel = DojoDetailsPage.websiteLabel.getText();
+    expect(websiteLabel).to.equal('WEBSITE');
 
     const website = DojoDetailsPage.website.getText();
     expect(website).to.equal('www.dublinninjakids.com');
 
-    const facebook = DojoDetailsPage.facebook.getText();
+    const facebook = DojoDetailsPage.facebook;
     expect(facebook).to.equal('https://www.facebook.com/CoderDojo');
 
-    const twitter = DojoDetailsPage.twitter.getText();
+    const twitter = DojoDetailsPage.twitter;
     expect(twitter).to.equal('https://twitter.com/CoderDojo');
 
-    const googleGroup = DojoDetailsPage.googleGroup.getText();
-    expect(googleGroup).to.equal('dublinninjakids@google.group.com');
+    const googleGroup = DojoDetailsPage.googleGroup;
+    expect(googleGroup).to.equal('mailto:dublinninjakids@google.group.com');
   });
 
   it('should show dojo\'s events', () => {
