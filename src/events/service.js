@@ -5,7 +5,7 @@ const EventsService = {
   loadEvents(dojoId) {
     return Vue.http.post(`${Vue.config.apiBase}/events/search`,
       {
-        query: { dojoId },
+        query: { dojoId, filterPastEvents: true, status: 'published' },
       },
     );
   },
