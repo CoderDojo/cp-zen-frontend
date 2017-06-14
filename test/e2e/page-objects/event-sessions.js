@@ -13,12 +13,12 @@ const EventDetailsPage = Object.create(BasePage, {
   },
   eventSessions: {
     value(index) {
-      return $$('.cd-event-sessions__item')[index];
+      return $$('.cd-event-sessions__session')[index];
     },
   },
   eventTickets: {
     value(index) {
-      return $$('.cd-event-tickets__item')[index];
+      return $$('.cd-event-tickets__ticket')[index];
     },
   },
   ticketCounterValue: {
