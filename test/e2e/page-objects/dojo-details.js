@@ -90,6 +90,11 @@ const DojoDetailsPage = Object.create(BasePage, {
       return $$('.cd-event-list__event-name')[index];
     }
   },
+  eventSessions: {
+    value(index) {
+      return $$('.cd-event-list__event-sessions')[index];
+    }
+  },
   eventDates: {
     value(index) {
       return $$('.cd-event-list__event-datetime-timestamp')[index];

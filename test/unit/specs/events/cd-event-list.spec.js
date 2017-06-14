@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import vueUnitHelper from 'vue-unit-helper';
 import eventList from '!!vue-loader?inject!@/events/cd-event-list';
 
 describe('Event list component', () => {
@@ -45,6 +46,21 @@ describe('Event list component', () => {
     requestAnimationFrame(() => {
       expect(vm.events).to.deep.equal(mockEventDataResponse);
       done();
+    });
+  });
+
+  describe('getSessionListForEvent()', () => {
+    it('should return a list of session names for given event', () => {
+      const vm = vueUnitHelper(eventList());
+      const eventMock = {
+        sessions: [
+          { name: 'Scratch' },
+          { name: 'Arduino' },
+          { name: 'HTML' },
+        ],
+      };
+
+      expect(vm.getSessionListForEvent(eventMock)).to.equal('Scratch, Arduino, HTML');
     });
   });
 });
