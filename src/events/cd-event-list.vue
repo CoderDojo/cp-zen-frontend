@@ -3,9 +3,14 @@
     <h1 class="cd-event-list__header">Upcoming Events</h1>
     <div v-for="event in events" class="cd-event-list__event">
       <div class="cd-event-list__event-details">
-        <h3 class="cd-event-list__event-name">
-          {{ event.name }}
-        </h3>
+        <header class="cd-event-list__event-header">
+          <h3 class="cd-event-list__event-name">
+            {{ event.name }}
+          </h3>
+          <h4 class="cd-event-list__event-sessions">
+            Sessions: {{ getSessionListForEvent(event) }}
+          </h4>
+        </header>
         <ul class="cd-event-list__datetime">
           <li v-for="date in event.dates" class="cd-event-list__event-datetime-timestamp">
             {{ date.startTime }}
@@ -36,6 +41,9 @@
           this.events = response.body;
         });
       },
+      getSessionListForEvent(event) {
+        return event.sessions.map(session => session.name).join(', ');
+      },
     },
     created() {
       this.loadEvents();
@@ -64,10 +72,19 @@
         display: flex;
       }
 
-      &-name {
+      &-header {
         flex: 3;
+      }
+
+      &-name {
         font-size: 24px;
         margin: 0;
+      }
+
+      &-sessions {
+        font-size: 16px;
+        color: #7b8082;
+        margin: 4px 0;
       }
 
       &-datetime {
@@ -78,6 +95,11 @@
           font-size: 18px;
         }
       }
+
+      &-view {
+        margin-top: 32px;
+      }
     }
+
   }
 </style>

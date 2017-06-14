@@ -59,10 +59,12 @@ describe('Dojo details page', () => {
 
     const firstEventName = DojoDetailsPage.eventNames(0).getText();
     expect(firstEventName).to.equal('My First Amazing Event');
+    expect(DojoDetailsPage.eventSessions(0).getText()).to.equal('Sessions: Scratch, Arduino');
     expect(DojoDetailsPage.eventDates(0).getText()).to.equal('2017-06-06T16:30:00.000Z');
 
     const secondEventName = DojoDetailsPage.eventNames(1).getText();
     expect(secondEventName).to.equal('My Second Amazing Event');
+    expect(DojoDetailsPage.eventSessions(1).getText()).to.equal('Sessions: Raspberry Pi, Unity');
     expect(DojoDetailsPage.eventDates(1).getText()).to.equal('2017-06-03T10:00:00.000Z');
     expect(DojoDetailsPage.eventDates(2).getText()).to.equal('2017-06-17T10:00:00.000Z');
     expect(DojoDetailsPage.eventDates(3).getText()).to.equal('2017-07-01T10:00:00.000Z');
