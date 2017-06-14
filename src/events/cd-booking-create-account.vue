@@ -27,6 +27,7 @@
   import { extend, clone } from 'lodash';
   import VueRecaptcha from 'vue-recaptcha';
   import UserService from '@/users/service';
+  import EventsService from '@/events/service';
   import DojoService from '@/dojos/service';
   import StoreService from '@/store/store-service';
 
@@ -67,6 +68,7 @@
         if (!this.errors.any() && this.recaptchaResponse) {
           this.register()
             .then(this.joinDojo)
+            .then(this.bookTickets)
             .then(() => {
               this.$router.push(`/events/${this.eventId}/confirmation`);
             });
@@ -81,7 +83,6 @@
           .then(() => {
             StoreService.save(`booking-${this.eventId}`, {
               parent: this.parent,
-              accountCreated: true,
             });
             return Promise.resolve();
           });
@@ -91,6 +92,14 @@
           const user = response.body.user;
           const selectedEvent = StoreService.load('selected-event');
           return DojoService.joinDojo(user.id, selectedEvent.dojoId, [this.user.initUserType.name]);
+        });
+      },
+      bookTickets() {
+        return UserService.getCurrentUser().then((response) => {
+          const user = response.body.user;
+          const selectedEvent = StoreService.load('selected-event');
+          const bookingSessions = StoreService.load('booking-sessions');
+          return EventsService.bookTickets(user, selectedEvent, bookingSessions);
         });
       },
       onRecaptchaVerify(response) {

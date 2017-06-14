@@ -15,10 +15,15 @@ describe('Booking Create Account Form', () => {
   const MockDojoService = {
     joinDojo: sandbox.stub(),
   };
+  const MockEventsService = {
+    bookTickets: sandbox.stub(),
+  };
+
   const BookingCreateAccountComponentWithMocks = BookingCreateAccountComponent({
     '@/store/store-service': MockStoreService,
     '@/users/service': MockUsersService,
     '@/dojos/service': MockDojoService,
+    '@/events/service': MockEventsService,
   });
 
   afterEach(() => {
@@ -96,14 +101,13 @@ describe('Booking Create Account Form', () => {
       expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedBookingData.parent);
       expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}`, {
         parent: storedBookingData.parent,
-        accountCreated: true,
       });
       done();
     });
   });
 
   describe('onValidate()', () => {
-    it('should call register if there is no error', (done) => {
+    it('should call register, joinDojo and bookTickets if there is no error', (done) => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.recaptchaResponse = 'foo';
@@ -117,6 +121,7 @@ describe('Booking Create Account Form', () => {
 
       sandbox.stub(vm, 'register').returns(Promise.resolve());
       sandbox.stub(vm, 'joinDojo').returns(Promise.resolve());
+      sandbox.stub(vm, 'bookTickets').returns(Promise.resolve());
 
       // ACT
       vm.onValidate();
@@ -125,6 +130,7 @@ describe('Booking Create Account Form', () => {
       requestAnimationFrame(() => {
         expect(vm.register).to.have.been.calledOnce;
         expect(vm.joinDojo).to.have.been.calledOnce;
+        expect(vm.bookTickets).to.have.been.calledOnce;
         expect(vm.$router.push).to.have.been.calledWith(`/events/${vm.eventId}/confirmation`);
         done();
       });
@@ -204,6 +210,64 @@ describe('Booking Create Account Form', () => {
       vm.joinDojo().then(() => {
         // ASSERT
         expect(MockDojoService.joinDojo).to.have.been.calledWith(userId, dojoId, userTypes);
+        done();
+      });
+    });
+  });
+
+  describe('bookTickets', () => {
+    const mockSelectedEvent = {
+      id: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+      dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+      sessions: [
+        {
+          id: '69624aec-e254-4636-b4c6-f623fdb0421b',
+          eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+          tickets: [
+            {
+              id: '7c6d2cb7-0344-4cfd-8808-c0cfebbbe5af',
+              sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
+              name: 'Parent',
+              type: 'parent-guardian',
+            },
+          ],
+        },
+      ],
+    };
+
+    const mockSelectedSessionTickets = {
+      '69624aec-e254-4636-b4c6-f623fdb0421b': { // sessionId
+        '7c6d2cb7-0344-4cfd-8808-c0cfebbbe5af': 1,  //ticketId  ticketCount
+      },
+    };
+
+    it('should book tickets', (done) => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+      vm.eventId = mockSelectedEvent.id;
+
+      const currentUserResponseMock = {
+        login: {},
+        user: {
+          id: '74afa4b8-8449-46e4-a553-8febda8614ad',
+        },
+        ok: true,
+      };
+
+      MockUsersService.getCurrentUser.returns(Promise.resolve({ body: currentUserResponseMock }));
+      MockStoreService.load.withArgs('selected-event').returns(mockSelectedEvent);
+      MockStoreService.load.withArgs('booking-sessions').returns(mockSelectedSessionTickets);
+
+      // ACT
+      vm.bookTickets();
+
+      // ASSERT
+      requestAnimationFrame(() => {
+        expect(MockEventsService.bookTickets).to.have.been.calledOnce;
+        expect(MockEventsService.bookTickets).to.have.been.calledWith(
+           currentUserResponseMock.user,
+           mockSelectedEvent,
+           mockSelectedSessionTickets);
         done();
       });
     });

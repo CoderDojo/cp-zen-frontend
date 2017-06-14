@@ -11,14 +11,16 @@ const pathsToReturnWhenPost = [
   '/api/2.0/dojos/find',
   '/api/2.0/dojos/search-bounding-box',
   '/api/2.0/events/search',
+  '/api/2.0/events/bulk-apply-applications',
 ];
 const pathsToReturnSingular = [
-  '/api/2.0/dojos/find'
+  '/api/2.0/dojos/find',
 ];
 var rewriteRules = {
   '/api/2.0/dojos/find': '/api/2.0/dojos',
   '/api/2.0/dojos/search-bounding-box': '/api/2.0/dojos',
   '/api/2.0/events/search':'/api/2.0/events',
+  '/api/2.0/events/bulk-apply-applications':'/api/2.0/bulk-apply-applications'
 };
 
 server.use(middlewares);
