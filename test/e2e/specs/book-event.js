@@ -59,6 +59,8 @@ describe('Book event page', () => {
     expect(BookingConfirmation.lastName.getText()).to.equal('Doe');
     expect(BookingConfirmation.phoneNumber.getText()).to.equal('1555123456');
     expect(BookingConfirmation.email.getText()).to.equal('john.doe@example.com');
+
+    expect(BookingConfirmation.bookingConfirmationMessage.getText()).to.equal('Your booking is completed successfully');
   });
 
   it('should report validation errors for not filling in required fields', () => {
