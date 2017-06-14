@@ -1,11 +1,11 @@
 <template>
-  <ul>
-    <li v-for="ticket in tickets" class="cd-event-tickets__item">
-      {{ ticket.name }}
+  <div>
+    <div v-for="ticket in tickets" class="cd-event-tickets__ticket">
+      <span class="cd-event-tickets__name">{{ ticket.name }}</span>
       <number-spinner min="0" :max="ticket.quantity - ticket.approvedApplications"
                       v-on:update="onTicketQuantityUpdate(ticket.id, $event)"></number-spinner>
-    </li>
-  </ul>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -38,3 +38,16 @@
     },
   };
 </script>
+<style scoped lang="less">
+  .cd-event-tickets {
+    &__ticket {
+      display: flex;
+      align-items: center;
+      margin: 16px 0;
+    }
+
+    &__name {
+      min-width: 150px;
+    }
+  }
+</style>

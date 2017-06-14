@@ -1,12 +1,16 @@
 <template>
   <div class="cd-event-sessions">
     <h1 v-if="event" class="cd-event-session__event-name">{{ event.name }}</h1>
-    <h1>Sessions</h1>
-    <div v-for="session in sessions">
-      <h3 class="cd-event-sessions__item">{{ session.name }} - {{ session.description }}</h3>
+    <h1 class="cd-event-sessions__header">Select Event Tickets</h1>
+
+    <div class="cd-event-sessions__session" v-for="session in sessions">
+      <h3 class="cd-event-sessions__name">{{ session.name }}</h3>
+      <p class="cd-event-sessions__description">{{ session.description }}</p>
       <event-tickets :tickets="session.tickets" :session-id="session.id"></event-tickets>
     </div>
-    <router-link :to="{name: 'EventBookingForm', params: {eventId: event.id}}" class="cd-event-sessions__next"
+
+    <router-link :to="{name: 'EventBookingForm', params: {eventId: event.id}}"
+                 class="cd-event-sessions__next btn btn-primary"
                  tag="button">Proceed
     </router-link>
   </div>
@@ -46,5 +50,32 @@
     },
   };
 </script>
-<style scoped>
+<style scoped lang="less">
+  @import "~cd-common/common/_colors";
+  .cd-event-sessions {
+    &__header {
+      font-size: 24px;
+      margin: 45px 0 16px 0;
+    }
+    &__name {
+      color: @cd-purple;
+      margin: 0;
+      font-size: 18px;
+    }
+    &__description {
+      margin: 4px 0;
+    }
+    &__session {
+      border-style: solid;
+      border-color: @cd-orange;
+      border-width: 1px 1px 3px 1px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+
+    &__next {
+       margin: 34px 0 16px 0;
+    }
+  }
 </style>
+
