@@ -6,24 +6,34 @@ const EventDetailsPage = Object.create(BasePage, {
       return $('.cd-event-details__name');
     },
   },
+  verifyAgeMessage: {
+    get() {
+      return $('.cd-event-details__verify-age-message');
+    },
+  },
+  dobInputLabel: {
+    get() {
+      return $('.cd-event-details__dob-input-label');
+    },
+  },
   dateOfBirthDayInput: {
     get() {
-      return $('.cd-event-details__dob-day');
+      return $$('.cd-event-details__dob select')[0];
     },
   },
   dateOfBirthMonthInput: {
     get() {
-      return $('.cd-event-details__dob-month');
+      return $$('.cd-event-details__dob select')[1];
     },
   },
   dateOfBirthYearInput: {
     get() {
-      return $('.cd-event-details__dob-year');
+      return $$('.cd-event-details__dob select')[2];
     },
   },
-  nextButton: {
+  verify: {
     get() {
-      return $('.cd-event-details__next');
+      return $('.cd-event-details__verify');
     },
   },
   dateOfBirthError: {

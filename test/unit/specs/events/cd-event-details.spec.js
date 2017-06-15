@@ -55,6 +55,7 @@ describe('Event details', () => {
         push: sandbox.spy(),
       },
       eventDetails: mockEventData,
+      date: new Date(1980, 10, 25, 0, 0, 0, 0),
     };
 
     vm.next.bind(data)();
@@ -66,15 +67,13 @@ describe('Event details', () => {
   });
 
   it('should allow adults', () => {
-    const now = new Date();
+    const now = new Date(1980, 10, 25, 0, 0, 0, 0);
     const data = {
       $router: {
         push: sandbox.spy(),
       },
       eventDetails: mockEventData,
-      day: now.getDate(),
-      month: now.getMonth() + 1,
-      year: now.getFullYear() - 28,
+      date: now,
       isDobUnderage: false,
     };
 
@@ -91,14 +90,13 @@ describe('Event details', () => {
 
   it('should allow someone who just turned 13', () => {
     const now = new Date();
+    const turned13 = new Date(now.getFullYear() - 13, now.getMonth(), now.getDate(), 0, 0, 0, 0);
     const data = {
       $router: {
         push: sandbox.spy(),
       },
       eventDetails: mockEventData,
-      day: now.getDate(),
-      month: now.getMonth() + 1,
-      year: now.getFullYear() - 13,
+      date: turned13,
       isDobUnderage: false,
     };
 
@@ -115,14 +113,13 @@ describe('Event details', () => {
 
   it('should not allow someone who is under 13', () => {
     const now = new Date();
+    const under13 = new Date(now.getFullYear() - 11, now.getMonth(), now.getDate(), 0, 0, 0, 0);
     const data = {
       $router: {
         push: sandbox.spy(),
       },
       eventDetails: mockEventData,
-      day: now.getDate(),
-      month: now.getMonth() + 1,
-      year: now.getFullYear() - 11,
+      date: under13,
       isDobUnderage: false,
     };
 

@@ -7,6 +7,7 @@ import VeeValidate from 'vee-validate';
 import PasswordValidator from '@/common/directives/cd-password-validator';
 import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'vue-dob-picker/dist/static/vue-dob-picker.css';
 import App from './App';
 import router from './router';
 import './dojos/filters';

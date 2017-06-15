@@ -11,10 +11,12 @@ function startBooking() {
   DojoDetailsPage.name.waitForVisible();
   DojoDetailsPage.eventViewButtons(0).click();
 
-  EventDetailsPage.dateOfBirthDayInput.setValue('27');
-  EventDetailsPage.dateOfBirthMonthInput.setValue('03');
-  EventDetailsPage.dateOfBirthYearInput.setValue('1980');
-  EventDetailsPage.nextButton.click();
+  expect(EventDetailsPage.verifyAgeMessage.getText()).to.equal('To continue, we need to verify your age.');
+  expect(EventDetailsPage.dobInputLabel.getText()).to.equal('Enter your Date of Birth');
+  EventDetailsPage.dateOfBirthDayInput.selectByValue('27');
+  EventDetailsPage.dateOfBirthMonthInput.selectByValue('3');
+  EventDetailsPage.dateOfBirthYearInput.selectByValue('1980');
+  EventDetailsPage.verify.click();
 
   EventSessionsPage.ticketCounterIncrement(1).click();
   EventSessionsPage.ticketCounterIncrement(4).click();
