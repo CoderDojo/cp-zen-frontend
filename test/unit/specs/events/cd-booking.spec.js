@@ -47,6 +47,9 @@ describe('Booking Page', () => {
       abc: {
         'ticket-1': 2,
       },
+      def: {
+        'ticket-50': 50,
+      },
       xyz: {
         'ticket-100': 100,
       },

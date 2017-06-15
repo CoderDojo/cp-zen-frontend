@@ -51,10 +51,12 @@
 
         getSelectedSessions(booking).forEach((sessionId) => {
           const session = find(event.sessions, s => s.id === sessionId);
-          getSelectedTicketsPerSession(booking, sessionId).forEach((ticketId) => {
-            const ticket = find(session.tickets, t => t.id === ticketId);
-            storeTicket(this.tickets, session.name, booking[sessionId][ticketId], ticket);
-          });
+          if (session) {
+            getSelectedTicketsPerSession(booking, sessionId).forEach((ticketId) => {
+              const ticket = find(session.tickets, t => t.id === ticketId);
+              storeTicket(this.tickets, session.name, booking[sessionId][ticketId], ticket);
+            });
+          }
         });
       },
     },
