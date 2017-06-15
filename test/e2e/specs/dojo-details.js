@@ -79,10 +79,10 @@ describe('Dojo details page', () => {
     EventDetailsPage.name.waitForVisible();
     expect(EventDetailsPage.name.getText()).to.equal('My First Amazing Event');
 
-    EventDetailsPage.dateOfBirthDayInput.setValue('27');
-    EventDetailsPage.dateOfBirthMonthInput.setValue('03');
-    EventDetailsPage.dateOfBirthYearInput.setValue('1980');
-    EventDetailsPage.nextButton.click();
+    EventDetailsPage.dateOfBirthDayInput.selectByValue('27');
+    EventDetailsPage.dateOfBirthMonthInput.selectByValue('3');
+    EventDetailsPage.dateOfBirthYearInput.selectByValue('1980');
+    EventDetailsPage.verify.click();
 
     expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
     EventSessionsPage.name.waitForVisible();
@@ -123,10 +123,10 @@ describe('Dojo details page', () => {
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.eventViewButtons(0).click();
 
-    EventDetailsPage.dateOfBirthDayInput.setValue('25');
-    EventDetailsPage.dateOfBirthMonthInput.setValue('05');
-    EventDetailsPage.dateOfBirthYearInput.setValue('2017');
-    EventDetailsPage.nextButton.click();
+    EventDetailsPage.dateOfBirthDayInput.selectByValue('25');
+    EventDetailsPage.dateOfBirthMonthInput.selectByValue('5');
+    EventDetailsPage.dateOfBirthYearInput.selectByValue('2017');
+    EventDetailsPage.verify.click();
     EventDetailsPage.dateOfBirthError.waitForVisible();
     expect(EventDetailsPage.dateOfBirthError.getText()).to.equal('You will need your parent to carry out the registration.');
   });
