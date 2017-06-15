@@ -31,6 +31,41 @@ const BookingConfirmation = Object.create(BasePage, {
       return $('.cd-booking-confirmation__booking-confirmation');
     },
   },
+  childFirstName: {
+    get() {
+      return $$('.cd-booking-confirmation__child-first-name');
+    },
+  },
+  childLastName: {
+    get() {
+      return $$('.cd-booking-confirmation__child-last-name');
+    },
+  },
+  childDayOfBirth: {
+    get() {
+      return $$('.cd-booking-confirmation__child-dob-date');
+    },
+  },
+  childMonthOfBirth: {
+    get() {
+      return $$('.cd-booking-confirmation__child-dob-month');
+    },
+  },
+  childYearOfBirth: {
+    get() {
+      return $$('.cd-booking-confirmation__child-dob-year');
+    },
+  },
+  childEmailAddress: {
+    get() {
+      return $$('.cd-booking-confirmation__child-email');
+    },
+  },
+  childGender: {
+    get() {
+      return $$('.cd-booking-confirmation__child-gender');
+    },
+  },
 });
 
 module.exports = BookingConfirmation;

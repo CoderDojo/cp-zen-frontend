@@ -18,6 +18,7 @@ describe('Booking Parent Form', () => {
       lastName: 'Doe',
       phone: '1555123456',
       email: 'john.doe@example.com',
+      childrenFormData: ['child1', 'child2'],
       $router: {
         push: sinon.spy(),
       },
@@ -31,7 +32,7 @@ describe('Booking Parent Form', () => {
     // ASSERT
     expect(MockStoreService.save).to.be.calledOnce;
     expect(MockStoreService.save).to.have.been.calledWith(`booking-${parentData.eventId}`,
-      { parent: pick(parentData, ['firstName', 'lastName', 'phone', 'email']) });
+      { parent: pick(parentData, ['firstName', 'lastName', 'phone', 'email']), children: parentData.childrenFormData });
     expect(parentData.$router.push).to.be.calledOnce;
     expect(parentData.$router.push).to.have.been.calledWith(`/events/${parentData.eventId}/create-account`);
   });
@@ -70,6 +71,55 @@ describe('Booking Parent Form', () => {
       // ASSERT
       expect(vm.formValidated).to.be.true;
       expect(vm.submitBooking).to.have.been.calledOnce;
+    });
+  });
+
+  describe('computed.ninjaTickets', () => {
+    it('should return ninja tickets only', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingParentFormComponent());
+      vm.tickets = [
+        {
+          id: 'ticket-1',
+          name: 'U13',
+          type: 'ninja',
+          quantity: 2,
+        },
+        {
+          id: 'ticket-2',
+          name: 'Parent',
+          type: 'parent-guardian',
+          quantity: 1,
+        },
+        {
+          id: 'ticket-3',
+          name: 'O13',
+          type: 'ninja',
+          quantity: 1,
+        },
+      ];
+
+      // ASSERT
+      expect(vm.ninjaTickets).to.deep.equal([
+        {
+          id: 'ticket-1',
+          name: 'U13',
+          type: 'ninja',
+          quantity: 2,
+        },
+        {
+          id: 'ticket-1',
+          name: 'U13',
+          type: 'ninja',
+          quantity: 2,
+        },
+        {
+          id: 'ticket-3',
+          name: 'O13',
+          type: 'ninja',
+          quantity: 1,
+        },
+      ]);
     });
   });
 });

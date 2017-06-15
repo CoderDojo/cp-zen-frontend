@@ -17,6 +17,32 @@
       <input type="text" name="email" id="email" data-vv-as="email" v-validate.initial="'required|email'" v-model="email"><br/>
       <p id="emailValidationError" class="text-danger" v-show="formValidated && errors.has('email')">{{ errors.first('email') }}</p>
 
+      <div v-for="(ticket, index) in ninjaTickets">
+        <h4 class="cd-booking-parent-form__child-section">{{ ticket.name }} ({{ ticket.sessionName }})</h4>
+        <label>
+          Name
+          <input type="text" placeholder="First Name" v-model="childrenFormData[index].firstName" class="cd-booking-parent-form__child-first-name" />
+          <input type="text" placeholder="Last Name" v-model="childrenFormData[index].lastName" class="cd-booking-parent-form__child-last-name" />
+        </label>
+        <label>
+          Date of birth
+          <input type="text" placeholder="Date" v-model="childrenFormData[index].dob.date" class="cd-booking-parent-form__child-dob-date" />
+          <input type="text" placeholder="Month" v-model="childrenFormData[index].dob.month" class="cd-booking-parent-form__child-dob-month" />
+          <input type="text" placeholder="Year" v-model="childrenFormData[index].dob.year" class="cd-booking-parent-form__child-dob-year" />
+        </label>
+        <label>
+          Email address (optional)
+          <input type="email" placeholder="Email address" v-model="childrenFormData[index].email" class="cd-booking-parent-form__child-email" />
+        </label>
+        <label>Gender</label>
+        <div class="cd-booking-parent-form__child-gender">
+          <label><input type="radio" :name="'childGender' + index" value="Male" v-model="childrenFormData[index].gender" /> Male</label>
+          <label><input type="radio" :name="'childGender' + index" value="Female" v-model="childrenFormData[index].gender" /> Female</label>
+          <label><input type="radio" :name="'childGender' + index" value="Other" v-model="childrenFormData[index].gender" /> Not Listed:</label><input type="text" :name="'otherGender' + index" v-model="childrenFormData[index].otherGender" />
+          <label><input type="radio" :name="'childGender' + index" value="Undisclosed" v-model="childrenFormData[index].gender" /> Prefer not to answer</label>
+        </div>
+      </div>
+
       <input type="submit" value="Submit Booking"/>
     </form>
   </div>
@@ -27,7 +53,7 @@
 
   export default {
     name: 'bookingParentForm',
-    props: ['eventId'],
+    props: ['eventId', 'tickets'],
     data() {
       return {
         firstName: null,
@@ -35,11 +61,12 @@
         phone: null,
         email: null,
         formValidated: false,
+        childrenFormData: [],
       };
     },
     methods: {
       submitBooking() {
-        StoreService.save(`booking-${this.eventId}`, { parent: pick(this, ['firstName', 'lastName', 'phone', 'email']) });
+        StoreService.save(`booking-${this.eventId}`, { parent: pick(this, ['firstName', 'lastName', 'phone', 'email']), children: this.childrenFormData });
         this.$router.push(`/events/${this.eventId}/create-account`);
       },
       doValidate() {
@@ -47,6 +74,22 @@
         if (!this.errors.any()) {
           this.submitBooking();
         }
+      },
+    },
+    created() {
+      this.ninjaTickets.forEach(() => this.childrenFormData.push({ dob: {} }));
+    },
+    computed: {
+      ninjaTickets() {
+        const ninjaTickets = [];
+        this.tickets.forEach((ticket) => {
+          if (ticket.type === 'ninja') {
+            for (let i = 0; i < ticket.quantity; i += 1) {
+              ninjaTickets.push(ticket);
+            }
+          }
+        });
+        return ninjaTickets;
       },
     },
   };

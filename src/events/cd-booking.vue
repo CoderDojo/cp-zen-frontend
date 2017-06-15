@@ -7,7 +7,7 @@
       </li>
     </ul>
 
-    <bookingParentForm :eventId="eventId"></bookingParentForm>
+    <bookingParentForm :eventId="eventId" :tickets="tickets"></bookingParentForm>
   </div>
 </template>
 <script>
@@ -23,9 +23,16 @@
     return Object.keys(booking[sessionId]);
   }
 
-  function storeTicket(tickets, name, quantity, sessionName) {
-    tickets.push({ name, quantity, sessionName });
+  function storeTicket(tickets, sessionName, quantity, ticket) {
+    tickets.push({
+      id: ticket.id,
+      name: ticket.name,
+      type: ticket.type,
+      quantity,
+      sessionName,
+    });
   }
+
   export default {
     name: 'Booking',
     props: ['eventId'],
@@ -46,7 +53,7 @@
           const session = find(event.sessions, s => s.id === sessionId);
           getSelectedTicketsPerSession(booking, sessionId).forEach((ticketId) => {
             const ticket = find(session.tickets, t => t.id === ticketId);
-            storeTicket(this.tickets, ticket.name, booking[sessionId][ticketId], session.name);
+            storeTicket(this.tickets, session.name, booking[sessionId][ticketId], ticket);
           });
         });
       },

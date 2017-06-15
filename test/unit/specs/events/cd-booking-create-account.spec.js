@@ -74,6 +74,7 @@ describe('Booking Create Account Form', () => {
         phone: '012345678',
         email: 'foo.bar@baz.com',
       },
+      children: ['child1', 'child2'],
     };
     MockStoreService.load.returns(storedBookingData);
 
@@ -98,9 +99,11 @@ describe('Booking Create Account Form', () => {
 
     // ASSERT
     requestAnimationFrame(() => {
+      expect(vm.parent).to.equal(storedBookingData.parent);
       expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedBookingData.parent);
       expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}`, {
         parent: storedBookingData.parent,
+        children: storedBookingData.children,
       });
       done();
     });

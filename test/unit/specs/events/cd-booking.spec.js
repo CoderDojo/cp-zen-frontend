@@ -15,10 +15,12 @@ describe('Booking Page', () => {
             {
               id: 'ticket-1',
               name: 'Ticket 1',
+              type: 'type-a',
             },
             {
               id: 'ticket-2',
               name: 'Ticket 2',
+              type: 'type-b',
             },
           ],
         },
@@ -29,10 +31,12 @@ describe('Booking Page', () => {
             {
               id: 'ticket-100',
               name: 'Ticket 100',
+              type: 'type-c',
             },
             {
               id: 'ticket-101',
               name: 'Ticket 101',
+              type: 'type-d',
             },
           ],
         },
@@ -62,7 +66,11 @@ describe('Booking Page', () => {
     expect(MockStoreService.load).to.be.calledTwice;
     expect(MockStoreService.load).to.be.calledWith('selected-event');
     expect(MockStoreService.load).to.be.calledWith('booking-sessions');
-    expect(bindingData.tickets).to.have.deep.members([{ name: 'Ticket 1', quantity: 2, sessionName: 'Session 1' }, { name: 'Ticket 100', quantity: 100, sessionName: 'Session 2' }]);
+    expect(bindingData.tickets).to.deep.equal(
+      [
+        { id: 'ticket-1', name: 'Ticket 1', quantity: 2, sessionName: 'Session 1', type: 'type-a' },
+        { id: 'ticket-100', name: 'Ticket 100', quantity: 100, sessionName: 'Session 2', type: 'type-c' },
+      ]);
   });
 });
 
