@@ -33,6 +33,7 @@ const EventDetailsPage = Object.create(BasePage, {
   },
   ticketCounterIncrement: {
     value(index) {
+      $('.cd-number-spinner__increment').waitForVisible();
       return $$('.cd-number-spinner__increment')[index];
     },
   },
