@@ -1,3 +1,4 @@
+import vueUnitHelper from 'vue-unit-helper';
 import BookingConfirmationComponent from '!!vue-loader?inject!@/events/cd-booking-confirmation';
 
 describe('Booking Confirmation Component', () => {
@@ -12,6 +13,7 @@ describe('Booking Confirmation Component', () => {
         phone: '+1-555-123456',
         email: 'john.doe@example.com',
       },
+      children: ['child1', 'child2'],
     };
 
     MockStoreService.load.returns(bookingData);
@@ -19,14 +21,14 @@ describe('Booking Confirmation Component', () => {
       '@/store/store-service': MockStoreService,
     });
 
-    const data = {
-      eventId: 1,
-    };
+    const vm = vueUnitHelper(BookingConfirmationComponentWithMocks);
+    vm.eventId = 1;
 
-    BookingConfirmationComponentWithMocks.methods.loadBookingData.bind(data)();
+    vm.loadBookingData();
 
     expect(MockStoreService.load).to.be.calledOnce;
-    expect(MockStoreService.load).to.have.been.calledWith(`booking-${data.eventId}`);
-    expect(data.parent).to.deep.equal(bookingData.parent);
+    expect(MockStoreService.load).to.have.been.calledWith(`booking-${vm.eventId}`);
+    expect(vm.parent).to.deep.equal(bookingData.parent);
+    expect(vm.children).to.deep.equal(bookingData.children);
   });
 });

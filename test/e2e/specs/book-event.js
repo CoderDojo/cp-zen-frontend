@@ -18,6 +18,7 @@ function startBooking() {
 
   EventSessionsPage.ticketCounterIncrement(1).click();
   EventSessionsPage.ticketCounterIncrement(4).click();
+  EventSessionsPage.ticketCounterIncrement(4).click();
 
   EventSessionsPage.nextButton.click();
 }
@@ -28,7 +29,7 @@ describe('Book event page', () => {
 
     expect(Booking.allTickets().length).to.equal(2);
     expect(Booking.tickets(0).getText()).to.equal('1 X Parent (Scratch)');
-    expect(Booking.tickets(1).getText()).to.equal('1 X Laptop required (Arduino)');
+    expect(Booking.tickets(1).getText()).to.equal('2 X Laptop required (Arduino)');
 
     expect(Booking.firstNameLabel.getText()).to.equal('First name');
     expect(Booking.lastNameLabel.getText()).to.equal('Last name');
@@ -39,6 +40,25 @@ describe('Book event page', () => {
     Booking.lastName.setValue('Doe');
     Booking.phoneNumber.setValue('1555123456');
     Booking.email.setValue('john.doe@example.com');
+
+    expect(Booking.sessionTicketTitle[0].getText()).to.equal('Laptop required (Arduino)');
+
+    Booking.sessionTicketFirstName[0].setValue('Child');
+    Booking.sessionTicketLastName[0].setValue('One');
+    Booking.sessionTicketDayOfBirth[0].setValue('01');
+    Booking.sessionTicketMonthOfBirth[0].setValue('01');
+    Booking.sessionTicketYearOfBirth[0].setValue('2008');
+    Booking.sessionTicketEmailAddress[0].setValue('child@one.org');
+    Booking.sessionTicketGender('Male')[0].click();
+
+    expect(Booking.sessionTicketTitle[1].getText()).to.equal('Laptop required (Arduino)');
+    Booking.sessionTicketFirstName[1].setValue('Child');
+    Booking.sessionTicketLastName[1].setValue('Two');
+    Booking.sessionTicketDayOfBirth[1].setValue('10');
+    Booking.sessionTicketMonthOfBirth[1].setValue('10');
+    Booking.sessionTicketYearOfBirth[1].setValue('2006');
+    Booking.sessionTicketEmailAddress[1].setValue('child@two.org');
+    Booking.sessionTicketGender('Female')[1].click();
 
     Booking.submitBookingButton.click();
 
@@ -60,7 +80,75 @@ describe('Book event page', () => {
     expect(BookingConfirmation.phoneNumber.getText()).to.equal('1555123456');
     expect(BookingConfirmation.email.getText()).to.equal('john.doe@example.com');
 
+    expect(BookingConfirmation.childFirstName[0].getText()).to.equal('Child');
+    expect(BookingConfirmation.childLastName[0].getText()).to.equal('One');
+    expect(BookingConfirmation.childDayOfBirth[0].getText()).to.equal('01');
+    expect(BookingConfirmation.childMonthOfBirth[0].getText()).to.equal('01');
+    expect(BookingConfirmation.childYearOfBirth[0].getText()).to.equal('2008');
+    expect(BookingConfirmation.childEmailAddress[0].getText()).to.equal('child@one.org');
+    expect(BookingConfirmation.childGender[0].getText()).to.equal('Male');
+
+    expect(BookingConfirmation.childFirstName[1].getText()).to.equal('Child');
+    expect(BookingConfirmation.childLastName[1].getText()).to.equal('Two');
+    expect(BookingConfirmation.childDayOfBirth[1].getText()).to.equal('10');
+    expect(BookingConfirmation.childMonthOfBirth[1].getText()).to.equal('10');
+    expect(BookingConfirmation.childYearOfBirth[1].getText()).to.equal('2006');
+    expect(BookingConfirmation.childEmailAddress[1].getText()).to.equal('child@two.org');
+    expect(BookingConfirmation.childGender[1].getText()).to.equal('Female');
+
     expect(BookingConfirmation.bookingConfirmationMessage.getText()).to.equal('Your booking is completed successfully');
+  });
+
+  it('should show the other gender', () => {
+    startBooking();
+
+    expect(Booking.allTickets().length).to.equal(2);
+    expect(Booking.tickets(0).getText()).to.equal('1 X Parent (Scratch)');
+    expect(Booking.tickets(1).getText()).to.equal('2 X Laptop required (Arduino)');
+
+    expect(Booking.firstNameLabel.getText()).to.equal('First name');
+    expect(Booking.lastNameLabel.getText()).to.equal('Last name');
+    expect(Booking.phoneNumberLabel.getText()).to.equal('Phone number');
+    expect(Booking.emailLabel.getText()).to.equal('Email address');
+
+    Booking.firstName.setValue('John');
+    Booking.lastName.setValue('Doe');
+    Booking.phoneNumber.setValue('1555123456');
+    Booking.email.setValue('john.doe@example.com');
+
+    expect(Booking.sessionTicketTitle[0].getText()).to.equal('Laptop required (Arduino)');
+
+    Booking.sessionTicketFirstName[0].setValue('Child');
+    Booking.sessionTicketLastName[0].setValue('One');
+    Booking.sessionTicketDayOfBirth[0].setValue('01');
+    Booking.sessionTicketMonthOfBirth[0].setValue('01');
+    Booking.sessionTicketYearOfBirth[0].setValue('2008');
+    Booking.sessionTicketEmailAddress[0].setValue('child@one.org');
+    Booking.sessionTicketGender('Other')[0].click();
+    Booking.sessionOtherGender[0].setValue('another gender');
+
+    expect(Booking.sessionTicketTitle[1].getText()).to.equal('Laptop required (Arduino)');
+    Booking.sessionTicketFirstName[1].setValue('Child');
+    Booking.sessionTicketLastName[1].setValue('Two');
+    Booking.sessionTicketDayOfBirth[1].setValue('10');
+    Booking.sessionTicketMonthOfBirth[1].setValue('10');
+    Booking.sessionTicketYearOfBirth[1].setValue('2006');
+    Booking.sessionTicketEmailAddress[1].setValue('child@two.org');
+    Booking.sessionTicketGender('Female')[1].click();
+
+    Booking.submitBookingButton.click();
+
+    BookingCreateAccount.password.waitForVisible();
+    BookingCreateAccount.password.setValue('Passw0rd');
+    BookingCreateAccount.confirmPassword.setValue('Passw0rd');
+    BookingCreateAccount.termsAndConditions.click();
+    BookingCreateAccount.dataConsent.click();
+    BookingCreateAccount.checkRecaptcha();
+    BookingCreateAccount.createAccount.click();
+
+    BookingConfirmation.firstName.waitForVisible();
+
+    expect(BookingConfirmation.childGender[0].getText()).to.equal('Other (another gender)');
   });
 
   it('should report validation errors for not filling in required fields', () => {

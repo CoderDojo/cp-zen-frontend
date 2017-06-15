@@ -8,6 +8,17 @@
       <li class="cd-booking-confirmation__phone-number">{{ parent.phone }}</li>
       <li class="cd-booking-confirmation__email">{{ parent.email }}</li>
     </ul>
+    <ul v-for="child in children">
+      <li class="cd-booking-confirmation__child-first-name">{{ child.firstName }}</li>
+      <li class="cd-booking-confirmation__child-last-name">{{ child.lastName }}</li>
+      <li class="cd-booking-confirmation__child-dob-date">{{ child.dob.date }}</li>
+      <li class="cd-booking-confirmation__child-dob-month">{{ child.dob.month }}</li>
+      <li class="cd-booking-confirmation__child-dob-year">{{ child.dob.year }}</li>
+      <li class="cd-booking-confirmation__child-email">{{ child.email }}</li>
+      <li class="cd-booking-confirmation__child-gender">
+        {{ child.gender }} <span v-if="child.otherGender">({{ child.otherGender }})</span>
+      </li>
+    </ul>
   </div>
 </template>
 <script>
@@ -19,6 +30,7 @@
     data() {
       return {
         parent: {},
+        children: null,
         accountCreated: false,
       };
     },
@@ -26,6 +38,7 @@
       loadBookingData() {
         const bookingData = StoreService.load(`booking-${this.eventId}`);
         this.parent = bookingData.parent;
+        this.children = bookingData.children;
         this.accountCreated = bookingData.accountCreated;
       },
     },

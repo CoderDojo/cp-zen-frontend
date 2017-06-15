@@ -78,11 +78,13 @@
         }
       },
       register() {
-        this.parent = StoreService.load(`booking-${this.eventId}`).parent;
+        const bookingData = StoreService.load(`booking-${this.eventId}`);
+        this.parent = bookingData.parent;
         return UserService.register(this.user, this.parent)
           .then(() => {
             StoreService.save(`booking-${this.eventId}`, {
               parent: this.parent,
+              children: bookingData.children,
             });
             return Promise.resolve();
           });
