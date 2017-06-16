@@ -107,10 +107,22 @@
         }
       }
 
+      &-date-timestamp {
+        font-size: 18px;
+       }
+
+      &-times-timestamp {
+         font-size: 16px;
+       }
+
       &-view {
         margin-top: 32px;
       }
     }
 
+    &__datetime {
+      list-style-type: none;
+      margin-right: 27px;
+     }
   }
 </style>
