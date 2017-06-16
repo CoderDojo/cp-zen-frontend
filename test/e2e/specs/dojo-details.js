@@ -60,16 +60,22 @@ describe('Dojo details page', () => {
     const firstEventName = DojoDetailsPage.eventNames(0).getText();
     expect(firstEventName).to.equal('My First Amazing Event');
     expect(DojoDetailsPage.eventSessions(0).getText()).to.equal('Sessions: Scratch, Arduino');
-    expect(DojoDetailsPage.eventDates(0).getText()).to.equal('2017-06-06T16:30:00.000Z');
+    expect(DojoDetailsPage.eventDate(0).getText()).to.equal('June 6, 2017');
+    expect(DojoDetailsPage.eventTimes(0).getText()).to.equal('4:30pm - 6pm');
 
     const secondEventName = DojoDetailsPage.eventNames(1).getText();
     expect(secondEventName).to.equal('My Second Amazing Event');
     expect(DojoDetailsPage.eventSessions(1).getText()).to.equal('Sessions: Raspberry Pi, Unity');
-    expect(DojoDetailsPage.eventDates(1).getText()).to.equal('2017-06-03T10:00:00.000Z');
-    expect(DojoDetailsPage.eventDates(2).getText()).to.equal('2017-06-17T10:00:00.000Z');
-    expect(DojoDetailsPage.eventDates(3).getText()).to.equal('2017-07-01T10:00:00.000Z');
-    expect(DojoDetailsPage.eventDates(4).getText()).to.equal('2017-07-15T10:00:00.000Z');
-    expect(DojoDetailsPage.eventDates(5).getText()).to.equal('2017-07-29T10:00:00.000Z');
+    expect(DojoDetailsPage.eventDate(1).getText()).to.equal('June 3, 2017');
+    expect(DojoDetailsPage.eventTimes(1).getText()).to.equal('10am - 12pm');
+    expect(DojoDetailsPage.eventDate(2).getText()).to.equal('June 17, 2017');
+    expect(DojoDetailsPage.eventTimes(2).getText()).to.equal('10am - 12pm');
+    expect(DojoDetailsPage.eventDate(3).getText()).to.equal('July 1, 2017');
+    expect(DojoDetailsPage.eventTimes(3).getText()).to.equal('10am - 12pm');
+    expect(DojoDetailsPage.eventDate(4).getText()).to.equal('July 15, 2017');
+    expect(DojoDetailsPage.eventTimes(4).getText()).to.equal('10am - 12pm');
+    expect(DojoDetailsPage.eventDate(5).getText()).to.equal('July 29, 2017');
+    expect(DojoDetailsPage.eventTimes(5).getText()).to.equal('10am - 12pm');
   });
 
   it('should show event details after clicking on an event', () => {

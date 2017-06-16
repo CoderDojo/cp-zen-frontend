@@ -95,9 +95,14 @@ const DojoDetailsPage = Object.create(BasePage, {
       return $$('.cd-event-list__event-sessions')[index];
     }
   },
-  eventDates: {
+  eventDate: {
     value(index) {
-      return $$('.cd-event-list__event-datetime-timestamp')[index];
+      return $$('.cd-event-list__event-date-timestamp')[index];
+    }
+  },
+  eventTimes: {
+    value(index) {
+      return $$('.cd-event-list__event-times-timestamp')[index];
     }
   },
   eventViewButtons: {
