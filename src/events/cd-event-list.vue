@@ -12,8 +12,13 @@
           </h4>
         </header>
         <ul class="cd-event-list__datetime">
-          <li v-for="date in event.dates" class="cd-event-list__event-datetime-timestamp">
-            {{ date.startTime }}
+          <li v-for="date in event.dates">
+            <div class="cd-event-list__event-date-timestamp">
+              {{ date.startTime | cdDateFormatter }}
+            </div>
+            <div class="cd-event-list__event-times-timestamp">
+              {{ date.startTime | cdTimeFormatter }} - {{ date.endTime | cdTimeFormatter }}
+            </div>
           </li>
         </ul>
       </div>
@@ -25,6 +30,8 @@
   </div>
 </template>
 <script>
+  import cdDateFormatter from '@/common/filters/cd-date-formatter';
+  import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import service from './service';
 
   export default {
@@ -34,6 +41,10 @@
       return {
         events: [],
       };
+    },
+    filters: {
+      cdDateFormatter,
+      cdTimeFormatter,
     },
     methods: {
       loadEvents() {
@@ -87,7 +98,7 @@
         margin: 4px 0;
       }
 
-      &-datetime {
+      &-date, &-times {
        flex: 1;
         &-timestamp {
           list-style-type: none;

@@ -19,6 +19,7 @@
     "cd-common": "git+https://github.com/CoderDojo/cd-common.git#1.1.5",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.4",
+    "moment": "^2.18.1",
     "vee-validate": "2.0.0-rc.5",
     "vue": "^2.2.6",
     "vue-awesome": "^2.3.1",
