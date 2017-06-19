@@ -133,7 +133,7 @@
     }
 
     &__left_column {
-      background-color: @cd-very-light-grey;
+      background-color: #f4f5f6;
       height: 450px;
     }
 

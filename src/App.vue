@@ -21,10 +21,4 @@
   };
 </script>
 
-<style>
-  body {
-    margin: 0;
-    background: #EEEEEE;
-    font-family: Lato, Arial, Helvetica, sans-serif;
-  }
-</style>
+<style lang="less" src="@/common/base.less"></style>
