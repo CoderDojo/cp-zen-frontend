@@ -22,13 +22,17 @@
         <img src="../assets/characters/ninjas/ninja-female-2-laptop-sitting.svg" />
       </div>
     </div>
-
-    <dojoList v-if="dojos.length > 0" :dojos="dojos"></dojoList>
+    <div v-if="dojos.length > 0" class="cd-find-dojo__results">
+      <dojo-list class="cd-find-dojo__results-list" :dojos="dojos"></dojo-list>
+      <dojo-map :center="coordinates" class="cd-find-dojo__results-map" :dojos="dojos" style="width: 400px;height: 400px;"></dojo-map>
+    </div>
   </div>
 
 </template>
 <script>
   import DojoList from '@/dojos/cd-dojo-list';
+  import DojoMap from '@/dojos/cd-dojo-map';
+  import GeolocationService from '@/geolocation/service';
   import DojosService from './service';
 
   export default {
@@ -64,13 +68,16 @@
           });
       },
       searchDojosByAddress() {
-        DojosService.getDojosByAddress(this.searchCriteria).then((response) => {
-          this.dojos = response.body;
-        });
+        GeolocationService.getLatitudeLongitudeByAddress(this.searchCriteria)
+          .then((coords) => {
+            this.coordinates = coords;
+            this.getDojosByLatLong();
+          });
       },
     },
     components: {
-      dojoList: DojoList,
+      DojoList,
+      DojoMap,
     },
     created() {
       if (this.lat && this.long) {
@@ -143,6 +150,18 @@
         align-self: flex-end;
         padding: 0 32px;
         transform: rotateY(180deg) translateY(15%);
+      }
+    }
+    &__results {
+     display: flex;
+     padding: 32px 16px;
+      &-list {
+        flex: 7
+      }
+
+      &-map {
+        flex: 5;
+        padding-left: 16px;
       }
     }
   }

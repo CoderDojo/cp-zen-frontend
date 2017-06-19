@@ -4,6 +4,7 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
 import VeeValidate from 'vee-validate';
+import * as VueGoogleMaps from 'vue2-google-maps';
 import PasswordValidator from '@/common/directives/cd-password-validator';
 import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,6 +18,11 @@ Vue.config.apiBase = process.env.API_BASE;
 
 Vue.use(VueResource);
 Vue.use(VeeValidate);
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyC3xF9XV91bS2R14Gjmx3UQaKbGgAfHbE4',
+  },
+});
 
 /* eslint-disable no-new */
 new Vue({

@@ -1,4 +1,4 @@
-const DojoPage = require('../page-objects/dojo-page');
+const DojoPage = require('../page-objects/find-dojo-page');
 
 describe('The dojo list', () => {
   it('should list all the dojos', () => {

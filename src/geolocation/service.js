@@ -19,4 +19,16 @@ export default {
       });
     });
   },
+
+  getLatitudeLongitudeByAddress(address) {
+    return this.getIpCountryDetails()
+      .then(response => this.geocode({
+        address,
+        region: response.body.country && response.body.country.iso_code,
+      }))
+      .then(results => Promise.resolve({
+        latitude: results[0].geometry.location.lat(),
+        longitude: results[0].geometry.location.lng(),
+      }));
+  },
 };

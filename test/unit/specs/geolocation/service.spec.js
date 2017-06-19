@@ -51,6 +51,15 @@ describe('Geolocation Service', () => {
     },
   };
 
+  const mockGeocoderResults = [{
+    geometry: {
+      location: {
+        lat: () => 10,
+        lng: () => 89,
+      },
+    },
+  }];
+
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
   });
@@ -72,16 +81,25 @@ describe('Geolocation Service', () => {
     });
   });
 
+  describe('getLatitudeLongitudeByAddress()', () => {
+    it('should return coordinates for given address', (done) => {
+      // ARRANGE
+      sandbox.stub(GeolocationService, 'getIpCountryDetails').returns(Promise.resolve({ body: expectedIpCountryDetails }));
+      sandbox.stub(GeolocationService, 'geocode').returns(Promise.resolve(mockGeocoderResults));
+
+      // ACT
+      GeolocationService.getLatitudeLongitudeByAddress()
+        .then((coords) => {
+          // ASSERT
+          expect(coords.latitude).to.equal(10);
+          expect(coords.longitude).to.equal(89);
+          done();
+        });
+    });
+  });
+
   describe('geocode()', () => {
     let status;
-    const mockGeocoderResults = [{
-      geometry: {
-        location: {
-          lat: () => 10,
-          lng: () => 89,
-        },
-      },
-    }];
 
     const mockGeocoder = {
       geocode(geocoderSearchOptions, cb) {

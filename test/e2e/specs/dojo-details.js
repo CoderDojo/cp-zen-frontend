@@ -1,4 +1,4 @@
-const DojoPage = require('../page-objects/dojo-page');
+const DojoPage = require('../page-objects/find-dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
 const EventDetailsPage = require('../page-objects/event-details');
 const EventSessionsPage = require('../page-objects/event-sessions');

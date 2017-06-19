@@ -1,4 +1,4 @@
-const DojoPage = require('../page-objects/dojo-page');
+const DojoPage = require('../page-objects/find-dojo-page');
 
 describe('Find Dojo page', () => {
   it('should have a Get current location button', () => {
@@ -19,5 +19,6 @@ describe('Find Dojo page', () => {
     expect(dojosList[0].getText()).to.have.string('CD ROM');
     expect(dojosList[1].getText()).to.have.string('Smithfield Awesome Dojo');
     expect(dojosList[2].getText()).to.have.string('Dublin Ninja Kids');
+    expect(DojoPage.map.isVisible()).to.equal(true);
   });
 });

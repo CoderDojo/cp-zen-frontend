@@ -84,12 +84,18 @@ const expectedDojosForLatLong = [{
   id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
 }];
 
-function setUpFindDojoComponent(mockBody) {
-  const mock = {
-    getDojosByAddress: (/* address */) => Promise.resolve({ body: mockBody }),
-  };
+const geoLocationServiceMock = {
+  getLatitudeLongitudeByAddress: sinon.stub(),
+};
+
+const dojoServiceMock = {
+  getDojosByLatLong: sinon.stub(),
+};
+
+function setUpFindDojoComponent() {
   const cdFindDojoWithMocks = cdFindDojo({
-    './service': mock,
+    './service': dojoServiceMock,
+    '@/geolocation/service': geoLocationServiceMock,
   });
   return cdFindDojoWithMocks;
 }
@@ -160,14 +166,30 @@ describe('The Find dojo vue ', () => {
 
   it('should search dojo\'s by address', (done) => {
     // ARRANGE
-    const FindDojoWithMock = setUpFindDojoComponent(expectedDojosForAddress);
+    const FindDojoWithMock = setUpFindDojoComponent();
+    dojoServiceMock.getDojosByLatLong
+      .withArgs(12, 84)
+      .returns(Promise.resolve({ body: expectedDojosForAddress }));
+    geoLocationServiceMock.getLatitudeLongitudeByAddress
+      .withArgs('CHQ')
+      .returns(Promise.resolve({
+        latitude: 12,
+        longiutide: 84,
+      }));
     const vm = vueUnitHelper(FindDojoWithMock);
+    sandbox.stub(vm, 'getDojosByLatLong');
     vm.searchCriteria = 'CHQ';
+
     // ACT
     vm.searchDojosByAddress();
+
+    // ASSERT
     requestAnimationFrame(() => {
-      // ASSERT
-      expect(vm.dojos).to.deep.equal(expectedDojosForAddress);
+      expect(vm.coordinates).to.deep.equal({
+        latitude: 12,
+        longiutide: 84,
+      });
+      expect(vm.getDojosByLatLong).to.have.been.calledOnce;
       done();
     });
   });
