@@ -1,17 +1,18 @@
 import vueUnitHelper from 'vue-unit-helper';
 import BookingParentFormComponent from '!!vue-loader?inject!@/events/cd-booking-parent-form';
 import { pick } from 'lodash';
+import { ErrorBag } from 'vee-validate';
 
 describe('Booking Parent Form', () => {
+  const MockStoreService = {
+    save: sinon.spy(),
+  };
+  const BookingParentFormComponentWithMocks = BookingParentFormComponent({
+    '@/store/store-service': MockStoreService,
+  });
+
   it('should store parent data and navigate to confirmation page', () => {
     // ARRANGE
-    const MockStoreService = {
-      save: sinon.spy(),
-    };
-    const BookingParentFormComponentWithMocks = BookingParentFormComponent({
-      '@/store/store-service': MockStoreService,
-    });
-
     const parentData = {
       eventId: 1,
       firstName: 'John',
@@ -33,44 +34,36 @@ describe('Booking Parent Form', () => {
     expect(MockStoreService.save).to.be.calledOnce;
     expect(MockStoreService.save).to.have.been.calledWith(`booking-${parentData.eventId}`,
       { parent: pick(parentData, ['firstName', 'lastName', 'phone', 'email']), children: parentData.childrenFormData });
-    expect(parentData.$router.push).to.be.calledOnce;
-    expect(parentData.$router.push).to.have.been.calledWith(`/events/${parentData.eventId}/create-account`);
   });
 
-  describe('parentForm.doValidate()', () => {
-    it('should not call submitBooking if validation errors are present', () => {
+  describe('form validation', () => {
+    it('should return a valid form', () => {
       // ARRANGE
-      const BookingParentFormComponentWithMocks = BookingParentFormComponent();
       const vm = vueUnitHelper(BookingParentFormComponentWithMocks);
-
-      vm.submitBooking = sinon.spy();
-      vm.errors = {
-        any: () => true,
-      };
+      vm.errors = new ErrorBag();
+      vm.formValidated = false;
 
       // ACT
-      vm.doValidate();
+      const isValid = vm.isValid();
 
       // ASSERT
-      expect(vm.formValidated).to.be.true;
-      expect(vm.submitBooking).to.not.have.been.called;
+      expect(isValid).to.equal(true);
+      expect(vm.formValidated).to.equal(true);
     });
-    it('should call submitBooking if no validation errors are present', () => {
+    it('should return a invalid form with errors', () => {
       // ARRANGE
-      const BookingParentFormComponentWithMocks = BookingParentFormComponent();
       const vm = vueUnitHelper(BookingParentFormComponentWithMocks);
-
-      vm.submitBooking = sinon.spy();
-      vm.errors = {
-        any: () => false,
-      };
+      const bag = new ErrorBag();
+      bag.add('oooo');
+      vm.errors = bag;
+      vm.formValidated = false;
 
       // ACT
-      vm.doValidate();
+      const isValid = vm.isValid();
 
       // ASSERT
-      expect(vm.formValidated).to.be.true;
-      expect(vm.submitBooking).to.have.been.calledOnce;
+      expect(isValid).to.equal(false);
+      expect(vm.formValidated).to.equal(true);
     });
   });
 

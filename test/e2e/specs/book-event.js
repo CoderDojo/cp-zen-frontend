@@ -1,5 +1,4 @@
 const Booking = require('../page-objects/booking');
-const BookingCreateAccount = require('../page-objects/booking-create-account');
 const BookingConfirmation = require('../page-objects/booking-confirmation');
 const DojoPage = require('../page-objects/find-dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
@@ -62,17 +61,15 @@ describe('Book event page', () => {
     Booking.sessionTicketEmailAddress[1].setValue('child@two.org');
     Booking.sessionTicketGender('Female')[1].click();
 
-    Booking.submitBookingButton.click();
+    expect(Booking.dataUsageLink.isVisible()).to.be.true;
+    expect(Booking.termsAndConditionsLink.isVisible()).to.be.true;
+    Booking.password.setValue('Passw0rd');
+    Booking.confirmPassword.setValue('Passw0rd');
+    Booking.termsAndConditions.click();
+    Booking.dataConsent.click();
+    Booking.checkRecaptcha();
 
-    BookingCreateAccount.password.waitForVisible();
-    expect(BookingCreateAccount.dataUsageLink.isVisible()).to.be.true;
-    expect(BookingCreateAccount.termsAndConditionsLink.isVisible()).to.be.true;
-    BookingCreateAccount.password.setValue('Passw0rd');
-    BookingCreateAccount.confirmPassword.setValue('Passw0rd');
-    BookingCreateAccount.termsAndConditions.click();
-    BookingCreateAccount.dataConsent.click();
-    BookingCreateAccount.checkRecaptcha();
-    BookingCreateAccount.createAccount.click();
+    Booking.submitBookingButton.click();
 
     BookingConfirmation.firstName.waitForVisible();
 
@@ -138,15 +135,14 @@ describe('Book event page', () => {
     Booking.sessionTicketEmailAddress[1].setValue('child@two.org');
     Booking.sessionTicketGender('Female')[1].click();
 
-    Booking.submitBookingButton.click();
+    Booking.password.waitForVisible();
+    Booking.password.setValue('Passw0rd');
+    Booking.confirmPassword.setValue('Passw0rd');
+    Booking.termsAndConditions.click();
+    Booking.dataConsent.click();
+    Booking.checkRecaptcha();
 
-    BookingCreateAccount.password.waitForVisible();
-    BookingCreateAccount.password.setValue('Passw0rd');
-    BookingCreateAccount.confirmPassword.setValue('Passw0rd');
-    BookingCreateAccount.termsAndConditions.click();
-    BookingCreateAccount.dataConsent.click();
-    BookingCreateAccount.checkRecaptcha();
-    BookingCreateAccount.createAccount.click();
+    Booking.submitBookingButton.click();
 
     BookingConfirmation.firstName.waitForVisible();
 
@@ -163,20 +159,25 @@ describe('Book event page', () => {
 
     Booking.submitBookingButton.click();
 
-    BookingCreateAccount.checkRecaptcha();
-    BookingCreateAccount.createAccount.click();
-    expect(BookingCreateAccount.passwordError.getText()).to.equal('The password field is required.');
-    expect(BookingCreateAccount.confirmPasswordError.getText()).to.equal('The password confirmation field is required.');
-    expect(BookingCreateAccount.termsAndConditionsError.getText()).to.equal('You must accept the terms and conditions before proceeding.');
-    expect(BookingCreateAccount.dataConsentError.getText()).to.equal('You must consent to the use of your data before proceeding.');
+    expect(browser.alertText()).to.equal('Please complete the reCAPTCHA.');
+    browser.alertAccept();
 
-    BookingCreateAccount.password.setValue('foo');
-    BookingCreateAccount.confirmPassword.setValue('foo');
-    expect(BookingCreateAccount.passwordError.getText()).to.equal('The password should be at least 8 characters and contain at least one numeric character.');
+    Booking.checkRecaptcha();
 
-    BookingCreateAccount.password.setValue('Passw0rd');
-    BookingCreateAccount.confirmPassword.setValue('No-Passw0rd');
-    expect(BookingCreateAccount.passwordError.getText()).to.equal('The password confirmation does not match.');
+    Booking.submitBookingButton.click();
+
+    expect(Booking.passwordError.getText()).to.equal('The password field is required.');
+    expect(Booking.confirmPasswordError.getText()).to.equal('The password confirmation field is required.');
+    expect(Booking.termsAndConditionsError.getText()).to.equal('You must accept the terms and conditions before proceeding.');
+    expect(Booking.dataConsentError.getText()).to.equal('You must consent to the use of your data before proceeding.');
+
+    Booking.password.setValue('foo');
+    Booking.confirmPassword.setValue('foo');
+    expect(Booking.passwordError.getText()).to.equal('The password should be at least 8 characters and contain at least one numeric character.');
+
+    Booking.password.setValue('Passw0rd');
+    Booking.confirmPassword.setValue('No-Passw0rd');
+    expect(Booking.passwordError.getText()).to.equal('The password confirmation does not match.');
   });
 
   it('should report validation errors for invalid phone number', () => {
@@ -186,6 +187,7 @@ describe('Book event page', () => {
     Booking.lastName.setValue('Doe');
     Booking.phoneNumber.setValue('+1-555-12-3456');
     Booking.email.setValue('john.doe@example.com');
+    Booking.checkRecaptcha();
 
     Booking.submitBookingButton.waitForVisible();
     Booking.submitBookingButton.click();
@@ -200,6 +202,7 @@ describe('Book event page', () => {
     Booking.lastName.setValue('Doe');
     Booking.phoneNumber.setValue('1555123456');
     Booking.email.setValue('john.doe');
+    Booking.checkRecaptcha();
 
     Booking.submitBookingButton.waitForVisible();
     Booking.submitBookingButton.click();
@@ -209,6 +212,7 @@ describe('Book event page', () => {
 
   it('should report validation errors missing required fields', () => {
     startBooking();
+    Booking.checkRecaptcha();
 
     Booking.submitBookingButton.waitForVisible();
     Booking.submitBookingButton.click();

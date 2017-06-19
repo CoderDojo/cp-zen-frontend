@@ -5,7 +5,6 @@ import FindDojo from '@/dojos/cd-find-dojo';
 import EventDetails from '@/events/cd-event-details';
 import EventSessions from '@/events/cd-event-sessions';
 import Booking from '@/events/cd-booking';
-import BookingCreateAccount from '@/events/cd-booking-create-account';
 import BookingConfirmation from '@/events/cd-booking-confirmation';
 
 Vue.use(Router);
@@ -41,12 +40,6 @@ export default new Router({
       path: '/events/:eventId/book',
       name: 'EventBookingForm',
       component: Booking,
-      props: true,
-    },
-    {
-      path: '/events/:eventId/create-account',
-      name: 'EventBookingCreateAccount',
-      component: BookingCreateAccount,
       props: true,
     },
     {

@@ -6,13 +6,17 @@
         {{ticket.quantity}} X {{ ticket.name }} ({{ ticket.sessionName }})
       </li>
     </ul>
-
-    <bookingParentForm :eventId="eventId" :tickets="tickets"></bookingParentForm>
+    <form>
+      <bookingParentForm :eventId="eventId" :tickets="tickets" ref="bookingParentFormRef" v-ref="child"></bookingParentForm>
+      <bookingCreateAccount :eventId="eventId" ref="bookingCreateAccountRef" v-ref="child"></bookingCreateAccount>
+    </form>
+    <input type="button" @click="onSubmit()" value="Submit Booking"/>
   </div>
 </template>
 <script>
   import StoreService from '@/store/store-service';
   import BookingParentForm from '@/events/cd-booking-parent-form';
+  import BookingCreateAccount from '@/events/cd-booking-create-account';
   import { find } from 'lodash';
 
   function getSelectedSessions(booking) {
@@ -38,6 +42,7 @@
     props: ['eventId'],
     components: {
       bookingParentForm: BookingParentForm,
+      bookingCreateAccount: BookingCreateAccount,
     },
     data() {
       return {
@@ -58,6 +63,22 @@
             });
           }
         });
+      },
+      onSubmit() {
+        if (this.isValidChildForm()) {
+          this.$refs.bookingParentFormRef.submitBooking();
+          this.$refs.bookingCreateAccountRef.submitAccount();
+          this.$router.push(`/events/${this.eventId}/confirmation`);
+        }
+      },
+      isValidChildForm() {
+        if (!this.$refs.bookingCreateAccountRef.getRecaptchaResponse()) {
+          // eslint-disable-next-line
+          window.alert('Please complete the reCAPTCHA.');
+          return false;
+        }
+        return this.$refs.bookingParentFormRef.isValid() &&
+          this.$refs.bookingCreateAccountRef.isValid();
       },
     },
     created() {
