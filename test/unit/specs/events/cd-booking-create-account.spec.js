@@ -1,5 +1,6 @@
 import vueUnitHelper from 'vue-unit-helper';
 import { clone } from 'lodash';
+import { ErrorBag } from 'vee-validate';
 import BookingCreateAccountComponent from '!!vue-loader?inject!@/events/cd-booking-create-account';
 
 describe('Booking Create Account Form', () => {
@@ -109,68 +110,90 @@ describe('Booking Create Account Form', () => {
     });
   });
 
-  describe('onValidate()', () => {
-    it('should call register, joinDojo and bookTickets if there is no error', (done) => {
+  describe('submitAccount()', () => {
+    it('should call register, joinDojo and bookTickets', (done) => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.recaptchaResponse = 'foo';
-      vm.errors = {
-        any: () => false,
-      };
       vm.eventId = 1;
-      vm.$router = {
-        push: sinon.stub(),
-      };
 
       sandbox.stub(vm, 'register').returns(Promise.resolve());
       sandbox.stub(vm, 'joinDojo').returns(Promise.resolve());
       sandbox.stub(vm, 'bookTickets').returns(Promise.resolve());
 
       // ACT
-      vm.onValidate();
+      vm.submitAccount();
 
       // ASSERT
       requestAnimationFrame(() => {
         expect(vm.register).to.have.been.calledOnce;
         expect(vm.joinDojo).to.have.been.calledOnce;
         expect(vm.bookTickets).to.have.been.calledOnce;
-        expect(vm.$router.push).to.have.been.calledWith(`/events/${vm.eventId}/confirmation`);
         done();
       });
     });
+  });
 
-    it('should validate recaptcha', () => {
-      // ARRANGE
-      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.errors = {
-        any: () => false,
-      };
-
-      sandbox.stub(vm, 'register');
-      sandbox.stub(window, 'alert');
-
-      vm.onValidate();
-
-      // ASSERT
-      expect(vm.register).not.to.have.been.called;
-      expect(window.alert).to.have.been.calledWith('Please complete reCAPTCHA');
-    });
-
-    it('should not call register if there is an error', () => {
+  describe('form validation', () => {
+    it('should return a valid form', () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.recaptchaResponse = 'foo';
-      vm.errors = {
-        any: () => true,
-      };
-
-      sandbox.stub(vm, 'register');
+      vm.errors = new ErrorBag();
+      vm.formValidated = false;
 
       // ACT
-      vm.onValidate();
+      const isValid = vm.isValid();
 
       // ASSERT
-      expect(vm.register).not.to.have.been.called;
+      expect(isValid).to.equal(true);
+      expect(vm.formValidated).to.equal(true);
+    });
+    it('should return a invalid form without recaptcha and empty error', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+      vm.recaptchaResponse = null;
+      vm.errors = new ErrorBag();
+      vm.formValidated = false;
+
+      // ACT
+      const isValid = vm.isValid();
+
+      // ASSERT
+      expect(isValid).to.equal(false);
+      expect(vm.formValidated).to.equal(true);
+    });
+    it('should return a invalid form without recaptcha and with errors', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+      vm.recaptchaResponse = null;
+      const bag = new ErrorBag();
+      bag.add('oooo');
+      vm.errors = bag;
+      vm.formValidated = false;
+
+      // ACT
+      const isValid = vm.isValid();
+
+      // ASSERT
+      expect(isValid).to.equal(false);
+      expect(vm.formValidated).to.equal(true);
+    });
+    it('should return a invalid form with recaptcha and with errors', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+      vm.recaptchaResponse = 'some recaptcha';
+      const bag = new ErrorBag();
+      bag.add('oooo');
+      vm.errors = bag;
+      vm.formValidated = false;
+
+      // ACT
+      const isValid = vm.isValid();
+
+      // ASSERT
+      expect(isValid).to.equal(false);
+      expect(vm.formValidated).to.equal(true);
     });
   });
 
