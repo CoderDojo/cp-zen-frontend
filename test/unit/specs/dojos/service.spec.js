@@ -150,48 +150,6 @@ describe('Dojos Service', () => {
     });
   });
 
-  describe('getDojosByAddress', () => {
-    it('should get dojos by address', (done) => {
-      // ARRANGE
-      MockGeolocationService.getIpCountryDetails
-        .returns(Promise.resolve({ body: expectedIpCountryDetails }));
-
-      const mockGeocoderResults = [{
-        geometry: {
-          location: {
-            lat: () => 10,
-            lng: () => 89,
-          },
-        },
-      }];
-      MockGeolocationService.geocode.withArgs({
-        address: 'CHQ',
-        region: 'IE',
-      }).returns(Promise.resolve(mockGeocoderResults));
-
-      sandbox.stub(DojosServiceWithMocks, 'getDojosByLatLong').returns(Promise.resolve({ body: expectedDojos }));
-
-      // ACT
-      const result = DojosServiceWithMocks.getDojosByAddress('CHQ');
-
-      // ASSERT
-      requestAnimationFrame(() => {
-        expect(MockGeolocationService.getIpCountryDetails).to.have.been.calledOnce;
-        expect(MockGeolocationService.geocode).to.have.been.calledOnce;
-        expect(MockGeolocationService.geocode).to.have.been.calledWith({
-          address: 'CHQ',
-          region: 'IE',
-        });
-        expect(DojosServiceWithMocks.getDojosByLatLong).to.have.been.calledOnce;
-        expect(DojosServiceWithMocks.getDojosByLatLong).to.have.been.calledWith(10, 89);
-        result.then((response) => {
-          expect(response).to.deep.equal({ body: expectedDojos });
-          done();
-        });
-      });
-    });
-  });
-
   describe('joinDojo', () => {
     it('should join a user to a dojo, based off userId, dojoId and roles', (done) => {
       // ARRANGE

@@ -1,7 +1,7 @@
 <template>
   <div class="cd-dojo-list">
     <p class="cd-dojo-list__show-dojo-list-count">Showing {{dojos.length}} of {{dojos.length}} Dojos</p>
-    <dojo-list-item v-for="dojo in dojos" :dojo="dojo"></dojo-list-item>
+    <dojo-list-item v-for="dojo in dojos" :key="dojo.id" :dojo="dojo"></dojo-list-item>
   </div>
 </template>
 <script>
@@ -18,8 +18,6 @@
 </script>
 <style scoped lang="less">
   .cd-dojo-list {
-    padding-top: 34px;
-
     &__show-dojo-list-count {
       font-size: 14px;
       color: #a2a1a0;

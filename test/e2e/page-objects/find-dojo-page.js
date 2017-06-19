@@ -47,6 +47,11 @@ const DojoPage = Object.create(BasePage, {
       return $('.cd-dojo-list__show-dojo-list-count');
     },
   },
+  map: {
+    get() {
+      return $('.cd-find-dojo__results-map');
+    },
+  },
   open: {
     value() {
       return BasePage.open.call(this, '/');
