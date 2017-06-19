@@ -58,53 +58,6 @@ describe('Dojos Service', () => {
     id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
   }];
 
-  const expectedIpCountryDetails = {
-    continent: {
-      code: 'EU',
-      geoname_id: 6255148,
-      names: {
-        de: 'Europa',
-        en: 'Europe',
-        es: 'Europa',
-        fr: 'Europe',
-        ja: 'ヨーロッパ',
-        'pt-BR': 'Europa',
-        ru: 'Европа',
-        'zh-CN': '欧洲',
-      },
-    },
-    country: {
-      geoname_id: 2963597,
-      iso_code: 'IE',
-      names: {
-        de: 'Irland',
-        en: 'Ireland',
-        es: 'Irlanda',
-        fr: 'Irlande',
-        ja: 'アイルランド',
-        'pt-BR': 'Irlanda',
-        ru: 'Ирландия',
-        'zh-CN': '爱尔兰',
-      },
-      tld: '.ie',
-    },
-    registered_country: {
-      geoname_id: 2963597,
-      iso_code: 'IE',
-      names: {
-        de: 'Irland',
-        en: 'Ireland',
-        es: 'Irlanda',
-        fr: 'Irlande',
-        ja: 'アイルランド',
-        'pt-BR': 'Irlanda',
-        ru: 'Ирландия',
-        'zh-CN': '爱尔兰',
-      },
-      tld: '.ie',
-    },
-  };
-
   it('should call the api', (done) => {
     const httpStub = sandbox.stub(Vue.http, 'post');
     httpStub.withArgs(
