@@ -28,7 +28,7 @@
         </div>
         <div class="row">
           <div class="cd-event-details__left-column-section-value col-md-12">
-            {{ eventDetails.address }}
+            {{ getFullAddress() }}
           </div>
         </div>
       </div>
@@ -62,12 +62,13 @@
           this.eventDetails = response.body;
         });
       },
+      getFullAddress() {
+        return `${this.eventDetails.address}, ${this.eventDetails.city.nameWithHierarchy}, ${this.eventDetails.country.countryName}`;
+      },
     },
     created() {
       this.loadEvent();
     },
-
-
   };
 </script>
 <style scoped lang="less">
