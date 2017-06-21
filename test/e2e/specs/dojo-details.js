@@ -1,6 +1,6 @@
 const DojoPage = require('../page-objects/find-dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
-const EventDetailsPage = require('../page-objects/event-details');
+const EventDobVerificationPage = require('../page-objects/event-dob-verification');
 const EventSessionsPage = require('../page-objects/event-sessions');
 
 describe('Dojo details page', () => {
@@ -82,13 +82,13 @@ describe('Dojo details page', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.eventViewButtons(0).click();
-    EventDetailsPage.name.waitForVisible();
-    expect(EventDetailsPage.name.getText()).to.equal('My First Amazing Event');
+    EventDobVerificationPage.name.waitForVisible();
+    expect(EventDobVerificationPage.name.getText()).to.equal('My First Amazing Event');
 
-    EventDetailsPage.dateOfBirthDayInput.selectByValue('27');
-    EventDetailsPage.dateOfBirthMonthInput.selectByValue('3');
-    EventDetailsPage.dateOfBirthYearInput.selectByValue('1980');
-    EventDetailsPage.verify.click();
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
+    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('3');
+    EventDobVerificationPage.dateOfBirthYearInput.selectByValue('1980');
+    EventDobVerificationPage.verify.click();
 
     expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
     EventSessionsPage.name.waitForVisible();
@@ -129,12 +129,12 @@ describe('Dojo details page', () => {
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.eventViewButtons(0).click();
 
-    EventDetailsPage.dateOfBirthDayInput.selectByValue('25');
-    EventDetailsPage.dateOfBirthMonthInput.selectByValue('5');
-    EventDetailsPage.dateOfBirthYearInput.selectByValue('2017');
-    EventDetailsPage.verify.click();
-    EventDetailsPage.dateOfBirthError.waitForVisible();
-    expect(EventDetailsPage.dateOfBirthError.getText()).to.equal('You will need your parent to carry out the registration.');
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue('25');
+    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('5');
+    EventDobVerificationPage.dateOfBirthYearInput.selectByValue('2017');
+    EventDobVerificationPage.verify.click();
+    EventDobVerificationPage.dateOfBirthError.waitForVisible();
+    expect(EventDobVerificationPage.dateOfBirthError.getText()).to.equal('You will need your parent to carry out the registration.');
   });
 
 });

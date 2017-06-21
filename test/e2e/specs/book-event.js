@@ -2,24 +2,39 @@ const Booking = require('../page-objects/booking');
 const BookingConfirmation = require('../page-objects/booking-confirmation');
 const DojoPage = require('../page-objects/find-dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
-const EventDetailsPage = require('../page-objects/event-details');
+const EventDobVerificationPage = require('../page-objects/event-dob-verification');
 const EventSessionsPage = require('../page-objects/event-sessions');
+
+function checkEventDetails(page) {
+  page.sectionIcon[0].waitForVisible();
+  expect(page.sectionHeading[0].getText()).to.equal('TIME');
+  expect(page.sectionValue[0].getText()).to.equal('June 6, 2017');
+  expect(page.sectionValue[1].getText()).to.equal('4:30pm - 6pm');
+  page.sectionIcon[1].waitForVisible();
+  expect(page.sectionHeading[1].getText()).to.equal('LOCATION');
+  expect(page.sectionValue[2].getText()).to.equal('CHQ');
+}
 
 function startBooking() {
   DojoPage.openDojoWithLatLong(10, 89);
   DojoDetailsPage.name.waitForVisible();
   DojoDetailsPage.eventViewButtons(0).click();
 
-  expect(EventDetailsPage.verifyAgeMessage.getText()).to.equal('To continue, we need to verify your age.');
-  expect(EventDetailsPage.dobInputLabel.getText()).to.equal('Enter your Date of Birth');
-  EventDetailsPage.dateOfBirthDayInput.selectByValue('27');
-  EventDetailsPage.dateOfBirthMonthInput.selectByValue('3');
-  EventDetailsPage.dateOfBirthYearInput.selectByValue('1980');
-  EventDetailsPage.verify.click();
+  checkEventDetails(EventDobVerificationPage);
+
+  expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('To continue, we need to verify your age.');
+  expect(EventDobVerificationPage.dobInputLabel.getText()).to.equal('Enter your Date of Birth');
+  EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
+  EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('3');
+  EventDobVerificationPage.dateOfBirthYearInput.selectByValue('1980');
+  EventDobVerificationPage.verify.click();
 
   EventSessionsPage.ticketCounterIncrement(1).click();
   EventSessionsPage.ticketCounterIncrement(4).click();
   EventSessionsPage.ticketCounterIncrement(4).click();
+
+  //sessions page want to verify that the event details is still here
+  checkEventDetails(EventSessionsPage);
 
   EventSessionsPage.nextButton.click();
 }
@@ -31,6 +46,8 @@ describe('Book event page', () => {
     expect(Booking.allTickets().length).to.equal(2);
     expect(Booking.tickets(0).getText()).to.equal('1 X Parent (Scratch)');
     expect(Booking.tickets(1).getText()).to.equal('2 X Laptop required (Arduino)');
+    checkEventDetails(Booking);
+
 
     expect(Booking.firstNameLabel.getText()).to.equal('First name');
     expect(Booking.lastNameLabel.getText()).to.equal('Last name');

@@ -1,9 +1,9 @@
-const BasePage = require('./base-page');
+const EventDetails = require('./event-details');
 
-const BookingParentData = Object.create(BasePage, {
+const BookingParentData = Object.create(EventDetails, {
   open: {
     value(eventId) {
-      return BasePage.open.call(this, `/events/${eventId}/book`);
+      return this.open.call(this, `/events/${eventId}/book`);
     },
   },
   firstNameLabel: {

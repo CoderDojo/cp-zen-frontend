@@ -1,6 +1,6 @@
-const BasePage = require('./base-page');
+const EventDetails = require('./event-details');
 
-const EventDetailsPage = Object.create(BasePage, {
+const EventSessionsPage = Object.create(EventDetails, {
   name: {
     get() {
       return $('.cd-event-session__event-name');
@@ -44,4 +44,4 @@ const EventDetailsPage = Object.create(BasePage, {
   },
 });
 
-module.exports = EventDetailsPage;
+module.exports = EventSessionsPage;

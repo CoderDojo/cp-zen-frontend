@@ -1,52 +1,21 @@
 const BasePage = require('./base-page');
 
-const EventDetailsPage = Object.create(BasePage, {
-  name: {
+const EventDetails = Object.create(BasePage, {
+  sectionIcon: {
     get() {
-      return $('.cd-event-details__name');
+      return $$('.cd-event-details__left-column-section-icon');
     },
   },
-  verifyAgeMessage: {
+  sectionHeading: {
     get() {
-      return $('.cd-event-details__verify-age-message');
+      return $$('.cd-event-details__left-column-section-heading');
     },
   },
-  dobInputLabel: {
+  sectionValue: {
     get() {
-      return $('.cd-event-details__dob-input-label');
+      return $$('.cd-event-details__left-column-section-value');
     },
   },
-  dateOfBirthDayInput: {
-    get() {
-      return $$('.cd-event-details__dob select')[0];
-    },
-  },
-  dateOfBirthMonthInput: {
-    get() {
-      return $$('.cd-event-details__dob select')[1];
-    },
-  },
-  dateOfBirthYearInput: {
-    get() {
-      return $$('.cd-event-details__dob select')[2];
-    },
-  },
-  verify: {
-    get() {
-      return $('.cd-event-details__verify');
-    },
-  },
-  dateOfBirthError: {
-    get() {
-      return $('.cd-event-details__dob-error');
-    },
-  },
-  open: {
-    value(eventId) {
-      return BasePage.open.call(this, `/events/${eventId}`);
-    },
-  },
-
 });
 
-module.exports = EventDetailsPage;
+module.exports = EventDetails;
