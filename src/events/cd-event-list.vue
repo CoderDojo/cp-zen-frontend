@@ -22,7 +22,7 @@
           </li>
         </ul>
       </div>
-      <router-link :to="{name: 'EventDetails', params: {eventId: event.id}}"
+      <router-link :to="{name: 'EventDobVerification', params: {eventId: event.id}}"
                    tag="button" class="btn btn-lg btn-primary cd-event-list__event-view">
         See Details and Book
       </router-link>

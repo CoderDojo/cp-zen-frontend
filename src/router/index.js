@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import DojoDetails from '@/dojos/cd-dojo-details';
 import FindDojo from '@/dojos/cd-find-dojo';
 import EventDetails from '@/events/cd-event-details';
+import EventDobVerification from '@/events/cd-event-dob-verification';
 import EventSessions from '@/events/cd-event-sessions';
 import Booking from '@/events/cd-booking';
 import BookingConfirmation from '@/events/cd-booking-confirmation';
@@ -26,21 +27,28 @@ export default new Router({
     },
     {
       path: '/events/:eventId',
-      name: 'EventDetails',
       component: EventDetails,
       props: true,
-    },
-    {
-      path: '/events/:eventId/sessions',
-      name: 'EventSessions',
-      component: EventSessions,
-      props: true,
-    },
-    {
-      path: '/events/:eventId/book',
-      name: 'EventBookingForm',
-      component: Booking,
-      props: true,
+      children: [
+        {
+          path: '',
+          name: 'EventDobVerification',
+          component: EventDobVerification,
+          props: true,
+        },
+        {
+          path: 'sessions',
+          name: 'EventSessions',
+          component: EventSessions,
+          props: true,
+        },
+        {
+          path: 'book',
+          name: 'EventBookingForm',
+          component: Booking,
+          props: true,
+        },
+      ],
     },
     {
       path: '/events/:eventId/confirmation',

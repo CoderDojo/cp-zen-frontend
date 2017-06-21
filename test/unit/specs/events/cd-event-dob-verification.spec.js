@@ -1,13 +1,13 @@
 import vueUnitHelper from 'vue-unit-helper';
 import { extend } from 'lodash';
-import EventDetails from '!!vue-loader?inject!@/events/cd-event-details';
+import EventDobVerification from '!!vue-loader?inject!@/events/cd-event-dob-verification';
 
-describe('Event details', () => {
+describe('Event DOB verification', () => {
   let vm;
   let sandbox;
   let MockEventService;
   let MockStoreService;
-  let EventDetailsWithMocks;
+  let EventDobVerificationWithMocks;
   const mockEventData = {
     key: 'val',
   };
@@ -20,11 +20,11 @@ describe('Event details', () => {
     MockEventService = {
       loadEvent: sandbox.stub(),
     };
-    EventDetailsWithMocks = EventDetails({
+    EventDobVerificationWithMocks = EventDobVerification({
       './service': MockEventService,
       '@/store/store-service': MockStoreService,
     });
-    vm = vueUnitHelper(EventDetailsWithMocks);
+    vm = vueUnitHelper(EventDobVerificationWithMocks);
     vm.eventId = 1;
   });
   afterEach(() => {

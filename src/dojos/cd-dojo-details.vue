@@ -11,8 +11,8 @@
           </div>
         </div>
     </div>
-    <div class="row">
-      <div class="col-sm-4 cd-dojo-details__left_column">
+    <div class="cd-dojo-details__container">
+      <div class="cd-dojo-details__left_column">
         <div class="row cd-dojo-details__section">
           <div class="cd-dojo-details__time-label">
             <div class="fa fa-clock-o col-md-1" aria-hidden="true"></div>
@@ -52,7 +52,7 @@
         </div>
       </div>
 
-      <div class="col-sm-8">
+      <div class="cd-dojo-details__main_content">
         <events-list v-if="dojoDetails.id" v-bind:dojoId="dojoDetails.id"></events-list>
         <div class="cd-dojo-details__details-label details">DETAILS</div>
         <div class="cd-dojo-details__details" v-html="dojoDetails.notes"></div>
@@ -123,6 +123,10 @@
       vertical-align: text-top;
     }
 
+    &__container {
+       display:flex;
+    }
+
     &__banner {
       background-color: @cd-purple;
     }
@@ -134,12 +138,21 @@
 
     &__left_column {
       background-color: #f4f5f6;
-      height: 450px;
+      max-width: 340px;
+      font-size: 16px;
+      flex: 4;
+      margin: 0 -16px;
+    }
+
+    &__main_content {
+      flex: 8;
+      margin-left: 32px;
     }
 
     &__section {
       margin-top: 45px;
-      margin-left: auto;
+      margin-left: 14px;
+      padding-right: 30px;
 
       .fa {
         font-size: 16px;
@@ -149,7 +162,7 @@
     }
 
     &__social-media-section {
-      margin-left: auto;
+      margin-left: 14px;
       margin-top: 32px;
 
      .sm-icon {
@@ -187,7 +200,7 @@
     font-size: 16px;
     font-weight: bold;
     color: @cd-purple;
-    margin-left: -15px;
+    margin-left: -7px;
     line-height: 1;
   }
 
