@@ -12,7 +12,7 @@ function checkEventDetails(page) {
   expect(page.sectionValue[1].getText()).to.equal('4:30pm - 6pm');
   page.sectionIcon[1].waitForVisible();
   expect(page.sectionHeading[1].getText()).to.equal('LOCATION');
-  expect(page.sectionValue[2].getText()).to.equal('CHQ');
+  expect(page.sectionValue[2].getText()).to.equal('CHQ, Dublin, Ireland');
 }
 
 function startBooking() {
