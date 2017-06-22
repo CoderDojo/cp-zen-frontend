@@ -1,5 +1,7 @@
 import Vue from 'vue';
+import { extend, clone } from 'lodash';
 import UserService from '@/users/service';
+import UserUtils from '@/users/util';
 
 describe('UserService', () => {
   const sandbox = sinon.sandbox.create();
@@ -51,6 +53,91 @@ describe('UserService', () => {
       UserService.getCurrentUser().then((user) => {
         // ASSERT
         expect(user.body).to.deep.equal(userMock);
+        done();
+      });
+    });
+  });
+
+  describe('addChild()', () => {
+    it('should add the given u13 child profile to the current user', (done) => {
+      // ARRANGE
+      const mockProfile = {
+        gender: 'foo',
+        dob: {
+          toISOString: () => '2007-06-21T13:44:57.232Z',
+        },
+      };
+
+      const expectedPayload = {
+        profile: extend(clone(mockProfile), {
+          userTypes: ['attendee-u13'],
+          dob: mockProfile.dob.toISOString(),
+        }),
+      };
+
+      sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
+      sandbox.stub(UserUtils, 'isUnderAge').withArgs(mockProfile.dob).returns(true);
+
+      // ACT
+      UserService.addChild(mockProfile).then(() => {
+        // ASSERT
+        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiBase}/profiles/youth/create`, expectedPayload);
+        done();
+      });
+    });
+
+    it('should add the given o13 child profile to the current user', (done) => {
+      // ARRANGE
+      const mockProfile = {
+        gender: 'foo',
+        dob: {
+          toISOString: () => '2007-06-21T13:44:57.232Z',
+        },
+      };
+
+      const expectedPayload = {
+        profile: extend(clone(mockProfile), {
+          userTypes: ['attendee-o13'],
+          dob: mockProfile.dob.toISOString(),
+        }),
+      };
+
+      sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
+      sandbox.stub(UserUtils, 'isUnderAge').withArgs(mockProfile.dob).returns(false);
+
+      // ACT
+      UserService.addChild(mockProfile).then(() => {
+        // ASSERT
+        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiBase}/profiles/youth/create`, expectedPayload);
+        done();
+      });
+    });
+
+    it('should use otherGender if gender is "Other"', (done) => {
+      // ARRANGE
+      const mockProfile = {
+        gender: 'Other',
+        otherGender: 'Fluid',
+        dob: {
+          toISOString: () => '2007-06-21T13:44:57.232Z',
+        },
+      };
+
+      const expectedPayload = {
+        profile: {
+          userTypes: ['attendee-o13'],
+          dob: mockProfile.dob.toISOString(),
+          gender: 'Fluid',
+        },
+      };
+
+      sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
+      sandbox.stub(UserUtils, 'isUnderAge').withArgs(mockProfile.dob).returns(false);
+
+      // ACT
+      UserService.addChild(mockProfile).then(() => {
+        // ASSERT
+        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiBase}/profiles/youth/create`, expectedPayload);
         done();
       });
     });

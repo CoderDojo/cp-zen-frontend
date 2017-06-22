@@ -45,8 +45,7 @@
           });
       },
       next() {
-        this.isDobUnderage = UsersUtil.isUnderAge(this.date.getDate(),
-          this.date.getMonth() + 1, this.date.getFullYear());
+        this.isDobUnderage = UsersUtil.isUnderAge(this.date);
         if (this.isDobUnderage) {
           return;
         }

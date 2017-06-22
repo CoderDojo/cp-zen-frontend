@@ -12,6 +12,7 @@ describe('Booking Create Account Form', () => {
   const MockUsersService = {
     register: sandbox.stub(),
     getCurrentUser: sandbox.stub(),
+    addChild: sandbox.stub(),
   };
   const MockDojoService = {
     joinDojo: sandbox.stub(),
@@ -102,16 +103,12 @@ describe('Booking Create Account Form', () => {
     requestAnimationFrame(() => {
       expect(vm.parent).to.equal(storedBookingData.parent);
       expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedBookingData.parent);
-      expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}`, {
-        parent: storedBookingData.parent,
-        children: storedBookingData.children,
-      });
       done();
     });
   });
 
   describe('submitAccount()', () => {
-    it('should call register, joinDojo and bookTickets', (done) => {
+    it('should call register, addChildren, joinDojo and bookTickets', (done) => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.recaptchaResponse = 'foo';
@@ -120,6 +117,7 @@ describe('Booking Create Account Form', () => {
       sandbox.stub(vm, 'register').returns(Promise.resolve());
       sandbox.stub(vm, 'joinDojo').returns(Promise.resolve());
       sandbox.stub(vm, 'bookTickets').returns(Promise.resolve());
+      sandbox.stub(vm, 'addChildren').returns(Promise.resolve());
 
       // ACT
       vm.submitAccount();
@@ -127,6 +125,7 @@ describe('Booking Create Account Form', () => {
       // ASSERT
       requestAnimationFrame(() => {
         expect(vm.register).to.have.been.calledOnce;
+        expect(vm.addChildren).to.have.been.calledOnce;
         expect(vm.joinDojo).to.have.been.calledOnce;
         expect(vm.bookTickets).to.have.been.calledOnce;
         done();
@@ -206,6 +205,82 @@ describe('Booking Create Account Form', () => {
 
     // ASSERT
     expect(vm.recaptchaResponse).to.equal('foo');
+  });
+
+  describe('addChildren', () => {
+    it('should create a profile for each child', (done) => {
+      // ARRANGE
+      const mockBookingData = {
+        children: [
+          {
+            firstName: 'Fee',
+            lastName: 'Bar',
+            dob: {
+              date: '1',
+              month: '2',
+              year: '2002',
+            },
+            gender: 'Female',
+            otherGender: '',
+          },
+          {
+            firstName: 'Fie',
+            lastName: 'Bar',
+            dob: {
+              date: '2',
+              month: '3',
+              year: '2010',
+            },
+            gender: 'Male',
+            otherGender: '',
+          },
+          {
+            firstName: 'Foe',
+            lastName: 'Bar',
+            dob: {
+              date: '3',
+              month: '4',
+              year: '2008',
+            },
+            gender: 'Other',
+            otherGender: 'Fluid',
+          },
+        ],
+      };
+
+      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+      vm.eventId = 1;
+      MockStoreService.load.withArgs(`booking-${vm.eventId}`).returns(mockBookingData);
+      MockUsersService.addChild.returns(Promise.resolve());
+
+      // ACT
+      vm.addChildren().then(() => {
+        // ASSERT
+        expect(MockUsersService.addChild).to.have.callCount(3);
+        expect(MockUsersService.addChild.getCall(0).args[0]).to.deep.equal({
+          firstName: 'Fee',
+          lastName: 'Bar',
+          dob: new Date(2002, 1, 1, 0, 0, 0, 0),
+          gender: 'Female',
+          otherGender: '',
+        });
+        expect(MockUsersService.addChild.getCall(1).args[0]).to.deep.equal({
+          firstName: 'Fie',
+          lastName: 'Bar',
+          dob: new Date(2010, 2, 2, 0, 0, 0, 0),
+          gender: 'Male',
+          otherGender: '',
+        });
+        expect(MockUsersService.addChild.getCall(2).args[0]).to.deep.equal({
+          firstName: 'Foe',
+          lastName: 'Bar',
+          dob: new Date(2008, 3, 3, 0, 0, 0, 0),
+          gender: 'Other',
+          otherGender: 'Fluid',
+        });
+        done();
+      });
+    });
   });
 
   describe('joinDojo', () => {

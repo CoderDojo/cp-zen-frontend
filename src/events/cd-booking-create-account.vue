@@ -21,7 +21,7 @@
   </div>
 </template>
 <script>
-  import { extend, clone } from 'lodash';
+  import { extend, clone, cloneDeep } from 'lodash';
   import VueRecaptcha from 'vue-recaptcha';
   import UserService from '@/users/service';
   import EventsService from '@/events/service';
@@ -66,20 +66,24 @@
       },
       submitAccount() {
         this.register()
+          .then(this.addChildren)
           .then(this.joinDojo)
           .then(this.bookTickets);
       },
       register() {
         const bookingData = StoreService.load(`booking-${this.eventId}`);
         this.parent = bookingData.parent;
-        return UserService.register(this.user, this.parent)
-          .then(() => {
-            StoreService.save(`booking-${this.eventId}`, {
-              parent: this.parent,
-              children: bookingData.children,
-            });
-            return Promise.resolve();
-          });
+        return UserService.register(this.user, this.parent);
+      },
+      addChildren() {
+        const bookingData = StoreService.load(`booking-${this.eventId}`);
+        const promises = [];
+        bookingData.children.forEach((child) => {
+          const childClone = cloneDeep(child);
+          childClone.dob = new Date(child.dob.year, child.dob.month - 1, child.dob.date, 0, 0, 0, 0);
+          promises.push(UserService.addChild(childClone));
+        });
+        return Promise.all(promises);
       },
       joinDojo() {
         return UserService.getCurrentUser().then((response) => {
