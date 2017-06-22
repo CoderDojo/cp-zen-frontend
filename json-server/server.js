@@ -16,11 +16,17 @@ const pathsToReturnWhenPost = [
 const pathsToReturnSingular = [
   '/api/2.0/dojos/find',
 ];
-var rewriteRules = {
+const nonResourcePostUrls = [
+  '/api/2.0/users/register',
+  '/api/2.0/users/login',
+  '/api/2.0/dojos/save-usersdojos',
+  '/api/2.0/profiles/youth/create',
+]
+const rewriteRules = {
   '/api/2.0/dojos/find': '/api/2.0/dojos',
   '/api/2.0/dojos/search-bounding-box': '/api/2.0/dojos',
-  '/api/2.0/events/search':'/api/2.0/events',
-  '/api/2.0/events/bulk-apply-applications':'/api/2.0/bulk-apply-applications'
+  '/api/2.0/events/search': '/api/2.0/events',
+  '/api/2.0/events/bulk-apply-applications': '/api/2.0/bulk-apply-applications'
 };
 
 server.use(middlewares);
@@ -49,14 +55,10 @@ server.use((req, res, next) => {
   }
   next();
 });
-server.post('/api/2.0/users/register', (req, res) => {
-  res.send();
-});
-server.post('/api/2.0/users/login', (req, res) => {
-  res.send();
-});
-server.post('/api/2.0/dojos/save-usersdojos', (req, res) => {
-  res.send();
+nonResourcePostUrls.forEach((url) => {
+  server.post(url, (req, res) => {
+    res.send();
+  });
 });
 server.use('/api/2.0', router);
 

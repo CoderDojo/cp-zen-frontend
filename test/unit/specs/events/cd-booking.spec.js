@@ -145,7 +145,7 @@ describe('Booking Page', () => {
     expect(window.alert).to.be.calledOnce;
   });
 
-  it('should submit form and redirect', () => {
+  it('should submit form and redirect', (done) => {
     // ARRANGE
     MockBookingCreateAccount.getRecaptchaResponse.returns('recaptcha');
     MockBookingCreateAccount.isValid.returns(true);
@@ -161,14 +161,18 @@ describe('Booking Page', () => {
       push: sandbox.spy(),
     };
     sandbox.stub(vm, 'isValidChildForm').returns(true);
+    MockBookingCreateAccount.submitAccount.returns(Promise.resolve());
 
     // ACT
     vm.onSubmit();
 
     // ASSERT
-    expect(vm.isValidChildForm).to.be.calledOnce;
-    expect(MockBookingParentForm.submitBooking).to.be.calledOnce;
-    expect(MockBookingCreateAccount.submitAccount).to.be.calledOnce;
-    expect(vm.$router.push).to.be.calledWith('/events/1/confirmation');
+    requestAnimationFrame(() => {
+      expect(vm.isValidChildForm).to.be.calledOnce;
+      expect(MockBookingParentForm.submitBooking).to.be.calledOnce;
+      expect(MockBookingCreateAccount.submitAccount).to.be.calledOnce;
+      expect(vm.$router.push).to.be.calledWith('/events/1/confirmation');
+      done();
+    });
   });
 });
