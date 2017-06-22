@@ -338,7 +338,7 @@ describe('Booking Create Account Form', () => {
 
     const mockSelectedSessionTickets = {
       '69624aec-e254-4636-b4c6-f623fdb0421b': { // sessionId
-        '7c6d2cb7-0344-4cfd-8808-c0cfebbbe5af': 1,  //ticketId  ticketCount
+        '7c6d2cb7-0344-4cfd-8808-c0cfebbbe5af': 1,  // ticketId ticketCount
       },
     };
 
