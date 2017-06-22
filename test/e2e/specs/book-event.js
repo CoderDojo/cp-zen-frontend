@@ -15,15 +15,25 @@ function checkEventDetails(page) {
   expect(page.sectionValue[2].getText()).to.equal('CHQ, Dublin, Ireland');
 }
 
+function checkRecurringEventDetails(page) {
+  page.sectionIcon[0].waitForVisible();
+  expect(page.sectionHeading[0].getText()).to.equal('TIME');
+  expect(page.sectionValue[0].getText()).to.equal('Next in series: July 1, 2017');
+  expect(page.sectionValue[1].getText()).to.equal('10am - 12pm');
+  expect(page.sectionValue[2].getText()).to.equal('Biweekly on Saturdays');
+  page.sectionIcon[1].waitForVisible();
+  expect(page.sectionHeading[1].getText()).to.equal('LOCATION');
+  expect(page.sectionValue[3].getText()).to.equal('CHQ, Dublin, Ireland');
+}
+
 function startBooking() {
   DojoPage.openDojoWithLatLong(10, 89);
   DojoDetailsPage.name.waitForVisible();
   DojoDetailsPage.eventViewButtons(0).click();
 
-  checkEventDetails(EventDobVerificationPage);
-
   expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('To continue, we need to verify your age.');
   expect(EventDobVerificationPage.dobInputLabel.getText()).to.equal('Enter your Date of Birth');
+
   EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
   EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('3');
   EventDobVerificationPage.dateOfBirthYearInput.selectByValue('1980');
@@ -32,9 +42,6 @@ function startBooking() {
   EventSessionsPage.ticketCounterIncrement(1).click();
   EventSessionsPage.ticketCounterIncrement(4).click();
   EventSessionsPage.ticketCounterIncrement(4).click();
-
-  //sessions page want to verify that the event details is still here
-  checkEventDetails(EventSessionsPage);
 
   EventSessionsPage.nextButton.click();
 }
@@ -46,8 +53,6 @@ describe('Book event page', () => {
     expect(Booking.allTickets().length).to.equal(2);
     expect(Booking.tickets(0).getText()).to.equal('1 X Parent (Scratch)');
     expect(Booking.tickets(1).getText()).to.equal('2 X Laptop required (Arduino)');
-    checkEventDetails(Booking);
-
 
     expect(Booking.firstNameLabel.getText()).to.equal('First name');
     expect(Booking.lastNameLabel.getText()).to.equal('Last name');
@@ -118,21 +123,10 @@ describe('Book event page', () => {
   it('should show the other gender', () => {
     startBooking();
 
-    expect(Booking.allTickets().length).to.equal(2);
-    expect(Booking.tickets(0).getText()).to.equal('1 X Parent (Scratch)');
-    expect(Booking.tickets(1).getText()).to.equal('2 X Laptop required (Arduino)');
-
-    expect(Booking.firstNameLabel.getText()).to.equal('First name');
-    expect(Booking.lastNameLabel.getText()).to.equal('Last name');
-    expect(Booking.phoneNumberLabel.getText()).to.equal('Phone number');
-    expect(Booking.emailLabel.getText()).to.equal('Email address');
-
     Booking.firstName.setValue('John');
     Booking.lastName.setValue('Doe');
     Booking.phoneNumber.setValue('1555123456');
     Booking.email.setValue('john.doe@example.com');
-
-    expect(Booking.sessionTicketTitle[0].getText()).to.equal('Laptop required (Arduino)');
 
     Booking.sessionTicketFirstName[0].setValue('Child');
     Booking.sessionTicketLastName[0].setValue('One');
@@ -143,7 +137,6 @@ describe('Book event page', () => {
     Booking.sessionTicketGender('Other')[0].click();
     Booking.sessionOtherGender[0].setValue('another gender');
 
-    expect(Booking.sessionTicketTitle[1].getText()).to.equal('Laptop required (Arduino)');
     Booking.sessionTicketFirstName[1].setValue('Child');
     Booking.sessionTicketLastName[1].setValue('Two');
     Booking.sessionTicketDayOfBirth[1].setValue('10');
@@ -239,4 +232,52 @@ describe('Book event page', () => {
     expect(Booking.lastNameValidationError.getText()).to.equal('The last name field is required.');
     expect(Booking.emailValidationError.getText()).to.equal('The email field is required.');
   });
+
+  it('should show the proper event details for recurring event', () => {
+    DojoPage.openDojoWithLatLong(10, 89);
+    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.eventViewButtons(1).click();
+
+    expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('To continue, we need to verify your age.');
+    expect(EventDobVerificationPage.dobInputLabel.getText()).to.equal('Enter your Date of Birth');
+    checkRecurringEventDetails(EventDobVerificationPage);
+
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
+    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('3');
+    EventDobVerificationPage.dateOfBirthYearInput.selectByValue('1980');
+    EventDobVerificationPage.verify.click();
+
+    checkRecurringEventDetails(EventSessionsPage);
+    EventSessionsPage.ticketCounterIncrement(1).click();
+    EventSessionsPage.ticketCounterIncrement(4).click();
+    EventSessionsPage.ticketCounterIncrement(4).click();
+
+    EventSessionsPage.nextButton.click();
+    checkRecurringEventDetails(Booking);
+  });
+
+  it('should show the proper event details for non recurring event', () => {
+    DojoPage.openDojoWithLatLong(10, 89);
+    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.eventViewButtons(0).click();
+
+    expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('To continue, we need to verify your age.');
+    expect(EventDobVerificationPage.dobInputLabel.getText()).to.equal('Enter your Date of Birth');
+    checkEventDetails(EventDobVerificationPage);
+
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
+    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('3');
+    EventDobVerificationPage.dateOfBirthYearInput.selectByValue('1980');
+    EventDobVerificationPage.verify.click();
+
+    checkEventDetails(EventSessionsPage);
+    EventSessionsPage.ticketCounterIncrement(1).click();
+    EventSessionsPage.ticketCounterIncrement(4).click();
+    EventSessionsPage.ticketCounterIncrement(4).click();
+
+    EventSessionsPage.nextButton.click();
+
+    checkEventDetails(Booking);
+  });
+
 });
