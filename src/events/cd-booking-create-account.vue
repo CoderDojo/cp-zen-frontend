@@ -77,13 +77,13 @@
       },
       addChildren() {
         const bookingData = StoreService.load(`booking-${this.eventId}`);
-        const promises = [];
+        let promiseChain = Promise.resolve();
         bookingData.children.forEach((child) => {
           const childClone = cloneDeep(child);
           childClone.dob = new Date(child.dob.year, child.dob.month - 1, child.dob.date, 0, 0, 0, 0);
-          promises.push(UserService.addChild(childClone));
+          promiseChain = promiseChain.then(() => UserService.addChild(childClone));
         });
-        return Promise.all(promises);
+        return promiseChain;
       },
       joinDojo() {
         return UserService.getCurrentUser().then((response) => {
