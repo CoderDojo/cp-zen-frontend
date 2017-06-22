@@ -65,7 +65,7 @@
         return (!this.errors.any() && !!this.recaptchaResponse);
       },
       submitAccount() {
-        this.register()
+        return this.register()
           .then(this.addChildren)
           .then(this.joinDojo)
           .then(this.bookTickets);

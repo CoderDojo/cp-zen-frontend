@@ -67,8 +67,10 @@
       onSubmit() {
         if (this.isValidChildForm()) {
           this.$refs.bookingParentFormRef.submitBooking();
-          this.$refs.bookingCreateAccountRef.submitAccount();
-          this.$router.push(`/events/${this.eventId}/confirmation`);
+          this.$refs.bookingCreateAccountRef.submitAccount()
+            .then(() => {
+              this.$router.push(`/events/${this.eventId}/confirmation`);
+            });
         }
       },
       isValidChildForm() {
