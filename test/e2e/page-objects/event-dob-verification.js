@@ -8,6 +8,7 @@ const EventDobVerification = Object.create(EventDetails, {
   },
   verifyAgeMessage: {
     get() {
+      $('.cd-event-dob-verification__verify-age-message').waitForVisible();
       return $('.cd-event-dob-verification__verify-age-message');
     },
   },

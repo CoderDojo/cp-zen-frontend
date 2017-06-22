@@ -112,9 +112,6 @@ describe('The Find dojo vue ', () => {
   });
 
   it('should get the user current location', (done) => {
-    navigator.geolocation = navigator.geolocation || {
-      getCurrentPosition() {},
-    };
     sandbox.stub(navigator.geolocation, 'getCurrentPosition').callsFake((cb) => {
       cb({
         coords: {
@@ -134,9 +131,6 @@ describe('The Find dojo vue ', () => {
   });
 
   it('should stop he loading animation when user location not granted', (done) => {
-    navigator.geolocation = navigator.geolocation || {
-      getCurrentPosition() {},
-    };
     sandbox.stub(navigator.geolocation, 'getCurrentPosition').callsFake((success, error) => {
       error();
     });
