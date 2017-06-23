@@ -67,6 +67,7 @@
     data() {
       return {
         eventDetails: null,
+        termEvent: { biweekly: 'Every two weeks', weekly: 'Weekly' },
         now: moment(),
       };
     },
@@ -94,15 +95,8 @@
         return nextDateInfo.startTime;
       },
       buildRecurringFrequencyInfo() {
-        let recurringTypeString = '';
-        if (this.eventDetails.recurringType === 'biweekly') {
-          recurringTypeString = 'Biweekly';
-        } else if (this.eventDetails.recurringType === 'weekly') {
-          recurringTypeString = 'Weekly';
-        }
         const dayName = moment(this.eventDetails.dates[0].startTime).format('dddd');
-
-        return `${recurringTypeString} on ${dayName}s`;
+        return `${this.termEvent[this.eventDetails.recurringType]} on ${dayName}s`;
       },
     },
     created() {
