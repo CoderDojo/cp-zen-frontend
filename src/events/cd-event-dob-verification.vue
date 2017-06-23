@@ -1,7 +1,6 @@
 <template>
   <div class="cd-event-dob-verification">
     <form @submit.prevent="next">
-      <h1 v-if="eventDetails.name" class="cd-event-dob-verification__name">{{ eventDetails.name }}</h1>
       <h2 v-if="isDobUnderage" class="cd-event-dob-verification__dob-error">You will need your parent to carry out the registration.</h2>
       <label class="cd-event-dob-verification__verify-age-message">To continue, we need to verify your age.</label>
       <label class="cd-event-dob-verification__dob-input-label" for="dob">Enter your Date of Birth</label>
@@ -67,6 +66,7 @@
       display: block;
       margin-bottom: 30px;
       font-size: 16px;
+      margin-top: 45px;
     }
     &__dob-input-label {
       font-size: 16px;
