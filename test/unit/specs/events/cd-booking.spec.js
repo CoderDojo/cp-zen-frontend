@@ -35,6 +35,7 @@ describe('Booking Page', () => {
   it('should load saved sessions data', () => {
     // ARRANGE
     const vm = vueUnitHelper(BookingComponentWithMocks);
+    vm.eventId = 'foo';
 
     MockStoreService.load.withArgs('selected-event').returns({
       sessions: [
@@ -73,7 +74,7 @@ describe('Booking Page', () => {
       ],
     });
 
-    MockStoreService.load.withArgs('booking-sessions').returns({
+    MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns({
       abc: {
         'ticket-1': 2,
       },
@@ -86,14 +87,13 @@ describe('Booking Page', () => {
     });
 
     // ACT
-    const bindingData = { tickets: [] };
-    vm.loadSessionData.bind(bindingData)();
+    vm.loadSessionData();
 
     // ASSERT
     expect(MockStoreService.load).to.be.calledTwice;
     expect(MockStoreService.load).to.be.calledWith('selected-event');
-    expect(MockStoreService.load).to.be.calledWith('booking-sessions');
-    expect(bindingData.tickets).to.deep.equal(
+    expect(MockStoreService.load).to.be.calledWith(`booking-${vm.eventId}-sessions`);
+    expect(vm.tickets).to.deep.equal(
       [
         { id: 'ticket-1', name: 'Ticket 1', quantity: 2, sessionName: 'Session 1', type: 'type-a' },
         { id: 'ticket-100', name: 'Ticket 100', quantity: 100, sessionName: 'Session 2', type: 'type-c' },

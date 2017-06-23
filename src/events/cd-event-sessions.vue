@@ -6,7 +6,7 @@
     <div class="cd-event-sessions__session" v-for="session in sessions">
       <h3 class="cd-event-sessions__name">{{ session.name }}</h3>
       <p class="cd-event-sessions__description">{{ session.description }}</p>
-      <event-tickets :tickets="session.tickets" :session-id="session.id"></event-tickets>
+      <event-tickets :tickets="session.tickets" :session-id="session.id" :event-id="eventId"></event-tickets>
     </div>
 
     <router-link :to="{name: 'EventBookingForm', params: {eventId: event.id}}"

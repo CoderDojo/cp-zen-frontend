@@ -14,7 +14,7 @@
 
   export default {
     name: 'EventTickets',
-    props: ['tickets', 'sessionId'],
+    props: ['tickets', 'sessionId', 'eventId'],
     data() {
       return {
         selectedTickets: {},
@@ -31,9 +31,9 @@
           this.selectedTickets[ticketId] = value;
         }
 
-        const booking = StoreService.load('booking-sessions') || {};
+        const booking = StoreService.load(`booking-${this.eventId}-sessions`) || {};
         booking[this.sessionId] = this.selectedTickets;
-        StoreService.save('booking-sessions', booking);
+        StoreService.save(`booking-${this.eventId}-sessions`, booking);
       },
     },
   };

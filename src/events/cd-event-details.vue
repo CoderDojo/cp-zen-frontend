@@ -1,5 +1,5 @@
 <template>
-  <div class="cd-event-details">
+  <div v-if="eventDetails" class="cd-event-details">
     <div class="cd-event-details__left-column">
       <div class="cd-event-details__left-column-section">
         <div class="row">
@@ -58,7 +58,7 @@
     props: ['eventId'],
     data() {
       return {
-        eventDetails: {},
+        eventDetails: null,
         now: moment(),
       };
     },

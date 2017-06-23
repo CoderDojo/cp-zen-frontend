@@ -7,8 +7,8 @@
       </li>
     </ul>
     <form>
-      <bookingParentForm :eventId="eventId" :tickets="tickets" ref="bookingParentFormRef" v-ref="child"></bookingParentForm>
-      <bookingCreateAccount :eventId="eventId" ref="bookingCreateAccountRef" v-ref="child"></bookingCreateAccount>
+      <bookingParentForm :eventId="eventId" :tickets="tickets" ref="bookingParentFormRef"></bookingParentForm>
+      <bookingCreateAccount :eventId="eventId" ref="bookingCreateAccountRef"></bookingCreateAccount>
     </form>
     <input type="button" @click="onSubmit()" value="Submit Booking"/>
   </div>
@@ -52,7 +52,7 @@
     methods: {
       loadSessionData() {
         const event = StoreService.load('selected-event');
-        const booking = StoreService.load('booking-sessions');
+        const booking = StoreService.load(`booking-${this.eventId}-sessions`);
 
         getSelectedSessions(booking).forEach((sessionId) => {
           const session = find(event.sessions, s => s.id === sessionId);
