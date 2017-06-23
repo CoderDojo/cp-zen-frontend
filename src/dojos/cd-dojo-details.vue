@@ -75,7 +75,7 @@
     components: {
       'events-list': eventsList,
     },
-    props: ['country', 'region', 'dojoName'],
+    props: ['country', 'path'],
     data() {
       return {
         dojoDetails: {},
@@ -90,7 +90,7 @@
         `;
       },
       urlSlug() {
-        return `${this.country}/${this.region}/${this.dojoName}`;
+        return `${this.country}/${this.path}`;
       },
       imageUrl() {
         return `https://s3-eu-west-1.amazonaws.com/zen-dojo-images/${this.dojoDetails.id}`;
