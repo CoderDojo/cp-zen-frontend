@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import vueUnitHelper from 'vue-unit-helper';
 import dojoDetails from '!!vue-loader?inject!@/dojos/cd-dojo-details';
 
 function setUpDojoDetailsComponent(mockBody) {
@@ -41,16 +42,14 @@ describe('Dojo details component', () => {
   });
 
   it('should build the urlSlug from path parameters', () => {
+    // ARRANGE
     const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
+    const vm = vueUnitHelper(DojoDetailsWithMock);
+    vm.country = 'za';
+    vm.path = 'gauteng/johannesburg-rock-stars';
 
-    const urlParts = {
-      country: 'za',
-      region: 'gauteng',
-      dojoName: 'johannesburg-rock-stars',
-    };
-
-    const urlSlug = DojoDetailsWithMock.computed.urlSlug.bind(urlParts)();
-    expect(urlSlug).to.equal('za/gauteng/johannesburg-rock-stars');
+    // ASSERT
+    expect(vm.urlSlug).to.equal('za/gauteng/johannesburg-rock-stars');
   });
 
   it('should compute an image url for given dojo id', (done) => {

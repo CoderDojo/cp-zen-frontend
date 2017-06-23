@@ -20,7 +20,7 @@ export default new Router({
       component: FindDojo,
     },
     {
-      path: '/dojos/:country/:region/:dojoName',
+      path: '/dojos/:country([A-Za-z]{2})/:path+',
       name: 'DojoDetails',
       component: DojoDetails,
       props: true,
