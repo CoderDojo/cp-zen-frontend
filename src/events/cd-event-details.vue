@@ -1,48 +1,56 @@
 <template>
   <div v-if="eventDetails" class="cd-event-details">
-    <div class="cd-event-details__left-column">
-      <div class="cd-event-details__left-column-section">
-        <div class="row">
-          <div class="fa fa-clock-o cd-event-details__left-column-section-icon col-md-1"></div>
-          <div class="cd-event-details__left-column-section-heading col-md-11">
-            TIME
-          </div>
-        </div>
-        <div class="row">
-          <div v-if="!isRecurring()" class="cd-event-details__left-column-section-value col-md-12">
-            {{ eventDetails.dates[0].startTime |  cdDateFormatter }}
-          </div>
-          <div v-else class="cd-event-details__left-column-section-value col-md-12">
-            Next in series: <span class="cd-event-details__left-column-section-value-next-session">{{ getNextStartTime() |  cdDateFormatter }}</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="cd-event-details__left-column-section-value col-md-12">
-            {{ eventDetails.dates[0].startTime | cdTimeFormatter }} - {{ eventDetails.dates[0].endTime | cdTimeFormatter }}
-          </div>
-        </div>
-        <div v-if="isRecurring()" class="row cd-event-details__left-column-section-value-frequency">
-          <div class="cd-event-details__left-column-section-value col-md-12">
-            {{ buildRecurringFrequencyInfo() }}
-          </div>
-        </div>
-      </div>
-      <div class="cd-event-details__left-column-section">
-        <div class="row">
-          <div class="fa fa-map-marker cd-event-details__left-column-section-icon col-md-1"></div>
-          <div class="cd-event-details__left-column-section-heading col-md-11">
-            LOCATION
-          </div>
-        </div>
-        <div class="row">
-          <div class="cd-event-details__left-column-section-value col-md-12">
-            {{ getFullAddress() }}
-          </div>
-        </div>
+    <div class="row cd-event-details__header">
+      <div class="col-md-12">
+        <p class="cd-event-details__book-event-title">Book Event</p>
+        <p class="cd-event-details__event-title">{{ eventDetails.name }}</p>
       </div>
     </div>
-    <div class="cd-event-details__main-content">
-      <router-view></router-view>
+    <div class="cd-event-details__container">
+      <div class="cd-event-details__left-column">
+        <div class="cd-event-details__left-column-section">
+          <div class="row">
+            <div class="fa fa-clock-o cd-event-details__left-column-section-icon col-md-1"></div>
+            <div class="cd-event-details__left-column-section-heading col-md-11">
+              TIME
+            </div>
+          </div>
+          <div class="row">
+            <div v-if="!isRecurring()" class="cd-event-details__left-column-section-value col-md-12">
+              {{ eventDetails.dates[0].startTime |  cdDateFormatter }}
+            </div>
+            <div v-else class="cd-event-details__left-column-section-value col-md-12">
+              Next in series: <span class="cd-event-details__left-column-section-value-next-session">{{ getNextStartTime() |  cdDateFormatter }}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="cd-event-details__left-column-section-value col-md-12">
+              {{ eventDetails.dates[0].startTime | cdTimeFormatter }} - {{ eventDetails.dates[0].endTime | cdTimeFormatter }}
+            </div>
+          </div>
+          <div v-if="isRecurring()" class="row cd-event-details__left-column-section-value-frequency">
+            <div class="cd-event-details__left-column-section-value col-md-12">
+              {{ buildRecurringFrequencyInfo() }}
+            </div>
+          </div>
+        </div>
+        <div class="cd-event-details__left-column-section">
+          <div class="row">
+            <div class="fa fa-map-marker cd-event-details__left-column-section-icon col-md-1"></div>
+            <div class="cd-event-details__left-column-section-heading col-md-11">
+              LOCATION
+            </div>
+          </div>
+          <div class="row">
+            <div class="cd-event-details__left-column-section-value col-md-12">
+              {{ getFullAddress() }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cd-event-details__main-content">
+        <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
@@ -106,8 +114,24 @@
   @import "~cd-common/common/_colors";
 
   .cd-event-details {
-    display: flex;
-    margin: 0 -16px;
+
+    &__header {
+      background-color: @cd-purple;
+      color: white;
+      text-align: center;
+    }
+    &__book-event-title {
+      font-size: 30px;
+      margin-top: 20px;
+    }
+    &__event-title {
+      font-size: 18px;
+      margin-bottom: 25px;
+    }
+    &__container {
+       display: flex;
+       margin: 0 -16px;
+    }
 
     &__left-column {
       flex: 4;

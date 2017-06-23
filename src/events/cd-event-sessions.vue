@@ -1,6 +1,5 @@
 <template>
   <div class="cd-event-sessions">
-    <h1 v-if="event" class="cd-event-session__event-name">{{ event.name }}</h1>
     <h1 class="cd-event-sessions__header">Select Event Tickets</h1>
 
     <div class="cd-event-sessions__session" v-for="session in sessions">

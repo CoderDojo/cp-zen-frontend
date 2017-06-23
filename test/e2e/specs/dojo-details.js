@@ -82,8 +82,6 @@ describe('Dojo details page', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.eventViewButtons(0).click();
-    EventDobVerificationPage.name.waitForVisible();
-    expect(EventDobVerificationPage.name.getText()).to.equal('My First Amazing Event');
 
     EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
     EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('3');
@@ -91,8 +89,6 @@ describe('Dojo details page', () => {
     EventDobVerificationPage.verify.click();
 
     expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
-    EventSessionsPage.name.waitForVisible();
-    expect(EventSessionsPage.name.getText()).to.equal('My First Amazing Event');
     expect(EventSessionsPage.eventSessions(0).getText()).to.have.string('Scratch');
     expect(EventSessionsPage.eventSessions(0).getText()).to.have.string('Beginners welcome');
     expect(EventSessionsPage.eventTickets(0).getText()).to.have.string('Laptop Required');

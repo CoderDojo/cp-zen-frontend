@@ -5,6 +5,11 @@ const DojoDetailsPage = require('../page-objects/dojo-details');
 const EventDobVerificationPage = require('../page-objects/event-dob-verification');
 const EventSessionsPage = require('../page-objects/event-sessions');
 
+function checkHeaderContent(page) {
+  expect(page.bookEventTitle.getText()).to.equal( "Book Event");
+  expect(page.eventTitle.getText()).to.equal( "My First Amazing Event");
+}
+
 function checkEventDetails(page) {
   page.sectionIcon[0].waitForVisible();
   expect(page.sectionHeading[0].getText()).to.equal('TIME');
@@ -280,4 +285,25 @@ describe('Book event page', () => {
     checkEventDetails(Booking);
   });
 
+  it('should show the event name in the header', ()=>{
+    DojoPage.openDojoWithLatLong(10, 89);
+    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.eventViewButtons(0).click();
+
+    checkHeaderContent(EventDobVerificationPage);
+
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
+    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('3');
+    EventDobVerificationPage.dateOfBirthYearInput.selectByValue('1980');
+    EventDobVerificationPage.verify.click();
+
+    checkHeaderContent(EventSessionsPage);
+
+    EventSessionsPage.ticketCounterIncrement(1).click();
+    EventSessionsPage.ticketCounterIncrement(4).click();
+    EventSessionsPage.ticketCounterIncrement(4).click();
+    EventSessionsPage.nextButton.click();
+
+    checkHeaderContent(Booking);
+  });
 });
