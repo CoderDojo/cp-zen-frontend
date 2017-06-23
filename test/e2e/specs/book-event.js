@@ -25,7 +25,7 @@ function checkRecurringEventDetails(page) {
   expect(page.sectionHeading[0].getText()).to.equal('TIME');
   expect(page.sectionValue[0].getText()).to.equal('Next in series: July 1, 2017');
   expect(page.sectionValue[1].getText()).to.equal('10am - 12pm');
-  expect(page.sectionValue[2].getText()).to.equal('Biweekly on Saturdays');
+  expect(page.sectionValue[2].getText()).to.equal('Every two weeks on Saturdays');
   page.sectionIcon[1].waitForVisible();
   expect(page.sectionHeading[1].getText()).to.equal('LOCATION');
   expect(page.sectionValue[3].getText()).to.equal('CHQ, Dublin, Ireland');

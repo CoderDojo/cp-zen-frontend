@@ -130,7 +130,7 @@ describe('Event Details', () => {
       const message = vm.buildRecurringFrequencyInfo();
 
       // ASSERT
-      expect(message).to.equal('Biweekly on Saturdays');
+      expect(message).to.equal('Every two weeks on Saturdays');
     });
   });
 
