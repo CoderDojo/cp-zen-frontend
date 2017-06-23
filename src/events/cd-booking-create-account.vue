@@ -96,7 +96,7 @@
         return UserService.getCurrentUser().then((response) => {
           const user = response.body.user;
           const selectedEvent = StoreService.load('selected-event');
-          const bookingSessions = StoreService.load('booking-sessions');
+          const bookingSessions = StoreService.load(`booking-${this.eventId}-sessions`);
           return EventsService.bookTickets(user, selectedEvent, bookingSessions);
         });
       },

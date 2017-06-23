@@ -24,6 +24,7 @@ describe('Event tickets list', () => {
   it('should store the selected tickets using the storage service', () => {
     // ARRANGE
     const vm = vueUnitHelper(EventTicketsWithMocks);
+    vm.eventId = 'foo';
     vm.sessionId = 'abc';
     vm.selectedTickets = {};
 
@@ -35,8 +36,8 @@ describe('Event tickets list', () => {
       xyz: 1,
     });
 
-    expect(MockStoreService.load).to.have.been.calledWith('booking-sessions');
-    expect(MockStoreService.save).to.have.been.calledWith('booking-sessions', {
+    expect(MockStoreService.load).to.have.been.calledWith(`booking-${vm.eventId}-sessions`);
+    expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
       abc: {
         xyz: 1,
       },
@@ -47,6 +48,7 @@ describe('Event tickets list', () => {
     // ARRANGE
     const vm = vueUnitHelper(EventTicketsWithMocks);
     vm.sessionId = 'abc';
+    vm.eventId = 'foo';
     vm.selectedTickets = {
       def: 1,
     };
@@ -59,7 +61,7 @@ describe('Event tickets list', () => {
       def: 1,
       xyz: 1,
     });
-    expect(MockStoreService.save).to.have.been.calledWith('booking-sessions', {
+    expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
       abc: {
         def: 1,
         xyz: 1,
@@ -71,6 +73,7 @@ describe('Event tickets list', () => {
     // ARRANGE
     const vm = vueUnitHelper(EventTicketsWithMocks);
     vm.sessionId = 'abc';
+    vm.eventId = 'foo';
     vm.selectedTickets = {
       def: 1,
     };
@@ -82,7 +85,7 @@ describe('Event tickets list', () => {
     expect(vm.selectedTickets).to.deep.equal({
       def: 2,
     });
-    expect(MockStoreService.save).to.have.been.calledWith('booking-sessions', {
+    expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
       abc: {
         def: 2,
       },
@@ -93,6 +96,7 @@ describe('Event tickets list', () => {
     // ARRANGE
     const vm = vueUnitHelper(EventTicketsWithMocks);
     vm.sessionId = 'abc';
+    vm.eventId = 'foo';
     vm.selectedTickets = {
       def: 1,
     };
@@ -102,13 +106,14 @@ describe('Event tickets list', () => {
 
     // ASSERT
     expect(vm.selectedTickets).to.deep.equal({});
-    expect(MockStoreService.save).to.have.been.calledWith('booking-sessions', { abc: {} });
+    expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, { abc: {} });
   });
 
   it('should retain other selected tickets when one ticket is removed', () => {
     // ARRANGE
     const vm = vueUnitHelper(EventTicketsWithMocks);
     vm.sessionId = 'abc';
+    vm.eventId = 'foo';
     vm.selectedTickets = {
       def: 1,
       xyz: 1,
@@ -121,7 +126,7 @@ describe('Event tickets list', () => {
     expect(vm.selectedTickets).to.deep.equal({
       xyz: 1,
     });
-    expect(MockStoreService.save).to.have.been.calledWith('booking-sessions', {
+    expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
       abc: {
         xyz: 1,
       },
@@ -132,9 +137,10 @@ describe('Event tickets list', () => {
     // ARRANGE
     const vm = vueUnitHelper(EventTicketsWithMocks);
     vm.sessionId = 'abc';
+    vm.eventId = 'foo';
     vm.selectedTickets = {};
 
-    MockStoreService.load.withArgs('booking-sessions').returns({
+    MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns({
       foo: {
         bar: 100,
       },
@@ -147,8 +153,8 @@ describe('Event tickets list', () => {
     expect(vm.selectedTickets).to.deep.equal({
       xyz: 1,
     });
-    expect(MockStoreService.load).to.have.been.calledWith('booking-sessions');
-    expect(MockStoreService.save).to.have.been.calledWith('booking-sessions', {
+    expect(MockStoreService.load).to.have.been.calledWith(`booking-${vm.eventId}-sessions`);
+    expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
       foo: {
         bar: 100,
       },

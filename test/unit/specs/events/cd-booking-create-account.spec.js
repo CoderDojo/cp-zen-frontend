@@ -357,7 +357,7 @@ describe('Booking Create Account Form', () => {
 
       MockUsersService.getCurrentUser.returns(Promise.resolve({ body: currentUserResponseMock }));
       MockStoreService.load.withArgs('selected-event').returns(mockSelectedEvent);
-      MockStoreService.load.withArgs('booking-sessions').returns(mockSelectedSessionTickets);
+      MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(mockSelectedSessionTickets);
 
       // ACT
       vm.bookTickets();
