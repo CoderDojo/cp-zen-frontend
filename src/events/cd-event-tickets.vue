@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="ticket in tickets" class="cd-event-tickets__ticket">
+    <div v-for="ticket in tickets" v-if="!(isYouthOverThirteen && ticket.type === 'parent-guardian')" class="cd-event-tickets__ticket">
       <span class="cd-event-tickets__name">{{ ticket.name }}</span>
       <number-spinner min="0" :max="ticket.quantity - ticket.approvedApplications"
                       v-on:update="onTicketQuantityUpdate(ticket.id, $event)"></number-spinner>
@@ -11,6 +11,7 @@
 <script>
   import NumberSpinner from '@/common/cd-number-spinner';
   import StoreService from '@/store/store-service';
+  import UsersUtil from '@/users/util';
 
   export default {
     name: 'EventTickets',
@@ -35,6 +36,9 @@
         booking[this.sessionId] = this.selectedTickets;
         StoreService.save(`booking-${this.eventId}-sessions`, booking);
       },
+    },
+    computed: {
+      isYouthOverThirteen: () => UsersUtil.isYouthOverThirteen(new Date(StoreService.load('applicant-dob'))),
     },
   };
 </script>

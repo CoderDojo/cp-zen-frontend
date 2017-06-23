@@ -11,6 +11,7 @@ describe('Event DOB verification', () => {
   const mockEventData = {
     key: 'val',
   };
+  const mockDob = new Date(1980, 10, 25, 0, 0, 0, 0);
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
@@ -49,31 +50,32 @@ describe('Event DOB verification', () => {
     });
   });
 
-  it('should save selected event and go to next page', () => {
+  it('should save selected event and dob and go to next page', () => {
     const data = {
       $router: {
         push: sandbox.spy(),
       },
       eventDetails: mockEventData,
-      date: new Date(1980, 10, 25, 0, 0, 0, 0),
+      date: mockDob,
     };
 
     vm.next.bind(data)();
-    expect(MockStoreService.save).to.be.calledOnce;
     expect(MockStoreService.save).to.have.been.calledWith('selected-event', mockEventData);
+    expect(MockStoreService.save).to.have.been.calledWith('applicant-dob', mockDob);
+    expect(MockStoreService.save).to.be.calledTwice;
 
     expect(data.$router.push).to.be.calledOnce;
     expect(data.$router.push).to.have.been.calledWith(`/events/${data.eventId}/sessions`);
   });
 
   it('should allow adults', () => {
-    const now = new Date(1980, 10, 25, 0, 0, 0, 0);
+    const mockDate = new Date(1980, 10, 25, 0, 0, 0, 0);
     const data = {
       $router: {
         push: sandbox.spy(),
       },
       eventDetails: mockEventData,
-      date: now,
+      date: mockDate,
       isDobUnderage: false,
     };
 
@@ -81,7 +83,8 @@ describe('Event DOB verification', () => {
 
     vm.next();
     expect(vm.isDobUnderage).to.equal(false);
-    expect(MockStoreService.save).to.be.calledOnce;
+    expect(MockStoreService.save).to.be.calledTwice;
+    expect(MockStoreService.save).to.have.been.calledWith('applicant-dob', mockDate);
     expect(MockStoreService.save).to.have.been.calledWith('selected-event', mockEventData);
 
     expect(vm.$router.push).to.be.calledOnce;
@@ -104,7 +107,8 @@ describe('Event DOB verification', () => {
 
     vm.next();
     expect(vm.isDobUnderage).to.equal(false);
-    expect(MockStoreService.save).to.be.calledOnce;
+    expect(MockStoreService.save).to.be.calledTwice;
+    expect(MockStoreService.save).to.have.been.calledWith('applicant-dob', turned13);
     expect(MockStoreService.save).to.have.been.calledWith('selected-event', mockEventData);
 
     expect(vm.$router.push).to.be.calledOnce;

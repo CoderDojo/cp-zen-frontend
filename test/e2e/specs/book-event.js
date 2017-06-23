@@ -306,4 +306,40 @@ describe('Book event page', () => {
 
     checkHeaderContent(Booking);
   });
+
+  it('should not show parent tickets for a youth over 13', () => {
+    DojoPage.openDojoWithLatLong(10, 89);
+    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.eventViewButtons(0).click();
+
+    const now = new Date();
+    const turned13 = new Date(now.getFullYear() - 13, now.getMonth(), now.getDate(), 0, 0, 0, 0);
+
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue(turned13.getDate());
+    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue(turned13.getMonth());
+    EventDobVerificationPage.dateOfBirthYearInput.selectByValue(turned13.getFullYear());
+
+    EventDobVerificationPage.verify.click();
+
+    expect(EventSessionsPage.eventSessions(0).getText()).not.contains('Parent');
+    expect(EventSessionsPage.eventSessions(1).getText()).not.contains('Parent');
+  });
+
+  it('should show parent tickets for someone over 18', () => {
+    DojoPage.openDojoWithLatLong(10, 89);
+    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.eventViewButtons(0).click();
+
+    const now = new Date();
+    const turned13 = new Date(now.getFullYear() - 18, now.getMonth(), now.getDate(), 0, 0, 0, 0);
+
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue(turned13.getDate());
+    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue(turned13.getMonth());
+    EventDobVerificationPage.dateOfBirthYearInput.selectByValue(turned13.getFullYear());
+
+    EventDobVerificationPage.verify.click();
+
+    expect(EventSessionsPage.eventSessions(0).getText()).contains('Parent');
+    expect(EventSessionsPage.eventSessions(1).getText()).contains('Parent');
+  });
 });
