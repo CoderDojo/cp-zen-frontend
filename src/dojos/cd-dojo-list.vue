@@ -1,6 +1,6 @@
 <template>
   <div class="cd-dojo-list">
-    <p class="cd-dojo-list__show-dojo-list-count">Showing {{dojos.length}} of {{dojos.length}} Dojos</p>
+    <p class="cd-dojo-list__show-dojo-list-count">{{ $t('Showing {numPerPage} of {total} Dojos', { numPerPage: dojos.length, total: dojos.length }) }}</p>
     <dojo-list-item v-for="dojo in dojos" :key="dojo.id" :dojo="dojo"></dojo-list-item>
   </div>
 </template>

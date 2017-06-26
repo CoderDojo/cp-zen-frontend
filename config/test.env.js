@@ -3,5 +3,5 @@ var devEnv = require('./dev.env')
 
 module.exports = merge(devEnv, {
   NODE_ENV: '"testing"',
-  API_BASE: '"/api/2.0"'
+  API_BASE: '""'
 })

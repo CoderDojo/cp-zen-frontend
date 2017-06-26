@@ -2,12 +2,12 @@
   <footer id="footer" class="cd-footer">
     <div class="row">
       <div class="col-sm-3">
-        <p>Maintained by</p>
+        <p>{{ $t('Maintained by') }}</p>
         <img class="cd-footer__foundation-logo" src="~cd-common/dist/coderdojo-foundation.svg" />
         </svg>
       </div>
       <div class="col-sm-3">
-        <p class="cd-footer__address-line">CoderDojo Foundation,</p>
+        <p class="cd-footer__address-line">{CoderDojo Foundation,</p>
         <p class="cd-footer__address-line">Dogpatch Labs Unit 1,</p>
         <p class="cd-footer__address-line">The CHQ building,</p>
         <p class="cd-footer__address-line">Custom House Quay,</p>
@@ -16,7 +16,7 @@
       </div>
       <div class="col-sm-3"></div>
       <div class="col-sm-3">
-        <p v-for="link in links"><a :href="link.href">{{ link.text }}</a></p>
+        <p v-for="link in links"><a :href="link.href">{{ $t(link.text) }}</a></p>
         <p class="cd-footer__social-icons">
           <a v-for="link in socialLinks" :href="link.href">
             <span class="fa-stack fa-lg">
@@ -28,20 +28,18 @@
       </div>
     </div>
 
-    <!--<div class="row">
-      <div class="col-md-4 col-sm-6">
-        <span class="fa fa-language fa-2x language-picker-icon"></span>{>"common/components/cdgm-lang-bar" /}
-      </div>
-      <div class="col-md-8 col-sm-6">
-        <a href="https://crowdin.com/project/zen-community-platform" class="translate-link">Help us translate</a>
-      </div>
-    </div>-->
+    <lang-picker></lang-picker>
   </footer>
 </template>
 
 <script>
+import LangPicker from '@/locale/cd-lang-picker';
+
 export default {
   name: 'cd-footer',
+  components: {
+    LangPicker,
+  },
   data() {
     return {
       links: [
@@ -89,6 +87,11 @@ export default {
 };
 </script>
 
-<style src="cd-common/dist/cd-common.min.css">
-
+<style lang="less">
+  @import "~cd-common/dist/cd-common.min.css";
+  .cd-footer {
+    &__lang-picker {
+      display: flex;
+    }
+  }
 </style>

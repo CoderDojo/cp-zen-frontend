@@ -3,7 +3,7 @@ import Vue from 'vue';
 export default {
   gecoder: null,
 
-  getIpCountryDetails: () => Vue.http.get(`${Vue.config.apiBase}/ip-country-details`),
+  getIpCountryDetails: () => Vue.http.get(`${Vue.config.apiServer}/api/2.0/ip-country-details`),
 
   geocode(gecoderSearchOptions) {
     if (!this.geocoder) {

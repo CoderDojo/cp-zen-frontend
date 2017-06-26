@@ -61,7 +61,7 @@ describe('Dojos Service', () => {
   it('should call the api', (done) => {
     const httpStub = sandbox.stub(Vue.http, 'post');
     httpStub.withArgs(
-      `${Vue.config.apiBase}/dojos/find`,
+      `${Vue.config.apiServer}/api/2.0/dojos/find`,
       {
         query: {
           urlSlug: 'aUrlSlug',
@@ -77,7 +77,7 @@ describe('Dojos Service', () => {
   describe('getDojos()', () => {
     it('should get dojos', (done) => {
       const postMock = sandbox.stub(Vue.http, 'post');
-      postMock.withArgs(`${Vue.config.apiBase}/dojos`).returns(Promise.resolve({ body: expectedDojos }));
+      postMock.withArgs(`${Vue.config.apiServer}/api/2.0/dojos`).returns(Promise.resolve({ body: expectedDojos }));
       DojosServiceWithMocks.getDojos().then((res) => {
         expect(res.body).to.deep.equal(expectedDojos);
         done();
@@ -95,7 +95,7 @@ describe('Dojos Service', () => {
         },
       };
       const postMock = sandbox.stub(Vue.http, 'post');
-      postMock.withArgs(`${Vue.config.apiBase}/dojos/search-bounding-box`, expectedQuery).returns(Promise.resolve({ body: expectedDojos }));
+      postMock.withArgs(`${Vue.config.apiServer}/api/2.0/dojos/search-bounding-box`, expectedQuery).returns(Promise.resolve({ body: expectedDojos }));
       DojosServiceWithMocks.getDojosByLatLong(10, 89).then((res) => {
         expect(res.body).to.deep.equal(expectedDojos);
         done();
@@ -119,7 +119,7 @@ describe('Dojos Service', () => {
       };
 
       const postMock = sandbox.stub(Vue.http, 'post');
-      postMock.withArgs(`${Vue.config.apiBase}/dojos/save-usersdojos`, expectedPayload).returns(Promise.resolve());
+      postMock.withArgs(`${Vue.config.apiServer}/api/2.0/dojos/save-usersdojos`, expectedPayload).returns(Promise.resolve());
 
       // ACT
       DojosServiceWithMocks.joinDojo(userId, dojoId, userTypes)

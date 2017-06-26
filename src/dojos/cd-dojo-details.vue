@@ -7,7 +7,7 @@
                  class="img-circle cd-dojo-details__dojo-image"/>
           </div>
           <div class="col-sm-11 headerContent">
-            <div class="cd-dojo-details__name align-middle">{{dojoDetails.name}}</div>
+            <div class="cd-dojo-details__name align-middle">{{ dojoDetails.name}}</div>
           </div>
         </div>
     </div>
@@ -16,7 +16,7 @@
         <div class="row cd-dojo-details__section">
           <div class="cd-dojo-details__time-label">
             <div class="fa fa-clock-o col-md-1" aria-hidden="true"></div>
-            <div class="col-md-11 purple_label">TIME</div>
+            <div class="col-md-11 purple_label">{{ $t('Time') }}</div>
           </div>
           <div class="cd-dojo-details__time col-md-12">{{dojoDetails.time}}</div>
         </div>
@@ -24,7 +24,7 @@
         <div class="row cd-dojo-details__section">
           <div class="cd-dojo-details__address-label">
             <div class="fa fa-map-marker col-md-1" aria-hidden="true"></div>
-            <div class="col-md-11 purple_label">LOCATION</div>
+            <div class="col-md-11 purple_label">{{ $t('Location') }}</div>
           </div>
           <div class="cd-dojo-details__address col-md-12">{{address}}</div>
         </div>
@@ -32,7 +32,7 @@
         <div class="row cd-dojo-details__section">
           <div class="cd-dojo-details__email-label">
             <div class="fa fa-envelope-o col-md-1" aria-hidden="true"></div>
-            <div class="col-md-11 purple_label">EMAIL</div>
+            <div class="col-md-11 purple_label">{{ $t('Email') }}</div>
           </div>
           <div class="cd-dojo-details__email col-md-12">{{dojoDetails.email}}</div>
         </div>
@@ -40,7 +40,7 @@
         <div class="row cd-dojo-details__section">
           <div class="cd-dojo-details__website-label">
             <div class="fa fa-globe col-md-1" aria-hidden="true"></div>
-            <div class="col-md-11 purple_label">WEBSITE</div>
+            <div class="col-md-11 purple_label">{{ $t('Website') }}</div>
           </div>
           <div class="cd-dojo-details__website col-md-12">{{dojoDetails.website}}</div>
         </div>
@@ -54,7 +54,7 @@
 
       <div class="cd-dojo-details__main_content">
         <events-list v-if="dojoDetails.id" v-bind:dojoId="dojoDetails.id"></events-list>
-        <div class="cd-dojo-details__details-label details">DETAILS</div>
+        <div class="cd-dojo-details__details-label">{{ $t('Details') }}</div>
         <div class="cd-dojo-details__details" v-html="dojoDetails.notes"></div>
       </div>
     </div>
@@ -183,15 +183,16 @@
         color: #db3236;
       }
     }
+
+    &__details-label {
+      font-size: 18px;
+      color: @cd-purple;
+      text-transform: uppercase;
+    }
   }
 
   .headerContent{
     line-height: 3;
-  }
-
-  .details {
-    font-size: 18px;
-    color: @cd-purple;
   }
 
   .purple_label {
@@ -202,6 +203,7 @@
     color: @cd-purple;
     margin-left: -7px;
     line-height: 1;
+    text-transform: uppercase;
   }
 
 

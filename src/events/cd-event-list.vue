@@ -1,6 +1,6 @@
 <template>
   <div class="cd-event-list">
-    <h1 class="cd-event-list__header">Upcoming Events</h1>
+    <h1 class="cd-event-list__header">{{ $t('Upcoming Events') }}</h1>
     <div v-for="event in events" class="cd-event-list__event">
       <div class="cd-event-list__event-details">
         <header class="cd-event-list__event-header">
@@ -8,7 +8,7 @@
             {{ event.name }}
           </h3>
           <h4 class="cd-event-list__event-sessions">
-            Sessions: {{ getSessionListForEvent(event) }}
+            {{ $t('Sessions') }}: {{ getSessionListForEvent(event) }}
           </h4>
         </header>
         <ul class="cd-event-list__datetime">
@@ -24,7 +24,7 @@
       </div>
       <router-link :to="{name: 'EventDobVerification', params: {eventId: event.id}}"
                    tag="button" class="btn btn-lg btn-primary cd-event-list__event-view">
-        See Details and Book
+        {{ $t('See Details and Book') }}
       </router-link>
     </div>
   </div>
