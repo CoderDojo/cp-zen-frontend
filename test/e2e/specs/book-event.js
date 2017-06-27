@@ -112,17 +112,13 @@ describe('Book event page', () => {
 
     expect(BookingConfirmation.bookingFirstName[1].getText()).to.equal('Child');
     expect(BookingConfirmation.bookingLastName[1].getText()).to.equal('One');
-    expect(BookingConfirmation.bookingDayOfBirth[1].getText()).to.equal('01');
-    expect(BookingConfirmation.bookingMonthOfBirth[1].getText()).to.equal('01');
-    expect(BookingConfirmation.bookingYearOfBirth[1].getText()).to.equal('2008');
+    expect(BookingConfirmation.bookingDateOfBirth[1].getText()).to.equal('2008-01-01T00:00:00.000Z');
     expect(BookingConfirmation.bookingEmailAddress[1].getText()).to.equal('child@one.org');
     expect(BookingConfirmation.bookingGender[1].getText()).to.equal('Male');
 
     expect(BookingConfirmation.bookingFirstName[2].getText()).to.equal('Child');
     expect(BookingConfirmation.bookingLastName[2].getText()).to.equal('Two');
-    expect(BookingConfirmation.bookingDayOfBirth[2].getText()).to.equal('10');
-    expect(BookingConfirmation.bookingMonthOfBirth[2].getText()).to.equal('10');
-    expect(BookingConfirmation.bookingYearOfBirth[2].getText()).to.equal('2006');
+    expect(BookingConfirmation.bookingDateOfBirth[2].getText()).to.equal('2006-10-10T00:00:00.000Z');
     expect(BookingConfirmation.bookingEmailAddress[2].getText()).to.equal('child@two.org');
     expect(BookingConfirmation.bookingGender[2].getText()).to.equal('Female');
 
@@ -165,7 +161,7 @@ describe('Book event page', () => {
 
     BookingConfirmation.firstName.waitForVisible();
 
-    expect(BookingConfirmation.bookingGender[1].getText()).to.equal('Other (another gender)');
+    expect(BookingConfirmation.bookingGender[1].getText()).to.equal('another gender');
   });
 
   it('should report validation errors for not filling in required fields', () => {

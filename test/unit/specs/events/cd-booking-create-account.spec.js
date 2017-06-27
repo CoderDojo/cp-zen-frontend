@@ -4,28 +4,37 @@ import { ErrorBag } from 'vee-validate';
 import BookingCreateAccountComponent from '!!vue-loader?inject!@/events/cd-booking-create-account';
 
 describe('Booking Create Account Form', () => {
-  const sandbox = sinon.sandbox.create();
-  const MockStoreService = {
-    save: sandbox.stub(),
-    load: sandbox.stub(),
-  };
-  const MockUsersService = {
-    register: sandbox.stub(),
-    getCurrentUser: sandbox.stub(),
-    addChild: sandbox.stub(),
-  };
-  const MockDojoService = {
-    joinDojo: sandbox.stub(),
-  };
-  const MockEventsService = {
-    bookTickets: sandbox.stub(),
-  };
+  let sandbox;
+  let MockStoreService;
+  let MockUsersService;
+  let MockDojoService;
+  let MockEventsService;
+  let BookingCreateAccountComponentWithMocks;
 
-  const BookingCreateAccountComponentWithMocks = BookingCreateAccountComponent({
-    '@/store/store-service': MockStoreService,
-    '@/users/service': MockUsersService,
-    '@/dojos/service': MockDojoService,
-    '@/events/service': MockEventsService,
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    MockStoreService = {
+      save: sandbox.stub(),
+      load: sandbox.stub(),
+    };
+    MockUsersService = {
+      register: sandbox.stub(),
+      getCurrentUser: sandbox.stub(),
+      addChild: sandbox.stub(),
+    };
+    MockDojoService = {
+      joinDojo: sandbox.stub(),
+    };
+    MockEventsService = {
+      bookTickets: sandbox.stub(),
+    };
+
+    BookingCreateAccountComponentWithMocks = BookingCreateAccountComponent({
+      '@/store/store-service': MockStoreService,
+      '@/users/service': MockUsersService,
+      '@/dojos/service': MockDojoService,
+      '@/events/service': MockEventsService,
+    });
   });
 
   afterEach(() => {
@@ -266,6 +275,7 @@ describe('Booking Create Account Form', () => {
       MockUsersService.addChild.callsFake((child) => {
         const childClone = clone(child);
         childClone.id = childIdCounter;
+        childClone.userId = 1000 + childIdCounter;
         childIdCounter += 1;
         return Promise.resolve({ body: childClone });
       });
@@ -298,6 +308,10 @@ describe('Booking Create Account Form', () => {
         expect(mockBookingData.foo.selectedTickets[0].user.id).to.equal(1);
         expect(mockBookingData.foo.selectedTickets[1].user.id).to.equal(2);
         expect(mockBookingData.abc.selectedTickets[0].user.id).to.equal(3);
+        expect(mockBookingData.foo.selectedTickets[0].user.userId).to.equal(1001);
+        expect(mockBookingData.foo.selectedTickets[1].user.userId).to.equal(1002);
+        expect(mockBookingData.abc.selectedTickets[0].user.userId).to.equal(1003);
+        expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, mockBookingData);
         done();
       });
     });
@@ -337,8 +351,15 @@ describe('Booking Create Account Form', () => {
   });
 
   describe('bookTickets()', () => {
-    it('should put together a list of applications and send them to event service to book', () => {
+    it('should put together a list of applications and send them to event service to book', (done) => {
       // ARRANGE
+      const currentUserResponseMock = {
+        login: {},
+        user: {
+          id: 'foo',
+        },
+        ok: true,
+      };
       const mockSelectedEvent = {
         id: 'foo',
         dojoId: 'dojo1',
@@ -354,7 +375,7 @@ describe('Booking Create Account Form', () => {
                 sessionId: 'bar',
               },
               user: {
-                id: 1,
+                userId: 1,
               },
             },
             {
@@ -364,7 +385,7 @@ describe('Booking Create Account Form', () => {
                 sessionId: 'bar',
               },
               user: {
-                id: 2,
+                userId: 2,
               },
             },
           ],
@@ -378,9 +399,6 @@ describe('Booking Create Account Form', () => {
                 name: 'ABC',
                 sessionId: 'xyz',
               },
-              user: {
-                id: 3,
-              },
             },
           ],
         },
@@ -389,40 +407,43 @@ describe('Booking Create Account Form', () => {
       vm.eventId = 'foo';
       MockStoreService.load.withArgs('selected-event').returns(mockSelectedEvent);
       MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(mockBookingData);
+      MockUsersService.getCurrentUser.returns(Promise.resolve({ body: currentUserResponseMock }));
 
       // ACT
-      vm.bookTickets();
-
-      // ASSERT
-      expect(MockEventsService.bookTickets).to.have.been.calledWith([
-        {
-          dojoId: mockSelectedEvent.dojoId,
-          eventId: mockSelectedEvent.id,
-          sessionId: 'bar',
-          ticketName: 'Foo',
-          ticketId: 'foo',
-          userId: 1,
-          notes: 'N/A',
-        },
-        {
-          dojoId: mockSelectedEvent.dojoId,
-          eventId: mockSelectedEvent.id,
-          sessionId: 'bar',
-          ticketName: 'Foo',
-          ticketId: 'foo',
-          userId: 2,
-          notes: 'N/A',
-        },
-        {
-          dojoId: mockSelectedEvent.dojoId,
-          eventId: mockSelectedEvent.id,
-          sessionId: 'xyz',
-          ticketName: 'ABC',
-          ticketId: 'abc',
-          userId: 3,
-          notes: 'N/A',
-        },
-      ]);
+      vm.bookTickets().then(() => {
+        // ASSERT
+        expect(MockEventsService.bookTickets).to.have.been.calledOnce;
+        expect(MockEventsService.bookTickets).to.have.been.calledWith([
+          {
+            dojoId: mockSelectedEvent.dojoId,
+            eventId: mockSelectedEvent.id,
+            sessionId: 'bar',
+            ticketName: 'Foo',
+            ticketId: 'foo',
+            userId: 1,
+            notes: 'N/A',
+          },
+          {
+            dojoId: mockSelectedEvent.dojoId,
+            eventId: mockSelectedEvent.id,
+            sessionId: 'bar',
+            ticketName: 'Foo',
+            ticketId: 'foo',
+            userId: 2,
+            notes: 'N/A',
+          },
+          {
+            dojoId: mockSelectedEvent.dojoId,
+            eventId: mockSelectedEvent.id,
+            sessionId: 'xyz',
+            ticketName: 'ABC',
+            ticketId: 'abc',
+            userId: 'foo',
+            notes: 'N/A',
+          },
+        ]);
+        done();
+      });
     });
   });
 });

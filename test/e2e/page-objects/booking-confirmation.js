@@ -46,19 +46,9 @@ const BookingConfirmation = Object.create(BasePage, {
       return $$('.cd-booking-confirmation__booking-last-name');
     },
   },
-  bookingDayOfBirth: {
+  bookingDateOfBirth: {
     get() {
-      return $$('.cd-booking-confirmation__booking-dob-date');
-    },
-  },
-  bookingMonthOfBirth: {
-    get() {
-      return $$('.cd-booking-confirmation__booking-dob-month');
-    },
-  },
-  bookingYearOfBirth: {
-    get() {
-      return $$('.cd-booking-confirmation__booking-dob-year');
+      return $$('.cd-booking-confirmation__booking-dob');
     },
   },
   bookingEmailAddress: {

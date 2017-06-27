@@ -1,6 +1,7 @@
 // server.js
 const jsonServer = require('json-server');
 const path = require('path');
+const uuidv1 = require('uuid/v1');
 
 const server = jsonServer.create();
 const router = jsonServer.router(path.join(__dirname, 'db.json'));
@@ -20,7 +21,6 @@ const nonResourcePostUrls = [
   '/api/2.0/users/register',
   '/api/2.0/users/login',
   '/api/2.0/dojos/save-usersdojos',
-  '/api/2.0/profiles/youth/create',
 ]
 const rewriteRules = {
   '/api/2.0/dojos/find': '/api/2.0/dojos',
@@ -59,6 +59,12 @@ nonResourcePostUrls.forEach((url) => {
   server.post(url, (req, res) => {
     res.send();
   });
+});
+server.post('/api/2.0/profiles/youth/create', (req, res) => {
+  const child = req.body.profile;
+  child.id = uuidv1();
+  child.userId = uuidv1();
+  res.send(child);
 });
 server.use('/api/2.0', router);
 
