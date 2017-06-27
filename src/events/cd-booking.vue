@@ -1,16 +1,22 @@
 <template>
   <div class="cd-booking">
-    <h2>Tickets:</h2>
-    <ul>
-      <li class="cd-booking-tickets" v-for="ticket in tickets">
-        {{ticket.selectedTickets.length}} X {{ ticket.selectedTickets[0].ticket.name }} ({{ ticket.session.name }})
-      </li>
-    </ul>
+    <div class="cd-booking__attendee-heading">Attendee Information</div>
+    <div class="cd-booking__ticket-box">
+      <div class="cd-booking__selected-tickets-heading">Selected Tickets</div>
+      <div class="row cd-booking__tickets" v-for="ticket in tickets">
+        <span class="col-md-4">
+         {{ticket.selectedTickets.length}} x {{ ticket.selectedTickets[0].ticket.name }}
+        </span>
+        <span class="col-md-8">
+          {{ ticket.session.name }}
+        </span>
+      </div>
+    </div>
     <form>
       <bookingParentForm :eventId="eventId" :tickets="tickets" ref="bookingParentFormRef"></bookingParentForm>
       <bookingCreateAccount :eventId="eventId" ref="bookingCreateAccountRef"></bookingCreateAccount>
     </form>
-    <input type="button" @click="onSubmit()" value="Submit Booking"/>
+    <input type="button" class="cd-booking__submit-button btn-primary" @click="onSubmit()" value="Confirm Booking"/>
   </div>
 </template>
 <script>
@@ -59,4 +65,39 @@
     },
   };
 </script>
-<style scoped></style>
+<style scoped lang="less">
+  @import "~cd-common/common/_colors";
+
+  .cd-booking {
+    &__attendee-heading {
+      margin-top: 45px;
+      margin-bottom: 16px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    &__selected-tickets-heading {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 9px;
+    }
+    &__tickets{
+      font-size: 16px;
+      height: 30px
+    }
+    &__ticket-box {
+      border-style: solid;
+      border-color: @cd-orange;
+      border-width: 1px 1px 3px 1px;
+      padding: 16px;
+      margin-right: 33px;
+    }
+    &__submit-button {
+      margin-top: 48px;
+      width: 200px;
+      height: 50px;
+      border-radius: 4px;
+      font-size: 16px;
+      border: none;
+    }
+  }
+</style>

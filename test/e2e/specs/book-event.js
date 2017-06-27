@@ -55,22 +55,24 @@ describe('Book event page', () => {
   it('should collect parent data', () => {
     startBooking();
 
+    expect(Booking.attendeeHeading.getText()).to.equal('Attendee Information');
+    expect(Booking.selectedTicketsHeading.getText()).to.equal('Selected Tickets');
     expect(Booking.allTickets().length).to.equal(2);
-    expect(Booking.tickets(0).getText()).to.equal('1 X Parent (Scratch)');
-    expect(Booking.tickets(1).getText()).to.equal('2 X Laptop required (Arduino)');
+    expect(Booking.tickets(0).getText()).to.equal('1 x Parent\nScratch');
+    expect(Booking.tickets(1).getText()).to.equal('2 x Laptop required\nArduino');
 
-    expect(Booking.firstNameLabel.getText()).to.equal('First name');
-    expect(Booking.lastNameLabel.getText()).to.equal('Last name');
-    expect(Booking.phoneNumberLabel.getText()).to.equal('Phone number');
-    expect(Booking.emailLabel.getText()).to.equal('Email address');
+    expect(Booking.attendeeTypeHeader[0].getText()).to.equal('Parent / Guardian');
+    expect(Booking.nameLabel.getText()).to.equal('Name');
+    expect(Booking.phoneNumberLabel.getText()).to.equal('Phone Number');
+    expect(Booking.emailLabel.getText()).to.equal('Email Address');
 
     Booking.firstName.setValue('John');
+    Booking.lastName.setValue('Doe');
     Booking.lastName.setValue('Doe');
     Booking.phoneNumber.setValue('1555123456');
     Booking.email.setValue('john.doe@example.com');
 
-    expect(Booking.sessionTicketTitle[0].getText()).to.equal('Laptop required (Arduino)');
-
+    expect(Booking.attendeeTypeHeader[1].getText()).to.equal('Laptop required (Arduino)');
     Booking.sessionTicketFirstName[0].setValue('Child');
     Booking.sessionTicketLastName[0].setValue('One');
     Booking.sessionTicketDayOfBirth[0].setValue('01');
@@ -79,7 +81,7 @@ describe('Book event page', () => {
     Booking.sessionTicketEmailAddress[0].setValue('child@one.org');
     Booking.sessionTicketGender('Male')[0].click();
 
-    expect(Booking.sessionTicketTitle[1].getText()).to.equal('Laptop required (Arduino)');
+    expect(Booking.attendeeTypeHeader[2].getText()).to.equal('Laptop required (Arduino)');
     Booking.sessionTicketFirstName[1].setValue('Child');
     Booking.sessionTicketLastName[1].setValue('Two');
     Booking.sessionTicketDayOfBirth[1].setValue('10');

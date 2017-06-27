@@ -6,9 +6,15 @@ const BookingParentData = Object.create(EventDetails, {
       return this.open.call(this, `/events/${eventId}/book`);
     },
   },
-  firstNameLabel: {
+  attendeeTypeHeader: {
     get() {
-      return $('label[for=firstName]');
+      $('.cd-booking-parent-form__attendee-type-header').waitForVisible();
+      return $$('.cd-booking-parent-form__attendee-type-header');
+    },
+  },
+  nameLabel: {
+    get() {
+      return $('label[for=name]');
     },
   },
   firstName: {
@@ -61,26 +67,31 @@ const BookingParentData = Object.create(EventDetails, {
       return $('p[id=emailValidationError]');
     },
   },
+  attendeeHeading: {
+    get() {
+      return $('.cd-booking__attendee-heading')
+    },
+  },
+  selectedTicketsHeading: {
+    get() {
+      return $('.cd-booking__selected-tickets-heading')
+    },
+  },
   tickets: {
     value(index) {
-      $('.cd-booking-tickets').waitForVisible();
-      return $$('.cd-booking-tickets')[index];
+      $('.cd-booking__tickets').waitForVisible();
+      return $$('.cd-booking__tickets')[index];
     },
   },
   allTickets: {
     value() {
-      $('.cd-booking-tickets').waitForVisible();
-      return $$('.cd-booking-tickets');
-    },
-  },
-  lastNameLabel: {
-    get() {
-      return $('label[for=lastName]');
+      $('.cd-booking__tickets').waitForVisible();
+      return $$('.cd-booking__tickets');
     },
   },
   submitBookingButton: {
     get() {
-      return $('input[value="Submit Booking"]');
+      return $('input[value="Confirm Booking"]');
     },
   },
   sessionTicketTitle: {
