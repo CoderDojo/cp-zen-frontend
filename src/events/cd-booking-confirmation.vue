@@ -12,9 +12,7 @@
       <li class="cd-booking-confirmation__booking-ticket-name">{{ booking.ticket.name }}</li>
       <li class="cd-booking-confirmation__booking-first-name">{{ booking.user.firstName }}</li>
       <li class="cd-booking-confirmation__booking-last-name">{{ booking.user.lastName }}</li>
-      <li class="cd-booking-confirmation__booking-dob-date">{{ booking.user.dob && booking.user.dob.date }}</li>
-      <li class="cd-booking-confirmation__booking-dob-month">{{ booking.user.dob && booking.user.dob.month }}</li>
-      <li class="cd-booking-confirmation__booking-dob-year">{{ booking.user.dob && booking.user.dob.year }}</li>
+      <li class="cd-booking-confirmation__booking-dob">{{ booking.user.dob }}</li>
       <li class="cd-booking-confirmation__booking-email">{{ booking.user.email }}</li>
       <li class="cd-booking-confirmation__booking-gender">
         {{ booking.user.gender }} <span v-if="booking.user.otherGender">({{ booking.user.otherGender }})</span>

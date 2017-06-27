@@ -93,6 +93,10 @@
               });
           }
         });
+        promiseChain = promiseChain.then(() => {
+          StoreService.save(`booking-${this.eventId}-sessions`, bookingData);
+          return Promise.resolve();
+        });
         return promiseChain;
       },
       joinDojo() {
@@ -103,21 +107,24 @@
         });
       },
       bookTickets() {
-        const selectedEvent = StoreService.load('selected-event');
-        const bookingSessions = StoreService.load(`booking-${this.eventId}-sessions`);
-        const applications = [];
-        forEachTicket(bookingSessions, (ticket) => {
-          applications.push({
-            dojoId: selectedEvent.dojoId,
-            eventId: selectedEvent.id,
-            sessionId: ticket.ticket.sessionId,
-            ticketName: ticket.ticket.name,
-            ticketId: ticket.ticket.id,
-            userId: ticket.user.id,
-            notes: 'N/A',
+        return UserService.getCurrentUser().then((response) => {
+          const loggedInUser = response.body.user;
+          const selectedEvent = StoreService.load('selected-event');
+          const bookingSessions = StoreService.load(`booking-${this.eventId}-sessions`);
+          const applications = [];
+          forEachTicket(bookingSessions, (ticket) => {
+            applications.push({
+              dojoId: selectedEvent.dojoId,
+              eventId: selectedEvent.id,
+              sessionId: ticket.ticket.sessionId,
+              ticketName: ticket.ticket.name,
+              ticketId: ticket.ticket.id,
+              userId: (ticket.user && ticket.user.userId) || loggedInUser.id,
+              notes: 'N/A',
+            });
           });
+          return EventsService.bookTickets(applications);
         });
-        return EventsService.bookTickets(applications);
       },
       getRecaptchaResponse() {
         return this.recaptchaResponse;

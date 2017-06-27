@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import moment from 'moment';
 import { clone } from 'lodash';
 import UserUtils from '@/users/util';
 
@@ -17,7 +18,7 @@ const UserService = {
     const payload = {
       profile: clone(profile),
     };
-    payload.profile.dob = profile.dob.toISOString();
+    payload.profile.dob = moment(profile.dob).subtract(profile.dob.getTimezoneOffset(), 'm').toISOString();
     payload.profile.userTypes = [UserUtils.isUnderAge(profile.dob) ? 'attendee-u13' : 'attendee-o13'];
     payload.profile.gender = profile.otherGender ? profile.otherGender : profile.gender;
     delete payload.profile.otherGender;

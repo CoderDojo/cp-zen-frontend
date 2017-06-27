@@ -63,15 +63,13 @@ describe('UserService', () => {
       // ARRANGE
       const mockProfile = {
         gender: 'foo',
-        dob: {
-          toISOString: () => '2007-06-21T13:44:57.232Z',
-        },
+        dob: new Date(2008, 9, 10, 0, 0, 0, 0),
       };
 
       const expectedPayload = {
         profile: extend(clone(mockProfile), {
           userTypes: ['attendee-u13'],
-          dob: mockProfile.dob.toISOString(),
+          dob: '2008-10-10T00:00:00.000Z',
         }),
       };
 
@@ -90,15 +88,13 @@ describe('UserService', () => {
       // ARRANGE
       const mockProfile = {
         gender: 'foo',
-        dob: {
-          toISOString: () => '2007-06-21T13:44:57.232Z',
-        },
+        dob: new Date(2008, 9, 10, 0, 0, 0, 0),
       };
 
       const expectedPayload = {
         profile: extend(clone(mockProfile), {
           userTypes: ['attendee-o13'],
-          dob: mockProfile.dob.toISOString(),
+          dob: '2008-10-10T00:00:00.000Z',
         }),
       };
 
@@ -118,15 +114,13 @@ describe('UserService', () => {
       const mockProfile = {
         gender: 'Other',
         otherGender: 'Fluid',
-        dob: {
-          toISOString: () => '2007-06-21T13:44:57.232Z',
-        },
+        dob: new Date(2008, 9, 10, 0, 0, 0, 0),
       };
 
       const expectedPayload = {
         profile: {
           userTypes: ['attendee-o13'],
-          dob: mockProfile.dob.toISOString(),
+          dob: '2008-10-10T00:00:00.000Z',
           gender: 'Fluid',
         },
       };
