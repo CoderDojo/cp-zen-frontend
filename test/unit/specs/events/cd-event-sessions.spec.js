@@ -34,6 +34,8 @@ describe('Event sessions component', () => {
     requestAnimationFrame(() => {
       expect(vm.event).to.deep.equal(event);
       expect(MockStoreService.load).to.be.calledOnce;
+      expect(MockStoreService.save).to.be.calledOnce;
+      expect(MockStoreService.save).to.be.calledWith(`booking-${vm.eventId}-sessions`, {});
       done();
     });
   });

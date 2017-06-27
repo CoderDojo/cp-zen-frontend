@@ -31,39 +31,44 @@ const BookingConfirmation = Object.create(BasePage, {
       return $('.cd-booking-confirmation__booking-confirmation');
     },
   },
-  childFirstName: {
+  bookingTicketName: {
     get() {
-      return $$('.cd-booking-confirmation__child-first-name');
+      return $$('.cd-booking-confirmation__booking-ticket-name');
     },
   },
-  childLastName: {
+  bookingFirstName: {
     get() {
-      return $$('.cd-booking-confirmation__child-last-name');
+      return $$('.cd-booking-confirmation__booking-first-name');
     },
   },
-  childDayOfBirth: {
+  bookingLastName: {
     get() {
-      return $$('.cd-booking-confirmation__child-dob-date');
+      return $$('.cd-booking-confirmation__booking-last-name');
     },
   },
-  childMonthOfBirth: {
+  bookingDayOfBirth: {
     get() {
-      return $$('.cd-booking-confirmation__child-dob-month');
+      return $$('.cd-booking-confirmation__booking-dob-date');
     },
   },
-  childYearOfBirth: {
+  bookingMonthOfBirth: {
     get() {
-      return $$('.cd-booking-confirmation__child-dob-year');
+      return $$('.cd-booking-confirmation__booking-dob-month');
     },
   },
-  childEmailAddress: {
+  bookingYearOfBirth: {
     get() {
-      return $$('.cd-booking-confirmation__child-email');
+      return $$('.cd-booking-confirmation__booking-dob-year');
     },
   },
-  childGender: {
+  bookingEmailAddress: {
     get() {
-      return $$('.cd-booking-confirmation__child-gender');
+      return $$('.cd-booking-confirmation__booking-email');
+    },
+  },
+  bookingGender: {
+    get() {
+      return $$('.cd-booking-confirmation__booking-gender');
     },
   },
 });

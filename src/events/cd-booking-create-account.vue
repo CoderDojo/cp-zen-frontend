@@ -28,6 +28,12 @@
   import DojoService from '@/dojos/service';
   import StoreService from '@/store/store-service';
 
+  function forEachTicket(bookingData, cb) {
+    Object.keys(bookingData).forEach((ticketId) => {
+      bookingData[ticketId].selectedTickets.forEach(cb);
+    });
+  }
+
   export default {
     name: 'BookingCreateAccount',
     props: ['eventId'],
@@ -36,7 +42,7 @@
     },
     data() {
       return {
-        parent: null,
+        profile: null,
         password: null,
         confirmPassword: null,
         termsConditionsAccepted: false,
@@ -48,7 +54,7 @@
     },
     computed: {
       user() {
-        return extend(clone(this.parent), {
+        return extend(clone(this.profile), {
           password: this.password,
           'g-recaptcha-response': this.recaptchaResponse,
           initUserType: {
@@ -71,17 +77,21 @@
           .then(this.bookTickets);
       },
       register() {
-        const bookingData = StoreService.load(`booking-${this.eventId}`);
-        this.parent = bookingData.parent;
-        return UserService.register(this.user, this.parent);
+        this.profile = StoreService.load(`booking-${this.eventId}-user`);
+        return UserService.register(this.user, this.profile);
       },
       addChildren() {
-        const bookingData = StoreService.load(`booking-${this.eventId}`);
+        const bookingData = StoreService.load(`booking-${this.eventId}-sessions`);
         let promiseChain = Promise.resolve();
-        bookingData.children.forEach((child) => {
-          const childClone = cloneDeep(child);
-          childClone.dob = new Date(child.dob.year, child.dob.month - 1, child.dob.date, 0, 0, 0, 0);
-          promiseChain = promiseChain.then(() => UserService.addChild(childClone));
+        forEachTicket(bookingData, (ticket) => {
+          if (ticket.ticket.type === 'ninja') {
+            const child = cloneDeep(ticket.user);
+            child.dob = new Date(child.dob.year, child.dob.month - 1, child.dob.date, 0, 0, 0, 0);
+            promiseChain = promiseChain.then(() => UserService.addChild(child))
+              .then((response) => {
+                ticket.user = response.body; // eslint-disable-line no-param-reassign
+              });
+          }
         });
         return promiseChain;
       },
@@ -93,12 +103,21 @@
         });
       },
       bookTickets() {
-        return UserService.getCurrentUser().then((response) => {
-          const user = response.body.user;
-          const selectedEvent = StoreService.load('selected-event');
-          const bookingSessions = StoreService.load(`booking-${this.eventId}-sessions`);
-          return EventsService.bookTickets(user, selectedEvent, bookingSessions);
+        const selectedEvent = StoreService.load('selected-event');
+        const bookingSessions = StoreService.load(`booking-${this.eventId}-sessions`);
+        const applications = [];
+        forEachTicket(bookingSessions, (ticket) => {
+          applications.push({
+            dojoId: selectedEvent.dojoId,
+            eventId: selectedEvent.id,
+            sessionId: ticket.ticket.sessionId,
+            ticketName: ticket.ticket.name,
+            ticketId: ticket.ticket.id,
+            userId: ticket.user.id,
+            notes: 'N/A',
+          });
         });
+        return EventsService.bookTickets(applications);
       },
       getRecaptchaResponse() {
         return this.recaptchaResponse;

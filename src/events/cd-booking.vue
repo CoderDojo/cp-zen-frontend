@@ -3,7 +3,7 @@
     <h2>Tickets:</h2>
     <ul>
       <li class="cd-booking-tickets" v-for="ticket in tickets">
-        {{ticket.quantity}} X {{ ticket.name }} ({{ ticket.sessionName }})
+        {{ticket.selectedTickets.length}} X {{ ticket.selectedTickets[0].ticket.name }} ({{ ticket.session.name }})
       </li>
     </ul>
     <form>
@@ -17,25 +17,7 @@
   import StoreService from '@/store/store-service';
   import BookingParentForm from '@/events/cd-booking-parent-form';
   import BookingCreateAccount from '@/events/cd-booking-create-account';
-  import { find } from 'lodash';
 
-  function getSelectedSessions(booking) {
-    return Object.keys(booking);
-  }
-
-  function getSelectedTicketsPerSession(booking, sessionId) {
-    return Object.keys(booking[sessionId]);
-  }
-
-  function storeTicket(tickets, sessionName, quantity, ticket) {
-    tickets.push({
-      id: ticket.id,
-      name: ticket.name,
-      type: ticket.type,
-      quantity,
-      sessionName,
-    });
-  }
 
   export default {
     name: 'Booking',
@@ -46,23 +28,12 @@
     },
     data() {
       return {
-        tickets: [],
+        tickets: {},
       };
     },
     methods: {
       loadSessionData() {
-        const event = StoreService.load('selected-event');
-        const booking = StoreService.load(`booking-${this.eventId}-sessions`);
-
-        getSelectedSessions(booking).forEach((sessionId) => {
-          const session = find(event.sessions, s => s.id === sessionId);
-          if (session) {
-            getSelectedTicketsPerSession(booking, sessionId).forEach((ticketId) => {
-              const ticket = find(session.tickets, t => t.id === ticketId);
-              storeTicket(this.tickets, session.name, booking[sessionId][ticketId], ticket);
-            });
-          }
-        });
+        this.tickets = StoreService.load(`booking-${this.eventId}-sessions`);
       },
       onSubmit() {
         if (this.isValidChildForm()) {

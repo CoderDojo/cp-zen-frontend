@@ -15,36 +15,17 @@ const EventsService = {
   loadSessions(eventId) {
     return Vue.http.get(`${Vue.config.apiBase}/events/${eventId}/sessions`);
   },
-  bookTickets(user, selectedEvent, selectedSessionTickets) {
-    const dojoId = selectedEvent.dojoId;
-    const eventId = selectedEvent.id;
-    const userId = user.id;
-    const sessionId = Object.keys(selectedSessionTickets)[0];
-    const ticketId = Object.keys(selectedSessionTickets[sessionId])[0];
-    const session = selectedEvent.sessions.filter(s => s.id === sessionId)[0];
-    const ticket = session.tickets.filter(tck => tck.id === ticketId)[0];
-    const ticketName = ticket.name;
-    const ticketType = ticket.type;
-
-    const payload = {
-      applications: [
-        {
-          dojoId,
-          eventId,
-          sessionId,
-          ticketName,
-          ticketType,
-          ticketId,
-          userId,
-          notes: 'N/A',
-          emailSubject: {
-            received: 'foo',
-            approved: 'bar',
-          },
-        },
-      ],
-    };
-    return Vue.http.post(`${Vue.config.apiBase}/events/bulk-apply-applications`, payload);
+  bookTickets(applications) {
+    applications.forEach((application) => {
+      /* eslint-disable no-param-reassign */
+      application.emailSubject = {
+        received: 'Your ticket request for %1$s has been received',
+        approved: 'Your ticket request for %1$s has been approved',
+        cancelled: 'Your ticket request for %1$s has been cancelled',
+      };
+      /* eslint-enable no-param-reassign */
+    });
+    return Vue.http.post(`${Vue.config.apiBase}/events/bulk-apply-applications`, { applications });
   },
 };
 
