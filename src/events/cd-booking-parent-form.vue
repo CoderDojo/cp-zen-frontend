@@ -3,19 +3,19 @@
     <div class="cd-booking-parent-form__attendee-type-header">
       Parent / Guardian
     </div>
-    <label class="cd-booking-parent-form__label" for="name">Name</label><br/>
+    <label class="cd-booking-parent-form__label" for="name">Name</label>
     <input type="text" class="form-control" name="firstName" placeholder="First Name" id="name" data-vv-as="first name" v-validate.initial="'required'" v-model="parentUserData.firstName">
 
-    <input type="text" class="form-control" name="lastName" placeholder="Last Name" id="lastName" data-vv-as="last name" v-validate.initial="'required'" v-model="parentUserData.lastName"><br/>
+    <input type="text" class="form-control" name="lastName" placeholder="Last Name" id="lastName" data-vv-as="last name" v-validate.initial="'required'" v-model="parentUserData.lastName">
     <p id="firstNameValidationError" class="text-danger" v-show="formValidated && errors.has('firstName')">{{ errors.first('firstName') }}</p>
     <p id="lastNameValidationError" class="text-danger" v-show="formValidated && errors.has('lastName')">{{ errors.first('lastName') }}</p>
 
-    <label class="cd-booking-parent-form__label" for="phoneNumber">Phone Number</label><br/>
-    <input type="text" class="form-control" placeholder="Eg. 353 123 45678" name="phoneNumber" id="phoneNumber" data-vv-as="phone number" v-validate.initial="'required|numeric'" v-model="parentUserData.phone"><br/>
+    <label class="cd-booking-parent-form__label" for="phoneNumber">Phone Number</label>
+    <input type="text" class="form-control" placeholder="Eg. 353 123 45678" name="phoneNumber" id="phoneNumber" data-vv-as="phone number" v-validate.initial="'required|numeric'" v-model="parentUserData.phone">
     <p id="phoneNumberValidationError" class="text-danger" v-show="formValidated && errors.has('phoneNumber')">{{ errors.first('phoneNumber') }}</p>
 
-    <label class="cd-booking-parent-form__label" for="email">Email Address</label><br/>
-    <input type="email" placeholder="Email address" class="form-control" name="email" id="email" data-vv-as="email" v-validate.initial="'required|email'" v-model="parentUserData.email"><br/>
+    <label class="cd-booking-parent-form__label" for="email">Email Address</label>
+    <input type="email" placeholder="Email address" class="form-control" name="email" id="email" data-vv-as="email" v-validate.initial="'required|email'" v-model="parentUserData.email">
     <p id="emailValidationError" class="text-danger" v-show="formValidated && errors.has('email')">{{ errors.first('email') }}</p>
 
     <div v-for="ticket in ninjaTickets">
@@ -37,7 +37,7 @@
           Email Address (optional)
         </label>
         <input type="email" placeholder="Email address" v-model="selectedTicket.user.email" class="cd-booking-parent-form__child-email form-control" />
-        <label class="cd-booking-parent-form__label">Gender</label><br/>
+        <label class="cd-booking-parent-form__label">Gender</label>
         <div class="cd-booking-parent-form__child-gender">
           <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Male" v-model="selectedTicket.user.gender" /><span> Male</span></label>
           <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Female" v-model="selectedTicket.user.gender" /><span> Female</span></label>
@@ -131,6 +131,7 @@
       margin-bottom: 10px;
       font-size: 16px;
       font-weight: normal;
+      display: block;
     }
     input[type=radio] {
       width: 20px;
