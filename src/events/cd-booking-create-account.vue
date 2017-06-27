@@ -153,6 +153,7 @@
               eventId: selectedEvent.id,
               sessionId: ticket.ticket.sessionId,
               ticketName: ticket.ticket.name,
+              ticketType: ticket.ticket.type,
               ticketId: ticket.ticket.id,
               userId: (ticket.user && ticket.user.userId) || loggedInUser.id,
               notes: 'N/A',
