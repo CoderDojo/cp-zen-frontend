@@ -1,22 +1,57 @@
 <template>
   <div class="cd-booking-create-account">
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" data-vv-as="password" v-validate.initial="'required|confirmed:confirmPassword|cd-password'" v-model="password" />
-    <label class="text-danger cd-booking-create-account__password-error" v-show="formValidated && errors.has('password')">{{ errors.first('password') }}</label>
-    <label for="password">Confirm Password</label>
-    <input type="password" name="confirmPassword" id="confirmPassword" data-vv-as="password confirmation" v-validate.initial="'required'" v-model="confirmPassword" />
-    <label class="text-danger cd-booking-create-account__password-confirmation-error" v-show="formValidated && errors.has('confirmPassword')">{{ errors.first('confirmPassword') }}</label>
-    <label><input type="checkbox" name="termsConditionsAccepted" v-validate.initial="'required'" v-model="termsConditionsAccepted" />
-      I accept the T&Cs (<a class="cd-booking-create-account__terms-conditions-link" href="https://zen.coderdojo.com/terms-and-conditions">Terms & Conditions</a>)
-    </label>
-    <label class="text-danger cd-booking-create-account__terms-conditions-error" v-show="formValidated && errors.has('termsConditionsAccepted')">You must accept the terms and conditions before proceeding.</label>
-    <label>
-      <input type="checkbox" name="dataConsentAccepted" id="consentData" v-validate.initial="'required'" v-model="dataConsentAccepted" />
-      I consent to the use of my data (<a class="cd-booking-create-account__data-usage-link" href="http://www.icecreammakesuhappy.ie/">Data policy</a>)
-    </label>
-    <label class="text-danger cd-booking-create-account__data-consent-error" v-show="formValidated && errors.has('dataConsentAccepted')">You must consent to the use of your data before proceeding.</label>
-    <div class="cd-booking-create-account__recaptcha">
-      <vue-recaptcha :sitekey="recaptchaSiteKey" @verify="onRecaptchaVerify"></vue-recaptcha>
+    <div class="cd-booking-create-account__header row">
+      <div class="cd-booking-create-account__header-title">
+        Create a CoderDojo Account
+      </div>
+      <div class="cd-booking-create-account__header-info">
+        Keep track of your Dojos and book event tickets faster
+      </div>
+    </div>
+    <div class="cd-booking-create-account__container">
+    <div class="row">
+      <label class="cd-booking-create-account__label" for="password">Password</label>
+      <input type="password" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
+             v-validate.initial="'required|confirmed:confirmPassword|cd-password'" v-model="password"/>
+      <label class="text-danger cd-booking-create-account__password-error"
+             v-show="formValidated && errors.has('password')">{{ errors.first('password') }}</label>
+    </div>
+    <div class="row cd-booking-create-account__password-hint">
+      Password must be at least 8 characters with at least one numeric.
+    </div>
+    <div class="row">
+      <label class="cd-booking-create-account__label" for="password">Confirm Password</label>
+      <input type="password" class="form-control" placeholder="Password" name="confirmPassword" id="confirmPassword" data-vv-as="password confirmation"
+             v-validate.initial="'required'" v-model="confirmPassword"/>
+      <label class="text-danger cd-booking-create-account__password-confirmation-error"
+             v-show="formValidated && errors.has('confirmPassword')">{{ errors.first('confirmPassword') }}</label>
+    </div>
+    <div class="row">
+      <div class="cd-booking-create-account__recaptcha">
+        <vue-recaptcha :sitekey="recaptchaSiteKey" @verify="onRecaptchaVerify"></vue-recaptcha>
+      </div>
+    </div>
+    <div class="row">
+      <label class="cd-booking-create-account__label"><input type="checkbox"  name="termsConditionsAccepted" v-validate.initial="'required'"
+                    v-model="termsConditionsAccepted"/>
+        I agree with <a class="cd-booking-create-account__terms-conditions-link"
+                              href="https://zen.coderdojo.com/terms-and-conditions">Terms & Conditions</a>
+      </label>
+      <label class="text-danger cd-booking-create-account__terms-conditions-error"
+             v-show="formValidated && errors.has('termsConditionsAccepted')">You must accept the terms and conditions
+        before proceeding.</label>
+    </div>
+    <div class="row">
+      <label class="cd-booking-create-account__label">
+        <input type="checkbox"  name="dataConsentAccepted" id="consentData" v-validate.initial="'required'"
+               v-model="dataConsentAccepted"/>
+        I consent to the use of my data (<a class="cd-booking-create-account__data-usage-link"
+                                            href="http://www.icecreammakesuhappy.ie/">Data policy</a>)
+      </label>
+      <label class="text-danger cd-booking-create-account__data-consent-error"
+             v-show="formValidated && errors.has('dataConsentAccepted')">You must consent to the use of your data before
+        proceeding.</label>
+    </div>
     </div>
   </div>
 </template>
@@ -135,3 +170,53 @@
     },
   };
 </script>
+<style scoped lang="less">
+  .cd-booking-create-account {
+    margin-right: 33px;
+    margin-top: 50px;
+    padding: 0 16px 16px 16px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    &__recaptcha{
+      margin-top: 33px;
+
+    }
+    &__header {
+      background-color: #f4f5f6;
+      height: 100px;
+      text-align: center;
+      &-title {
+        margin-top: 21px;
+        font-size: 18px;
+        font-weight: bold;
+      }
+      &-info {
+        font-size: 16px;
+        margin-top: 4px;
+      }
+    }
+    &__container{
+      margin-left: 25px;
+    }
+    &__label {
+      margin-top: 32px;
+      display: block;
+      font-size: 16px;
+      font-weight: normal;
+    }
+    &__password-hint{
+      font-size: 14px;
+      color: #808890;
+      margin-top: 4px;
+      font-weight: 300;
+    }
+  }
+  .form-control[type=password] {
+    width: 230px;
+    display: inline-block;
+    font-weight: 300;
+  }
+  .form-control[type=checkbox] {
+    box-shadow: none;
+
+  }
+</style>
