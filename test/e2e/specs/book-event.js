@@ -106,21 +106,25 @@ describe('Book event page', () => {
     expect(BookingConfirmation.phoneNumber.getText()).to.equal('1555123456');
     expect(BookingConfirmation.email.getText()).to.equal('john.doe@example.com');
 
-    expect(BookingConfirmation.childFirstName[0].getText()).to.equal('Child');
-    expect(BookingConfirmation.childLastName[0].getText()).to.equal('One');
-    expect(BookingConfirmation.childDayOfBirth[0].getText()).to.equal('01');
-    expect(BookingConfirmation.childMonthOfBirth[0].getText()).to.equal('01');
-    expect(BookingConfirmation.childYearOfBirth[0].getText()).to.equal('2008');
-    expect(BookingConfirmation.childEmailAddress[0].getText()).to.equal('child@one.org');
-    expect(BookingConfirmation.childGender[0].getText()).to.equal('Male');
+    expect(BookingConfirmation.bookingFirstName[0].getText()).to.equal('John');
+    expect(BookingConfirmation.bookingLastName[0].getText()).to.equal('Doe');
+    expect(BookingConfirmation.bookingEmailAddress[0].getText()).to.equal('john.doe@example.com');
 
-    expect(BookingConfirmation.childFirstName[1].getText()).to.equal('Child');
-    expect(BookingConfirmation.childLastName[1].getText()).to.equal('Two');
-    expect(BookingConfirmation.childDayOfBirth[1].getText()).to.equal('10');
-    expect(BookingConfirmation.childMonthOfBirth[1].getText()).to.equal('10');
-    expect(BookingConfirmation.childYearOfBirth[1].getText()).to.equal('2006');
-    expect(BookingConfirmation.childEmailAddress[1].getText()).to.equal('child@two.org');
-    expect(BookingConfirmation.childGender[1].getText()).to.equal('Female');
+    expect(BookingConfirmation.bookingFirstName[1].getText()).to.equal('Child');
+    expect(BookingConfirmation.bookingLastName[1].getText()).to.equal('One');
+    expect(BookingConfirmation.bookingDayOfBirth[1].getText()).to.equal('01');
+    expect(BookingConfirmation.bookingMonthOfBirth[1].getText()).to.equal('01');
+    expect(BookingConfirmation.bookingYearOfBirth[1].getText()).to.equal('2008');
+    expect(BookingConfirmation.bookingEmailAddress[1].getText()).to.equal('child@one.org');
+    expect(BookingConfirmation.bookingGender[1].getText()).to.equal('Male');
+
+    expect(BookingConfirmation.bookingFirstName[2].getText()).to.equal('Child');
+    expect(BookingConfirmation.bookingLastName[2].getText()).to.equal('Two');
+    expect(BookingConfirmation.bookingDayOfBirth[2].getText()).to.equal('10');
+    expect(BookingConfirmation.bookingMonthOfBirth[2].getText()).to.equal('10');
+    expect(BookingConfirmation.bookingYearOfBirth[2].getText()).to.equal('2006');
+    expect(BookingConfirmation.bookingEmailAddress[2].getText()).to.equal('child@two.org');
+    expect(BookingConfirmation.bookingGender[2].getText()).to.equal('Female');
 
     expect(BookingConfirmation.bookingConfirmationMessage.getText()).to.equal('Your booking is completed successfully');
   });
@@ -161,7 +165,7 @@ describe('Book event page', () => {
 
     BookingConfirmation.firstName.waitForVisible();
 
-    expect(BookingConfirmation.childGender[0].getText()).to.equal('Other (another gender)');
+    expect(BookingConfirmation.bookingGender[1].getText()).to.equal('Other (another gender)');
   });
 
   it('should report validation errors for not filling in required fields', () => {

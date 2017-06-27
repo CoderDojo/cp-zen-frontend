@@ -34,70 +34,28 @@ describe('Booking Page', () => {
 
   it('should load saved sessions data', () => {
     // ARRANGE
+    const bookingDataMock = {
+      foo: {
+        session: 'bar',
+        selectedTickets: [
+          {
+            ticket: { id: 'foo' },
+          },
+        ],
+      },
+    };
     const vm = vueUnitHelper(BookingComponentWithMocks);
     vm.eventId = 'foo';
 
-    MockStoreService.load.withArgs('selected-event').returns({
-      sessions: [
-        {
-          name: 'Session 1',
-          id: 'abc',
-          tickets: [
-            {
-              id: 'ticket-1',
-              name: 'Ticket 1',
-              type: 'type-a',
-            },
-            {
-              id: 'ticket-2',
-              name: 'Ticket 2',
-              type: 'type-b',
-            },
-          ],
-        },
-        {
-          name: 'Session 2',
-          id: 'xyz',
-          tickets: [
-            {
-              id: 'ticket-100',
-              name: 'Ticket 100',
-              type: 'type-c',
-            },
-            {
-              id: 'ticket-101',
-              name: 'Ticket 101',
-              type: 'type-d',
-            },
-          ],
-        },
-      ],
-    });
-
-    MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns({
-      abc: {
-        'ticket-1': 2,
-      },
-      def: {
-        'ticket-50': 50,
-      },
-      xyz: {
-        'ticket-100': 100,
-      },
-    });
+    MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(bookingDataMock);
 
     // ACT
     vm.loadSessionData();
 
     // ASSERT
-    expect(MockStoreService.load).to.be.calledTwice;
-    expect(MockStoreService.load).to.be.calledWith('selected-event');
+    expect(MockStoreService.load).to.be.calledOnce;
     expect(MockStoreService.load).to.be.calledWith(`booking-${vm.eventId}-sessions`);
-    expect(vm.tickets).to.deep.equal(
-      [
-        { id: 'ticket-1', name: 'Ticket 1', quantity: 2, sessionName: 'Session 1', type: 'type-a' },
-        { id: 'ticket-100', name: 'Ticket 100', quantity: 100, sessionName: 'Session 2', type: 'type-c' },
-      ]);
+    expect(vm.tickets).to.deep.equal(bookingDataMock);
   });
 
   it('should validate form', () => {

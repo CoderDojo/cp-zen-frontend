@@ -47,14 +47,14 @@ describe('Booking Create Account Form', () => {
       },
       termsConditionsAccepted: true,
     };
-    const parent = {
+    const profile = {
       firstName: 'John',
       lastName: 'Doe',
       phone: '+1-555-123456',
       email: 'john.doe@example.com',
     };
     const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-    vm.parent = clone(parent);
+    vm.profile = clone(profile);
     vm.password = 'Passw0rd';
     vm.recaptchaResponse = 'abc123';
     vm.termsConditionsAccepted = true;
@@ -64,35 +64,20 @@ describe('Booking Create Account Form', () => {
 
     // ASSERT
     expect(user).to.deep.equal(expectedUser);
-    expect(vm.parent).to.deep.equal(parent);
+    expect(vm.profile).to.deep.equal(profile);
   });
 
   it('should register the user', (done) => {
     // ARRANGE
-    const storedBookingData = {
-      parent: {
-        firstName: 'Foo',
-        lastName: 'Bar',
-        phone: '012345678',
-        email: 'foo.bar@baz.com',
-      },
-      children: ['child1', 'child2'],
-    };
-    MockStoreService.load.returns(storedBookingData);
-
-    const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-    vm.user = {
+    const storedUserData = {
       firstName: 'Foo',
       lastName: 'Bar',
       phone: '012345678',
       email: 'foo.bar@baz.com',
-      password: 'Passw0rd',
-      'g-recaptcha-response': 'abc123',
-      initUserType: {
-        title: 'Parent/Guardian',
-        name: 'parent-guardian',
-      },
     };
+    MockStoreService.load.returns(storedUserData);
+
+    const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
     vm.eventId = 1;
     MockUsersService.register.returns(Promise.resolve());
 
@@ -101,8 +86,8 @@ describe('Booking Create Account Form', () => {
 
     // ASSERT
     requestAnimationFrame(() => {
-      expect(vm.parent).to.equal(storedBookingData.parent);
-      expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedBookingData.parent);
+      expect(vm.profile).to.equal(storedUserData);
+      expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
       done();
     });
   });
@@ -211,47 +196,79 @@ describe('Booking Create Account Form', () => {
     it('should create a profile for each child', (done) => {
       // ARRANGE
       const mockBookingData = {
-        children: [
-          {
-            firstName: 'Fee',
-            lastName: 'Bar',
-            dob: {
-              date: '1',
-              month: '2',
-              year: '2002',
+        foo: {
+          session: 'bar',
+          selectedTickets: [
+            {
+              ticket: {
+                id: 'foo',
+                type: 'ninja',
+              },
+              user: {
+                firstName: 'Fee',
+                lastName: 'Bar',
+                dob: {
+                  date: '1',
+                  month: '2',
+                  year: '2002',
+                },
+                gender: 'Female',
+                otherGender: '',
+              },
             },
-            gender: 'Female',
-            otherGender: '',
-          },
-          {
-            firstName: 'Fie',
-            lastName: 'Bar',
-            dob: {
-              date: '2',
-              month: '3',
-              year: '2010',
+            {
+              ticket: {
+                id: 'foo',
+                type: 'ninja',
+              },
+              user: {
+                firstName: 'Fie',
+                lastName: 'Bar',
+                dob: {
+                  date: '2',
+                  month: '3',
+                  year: '2010',
+                },
+                gender: 'Male',
+                otherGender: '',
+              },
             },
-            gender: 'Male',
-            otherGender: '',
-          },
-          {
-            firstName: 'Foe',
-            lastName: 'Bar',
-            dob: {
-              date: '3',
-              month: '4',
-              year: '2008',
+          ],
+        },
+        abc: {
+          session: 'xyz',
+          selectedTickets: [
+            {
+              ticket: {
+                id: 'abc',
+                type: 'ninja',
+              },
+              user: {
+                firstName: 'Foe',
+                lastName: 'Bar',
+                dob: {
+                  date: '3',
+                  month: '4',
+                  year: '2008',
+                },
+                gender: 'Other',
+                otherGender: 'Fluid',
+              },
             },
-            gender: 'Other',
-            otherGender: 'Fluid',
-          },
-        ],
+          ],
+        },
       };
 
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.eventId = 1;
-      MockStoreService.load.withArgs(`booking-${vm.eventId}`).returns(mockBookingData);
-      MockUsersService.addChild.returns(Promise.resolve());
+      MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(mockBookingData);
+      let childIdCounter = 1;
+      MockUsersService.addChild.callsFake((child) => {
+        const childClone = clone(child);
+        childClone.id = childIdCounter;
+        childIdCounter += 1;
+        return Promise.resolve({ body: childClone });
+      });
 
       // ACT
       vm.addChildren().then(() => {
@@ -278,6 +295,9 @@ describe('Booking Create Account Form', () => {
           gender: 'Other',
           otherGender: 'Fluid',
         });
+        expect(mockBookingData.foo.selectedTickets[0].user.id).to.equal(1);
+        expect(mockBookingData.foo.selectedTickets[1].user.id).to.equal(2);
+        expect(mockBookingData.abc.selectedTickets[0].user.id).to.equal(3);
         done();
       });
     });
@@ -316,61 +336,93 @@ describe('Booking Create Account Form', () => {
     });
   });
 
-  describe('bookTickets', () => {
-    const mockSelectedEvent = {
-      id: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
-      dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
-      sessions: [
-        {
-          id: '69624aec-e254-4636-b4c6-f623fdb0421b',
-          eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
-          tickets: [
+  describe('bookTickets()', () => {
+    it('should put together a list of applications and send them to event service to book', () => {
+      // ARRANGE
+      const mockSelectedEvent = {
+        id: 'foo',
+        dojoId: 'dojo1',
+      };
+      const mockBookingData = {
+        foo: {
+          session: 'bar',
+          selectedTickets: [
             {
-              id: '7c6d2cb7-0344-4cfd-8808-c0cfebbbe5af',
-              sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
-              name: 'Parent',
-              type: 'parent-guardian',
+              ticket: {
+                id: 'foo',
+                name: 'Foo',
+                sessionId: 'bar',
+              },
+              user: {
+                id: 1,
+              },
+            },
+            {
+              ticket: {
+                id: 'foo',
+                name: 'Foo',
+                sessionId: 'bar',
+              },
+              user: {
+                id: 2,
+              },
             },
           ],
         },
-      ],
-    };
-
-    const mockSelectedSessionTickets = {
-      '69624aec-e254-4636-b4c6-f623fdb0421b': { // sessionId
-        '7c6d2cb7-0344-4cfd-8808-c0cfebbbe5af': 1,  // ticketId ticketCount
-      },
-    };
-
-    it('should book tickets', (done) => {
-      // ARRANGE
-      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.eventId = mockSelectedEvent.id;
-
-      const currentUserResponseMock = {
-        login: {},
-        user: {
-          id: '74afa4b8-8449-46e4-a553-8febda8614ad',
+        abc: {
+          session: 'xyz',
+          selectedTickets: [
+            {
+              ticket: {
+                id: 'abc',
+                name: 'ABC',
+                sessionId: 'xyz',
+              },
+              user: {
+                id: 3,
+              },
+            },
+          ],
         },
-        ok: true,
       };
-
-      MockUsersService.getCurrentUser.returns(Promise.resolve({ body: currentUserResponseMock }));
+      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+      vm.eventId = 'foo';
       MockStoreService.load.withArgs('selected-event').returns(mockSelectedEvent);
-      MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(mockSelectedSessionTickets);
+      MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(mockBookingData);
 
       // ACT
       vm.bookTickets();
 
       // ASSERT
-      requestAnimationFrame(() => {
-        expect(MockEventsService.bookTickets).to.have.been.calledOnce;
-        expect(MockEventsService.bookTickets).to.have.been.calledWith(
-           currentUserResponseMock.user,
-           mockSelectedEvent,
-           mockSelectedSessionTickets);
-        done();
-      });
+      expect(MockEventsService.bookTickets).to.have.been.calledWith([
+        {
+          dojoId: mockSelectedEvent.dojoId,
+          eventId: mockSelectedEvent.id,
+          sessionId: 'bar',
+          ticketName: 'Foo',
+          ticketId: 'foo',
+          userId: 1,
+          notes: 'N/A',
+        },
+        {
+          dojoId: mockSelectedEvent.dojoId,
+          eventId: mockSelectedEvent.id,
+          sessionId: 'bar',
+          ticketName: 'Foo',
+          ticketId: 'foo',
+          userId: 2,
+          notes: 'N/A',
+        },
+        {
+          dojoId: mockSelectedEvent.dojoId,
+          eventId: mockSelectedEvent.id,
+          sessionId: 'xyz',
+          ticketName: 'ABC',
+          ticketId: 'abc',
+          userId: 3,
+          notes: 'N/A',
+        },
+      ]);
     });
   });
 });

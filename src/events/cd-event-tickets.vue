@@ -3,7 +3,7 @@
     <div v-for="ticket in tickets" v-if="!(isYouthOverThirteen && ticket.type === 'parent-guardian')" class="cd-event-tickets__ticket">
       <span class="cd-event-tickets__name">{{ ticket.name }}</span>
       <number-spinner min="0" :max="ticket.quantity - ticket.approvedApplications"
-                      v-on:update="onTicketQuantityUpdate(ticket.id, $event)"></number-spinner>
+                      v-on:update="onTicketQuantityUpdate(ticket, $event)"></number-spinner>
     </div>
   </div>
 </template>
@@ -15,7 +15,7 @@
 
   export default {
     name: 'EventTickets',
-    props: ['tickets', 'sessionId', 'eventId'],
+    props: ['tickets', 'session', 'eventId'],
     data() {
       return {
         selectedTickets: {},
@@ -25,16 +25,33 @@
       NumberSpinner,
     },
     methods: {
-      onTicketQuantityUpdate(ticketId, value) {
-        if (value === 0 && this.selectedTickets[ticketId]) {
-          delete this.selectedTickets[ticketId];
+      onTicketQuantityUpdate(ticket, value) {
+        const previousValue = this.selectedTickets[ticket.id] || 0;
+        if (value === 0 && this.selectedTickets[ticket.id]) {
+          delete this.selectedTickets[ticket.id];
         } else if (value > 0) {
-          this.selectedTickets[ticketId] = value;
+          this.selectedTickets[ticket.id] = value;
+        }
+        this.updateStoredSelectedTickets(ticket, previousValue);
+      },
+      updateStoredSelectedTickets(ticket, previousValue) {
+        const bookingData = StoreService.load(`booking-${this.eventId}-sessions`) || {};
+        if (!bookingData[ticket.id]) bookingData[ticket.id] = {};
+
+        if (!this.selectedTickets[ticket.id]) {
+          delete bookingData[ticket.id];
+        } else if (this.selectedTickets[ticket.id] > previousValue) {
+          bookingData[ticket.id].session = this.session;
+          if (!bookingData[ticket.id].selectedTickets) bookingData[ticket.id].selectedTickets = [];
+          bookingData[ticket.id].selectedTickets.push({ ticket });
+        } else if (this.selectedTickets[ticket.id] < previousValue) {
+          const matchingTicket = bookingData[ticket.id].selectedTickets
+            .find(selectedTicket => selectedTicket.ticket.id === ticket.id);
+          bookingData[ticket.id].selectedTickets
+            .splice(bookingData[ticket.id].selectedTickets.indexOf(matchingTicket), 1);
         }
 
-        const booking = StoreService.load(`booking-${this.eventId}-sessions`) || {};
-        booking[this.sessionId] = this.selectedTickets;
-        StoreService.save(`booking-${this.eventId}-sessions`, booking);
+        StoreService.save(`booking-${this.eventId}-sessions`, bookingData);
       },
     },
     computed: {

@@ -1,39 +1,111 @@
 import vueUnitHelper from 'vue-unit-helper';
 import BookingParentFormComponent from '!!vue-loader?inject!@/events/cd-booking-parent-form';
-import { pick } from 'lodash';
 import { ErrorBag } from 'vee-validate';
 
 describe('Booking Parent Form', () => {
-  const MockStoreService = {
-    save: sinon.spy(),
-  };
-  const BookingParentFormComponentWithMocks = BookingParentFormComponent({
-    '@/store/store-service': MockStoreService,
+  let sandbox;
+  let MockStoreService;
+  let BookingParentFormComponentWithMocks;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    MockStoreService = {
+      save: sandbox.spy(),
+    };
+    BookingParentFormComponentWithMocks = BookingParentFormComponent({
+      '@/store/store-service': MockStoreService,
+    });
   });
 
-  it('should store parent data and navigate to confirmation page', () => {
-    // ARRANGE
-    const parentData = {
-      eventId: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      phone: '1555123456',
-      email: 'john.doe@example.com',
-      childrenFormData: ['child1', 'child2'],
-      $router: {
-        push: sinon.spy(),
-      },
-    };
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-    const vm = vueUnitHelper(BookingParentFormComponentWithMocks);
+  describe('methods.submitBooking()', () => {
+    it('should store the parent user data into parent ticket if exists', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingParentFormComponentWithMocks);
+      vm.eventId = 'foo';
+      const ticketsMock = {
+        foo: {
+          session: 'bar',
+          selectedTickets: [
+            {
+              ticket: {
+                id: 'foo',
+                type: 'parent-guardian',
+              },
+            },
+          ],
+        },
+      };
+      vm.bookedTickets = ticketsMock;
+      vm.parentTicket = ticketsMock.foo;
+      vm.parentUserData = { name: 'John' };
 
-    // ACT
-    vm.submitBooking.bind(parentData)();
+      // ACT
+      vm.submitBooking();
 
-    // ASSERT
-    expect(MockStoreService.save).to.be.calledOnce;
-    expect(MockStoreService.save).to.have.been.calledWith(`booking-${parentData.eventId}`,
-      { parent: pick(parentData, ['firstName', 'lastName', 'phone', 'email']), children: parentData.childrenFormData });
+      // ASSERT
+      expect(MockStoreService.save).to.have.been.calledTwice;
+      expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-user`, vm.parentUserData);
+      expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
+        foo: {
+          session: 'bar',
+          selectedTickets: [
+            {
+              ticket: {
+                id: 'foo',
+                type: 'parent-guardian',
+              },
+              user: { name: 'John' },
+            },
+          ],
+        },
+      });
+    });
+
+    it('shouldnt update booking data if no parent tickets selected', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingParentFormComponentWithMocks);
+      vm.eventId = 'foo';
+      const ticketsMock = {
+        foo: {
+          session: 'bar',
+          selectedTickets: [
+            {
+              ticket: {
+                id: 'foo',
+                type: 'ninja',
+              },
+            },
+          ],
+        },
+      };
+      vm.tickets = ticketsMock;
+      vm.bookedTickets = ticketsMock;
+      vm.parentUserData = { name: 'John' };
+
+      // ACT
+      vm.submitBooking();
+
+      // ASSERT
+      expect(MockStoreService.save).to.have.been.calledTwice;
+      expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-user`, vm.parentUserData);
+      expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
+        foo: {
+          session: 'bar',
+          selectedTickets: [
+            {
+              ticket: {
+                id: 'foo',
+                type: 'ninja',
+              },
+            },
+          ],
+        },
+      });
+    });
   });
 
   describe('form validation', () => {
@@ -71,48 +143,208 @@ describe('Booking Parent Form', () => {
     it('should return ninja tickets only', () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingParentFormComponent());
-      vm.tickets = [
-        {
-          id: 'ticket-1',
-          name: 'U13',
-          type: 'ninja',
-          quantity: 2,
+      vm.tickets = {
+        'ticket-1': {
+          session: {
+            name: 'session-1',
+          },
+          selectedTickets: [
+            {
+              ticket: {
+                type: 'ninja',
+              },
+            },
+            {
+              ticket: {
+                type: 'ninja',
+              },
+            },
+          ],
         },
-        {
-          id: 'ticket-2',
-          name: 'Parent',
-          type: 'parent-guardian',
-          quantity: 1,
+        'ticket-2': {
+          session: {
+            name: 'session-1',
+          },
+          selectedTickets: [
+            {
+              ticket: {
+                type: 'parent-guardian',
+              },
+            },
+          ],
         },
-        {
-          id: 'ticket-3',
-          name: 'O13',
-          type: 'ninja',
-          quantity: 1,
+        'ticket-3': {
+          session: {
+            name: 'session-2',
+          },
+          selectedTickets: [
+            {
+              ticket: {
+                type: 'ninja',
+              },
+            },
+          ],
         },
-      ];
+      };
 
       // ASSERT
-      expect(vm.ninjaTickets).to.deep.equal([
-        {
-          id: 'ticket-1',
-          name: 'U13',
-          type: 'ninja',
-          quantity: 2,
+      expect(vm.ninjaTickets).to.deep.equal({
+        'ticket-1': {
+          session: {
+            name: 'session-1',
+          },
+          selectedTickets: [
+            {
+              ticket: {
+                type: 'ninja',
+              },
+            },
+            {
+              ticket: {
+                type: 'ninja',
+              },
+            },
+          ],
         },
-        {
-          id: 'ticket-1',
-          name: 'U13',
-          type: 'ninja',
-          quantity: 2,
+        'ticket-3': {
+          session: {
+            name: 'session-2',
+          },
+          selectedTickets: [
+            {
+              ticket: {
+                type: 'ninja',
+              },
+            },
+          ],
         },
-        {
-          id: 'ticket-3',
-          name: 'O13',
-          type: 'ninja',
-          quantity: 1,
+      });
+    });
+  });
+  describe('computed.parentTicket', () => {
+    it('should return only a single parent ticket', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingParentFormComponent());
+      vm.tickets = {
+        'ticket-1': {
+          session: {
+            name: 'session-1',
+          },
+          selectedTickets: [
+            {
+              ticket: {
+                type: 'ninja',
+              },
+            },
+            {
+              ticket: {
+                type: 'ninja',
+              },
+            },
+          ],
         },
-      ]);
+        'ticket-2': {
+          session: {
+            name: 'session-1',
+          },
+          selectedTickets: [
+            {
+              ticket: {
+                type: 'parent-guardian',
+              },
+            },
+          ],
+        },
+        'ticket-3': {
+          session: {
+            name: 'session-2',
+          },
+          selectedTickets: [
+            {
+              ticket: {
+                type: 'ninja',
+              },
+            },
+          ],
+        },
+      };
+
+      // ASSERT
+      expect(vm.parentTicket).to.deep.equal({
+        session: {
+          name: 'session-1',
+        },
+        selectedTickets: [
+          {
+            ticket: {
+              type: 'parent-guardian',
+            },
+          },
+        ],
+      });
+    });
+  });
+
+  describe('created()', () => {
+    it('should assign bookedTickets, and generate user objects for each ticket', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingParentFormComponent());
+      vm.tickets = {
+        foo: {
+          session: 'bar',
+          selectedTickets: [
+            {
+              ticket: { id: 'foo' },
+            },
+            {
+              ticket: { id: 'foo' },
+            },
+          ],
+        },
+        bar: {
+          session: 'foo',
+          selectedTickets: [
+            {
+              ticket: { id: 'bar' },
+            },
+          ],
+        },
+      };
+
+      // ACT
+      vm.$lifecycleMethods.created();
+
+      // ASSERT
+      expect(vm.bookedTickets).to.deep.equal({
+        foo: {
+          session: 'bar',
+          selectedTickets: [
+            {
+              ticket: {
+                id: 'foo',
+              },
+              user: { dob: {} },
+            },
+            {
+              ticket: {
+                id: 'foo',
+              },
+              user: { dob: {} },
+            },
+          ],
+        },
+        bar: {
+          session: 'foo',
+          selectedTickets: [
+            {
+              ticket: {
+                id: 'bar',
+              },
+              user: { dob: {} },
+            },
+          ],
+        },
+      });
     });
   });
 });

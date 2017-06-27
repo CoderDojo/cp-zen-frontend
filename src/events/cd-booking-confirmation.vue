@@ -1,22 +1,23 @@
 <template>
   <div class="cd-booking-confirmation">
     <p class="cd-booking-confirmation__account-creation-confirmation">Account created</p>
-    <p class="cd-booking-confirmation__booking-confirmation">Your booking is completed successfully</p>
-    <ul v-if="parent.firstName">
-      <li class="cd-booking-confirmation__first-name">{{ parent.firstName }}</li>
-      <li class="cd-booking-confirmation__last-name">{{ parent.lastName }}</li>
-      <li class="cd-booking-confirmation__phone-number">{{ parent.phone }}</li>
-      <li class="cd-booking-confirmation__email">{{ parent.email }}</li>
+    <ul v-if="createdUser.firstName">
+      <li class="cd-booking-confirmation__first-name">{{ createdUser.firstName }}</li>
+      <li class="cd-booking-confirmation__last-name">{{ createdUser.lastName }}</li>
+      <li class="cd-booking-confirmation__phone-number">{{ createdUser.phone }}</li>
+      <li class="cd-booking-confirmation__email">{{ createdUser.email }}</li>
     </ul>
-    <ul v-for="child in children">
-      <li class="cd-booking-confirmation__child-first-name">{{ child.firstName }}</li>
-      <li class="cd-booking-confirmation__child-last-name">{{ child.lastName }}</li>
-      <li class="cd-booking-confirmation__child-dob-date">{{ child.dob.date }}</li>
-      <li class="cd-booking-confirmation__child-dob-month">{{ child.dob.month }}</li>
-      <li class="cd-booking-confirmation__child-dob-year">{{ child.dob.year }}</li>
-      <li class="cd-booking-confirmation__child-email">{{ child.email }}</li>
-      <li class="cd-booking-confirmation__child-gender">
-        {{ child.gender }} <span v-if="child.otherGender">({{ child.otherGender }})</span>
+    <p class="cd-booking-confirmation__booking-confirmation">Your booking is completed successfully</p>
+    <ul v-for="booking in bookings">
+      <li class="cd-booking-confirmation__booking-ticket-name">{{ booking.ticket.name }}</li>
+      <li class="cd-booking-confirmation__booking-first-name">{{ booking.user.firstName }}</li>
+      <li class="cd-booking-confirmation__booking-last-name">{{ booking.user.lastName }}</li>
+      <li class="cd-booking-confirmation__booking-dob-date">{{ booking.user.dob.date }}</li>
+      <li class="cd-booking-confirmation__booking-dob-month">{{ booking.user.dob.month }}</li>
+      <li class="cd-booking-confirmation__booking-dob-year">{{ booking.user.dob.year }}</li>
+      <li class="cd-booking-confirmation__booking-email">{{ booking.user.email }}</li>
+      <li class="cd-booking-confirmation__booking-gender">
+        {{ booking.user.gender }} <span v-if="booking.user.otherGender">({{ booking.user.otherGender }})</span>
       </li>
     </ul>
   </div>
@@ -29,17 +30,24 @@
     props: ['eventId'],
     data() {
       return {
-        parent: {},
-        children: null,
-        accountCreated: false,
+        createdUser: {},
+        bookingData: {},
       };
+    },
+    computed: {
+      bookings() {
+        let bookings = [];
+        Object.keys(this.bookingData).forEach((ticketId) => {
+          const booking = this.bookingData[ticketId];
+          bookings = bookings.concat(booking.selectedTickets);
+        });
+        return bookings;
+      },
     },
     methods: {
       loadBookingData() {
-        const bookingData = StoreService.load(`booking-${this.eventId}`);
-        this.parent = bookingData.parent;
-        this.children = bookingData.children;
-        this.accountCreated = bookingData.accountCreated;
+        this.createdUser = StoreService.load(`booking-${this.eventId}-user`);
+        this.bookingData = StoreService.load(`booking-${this.eventId}-sessions`);
       },
     },
     created() {

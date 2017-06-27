@@ -21,146 +21,245 @@ describe('Event tickets list', () => {
     sandbox.restore();
   });
 
-  it('should store the selected tickets using the storage service', () => {
-    // ARRANGE
-    const vm = vueUnitHelper(EventTicketsWithMocks);
-    vm.eventId = 'foo';
-    vm.sessionId = 'abc';
-    vm.selectedTickets = {};
+  describe('onTicketQuantityUpdate()', () => {
+    it('should save the selected tickets', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(EventTicketsWithMocks);
+      vm.eventId = 'foo';
+      vm.sessionId = 'abc';
+      vm.selectedTickets = {};
+      sandbox.stub(vm, 'updateStoredSelectedTickets');
+      const mockTicket = { id: 'xyz' };
 
-    // ACT
-    vm.onTicketQuantityUpdate('xyz', 1);
+      // ACT
+      vm.onTicketQuantityUpdate(mockTicket, 1);
 
-    // ASSERT
-    expect(vm.selectedTickets).to.deep.equal({
-      xyz: 1,
-    });
-
-    expect(MockStoreService.load).to.have.been.calledWith(`booking-${vm.eventId}-sessions`);
-    expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
-      abc: {
+      // ASSERT
+      expect(vm.selectedTickets).to.deep.equal({
         xyz: 1,
-      },
+      });
+      expect(vm.updateStoredSelectedTickets).to.have.been.calledOnce;
+      expect(vm.updateStoredSelectedTickets).to.have.been.calledWith(mockTicket, 0);
     });
-  });
 
-  it('should add to selected tickets', () => {
-    // ARRANGE
-    const vm = vueUnitHelper(EventTicketsWithMocks);
-    vm.sessionId = 'abc';
-    vm.eventId = 'foo';
-    vm.selectedTickets = {
-      def: 1,
-    };
+    it('should add to selected tickets', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(EventTicketsWithMocks);
+      vm.sessionId = 'abc';
+      vm.eventId = 'foo';
+      vm.selectedTickets = {
+        def: 1,
+      };
+      sandbox.stub(vm, 'updateStoredSelectedTickets');
+      const mockTicket = { id: 'xyz' };
 
-    // ACT
-    vm.onTicketQuantityUpdate('xyz', 1);
+      // ACT
+      vm.onTicketQuantityUpdate(mockTicket, 1);
 
-    // ASSERT
-    expect(vm.selectedTickets).to.deep.equal({
-      def: 1,
-      xyz: 1,
-    });
-    expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
-      abc: {
+      // ASSERT
+      expect(vm.selectedTickets).to.deep.equal({
         def: 1,
         xyz: 1,
-      },
+      });
+      expect(vm.updateStoredSelectedTickets).to.have.been.calledOnce;
+      expect(vm.updateStoredSelectedTickets).to.have.been.calledWith(mockTicket, 0);
     });
-  });
 
-  it('should update selected tickets when value changed', () => {
-    // ARRANGE
-    const vm = vueUnitHelper(EventTicketsWithMocks);
-    vm.sessionId = 'abc';
-    vm.eventId = 'foo';
-    vm.selectedTickets = {
-      def: 1,
-    };
+    it('should update selected tickets when value changed', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(EventTicketsWithMocks);
+      vm.sessionId = 'abc';
+      vm.eventId = 'foo';
+      vm.selectedTickets = {
+        def: 1,
+      };
+      sandbox.stub(vm, 'updateStoredSelectedTickets');
+      const mockTicket = { id: 'def' };
 
-    // ACT
-    vm.onTicketQuantityUpdate('def', 2);
+      // ACT
+      vm.onTicketQuantityUpdate(mockTicket, 2);
 
-    // ASSERT
-    expect(vm.selectedTickets).to.deep.equal({
-      def: 2,
-    });
-    expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
-      abc: {
+      // ASSERT
+      expect(vm.selectedTickets).to.deep.equal({
         def: 2,
-      },
+      });
+      expect(vm.updateStoredSelectedTickets).to.have.been.calledOnce;
+      expect(vm.updateStoredSelectedTickets).to.have.been.calledWith(mockTicket, 1);
     });
-  });
 
-  it('should remove selected tickets when value is zero', () => {
-    // ARRANGE
-    const vm = vueUnitHelper(EventTicketsWithMocks);
-    vm.sessionId = 'abc';
-    vm.eventId = 'foo';
-    vm.selectedTickets = {
-      def: 1,
-    };
+    it('should remove selected tickets when value is zero', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(EventTicketsWithMocks);
+      vm.sessionId = 'abc';
+      vm.eventId = 'foo';
+      vm.selectedTickets = {
+        def: 1,
+      };
+      sandbox.stub(vm, 'updateStoredSelectedTickets');
+      const mockTicket = { id: 'def' };
 
-    // ACT
-    vm.onTicketQuantityUpdate('def', 0);
+      // ACT
+      vm.onTicketQuantityUpdate(mockTicket, 0);
 
-    // ASSERT
-    expect(vm.selectedTickets).to.deep.equal({});
-    expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, { abc: {} });
-  });
-
-  it('should retain other selected tickets when one ticket is removed', () => {
-    // ARRANGE
-    const vm = vueUnitHelper(EventTicketsWithMocks);
-    vm.sessionId = 'abc';
-    vm.eventId = 'foo';
-    vm.selectedTickets = {
-      def: 1,
-      xyz: 1,
-    };
-
-    // ACT
-    vm.onTicketQuantityUpdate('def', 0);
-
-    // ASSERT
-    expect(vm.selectedTickets).to.deep.equal({
-      xyz: 1,
+      // ASSERT
+      expect(vm.selectedTickets).to.deep.equal({});
+      expect(vm.updateStoredSelectedTickets).to.have.been.calledOnce;
+      expect(vm.updateStoredSelectedTickets).to.have.been.calledWith(mockTicket, 1);
     });
-    expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
-      abc: {
+
+    it('should retain other selected tickets when one ticket is removed', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(EventTicketsWithMocks);
+      vm.sessionId = 'abc';
+      vm.eventId = 'foo';
+      vm.selectedTickets = {
+        def: 1,
         xyz: 1,
-      },
+      };
+      sandbox.stub(vm, 'updateStoredSelectedTickets');
+      const mockTicket = { id: 'def' };
+
+      // ACT
+      vm.onTicketQuantityUpdate(mockTicket, 0);
+
+      // ASSERT
+      expect(vm.selectedTickets).to.deep.equal({
+        xyz: 1,
+      });
+      expect(vm.updateStoredSelectedTickets).to.have.been.calledOnce;
+      expect(vm.updateStoredSelectedTickets).to.have.been.calledWith(mockTicket, 1);
     });
   });
 
-  it('should store the selected tickets without changing other sessions tickets amount', () => {
-    // ARRANGE
-    const vm = vueUnitHelper(EventTicketsWithMocks);
-    vm.sessionId = 'abc';
-    vm.eventId = 'foo';
-    vm.selectedTickets = {};
+  describe('updateStoredSelectedTickets()', () => {
+    it('should create the array of stored tickets if it doesnt yet exist', () => {
+      // ARRANGE
+      const storedTicketsMock = undefined;
+      const vm = vueUnitHelper(EventTicketsWithMocks);
+      vm.eventId = 'foo';
+      vm.selectedTickets = {
+        foo: 1,
+      };
+      vm.session = 'bar';
+      MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(storedTicketsMock);
 
-    MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns({
-      foo: {
-        bar: 100,
-      },
+      // ACT
+      vm.updateStoredSelectedTickets({ id: 'foo' }, 0);
+
+      // ASSERT
+      expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
+        foo: {
+          session: 'bar',
+          selectedTickets: [
+            {
+              ticket: { id: 'foo' },
+            },
+          ],
+        },
+      });
     });
 
-    // ACT
-    vm.onTicketQuantityUpdate('xyz', 1);
+    it('should add to stored tickets when value is increased', () => {
+      // ARRANGE
+      const storedTicketsMock = {
+        foo: {
+          session: 'bar',
+          selectedTickets: [
+            {
+              ticket: { id: 'foo' },
+            },
+          ],
+        },
+      };
+      const vm = vueUnitHelper(EventTicketsWithMocks);
+      vm.eventId = 'foo';
+      vm.selectedTickets = {
+        foo: 2,
+      };
+      vm.session = 'bar';
+      MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(storedTicketsMock);
 
-    // ASSERT
-    expect(vm.selectedTickets).to.deep.equal({
-      xyz: 1,
+      // ACT
+      vm.updateStoredSelectedTickets({ id: 'foo' }, 1);
+
+      // ASSERT
+      expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
+        foo: {
+          session: 'bar',
+          selectedTickets: [
+            {
+              ticket: { id: 'foo' },
+            },
+            {
+              ticket: { id: 'foo' },
+            },
+          ],
+        },
+      });
     });
-    expect(MockStoreService.load).to.have.been.calledWith(`booking-${vm.eventId}-sessions`);
-    expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
-      foo: {
-        bar: 100,
-      },
-      abc: {
-        xyz: 1,
-      },
+
+    it('should remove from stored tickets when value is decreased', () => {
+      // ARRANGE
+      const storedTicketsMock = {
+        foo: {
+          session: 'bar',
+          selectedTickets: [
+            {
+              ticket: { id: 'foo' },
+            },
+            {
+              ticket: { id: 'foo' },
+            },
+          ],
+        },
+      };
+      const vm = vueUnitHelper(EventTicketsWithMocks);
+      vm.eventId = 'foo';
+      vm.selectedTickets = {
+        foo: 1,
+      };
+      vm.session = 'bar';
+      MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(storedTicketsMock);
+
+      // ACT
+      vm.updateStoredSelectedTickets({ id: 'foo' }, 2);
+
+      // ASSERT
+      expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {
+        foo: {
+          session: 'bar',
+          selectedTickets: [
+            {
+              ticket: { id: 'foo' },
+            },
+          ],
+        },
+      });
+    });
+
+    it('should remove from stored tickets when value is decreased', () => {
+      // ARRANGE
+      const storedTicketsMock = {
+        foo: {
+          session: 'bar',
+          selectedTickets: [
+            {
+              ticket: { id: 'foo' },
+            },
+          ],
+        },
+      };
+      const vm = vueUnitHelper(EventTicketsWithMocks);
+      vm.eventId = 'foo';
+      vm.selectedTickets = {};
+      vm.session = 'bar';
+      MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(storedTicketsMock);
+
+      // ACT
+      vm.updateStoredSelectedTickets({ id: 'foo' }, 1);
+
+      // ASSERT
+      expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {});
     });
   });
 });
