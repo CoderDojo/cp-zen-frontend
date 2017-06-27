@@ -65,7 +65,7 @@
     data() {
       return {
         bookedTickets: {},
-        parentUserData: { dob: {} },
+        parentUserData: {},
         formValidated: false,
         childrenFormData: [],
       };
