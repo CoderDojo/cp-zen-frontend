@@ -41,12 +41,14 @@
         <div class="cd-booking-parent-form__child-gender">
           <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Male" v-model="selectedTicket.user.gender" /><span> Male</span></label>
           <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Female" v-model="selectedTicket.user.gender" /><span> Female</span></label>
-          <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Other" v-model="selectedTicket.user.gender" /><span> Not Listed. Specify here:</span></label><input type="text" :name="'otherGender' + index" v-model="selectedTicket.user.otherGender" />
-          <input type="text" class="form-control cd-booking-parent-form__other" placeholder="Preferred Gender" :name="'otherGender' + index"  />
+          <label class="cd-booking-parent-form__child-gender-option">
+            <input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Other" v-model="selectedTicket.user.gender" />
+            <span> Not Listed. Specify here:</span>
+          </label>
+          <input type="text" class="form-control cd-booking-parent-form__other" placeholder="Preferred Gender" :name="'otherGender' + index"  v-model="selectedTicket.user.otherGender"  />
           <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Undisclosed" v-model="selectedTicket.user.gender" /> <span>Prefer not to answer</span></label>
         </div>
       </div>
-
     </div>
   </div>
 </template>
