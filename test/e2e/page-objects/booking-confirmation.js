@@ -11,6 +11,11 @@ const BookingConfirmation = Object.create(BasePage, {
       return $('.cd-booking-confirmation__last-name');
     },
   },
+  dateOfBirth: {
+    get() {
+      return $('.cd-booking-confirmation__dob');
+    },
+  },
   phoneNumber: {
     get() {
       return $('.cd-booking-confirmation__phone-number');

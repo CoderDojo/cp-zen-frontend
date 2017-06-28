@@ -6,8 +6,8 @@ const EventDobVerificationPage = require('../page-objects/event-dob-verification
 const EventSessionsPage = require('../page-objects/event-sessions');
 
 function checkHeaderContent(page) {
-  expect(page.bookEventTitle.getText()).to.equal( "Book Event");
-  expect(page.eventTitle.getText()).to.equal( "My First Amazing Event");
+  expect(page.bookEventTitle.getText()).to.equal('Book Event');
+  expect(page.eventTitle.getText()).to.equal('My First Amazing Event');
 }
 
 function checkEventDetails(page) {
@@ -68,7 +68,9 @@ describe('Book event page', () => {
 
     Booking.firstName.setValue('John');
     Booking.lastName.setValue('Doe');
-    Booking.lastName.setValue('Doe');
+    Booking.dateOfBirthDayInput.selectByValue('27');
+    Booking.dateOfBirthMonthInput.selectByValue('3');
+    Booking.dateOfBirthYearInput.selectByValue('1980');
     Booking.phoneNumber.setValue('1555123456');
     Booking.email.setValue('john.doe@example.com');
 
@@ -105,6 +107,7 @@ describe('Book event page', () => {
     expect(BookingConfirmation.accountCreationConfirmation.getText()).to.equal('Account created');
     expect(BookingConfirmation.firstName.getText()).to.equal('John');
     expect(BookingConfirmation.lastName.getText()).to.equal('Doe');
+    expect(BookingConfirmation.dateOfBirth.getText()).to.equal('1980-04-27T00:00:00.000Z');
     expect(BookingConfirmation.phoneNumber.getText()).to.equal('1555123456');
     expect(BookingConfirmation.email.getText()).to.equal('john.doe@example.com');
 
@@ -132,6 +135,9 @@ describe('Book event page', () => {
 
     Booking.firstName.setValue('John');
     Booking.lastName.setValue('Doe');
+    Booking.dateOfBirthDayInput.selectByValue('27');
+    Booking.dateOfBirthMonthInput.selectByValue('3');
+    Booking.dateOfBirthYearInput.selectByValue('1980');
     Booking.phoneNumber.setValue('1555123456');
     Booking.email.setValue('john.doe@example.com');
 
@@ -171,6 +177,9 @@ describe('Book event page', () => {
 
     Booking.firstName.setValue('John');
     Booking.lastName.setValue('Doe');
+    Booking.dateOfBirthDayInput.selectByValue('27');
+    Booking.dateOfBirthMonthInput.selectByValue('3');
+    Booking.dateOfBirthYearInput.selectByValue('1980');
     Booking.phoneNumber.setValue('1555123456');
     Booking.email.setValue('john.doe@example.com');
 
@@ -202,6 +211,9 @@ describe('Book event page', () => {
 
     Booking.firstName.setValue('John');
     Booking.lastName.setValue('Doe');
+    Booking.dateOfBirthDayInput.selectByValue('27');
+    Booking.dateOfBirthMonthInput.selectByValue('3');
+    Booking.dateOfBirthYearInput.selectByValue('1980');
     Booking.phoneNumber.setValue('+1-555-12-3456');
     Booking.email.setValue('john.doe@example.com');
     Booking.checkRecaptcha();
@@ -217,6 +229,9 @@ describe('Book event page', () => {
 
     Booking.firstName.setValue('John');
     Booking.lastName.setValue('Doe');
+    Booking.dateOfBirthDayInput.selectByValue('27');
+    Booking.dateOfBirthMonthInput.selectByValue('3');
+    Booking.dateOfBirthYearInput.selectByValue('1980');
     Booking.phoneNumber.setValue('1555123456');
     Booking.email.setValue('john.doe');
     Booking.checkRecaptcha();

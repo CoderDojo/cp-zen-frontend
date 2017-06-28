@@ -285,6 +285,32 @@ describe('Booking Parent Form', () => {
     });
   });
 
+  describe('computed.parentGuardianDateOfBirth', () => {
+    it('should return a date object for the ISO String stored in parentUserData', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingParentFormComponent());
+      vm.parentUserData = {
+        dob: '1980-08-27T00:00:00.000Z',
+      };
+
+      // ASSERT
+      expect(vm.parentUserDataDoB.toString())
+        .to.equal(new Date(1980, 7, 27, 0, 0, 0, 0).toString());
+    });
+
+    it('should transform date into ISO String and store it in parentUserData', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingParentFormComponent());
+      vm.parentUserData = {};
+
+      // ACT
+      vm.parentUserDataDoB = new Date(1980, 7, 27, 0, 0, 0, 0);
+
+      // ASSERT
+      expect(vm.parentUserData.dob).to.equal('1980-08-27T00:00:00.000Z');
+    });
+  });
+
   describe('created()', () => {
     it('should assign bookedTickets, and generate user objects for each ticket', () => {
       // ARRANGE

@@ -37,6 +37,26 @@ const BookingParentData = Object.create(EventDetails, {
       return $('p[id=lastNameValidationError]');
     },
   },
+  dateOfBirthLabel: {
+    get() {
+      return $('label.cd-booking-parent-form__parent-dob-label');
+    },
+  },
+  dateOfBirthDayInput: {
+    get() {
+      return $$('.cd-booking-parent-form__parent-dob select')[0];
+    },
+  },
+  dateOfBirthMonthInput: {
+    get() {
+      return $$('.cd-booking-parent-form__parent-dob select')[1];
+    },
+  },
+  dateOfBirthYearInput: {
+    get() {
+      return $$('.cd-booking-parent-form__parent-dob select')[2];
+    },
+  },
   phoneNumberLabel: {
     get() {
       return $('label[for=phoneNumber]');

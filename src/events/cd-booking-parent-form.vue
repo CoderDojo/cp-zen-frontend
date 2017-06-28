@@ -10,8 +10,11 @@
     <p id="firstNameValidationError" class="text-danger" v-show="formValidated && errors.has('firstName')">{{ errors.first('firstName') }}</p>
     <p id="lastNameValidationError" class="text-danger" v-show="formValidated && errors.has('lastName')">{{ errors.first('lastName') }}</p>
 
+    <label class="cd-booking-parent-form__label cd-booking-parent-form__parent-dob-label">Date of Birth</label>
+    <vue-dob-picker class="cd-booking-parent-form__parent-dob" v-model="parentUserDataDoB" select-class="form-control" select-placeholder-class="form-control cd-select-placeholder" month-format="short" show-labels="false" :placeholders="['Date', 'Month', 'Year']" :proportions="[7, 9, 9]"></vue-dob-picker>
+
     <label class="cd-booking-parent-form__label" for="phoneNumber">Phone Number</label>
-    <input type="text" class="form-control" placeholder="Eg. 353 123 45678" name="phoneNumber" id="phoneNumber" data-vv-as="phone number" v-validate.initial="'required|numeric'" v-model="parentUserData.phone">
+    <input type="text" class="form-control" placeholder="Eg. 353 123 45678" name="phoneNumber" id="phoneNumber" data-vv-as="phone number" v-validate.initial="'required|numeric'" v-model="parentUserData.phone"><br/>
     <p id="phoneNumberValidationError" class="text-danger" v-show="formValidated && errors.has('phoneNumber')">{{ errors.first('phoneNumber') }}</p>
 
     <label class="cd-booking-parent-form__label" for="email">Email Address</label>
@@ -53,6 +56,8 @@
   </div>
 </template>
 <script>
+  import moment from 'moment';
+  import VueDobPicker from 'vue-dob-picker';
   import StoreService from '@/store/store-service';
 
   function getTicketsByType(tickets, type) {
@@ -69,6 +74,9 @@
   export default {
     name: 'bookingParentForm',
     props: ['eventId', 'tickets'],
+    components: {
+      VueDobPicker,
+    },
     data() {
       return {
         bookedTickets: {},
@@ -88,6 +96,20 @@
           return matchedTickets[ticketIds[0]];
         }
         return null;
+      },
+      parentUserDataDoB: {
+        get() {
+          const dob = new Date(this.parentUserData.dob);
+          if (dob.toString() !== 'Invalid Date') {
+            return moment(dob).add(dob.getTimezoneOffset(), 'm').toDate();
+          }
+          return null;
+        },
+        set(val) {
+          if (val) {
+            this.parentUserData.dob = moment(val).subtract(val.getTimezoneOffset(), 'm').toISOString();
+          }
+        },
       },
     },
     methods: {
@@ -126,6 +148,7 @@
       padding-bottom: 9px;
       border-bottom: solid 1px #bdc3c6;
     }
+
     &__label {
       margin-top: 32px;
       margin-bottom: 10px;
@@ -133,6 +156,7 @@
       font-weight: normal;
       display: block;
     }
+
     input[type=radio] {
       width: 20px;
       height: 20px;
@@ -159,6 +183,11 @@
        border-color: #000;
      }
     }
+
+    &__parent-dob {
+      width: 266px;
+    }
+
     &__child-gender-option{
       display: flex;
       align-items: center;
@@ -170,20 +199,24 @@
         padding-left: 8px;
       }
     }
+
     &__child-first-name{
        width: 170px !important;
        font-weight: 300;
     }
+
     &__child-last-name{
        width: 170px !important;
        font-weight: 300;
     }
+
     &__other {
       margin-bottom: 20px;
       margin-left: 20px;
       margin-top: -7px;
     }
   }
+
   .form-control[type=text], .form-control[type=email] {
     width: 230px;
     display: inline-block;
