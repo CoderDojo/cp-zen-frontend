@@ -3,17 +3,17 @@ import Vue from 'vue';
 const EventsService = {
 
   loadEvents(dojoId) {
-    return Vue.http.post(`${Vue.config.apiBase}/events/search`,
+    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/events/search`,
       {
         query: { dojoId, filterPastEvents: true, status: 'published' },
       },
     );
   },
   loadEvent(eventId) {
-    return Vue.http.get(`${Vue.config.apiBase}/events/${eventId}`);
+    return Vue.http.get(`${Vue.config.apiServer}/api/2.0/events/${eventId}`);
   },
   loadSessions(eventId) {
-    return Vue.http.get(`${Vue.config.apiBase}/events/${eventId}/sessions`);
+    return Vue.http.get(`${Vue.config.apiServer}/api/2.0/events/${eventId}/sessions`);
   },
   bookTickets(applications) {
     applications.forEach((application) => {
@@ -25,7 +25,7 @@ const EventsService = {
       };
       /* eslint-enable no-param-reassign */
     });
-    return Vue.http.post(`${Vue.config.apiBase}/events/bulk-apply-applications`, { applications });
+    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/events/bulk-apply-applications`, { applications });
   },
 };
 

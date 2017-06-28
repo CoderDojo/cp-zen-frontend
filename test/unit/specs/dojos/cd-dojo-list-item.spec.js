@@ -42,4 +42,26 @@ describe('The Dojo List Item vue', () => {
     // ASSERT
     expect(vm.imageUrl).to.equal('https://s3-eu-west-1.amazonaws.com/zen-dojo-images/b850b40e-1e10-4e3a-8a46-d076c94946c6');
   });
+
+  it('should compute a Private string when dojo.private is 1', () => {
+    // ARRANGE
+    const vm = vueUnitHelper(cdDojoListItem);
+    vm.dojo = {
+      private: 1,
+    };
+
+    // ASSERT
+    expect(vm.privacy).to.equal('Private');
+  });
+
+  it('should compute a Public string when dojo.private is 0', () => {
+    // ARRANGE
+    const vm = vueUnitHelper(cdDojoListItem);
+    vm.dojo = {
+      private: 0,
+    };
+
+    // ASSERT
+    expect(vm.privacy).to.equal('Public');
+  });
 });

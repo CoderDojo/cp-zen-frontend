@@ -57,6 +57,10 @@ module.exports = {
         }]
       },
       {
+        test: /\.po$/,
+        loader: 'json-loader!po-loader?format=mf'
+      },
+      {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {

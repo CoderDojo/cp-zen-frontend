@@ -4,16 +4,16 @@ import GeolocationService from '@/geolocation/service';
 const radius = 50000;
 
 const DojosService = {
-  getDojos: () => Vue.http.post(`${Vue.config.apiBase}/dojos`),
+  getDojos: () => Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos`),
 
   getByUrlSlug(urlSlug) {
-    return Vue.http.post(`${Vue.config.apiBase}/dojos/find`,
+    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/find`,
       {
         query: { urlSlug },
       },
     );
   },
-  getDojosByLatLong: (lat, lon) => Vue.http.post(`${Vue.config.apiBase}/dojos/search-bounding-box`, {
+  getDojosByLatLong: (lat, lon) => Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/search-bounding-box`, {
     query: {
       lat,
       lon,
@@ -35,7 +35,7 @@ const DojosService = {
   },
 
   joinDojo(userId, dojoId, userTypes) {
-    return Vue.http.post(`${Vue.config.apiBase}/dojos/save-usersdojos`, {
+    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/save-usersdojos`, {
       userDojo: {
         userId,
         dojoId,

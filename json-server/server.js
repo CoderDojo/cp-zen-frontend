@@ -5,6 +5,7 @@ const uuidv1 = require('uuid/v1');
 
 const server = jsonServer.create();
 const router = jsonServer.router(path.join(__dirname, 'db.json'));
+const locales = require('./locales.js');
 const middlewares = jsonServer.defaults();
 
 const pathsToReturnWhenPost = [
@@ -67,7 +68,11 @@ server.post('/api/2.0/profiles/youth/create', (req, res) => {
   res.send(child);
 });
 server.use('/api/2.0', router);
+server.get('/locale/data', (req, res) => {
+  const lang = req.query.lang || 'en_US';
+  res.send(locales[lang]);
+});
 
 server.listen(3000, () => {
   console.log('JSON Server is running')
-})
+});

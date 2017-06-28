@@ -1,55 +1,55 @@
 <template>
   <div class="cd-booking-parent-form">
     <div class="cd-booking-parent-form__attendee-type-header">
-      Parent / Guardian
+      {{ $t('Parent / Guardian') }}
     </div>
-    <label class="cd-booking-parent-form__label" for="name">Name</label>
-    <input type="text" class="form-control" name="firstName" placeholder="First Name" id="name" data-vv-as="first name" v-validate.initial="'required'" v-model="parentUserData.firstName">
+    <label class="cd-booking-parent-form__label" for="name">{{ $t('Name') }}</label>
+    <input type="text" class="form-control" name="firstName" :placeholder="$t('First Name')" id="name" data-vv-as="first name" v-validate.initial="'required'" v-model="parentUserData.firstName">
 
-    <input type="text" class="form-control" name="lastName" placeholder="Last Name" id="lastName" data-vv-as="last name" v-validate.initial="'required'" v-model="parentUserData.lastName">
-    <p id="firstNameValidationError" class="text-danger" v-show="formValidated && errors.has('firstName')">{{ errors.first('firstName') }}</p>
-    <p id="lastNameValidationError" class="text-danger" v-show="formValidated && errors.has('lastName')">{{ errors.first('lastName') }}</p>
+    <input type="text" class="form-control" name="lastName" :placeholder="$t('Last Name')" id="lastName" data-vv-as="last name" v-validate.initial="'required'" v-model="parentUserData.lastName">
+    <p id="firstNameValidationError" class="text-danger" v-show="formValidated && errors.has('firstName')">{{ $t(errors.first('firstName')) }}</p>
+    <p id="lastNameValidationError" class="text-danger" v-show="formValidated && errors.has('lastName')">{{ $t(errors.first('lastName')) }}</p>
 
-    <label class="cd-booking-parent-form__label cd-booking-parent-form__parent-dob-label">Date of Birth</label>
-    <vue-dob-picker class="cd-booking-parent-form__parent-dob" v-model="parentUserDataDoB" select-class="form-control" select-placeholder-class="form-control cd-select-placeholder" month-format="short" show-labels="false" :placeholders="['Date', 'Month', 'Year']" :proportions="[7, 9, 9]"></vue-dob-picker>
+    <label class="cd-booking-parent-form__label cd-booking-parent-form__parent-dob-label">{{ $t('Date of Birth') }}</label>
+    <vue-dob-picker class="cd-booking-parent-form__parent-dob" v-model="parentUserDataDoB" select-class="form-control" select-placeholder-class="form-control cd-select-placeholder" month-format="short" show-labels="false" :placeholders="[$t('Date'), $t('Month'), $t('Year')]" :proportions="[7, 9, 9]"></vue-dob-picker>
 
-    <label class="cd-booking-parent-form__label" for="phoneNumber">Phone Number</label>
+    <label class="cd-booking-parent-form__label" for="phoneNumber">{{ $t('Phone Number') }}</label>
     <input type="text" class="form-control" placeholder="Eg. 353 123 45678" name="phoneNumber" id="phoneNumber" data-vv-as="phone number" v-validate.initial="'required|numeric'" v-model="parentUserData.phone"><br/>
-    <p id="phoneNumberValidationError" class="text-danger" v-show="formValidated && errors.has('phoneNumber')">{{ errors.first('phoneNumber') }}</p>
+    <p id="phoneNumberValidationError" class="text-danger" v-show="formValidated && errors.has('phoneNumber')">{{ $t(errors.first('phoneNumber')) }}</p>
 
-    <label class="cd-booking-parent-form__label" for="email">Email Address</label>
-    <input type="email" placeholder="Email address" class="form-control" name="email" id="email" data-vv-as="email" v-validate.initial="'required|email'" v-model="parentUserData.email">
-    <p id="emailValidationError" class="text-danger" v-show="formValidated && errors.has('email')">{{ errors.first('email') }}</p>
+    <label class="cd-booking-parent-form__label" for="email">{{ $t('Email Address') }}</label>
+    <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate.initial="'required|email'" v-model="parentUserData.email">
+    <p id="emailValidationError" class="text-danger" v-show="formValidated && errors.has('email')">{{ $t(errors.first('email')) }}</p>
 
     <div v-for="ticket in ninjaTickets">
       <div v-for="(selectedTicket, index) in ticket.selectedTickets">
         <div class="cd-booking-parent-form__attendee-type-header">{{ selectedTicket.ticket.name }} ({{ ticket.session.name }})</div>
         <label class="cd-booking-parent-form__label">
-          Name
+          {{ $t('Name') }}
         </label>
-        <input type="text" placeholder="First Name" v-model="selectedTicket.user.firstName" class="cd-booking-parent-form__child-first-name form-control" />
-        <input type="text" placeholder="Last Name" v-model="selectedTicket.user.lastName" class="cd-booking-parent-form__child-last-name form-control" />
+        <input type="text" :placeholder="$t('First Name')" v-model="selectedTicket.user.firstName" class="cd-booking-parent-form__child-first-name form-control" />
+        <input type="text" :placeholder="$t('Last Name')" v-model="selectedTicket.user.lastName" class="cd-booking-parent-form__child-last-name form-control" />
         <br/>
         <label class="cd-booking-parent-form__label">
-          Date of Birth
+          {{ $t('Date of Birth') }}
         </label>
-        <input type="text" placeholder="Date" v-model="selectedTicket.user.dob.date" class="cd-booking-parent-form__child-dob-date form-control" />
-        <input type="text" placeholder="Month" v-model="selectedTicket.user.dob.month" class="cd-booking-parent-form__child-dob-month form-control" />
-        <input type="text" placeholder="Year" v-model="selectedTicket.user.dob.year" class="cd-booking-parent-form__child-dob-year form-control" />
+        <input type="text" :placeholder="$t('Date')" v-model="selectedTicket.user.dob.date" class="cd-booking-parent-form__child-dob-date form-control" />
+        <input type="text" :placeholder="$t('Month')" v-model="selectedTicket.user.dob.month" class="cd-booking-parent-form__child-dob-month form-control" />
+        <input type="text" :placeholder="$t('Year')" v-model="selectedTicket.user.dob.year" class="cd-booking-parent-form__child-dob-year form-control" />
         <label class="cd-booking-parent-form__label">
-          Email Address (optional)
+          {{ $t('Email Address (optional)') }}
         </label>
-        <input type="email" placeholder="Email address" v-model="selectedTicket.user.email" class="cd-booking-parent-form__child-email form-control" />
-        <label class="cd-booking-parent-form__label">Gender</label>
+        <input type="email" :placeholder="$t('Email address')" v-model="selectedTicket.user.email" class="cd-booking-parent-form__child-email form-control" />
+        <label class="cd-booking-parent-form__label">{{ $t('Gender') }}</label>
         <div class="cd-booking-parent-form__child-gender">
-          <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Male" v-model="selectedTicket.user.gender" /><span> Male</span></label>
-          <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Female" v-model="selectedTicket.user.gender" /><span> Female</span></label>
+          <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Male" v-model="selectedTicket.user.gender" /><span> {{ $t('Male') }}</span></label>
+          <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Female" v-model="selectedTicket.user.gender" /><span> {{ $t('Female') }}</span></label>
           <label class="cd-booking-parent-form__child-gender-option">
             <input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Other" v-model="selectedTicket.user.gender" />
-            <span> Not Listed. Specify here:</span>
+            <span> {{ $t('Not Listed. Specify here:') }}</span>
           </label>
-          <input type="text" class="form-control cd-booking-parent-form__other" placeholder="Preferred Gender" :name="'otherGender' + index"  v-model="selectedTicket.user.otherGender"  />
-          <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Undisclosed" v-model="selectedTicket.user.gender" /> <span>Prefer not to answer</span></label>
+          <input type="text" class="form-control cd-booking-parent-form__other" :placeholder="$t('Preferred Gender')" :name="'otherGender' + index"  v-model="selectedTicket.user.otherGender"  />
+          <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Undisclosed" v-model="selectedTicket.user.gender" /> <span>{{ $t('Prefer not to answer') }}</span></label>
         </div>
       </div>
     </div>

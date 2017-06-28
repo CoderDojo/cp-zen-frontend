@@ -1,17 +1,17 @@
 <template>
   <div class="cd-event-dob-verification">
     <form @submit.prevent="next">
-      <h2 v-if="isDobUnderage" class="cd-event-dob-verification__dob-error">You will need your parent to carry out the registration.</h2>
-      <label class="cd-event-dob-verification__verify-age-message">To continue, we need to verify your age.</label>
-      <label class="cd-event-dob-verification__dob-input-label" for="dob">Enter your Date of Birth</label>
+      <h2 v-if="isDobUnderage" class="cd-event-dob-verification__dob-error">{{ $t('You will need your parent to carry out the registration.') }}</h2>
+      <label class="cd-event-dob-verification__verify-age-message">{{ $t('To continue, we need to verify your age.') }}</label>
+      <label class="cd-event-dob-verification__dob-input-label" for="dob">{{ $t('Enter your Date of Birth') }}</label>
       <div class="cd-event-dob-verification__dob-picker-wrapper">
         <vue-dob-picker v-model="date" select-class="form-control" id="dob" class="cd-event-dob-verification__dob"
                         show-labels="false" month-format="short"
-                        :placeholders="['Date', 'Month', 'Year']"
+                        :placeholders="[$t('Date'), $t('Month'), $t('Year')]"
                         :proportions="[2, 2, 3]"></vue-dob-picker>
       </div>
-      <button @click="cancel" class="cd-event-dob-verification__cancel btn btn-primary">Cancel</button>
-      <input type="submit" class="cd-event-dob-verification__verify btn btn-primary" value="Verify">
+      <button @click="cancel" class="cd-event-dob-verification__cancel btn btn-primary">{{ $t('Cancel') }}</button>
+      <input type="submit" class="cd-event-dob-verification__verify btn btn-primary" :value="$t('Verify')">
     </form>
   </div>
 </template>

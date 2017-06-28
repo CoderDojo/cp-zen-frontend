@@ -2,7 +2,7 @@
   <div v-if="eventDetails" class="cd-event-details">
     <div class="row cd-event-details__header">
       <div class="col-md-12">
-        <p class="cd-event-details__book-event-title">Book Event</p>
+        <p class="cd-event-details__book-event-title">{{ $t('Book Event') }}</p>
         <p class="cd-event-details__event-title">{{ eventDetails.name }}</p>
       </div>
     </div>
@@ -12,7 +12,7 @@
           <div class="row">
             <div class="fa fa-clock-o cd-event-details__left-column-section-icon col-md-1"></div>
             <div class="cd-event-details__left-column-section-heading col-md-11">
-              TIME
+              {{ $t('Time') }}
             </div>
           </div>
           <div class="row">
@@ -20,7 +20,7 @@
               {{ eventDetails.dates[0].startTime |  cdDateFormatter }}
             </div>
             <div v-else class="cd-event-details__left-column-section-value col-md-12">
-              Next in series: <span class="cd-event-details__left-column-section-value-next-session">{{ getNextStartTime() |  cdDateFormatter }}</span>
+              {{ $t('Next in series:') }} <span class="cd-event-details__left-column-section-value-next-session">{{ getNextStartTime() |  cdDateFormatter }}</span>
             </div>
           </div>
           <div class="row">
@@ -38,7 +38,7 @@
           <div class="row">
             <div class="fa fa-map-marker cd-event-details__left-column-section-icon col-md-1"></div>
             <div class="cd-event-details__left-column-section-heading col-md-11">
-              LOCATION
+              {{ $t('Location') }}
             </div>
           </div>
           <div class="row">
@@ -96,7 +96,8 @@
       },
       buildRecurringFrequencyInfo() {
         const dayName = moment(this.eventDetails.dates[0].startTime).format('dddd');
-        return `${this.termEvent[this.eventDetails.recurringType]} on ${dayName}s`;
+        const recurrence = this.termEvent[this.eventDetails.recurringType];
+        return `${this.$i18n.t(recurrence)} ${this.$i18n.t('on')} ${dayName}s`;
       },
     },
     created() {
@@ -149,6 +150,7 @@
          margin-bottom: 4px;
          margin-left: -7px;
          line-height: 1;
+         text-transform: uppercase;
         }
         &-value {
           &-frequency {

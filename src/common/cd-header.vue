@@ -5,41 +5,41 @@
         <a href="/">
           <img src="~cd-common/dist/coderdojo-logo-light-bg.svg" width="120" height="44" />
         </a>
-        <a href="https://coderdojo.com/donate/" class="cd-menu__donate-button">Donate</a>
+        <a href="https://coderdojo.com/donate/" class="cd-menu__donate-button">{{ $t('Donate') }}</a>
         <form class="cd-menu__search" role="search" action="https://coderdojo.com/">
           <input class="cd-menu__search-input" type="text" placeholder=Search... name="s" />
           <button class="cd-menu__search-button" type="submit"><span class="fa fa-search fa-2x"></span></button>
         </form>
         <div class="cd-menu__flex-spacer"></div>
         <div class="cd-menu__account">
-          <a href="/register/user">Register</a>
-          <a href="/login">Login</a>
+          <a href="/register/user">{{ $t('Register') }}</a>
+          <a href="/login">{{ $t('Login') }}</a>
         </div>
         <div class="cd-menu__profile">
           <div class="cd-menu__profile-pic"></div>
-          <span class="cd-menu__profile-name">My Account</span>
+          <span class="cd-menu__profile-name">{{ $t('My Account') }}</span>
           <i class="cd-menu__sub-menu-icon fa fa-chevron-down"></i>
           <ul class="cd-menu__profile-menu">
-            <li><a class="cd-menu__profile-link">My Profile</a></li>
-            <li><a href="/dashboard/my-dojos">My Dojos</a></li>
-            <li><a href="/dashboard/dojos/events/user-events">My Events</a></li>
-            <li class="cd-menu__parent-link"><a href="/dashboard/children">My Children</a></li>
-            <li class="cd-menu__e-learning-link"><a href="/dashboard/profile/lms">E-learning</a></li>
-            <li class="cd-menu__cdf-admin-link"><a href="/dashboard/manage-dojos">Manage Dojos</a></li>
+            <li><a class="cd-menu__profile-link">{{ $t('My Profile') }}</a></li>
+            <li><a href="/dashboard/my-dojos">{{ $t('My Dojos') }}</a></li>
+            <li><a href="/dashboard/dojos/events/user-events">{{ $t('My Events') }}</a></li>
+            <li class="cd-menu__parent-link"><a href="/dashboard/children"{{ $t('My Children') }}</a></li>
+            <li class="cd-menu__e-learning-link"><a href="/dashboard/profile/lms">{{ $t('E-learning') }}</a></li>
+            <li class="cd-menu__cdf-admin-link"><a href="/dashboard/manage-dojos">{{ $t('Manage Dojos') }}</a></li>
             <li class="cd-menu__cdf-admin-link"><a href="http://badgekit.coderdojo.com/">Badgekit</a></li>
-            <li class="cd-menu__cdf-admin-link"><a href="/dashboard/stats">Stats</a></li>
-            <li><a class="cd-menu__referer-link" href="/logout">Logout</a></li>
+            <li class="cd-menu__cdf-admin-link"><a href="/dashboard/stats">{{ $t('Stats') }}</a></li>
+            <li><a class="cd-menu__referer-link" href="/logout">{{ $t('Logout') }}</a></li>
           </ul>
         </div>
       </div>
       <ul class="cd-menu__second-row">
         <li v-for="link in navigationLinks" :class="link.subLinks ? 'cd-menu__dropdown' : ''">
-          <a v-if="!link.subLinks" :href="link.href">{{ link.text }}</a>
+          <a v-if="!link.subLinks" :href="link.href">{{ $t(link.text) }}</a>
           <span v-if="link.subLinks">
-            {{ link.text }}
+            {{ $t(link.text) }}
             <i class="cd-menu__dropdown-icon fa fa-chevron-down"></i>
             <ul>
-              <li v-for="subLink in link.subLinks"><a :href="subLink.href">{{ subLink.text }}</a></li>
+              <li v-for="subLink in link.subLinks"><a :href="subLink.href">{{ $t(subLink.text) }}</a></li>
             </ul>
           </span>
         </li>
@@ -47,7 +47,7 @@
     </div>
     <div class="cd-menu__mobile-nav-bar">
       <button type="button" class="cd-menu__hamburger" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
+        <span class="sr-only">{{ $t('Toggle navigation') }}</span>
         <span class="cd-menu__hamburger-bar"></span>
         <span class="cd-menu__hamburger-bar"></span>
         <span class="cd-menu__hamburger-bar"></span>
@@ -67,14 +67,14 @@
           <button class="cd-menu__search-button" type="button"><span class="fa fa-search fa-2x"></span></button>
         </div>
         <div class="cd-menu__content-block cd-menu__account">
-          <a href="/register/user">Register</a>
-          <a href="/login">Login</a>
+          <a href="/register/user">{{ $t('Register') }}</a>
+          <a href="/login">{{ $t('Login') }}</a>
         </div>
         <ul class="cd-menu__content-block">
           <li class="cd-menu__profile">
             <span>
               <div class="cd-menu__profile-pic"></div>
-              <span class="cd-menu__profile-name">My Account</span>
+              <span class="cd-menu__profile-name">{{ $t('My Account') }}</span>
               <i class="cd-menu__sub-menu-icon fa fa-chevron-right"></i>
             </span>
             <div class="cd-menu__sliding-menu cd-menu__sliding-menu-secondary" data-toggle="closed">
@@ -88,24 +88,24 @@
                   <span class="cd-menu__profile-name"></span>
                 </div>
                 <ul class="cd-menu__content-block cd-menu__profile-menu">
-                  <li><a class="cd-menu__profile-link">My Profile</a></li>
-                  <li><a href="/dashboard/my-dojos">My Dojos</a></li>
-                  <li><a href="/dashboard/dojos/events/user-events">My Events</a></li>
-                  <li class="cd-menu__parent-link"><a href="/dashboard/children">My Children</a></li>
-                  <li class="cd-menu__e-learning-link"><a href="/dashboard/profile/lms">E-learning</a></li>
-                  <li class="cd-menu__cdf-admin-link"><a href="/dashboard/manage-dojos">Manage Dojos</a></li>
+                  <li><a class="cd-menu__profile-link">{{ $t('My Profile') }}</a></li>
+                  <li><a href="/dashboard/my-dojos">{{ $t('My Dojos') }}</a></li>
+                  <li><a href="/dashboard/dojos/events/user-events">{{ $t('My Events') }}</a></li>
+                  <li class="cd-menu__parent-link"><a href="/dashboard/children">{{ $t('My Children') }}</a></li>
+                  <li class="cd-menu__e-learning-link"><a href="/dashboard/profile/lms">{{ $t('E-learning') }}</a></li>
+                  <li class="cd-menu__cdf-admin-link"><a href="/dashboard/manage-dojos">{{ $t('Manage Dojos') }}</a></li>
                   <li class="cd-menu__cdf-admin-link"><a href="http://badgekit.coderdojo.com/">Badgekit</a></li>
-                  <li class="cd-menu__cdf-admin-link"><a href="/dashboard/stats">Stats</a></li>
-                  <li><a class="cd-menu__referer-link" href="/logout">Logout</a></li>
+                  <li class="cd-menu__cdf-admin-link"><a href="/dashboard/stats">{{ $t('Stats') }}</a></li>
+                  <li><a class="cd-menu__referer-link" href="/logout">{{ $t('Logout') }}</a></li>
                 </ul>
               </div>
             </div>
           </li>
           <li v-for="link in navigationLinks">
-            <a v-if="!link.subLinks" :href="link.href">{{ link.text }}</a>
+            <a v-if="!link.subLinks" :href="link.href">{{ $t(link.text) }}</a>
             <span v-if="link.subLinks">
               <span>
-                {{ link.text }}
+                {{ $t(link.text) }}
                 <i class="cd-menu__sub-menu-icon fa fa-chevron-right"></i>
               </span>
               <div class="cd-menu__sliding-menu cd-menu__sliding-menu-secondary" data-toggle="closed">
@@ -118,13 +118,13 @@
                     <span>{{ link.text }}</span>
                   </div>
                   <ul class="cd-menu__content-block">
-                    <li v-for="subLink in link.subLinks"><a :href="subLink.href">{{ subLink.text }}</a></li>
+                    <li v-for="subLink in link.subLinks"><a :href="subLink.href">{{ $t(subLink.text) }}</a></li>
                   </ul>
                 </div>
               </div>
             </span>
           </li>
-          <li><a href="https://coderdojo.com/donate/">Donate</a></li>
+          <li><a href="https://coderdojo.com/donate/">{{ $t('Donate') }}</a></li>
         </ul>
       </div>
     </nav>
