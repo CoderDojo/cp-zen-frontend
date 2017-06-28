@@ -6,7 +6,6 @@ machine:
     WDIO_MAX_INSTANCES: 1
 dependencies:
   pre:
-    - if [ "$CIRCLE_BRANCH" = "master" ]; then cd ~/ && git clone git@github.com:CoderDojo/cp-translations.git && cd cp-translations && ./build.sh; fi
     - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
     - google-chrome --version
     - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -16,6 +15,7 @@ dependencies:
     - google-chrome --version
   override:
     - npm install
+    - if [ "$CIRCLE_BRANCH" = "staging" ]; then npm install --save cp-translations@staging; fi
 test:
   override:
     - npm run test

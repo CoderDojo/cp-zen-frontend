@@ -2,29 +2,29 @@
   <div class="cd-booking-create-account">
     <div class="cd-booking-create-account__header row">
       <div class="cd-booking-create-account__header-title">
-        Create a CoderDojo Account
+        {{ $t('Create a CoderDojo Account') }}
       </div>
       <div class="cd-booking-create-account__header-info">
-        Keep track of your Dojos and book event tickets faster
+        {{ $t('Keep track of your Dojos and book event tickets faster') }}
       </div>
     </div>
     <div class="cd-booking-create-account__container">
     <div class="row">
-      <label class="cd-booking-create-account__label" for="password">Password</label>
+      <label class="cd-booking-create-account__label" for="password">{{ $t('Password') }}</label>
       <input type="password" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
              v-validate.initial="'required|confirmed:confirmPassword|cd-password'" v-model="password"/>
       <label class="text-danger cd-booking-create-account__password-error"
-             v-show="formValidated && errors.has('password')">{{ errors.first('password') }}</label>
+             v-show="formValidated && errors.has('password')">{{ $t(errors.first('password')) }}</label>
     </div>
     <div class="row cd-booking-create-account__password-hint">
-      Password must be at least 8 characters with at least one numeric.
+      {{ $t('Password must be at least 8 characters with at least one numeric.') }}
     </div>
     <div class="row">
-      <label class="cd-booking-create-account__label" for="password">Confirm Password</label>
+      <label class="cd-booking-create-account__label" for="password">{{ $t('Confirm Password') }}</label>
       <input type="password" class="form-control" placeholder="Password" name="confirmPassword" id="confirmPassword" data-vv-as="password confirmation"
              v-validate.initial="'required'" v-model="confirmPassword"/>
       <label class="text-danger cd-booking-create-account__password-confirmation-error"
-             v-show="formValidated && errors.has('confirmPassword')">{{ errors.first('confirmPassword') }}</label>
+             v-show="formValidated && errors.has('confirmPassword')">{{ $t(errors.first('confirmPassword')) }}</label>
     </div>
     <div class="row">
       <div class="cd-booking-create-account__recaptcha">
@@ -34,23 +34,23 @@
     <div class="row">
       <label class="cd-booking-create-account__label"><input type="checkbox"  name="termsConditionsAccepted" v-validate.initial="'required'"
                     v-model="termsConditionsAccepted"/>
-        I agree with <a class="cd-booking-create-account__terms-conditions-link"
-                              href="https://zen.coderdojo.com/terms-and-conditions">Terms & Conditions</a>
+        <span v-html="$t('I agree with {openLinkTag}Terms & Conditions{closingLinkTag}', { openLinkTag: '<a class=\'cd-booking-create-account__terms-conditions-link\' href=\'https://zen.coderdojo.com/terms-and-conditions\'>', closingLinkTag: '</a>' })"></span>
       </label>
       <label class="text-danger cd-booking-create-account__terms-conditions-error"
-             v-show="formValidated && errors.has('termsConditionsAccepted')">You must accept the terms and conditions
-        before proceeding.</label>
+             v-show="formValidated && errors.has('termsConditionsAccepted')">
+        {{ $t('You must accept the terms and conditions before proceeding.') }}
+      </label>
     </div>
     <div class="row">
       <label class="cd-booking-create-account__label">
-        <input type="checkbox"  name="dataConsentAccepted" id="consentData" v-validate.initial="'required'"
+        <input type="checkbox" name="dataConsentAccepted" id="consentData" v-validate.initial="'required'"
                v-model="dataConsentAccepted"/>
-        I consent to the use of my data (<a class="cd-booking-create-account__data-usage-link"
-                                            href="http://www.icecreammakesuhappy.ie/">Data policy</a>)
+        <span v-html="$t('I consent to the use of my data ({openLinkTag}Data policy{closingLinkTag})', { openLinkTag: '<a class=\'cd-booking-create-account__data-usage-link\' href=\'http://www.icecreammakesuhappy.ie/\'>', closingLinkTag: '</a>' })"></span>
       </label>
       <label class="text-danger cd-booking-create-account__data-consent-error"
-             v-show="formValidated && errors.has('dataConsentAccepted')">You must consent to the use of your data before
-        proceeding.</label>
+             v-show="formValidated && errors.has('dataConsentAccepted')">
+        {{ $t('You must consent to the use of your data before proceeding.') }}
+      </label>
     </div>
     </div>
   </div>

@@ -2,20 +2,20 @@
   <div class="cd-find-dojo">
     <div class="cd-find-dojo__panel">
       <form class="cd-find-dojo__panel-form" @submit.prevent="searchDojosByAddress">
-        <h1 class="cd-find-dojo__panel-form-header">Find a Dojo to attend</h1>
-        <p class="cd-find-dojo__panel-form-info">Learn technology in an informal, creative and social environment. Find a dojo near you.</p>
+        <h1 class="cd-find-dojo__panel-form-header">{{ $t('Find a Dojo to attend') }}</h1>
+        <p class="cd-find-dojo__panel-form-info">{{ $t('Learn technology in an informal, creative and social environment. Find a dojo near you.') }}</p>
         <div class="cd-find-dojo__panel-form-search">
           <div class="cd-find-dojo__panel-form-search-input">
-            <input type="text" name="addressSearch" class="form-control input-lg" placeholder="Enter your city or locality" v-model="searchCriteria">
+            <input type="text" name="addressSearch" class="form-control input-lg" :placeholder="$t('Enter your city or locality')" v-model="searchCriteria">
           </div>
           <div class="cd-find-dojo__panel-form-search-submit">
-            <input type="submit" class="btn btn-lg" value="Search Dojos"/>
+            <input type="submit" class="btn btn-lg" :value="$t('Search Dojos')"/>
           </div>
         </div>
         <button @click.prevent="getCurrentLocation" class="cd-find-dojo__panel-form-detect-location">
           <i class="fa fa-location-arrow" aria-hidden="true" v-show="!detectingLocation"></i>
           <i class="fa fa-spinner fa-spin" aria-hidden="true" v-show="detectingLocation"></i>
-          Detect My Location
+          {{ $t('Detect My Location') }}
         </button>
       </form>
       <div class="cd-find-dojo__panel-illustration">

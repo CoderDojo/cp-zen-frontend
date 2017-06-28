@@ -1,6 +1,6 @@
 <template>
   <div class="cd-event-sessions">
-    <h1 class="cd-event-sessions__header">Select Event Tickets</h1>
+    <h1 class="cd-event-sessions__header">{{ $t('Select Event Tickets') }}</h1>
 
     <div class="cd-event-sessions__session" v-for="session in sessions">
       <h3 class="cd-event-sessions__name">{{ session.name }}</h3>
@@ -10,7 +10,7 @@
 
     <router-link :to="{name: 'EventBookingForm', params: {eventId: event.id}}"
                  class="cd-event-sessions__next btn btn-primary"
-                 tag="button">Proceed
+                 tag="button">{{ $t('Proceed') }}
     </router-link>
   </div>
 </template>

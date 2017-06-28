@@ -1,6 +1,11 @@
 const BasePage = require('./base-page');
 
 const DojoPage = Object.create(BasePage, {
+  header: {
+    get() {
+      return $('.cd-find-dojo__panel-form-header');
+    },
+  },
   detectLocationButton: {
     get() {
       return $('.cd-find-dojo__panel-form-detect-location');

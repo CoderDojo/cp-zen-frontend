@@ -6,7 +6,7 @@
     <div class="media-body">
       <h4 class="media-heading">
         <router-link :to="detailsPageUrl" class="cd-dojo-list-item__name">
-          {{dojo.name}} ({{ dojo.private | cd-dojo-private }})
+          {{dojo.name}} ({{ $t(privacy) }})
         </router-link>
       </h4>
       <p>{{dojo.address1}}</p>
@@ -33,6 +33,9 @@
       },
       loadImage() {
         return require('../assets/avatars/dojo-default-logo.png');
+      },
+      privacy() {
+        return this.dojo.private === 1 ? 'Private' : 'Public';
       },
     },
   };

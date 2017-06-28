@@ -55,7 +55,11 @@ describe('Event Details', () => {
       './service': MockEventService,
     });
     vm = vueUnitHelper(EventDetailsWithMocks);
+    vm.$i18n = {
+      t: val => val,
+    };
   });
+
   afterEach(() => {
     sandbox.restore();
   });

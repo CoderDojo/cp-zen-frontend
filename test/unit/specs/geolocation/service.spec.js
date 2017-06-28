@@ -71,7 +71,7 @@ describe('Geolocation Service', () => {
   describe('getIpCountryDetails()', () => {
     it('should get country data from users IP', (done) => {
       const httpStub = sandbox.stub(Vue.http, 'get');
-      httpStub.withArgs(`${Vue.config.apiBase}/ip-country-details`)
+      httpStub.withArgs(`${Vue.config.apiServer}/api/2.0/ip-country-details`)
         .returns(Promise.resolve({ body: expectedIpCountryDetails }));
 
       GeolocationService.getIpCountryDetails().then((response) => {

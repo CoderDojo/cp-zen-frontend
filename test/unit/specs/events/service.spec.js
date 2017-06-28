@@ -34,7 +34,7 @@ describe('Events Service', () => {
   it('should get dojo events', (done) => {
     const postMock = sandbox.stub(Vue.http, 'post');
     postMock.withArgs(
-      `${Vue.config.apiBase}/events/search`,
+      `${Vue.config.apiServer}/api/2.0/events/search`,
       {
         query: {
           dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
@@ -46,7 +46,7 @@ describe('Events Service', () => {
     EventsService.loadEvents('3ed47c6d-a689-46a0-883b-1f3fd46e9c77').then((events) => {
       expect(events.body).to.deep.equal(expectedEvents);
       const mockCall = postMock.getCall(0).args[0];
-      expect(mockCall).to.equal(`${Vue.config.apiBase}/events/search`);
+      expect(mockCall).to.equal(`${Vue.config.apiServer}/api/2.0/events/search`);
       done();
     });
   });
@@ -54,7 +54,7 @@ describe('Events Service', () => {
   it('should get specific event details by id', (done) => {
     const eventId = 1;
     const getMock = sandbox.stub(Vue.http, 'get');
-    getMock.withArgs(`${Vue.config.apiBase}/events/${eventId}`)
+    getMock.withArgs(`${Vue.config.apiServer}/api/2.0/events/${eventId}`)
       .returns(Promise.resolve({ body: expectedEvents[0] }));
 
     EventsService.loadEvent(eventId).then((event) => {
@@ -74,7 +74,7 @@ describe('Events Service', () => {
       },
     ];
     const getMock = sandbox.stub(Vue.http, 'get');
-    getMock.withArgs(`${Vue.config.apiBase}/events/${eventId}/sessions`)
+    getMock.withArgs(`${Vue.config.apiServer}/api/2.0/events/${eventId}/sessions`)
       .returns(Promise.resolve({ body: mockSessions }));
 
     EventsService.loadSessions(eventId).then((sessions) => {
@@ -104,7 +104,7 @@ describe('Events Service', () => {
     EventsService.bookTickets(applications)
       .then(() => {
         expect(Vue.http.post).to.have.been.calledOnce;
-        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiBase}/events/bulk-apply-applications`, {
+        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/events/bulk-apply-applications`, {
           applications: [
             {
               dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',

@@ -1,6 +1,6 @@
 <template>
   <div class="cd-booking-confirmation">
-    <p class="cd-booking-confirmation__account-creation-confirmation">Account created</p>
+    <p class="cd-booking-confirmation__account-creation-confirmation">{{ $t('Account created') }}</p>
     <ul v-if="createdUser.firstName">
       <li class="cd-booking-confirmation__first-name">{{ createdUser.firstName }}</li>
       <li class="cd-booking-confirmation__last-name">{{ createdUser.lastName }}</li>
@@ -8,7 +8,7 @@
       <li class="cd-booking-confirmation__phone-number">{{ createdUser.phone }}</li>
       <li class="cd-booking-confirmation__email">{{ createdUser.email }}</li>
     </ul>
-    <p class="cd-booking-confirmation__booking-confirmation">Your booking is completed successfully</p>
+    <p class="cd-booking-confirmation__booking-confirmation">{{ $t('Your booking is completed successfully') }}</p>
     <ul v-for="booking in bookings">
       <li class="cd-booking-confirmation__booking-ticket-name">{{ booking.ticket.name }}</li>
       <li class="cd-booking-confirmation__booking-first-name">{{ booking.user.firstName }}</li>

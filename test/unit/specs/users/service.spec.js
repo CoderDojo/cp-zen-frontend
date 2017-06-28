@@ -29,10 +29,10 @@ describe('UserService', () => {
 
       sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
       UserService.register(user, profile).then(() => {
-        expect(Vue.http.post.firstCall.args[0]).to.equal(`${Vue.config.apiBase}/users/register`);
+        expect(Vue.http.post.firstCall.args[0]).to.equal(`${Vue.config.apiServer}/api/2.0/users/register`);
         expect(Vue.http.post.firstCall.args[1]).to.deep.equal({ profile, user });
 
-        expect(Vue.http.post.secondCall.args[0]).to.equal(`${Vue.config.apiBase}/users/login`);
+        expect(Vue.http.post.secondCall.args[0]).to.equal(`${Vue.config.apiServer}/api/2.0/users/login`);
         expect(Vue.http.post.secondCall.args[1])
           .to.deep.equal({ email: user.email, password: user.password });
         done();
@@ -46,7 +46,7 @@ describe('UserService', () => {
       const userMock = {
         key: 'val',
       };
-      sandbox.stub(Vue.http, 'get').withArgs(`${Vue.config.apiBase}/users/instance`)
+      sandbox.stub(Vue.http, 'get').withArgs(`${Vue.config.apiServer}/api/2.0/users/instance`)
         .returns(Promise.resolve({ body: userMock }));
 
       // ACT
@@ -79,7 +79,7 @@ describe('UserService', () => {
       // ACT
       UserService.addChild(mockProfile).then(() => {
         // ASSERT
-        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiBase}/profiles/youth/create`, expectedPayload);
+        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, expectedPayload);
         done();
       });
     });
@@ -104,7 +104,7 @@ describe('UserService', () => {
       // ACT
       UserService.addChild(mockProfile).then(() => {
         // ASSERT
-        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiBase}/profiles/youth/create`, expectedPayload);
+        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, expectedPayload);
         done();
       });
     });
@@ -131,7 +131,7 @@ describe('UserService', () => {
       // ACT
       UserService.addChild(mockProfile).then(() => {
         // ASSERT
-        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiBase}/profiles/youth/create`, expectedPayload);
+        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, expectedPayload);
         done();
       });
     });
