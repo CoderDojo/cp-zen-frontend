@@ -26,7 +26,7 @@
             <li class="cd-menu__parent-link"><a href="/dashboard/children"{{ $t('My Children') }}</a></li>
             <li class="cd-menu__e-learning-link"><a href="/dashboard/profile/lms">{{ $t('E-learning') }}</a></li>
             <li class="cd-menu__cdf-admin-link"><a href="/dashboard/manage-dojos">{{ $t('Manage Dojos') }}</a></li>
-            <li class="cd-menu__cdf-admin-link"><a href="http://badgekit.coderdojo.com/">{{ $t('Badgekit') }}</a></li>
+            <li class="cd-menu__cdf-admin-link"><a href="http://badgekit.coderdojo.com/">Badgekit</a></li>
             <li class="cd-menu__cdf-admin-link"><a href="/dashboard/stats">{{ $t('Stats') }}</a></li>
             <li><a class="cd-menu__referer-link" href="/logout">{{ $t('Logout') }}</a></li>
           </ul>
@@ -94,7 +94,7 @@
                   <li class="cd-menu__parent-link"><a href="/dashboard/children">{{ $t('My Children') }}</a></li>
                   <li class="cd-menu__e-learning-link"><a href="/dashboard/profile/lms">{{ $t('E-learning') }}</a></li>
                   <li class="cd-menu__cdf-admin-link"><a href="/dashboard/manage-dojos">{{ $t('Manage Dojos') }}</a></li>
-                  <li class="cd-menu__cdf-admin-link"><a href="http://badgekit.coderdojo.com/">{{ $t('Badgekit') }}</a></li>
+                  <li class="cd-menu__cdf-admin-link"><a href="http://badgekit.coderdojo.com/">Badgekit</a></li>
                   <li class="cd-menu__cdf-admin-link"><a href="/dashboard/stats">{{ $t('Stats') }}</a></li>
                   <li><a class="cd-menu__referer-link" href="/logout">{{ $t('Logout') }}</a></li>
                 </ul>

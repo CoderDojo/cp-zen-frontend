@@ -11,7 +11,6 @@ import 'font-awesome/css/font-awesome.min.css';
 import 'vue-dob-picker/dist/static/vue-dob-picker.css';
 import App from './App';
 import router from './router';
-import './dojos/filters';
 
 Vue.config.productionTip = false;
 Vue.config.apiServer = process.env.API_SERVER;
@@ -24,8 +23,6 @@ Vue.use(VueGoogleMaps, {
     key: 'AIzaSyC3xF9XV91bS2R14Gjmx3UQaKbGgAfHbE4',
   },
 });
-
-Vue.config.lang = 'en_US';
 
 const messages = {
   en_US: require('cp-translations/strings/en_US/messages.po'),

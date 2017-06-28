@@ -12,7 +12,7 @@
           <div class="row">
             <div class="fa fa-clock-o cd-event-details__left-column-section-icon col-md-1"></div>
             <div class="cd-event-details__left-column-section-heading col-md-11">
-              Time
+              {{ $t('Time') }}
             </div>
           </div>
           <div class="row">
@@ -20,7 +20,7 @@
               {{ eventDetails.dates[0].startTime |  cdDateFormatter }}
             </div>
             <div v-else class="cd-event-details__left-column-section-value col-md-12">
-              Next in series: <span class="cd-event-details__left-column-section-value-next-session">{{ getNextStartTime() |  cdDateFormatter }}</span>
+              {{ $t('Next in series:') }} <span class="cd-event-details__left-column-section-value-next-session">{{ getNextStartTime() |  cdDateFormatter }}</span>
             </div>
           </div>
           <div class="row">
@@ -96,7 +96,8 @@
       },
       buildRecurringFrequencyInfo() {
         const dayName = moment(this.eventDetails.dates[0].startTime).format('dddd');
-        return `${this.termEvent[this.eventDetails.recurringType]} on ${dayName}s`;
+        const recurrence = this.termEvent[this.eventDetails.recurringType];
+        return `${this.$i18n.t(recurrence)} ${this.$i18n.t('on')} ${dayName}s`;
       },
     },
     created() {

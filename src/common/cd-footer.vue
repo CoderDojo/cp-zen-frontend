@@ -7,7 +7,7 @@
         </svg>
       </div>
       <div class="col-sm-3">
-        <p class="cd-footer__address-line">{CoderDojo Foundation,</p>
+        <p class="cd-footer__address-line">CoderDojo Foundation,</p>
         <p class="cd-footer__address-line">Dogpatch Labs Unit 1,</p>
         <p class="cd-footer__address-line">The CHQ building,</p>
         <p class="cd-footer__address-line">Custom House Quay,</p>
@@ -87,11 +87,5 @@ export default {
 };
 </script>
 
-<style lang="less">
-  @import "~cd-common/dist/cd-common.min.css";
-  .cd-footer {
-    &__lang-picker {
-      display: flex;
-    }
-  }
+<style src="cd-common/dist/cd-common.min.css">
 </style>

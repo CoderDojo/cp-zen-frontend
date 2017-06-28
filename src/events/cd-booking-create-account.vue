@@ -37,8 +37,9 @@
         <span v-html="$t('I agree with {openLinkTag}Terms & Conditions{closingLinkTag}', { openLinkTag: '<a class=\'cd-booking-create-account__terms-conditions-link\' href=\'https://zen.coderdojo.com/terms-and-conditions\'>', closingLinkTag: '</a>' })"></span>
       </label>
       <label class="text-danger cd-booking-create-account__terms-conditions-error"
-             v-show="formValidated && errors.has('termsConditionsAccepted')">{{ $t('You must accept the terms and conditions
-        before proceeding.') }}</label>
+             v-show="formValidated && errors.has('termsConditionsAccepted')">
+        {{ $t('You must accept the terms and conditions before proceeding.') }}
+      </label>
     </div>
     <div class="row">
       <label class="cd-booking-create-account__label">
@@ -47,8 +48,9 @@
         <span v-html="$t('I consent to the use of my data ({openLinkTag}Data policy{closingLinkTag})', { openLinkTag: '<a class=\'cd-booking-create-account__data-usage-link\' href=\'http://www.icecreammakesuhappy.ie/\'>', closingLinkTag: '</a>' })"></span>
       </label>
       <label class="text-danger cd-booking-create-account__data-consent-error"
-             v-show="formValidated && errors.has('dataConsentAccepted')">{{ $t('You must consent to the use of your data before
-        proceeding.') }}</label>
+             v-show="formValidated && errors.has('dataConsentAccepted')">
+        {{ $t('You must consent to the use of your data before proceeding.') }}
+      </label>
     </div>
     </div>
   </div>

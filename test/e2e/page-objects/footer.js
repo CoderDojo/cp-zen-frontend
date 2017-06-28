@@ -1,7 +1,7 @@
 const BasePage = require('./base-page');
 
 const Footer = Object.create(BasePage, {
-  picker: {
+  languagePicker: {
     get() {
       return $('.cd-lang-picker__select');
     },
