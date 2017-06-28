@@ -59,6 +59,7 @@ describe('Booking Create Account Form', () => {
     const profile = {
       firstName: 'John',
       lastName: 'Doe',
+      dob: '1980-04-12T00:00:00.000Z',
       phone: '+1-555-123456',
       email: 'john.doe@example.com',
     };
