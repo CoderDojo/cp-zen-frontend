@@ -4,6 +4,7 @@
     <ul v-if="createdUser.firstName">
       <li class="cd-booking-confirmation__first-name">{{ createdUser.firstName }}</li>
       <li class="cd-booking-confirmation__last-name">{{ createdUser.lastName }}</li>
+      <li class="cd-booking-confirmation__dob">{{ createdUser.dob }}</li>
       <li class="cd-booking-confirmation__phone-number">{{ createdUser.phone }}</li>
       <li class="cd-booking-confirmation__email">{{ createdUser.email }}</li>
     </ul>
