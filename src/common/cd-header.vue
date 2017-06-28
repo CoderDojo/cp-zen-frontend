@@ -23,7 +23,7 @@
             <li><a class="cd-menu__profile-link">{{ $t('My Profile') }}</a></li>
             <li><a href="/dashboard/my-dojos">{{ $t('My Dojos') }}</a></li>
             <li><a href="/dashboard/dojos/events/user-events">{{ $t('My Events') }}</a></li>
-            <li class="cd-menu__parent-link"><a href="/dashboard/children"{{ $t('My Children') }}</a></li>
+            <li class="cd-menu__parent-link"><a href="/dashboard/children">{{ $t('My Children') }}</a></li>
             <li class="cd-menu__e-learning-link"><a href="/dashboard/profile/lms">{{ $t('E-learning') }}</a></li>
             <li class="cd-menu__cdf-admin-link"><a href="/dashboard/manage-dojos">{{ $t('Manage Dojos') }}</a></li>
             <li class="cd-menu__cdf-admin-link"><a href="http://badgekit.coderdojo.com/">Badgekit</a></li>
