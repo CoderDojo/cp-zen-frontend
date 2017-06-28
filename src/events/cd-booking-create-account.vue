@@ -56,7 +56,7 @@
   </div>
 </template>
 <script>
-  import { extend, clone, cloneDeep } from 'lodash';
+  import { extend, omit, cloneDeep } from 'lodash';
   import VueRecaptcha from 'vue-recaptcha';
   import UserService from '@/users/service';
   import EventsService from '@/events/service';
@@ -89,7 +89,7 @@
     },
     computed: {
       user() {
-        return extend(clone(this.profile), {
+        return extend(omit(this.profile, ['dob']), {
           password: this.password,
           'g-recaptcha-response': this.recaptchaResponse,
           initUserType: {
