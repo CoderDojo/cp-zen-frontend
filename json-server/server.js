@@ -34,6 +34,14 @@ server.use(middlewares);
 server.use(require('body-parser').json());
 server.use(jsonServer.rewriter(rewriteRules));
 server.use((req, res, next) => {
+  if (req.originalUrl === '/api/2.0/dojos/search-bounding-box'
+    && req.body.query.lat === 53.270668 && req.body.query.lon === -9.056790500000034) {
+    res.send([]);
+  } else {
+    next();
+  }
+});
+server.use((req, res, next) => {
   if (req.method === 'POST' && pathsToReturnWhenPost.indexOf(req.originalUrl) > -1) {
     req.method = 'GET';
     if (req.body.query) {

@@ -144,11 +144,12 @@ describe('The Find dojo vue ', () => {
     });
   });
 
-  it('should get coordinates from url', () => {
+  it('should get coordinates from url and fetch all dojos for map', () => {
     const vm = vueUnitHelper(cdFindDojo());
     vm.lat = 11;
     vm.long = 88;
     sandbox.stub(vm, 'getDojosByLatLong');
+    sandbox.stub(vm, 'getAllDojos');
 
     vm.$lifecycleMethods.created();
 
@@ -156,6 +157,20 @@ describe('The Find dojo vue ', () => {
     expect(vm.coordinates.latitude).to.equal(11);
     expect(vm.coordinates.longitude).to.equal(88);
     expect(vm.getDojosByLatLong).to.have.been.calledOnce;
+    expect(vm.getAllDojos).to.have.been.calledOnce;
+  });
+
+  it('should only get all Dojos when no coordinates from url', () => {
+    const vm = vueUnitHelper(cdFindDojo());
+    vm.lat = undefined;
+    vm.long = undefined;
+    sandbox.stub(vm, 'getDojosByLatLong');
+    sandbox.stub(vm, 'getAllDojos');
+
+    vm.$lifecycleMethods.created();
+
+    expect(vm.getDojosByLatLong).not.to.have.been.called;
+    expect(vm.getAllDojos).to.have.been.calledOnce;
   });
 
   it('should search dojo\'s by address', (done) => {
@@ -212,9 +227,60 @@ describe('The Find dojo vue ', () => {
 
     // ASSERT
     requestAnimationFrame(() => {
+      expect(vm.searchExecuted).to.equal(true);
       expect(vm.detectingLocation).to.equal(false);
       expect(vm.dojos).to.deep.equal(expectedDojosForLatLong);
       done();
+    });
+  });
+
+  describe('getAllDojos()', () => {
+    it('should load all Dojos', (done) => {
+      // ARRANGE
+      const DojoServiceMock = {
+        getDojos: sandbox.stub(),
+      };
+      DojoServiceMock.getDojos.withArgs({
+        verified: 1,
+        deleted: 0,
+        fields$: ['name', 'geo_point', 'stage', 'url_slug', 'private'],
+      }).returns(Promise.resolve({ body: expectedDojosForAddress }));
+      const FindDojoWithMocks = cdFindDojo({
+        './service': DojoServiceMock,
+      });
+      const vm = vueUnitHelper(FindDojoWithMocks);
+
+      // ACT
+      vm.getAllDojos();
+
+      // ASSERT
+      requestAnimationFrame(() => {
+        expect(vm.allDojos).to.deep.equal(expectedDojosForAddress);
+        done();
+      });
+    });
+  });
+
+  describe('computed.allActiveDojos', () => {
+    it('should filter out non-active dojos from allDojos', () => {
+      // ARRANGE
+      const FindDojoWithMocks = cdFindDojo();
+
+      const vm = vueUnitHelper(FindDojoWithMocks);
+      vm.allDojos = [
+        { name: 'Dojo1', stage: 1 },
+        { name: 'Dojo2', stage: 4 },
+        { name: 'Dojo3', stage: 2 },
+        { name: 'Dojo4', stage: 0 },
+        { name: 'Dojo5', stage: 4 },
+      ];
+
+      // ASSERT
+      expect(vm.allActiveDojos).to.deep.equal([
+        { name: 'Dojo1', stage: 1 },
+        { name: 'Dojo3', stage: 2 },
+        { name: 'Dojo4', stage: 0 },
+      ]);
     });
   });
 });

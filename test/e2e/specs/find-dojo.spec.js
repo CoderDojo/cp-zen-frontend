@@ -21,4 +21,13 @@ describe('Find Dojo page', () => {
     expect(dojosList[2].getText()).to.have.string('Dublin Ninja Kids');
     expect(DojoPage.map.isVisible()).to.equal(true);
   });
+
+  it('should show the no results message when there are no results', () => {
+    DojoPage.open();
+    DojoPage.addressSearchInput.waitForVisible();
+    DojoPage.addressSearchInput.setValue('Galway');
+    DojoPage.addressSearchButton.click();
+    DojoPage.noResultsMessage.waitForVisible();
+    expect(DojoPage.noResultsMessage.isVisible()).to.equal(true);
+  });
 });

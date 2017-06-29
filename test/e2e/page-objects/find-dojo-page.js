@@ -57,6 +57,11 @@ const DojoPage = Object.create(BasePage, {
       return $('.cd-find-dojo__results-map');
     },
   },
+  noResultsMessage: {
+    get() {
+      return $('.cd-find-dojo__no-results-message');
+    },
+  },
   open: {
     value() {
       return BasePage.open.call(this, '/v2/');
