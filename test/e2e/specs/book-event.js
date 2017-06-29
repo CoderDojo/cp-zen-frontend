@@ -80,7 +80,6 @@ describe('Book event page', () => {
     Booking.sessionTicketDayOfBirth(0).selectByValue('1');
     Booking.sessionTicketMonthOfBirth(0).selectByValue('0');
     Booking.sessionTicketYearOfBirth(0).selectByValue('2008');
-    Booking.sessionTicketEmailAddress[0].setValue('child@one.org');
     Booking.sessionTicketGender('Male')[0].click();
 
     expect(Booking.attendeeTypeHeader[2].getText()).to.equal('Laptop required (Arduino)');
@@ -89,15 +88,12 @@ describe('Book event page', () => {
     Booking.sessionTicketDayOfBirth(1).selectByValue('10');
     Booking.sessionTicketMonthOfBirth(1).selectByValue('9');
     Booking.sessionTicketYearOfBirth(1).selectByValue('2006');
-    Booking.sessionTicketEmailAddress[1].setValue('child@two.org');
     Booking.sessionTicketGender('Female')[1].click();
 
-    expect(Booking.dataUsageLink.isVisible()).to.be.true;
     expect(Booking.termsAndConditionsLink.isVisible()).to.be.true;
     Booking.password.setValue('Passw0rd');
     Booking.confirmPassword.setValue('Passw0rd');
     Booking.termsAndConditions.click();
-    Booking.dataConsent.click();
     Booking.checkRecaptcha();
 
     Booking.submitBookingButton.click();
@@ -118,16 +114,81 @@ describe('Book event page', () => {
     expect(BookingConfirmation.bookingFirstName[1].getText()).to.equal('Child');
     expect(BookingConfirmation.bookingLastName[1].getText()).to.equal('One');
     expect(BookingConfirmation.bookingDateOfBirth[1].getText()).to.equal('2008-01-01T00:00:00.000Z');
-    expect(BookingConfirmation.bookingEmailAddress[1].getText()).to.equal('child@one.org');
     expect(BookingConfirmation.bookingGender[1].getText()).to.equal('Male');
 
     expect(BookingConfirmation.bookingFirstName[2].getText()).to.equal('Child');
     expect(BookingConfirmation.bookingLastName[2].getText()).to.equal('Two');
     expect(BookingConfirmation.bookingDateOfBirth[2].getText()).to.equal('2006-10-10T00:00:00.000Z');
-    expect(BookingConfirmation.bookingEmailAddress[2].getText()).to.equal('child@two.org');
     expect(BookingConfirmation.bookingGender[2].getText()).to.equal('Female');
 
     expect(BookingConfirmation.bookingConfirmationMessage.getText()).to.equal('Your booking is completed successfully');
+  });
+
+  it('should show youth email input field when youth is booking', () => {
+    DojoPage.openDojoWithLatLong(10, 89);
+    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.eventViewButtons(0).click();
+
+    const now = new Date();
+    const turned13 = new Date(now.getFullYear() - 13, now.getMonth(), now.getDate(), 0, 0, 0, 0);
+
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue(turned13.getDate());
+    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue(turned13.getMonth());
+    EventDobVerificationPage.dateOfBirthYearInput.selectByValue(turned13.getFullYear());
+    EventDobVerificationPage.verify.click();
+
+    EventSessionsPage.ticketCounterIncrement(0).click();
+    EventSessionsPage.nextButton.click();
+
+    Booking.sessionTicketEmailAddress[0].waitForVisible();
+    Booking.firstName.setValue('John');
+    Booking.lastName.setValue('Doe');
+    Booking.dateOfBirthDayInput.selectByValue('27');
+    Booking.dateOfBirthMonthInput.selectByValue('3');
+    Booking.dateOfBirthYearInput.selectByValue('1980');
+    Booking.phoneNumber.setValue('1555123456');
+    Booking.email.setValue('john.doe@example.com');
+
+    Booking.sessionTicketFirstName[0].setValue('Child');
+    Booking.sessionTicketLastName[0].setValue('One');
+    Booking.sessionTicketDayOfBirth(0).selectByValue('1');
+    Booking.sessionTicketMonthOfBirth(0).selectByValue('0');
+    Booking.sessionTicketYearOfBirth(0).selectByValue('2008');
+    Booking.sessionTicketEmailAddress[0].setValue('child@one.org');
+    Booking.sessionTicketGender('Male')[0].click();
+
+    Booking.password.setValue('Passw0rd');
+    Booking.confirmPassword.setValue('Passw0rd');
+    Booking.termsAndConditions.click();
+    Booking.checkRecaptcha();
+
+    Booking.submitBookingButton.click();
+
+    BookingConfirmation.firstName.waitForVisible();
+
+    expect(BookingConfirmation.bookingEmailAddress[0].getText()).to.equal('child@one.org');
+  });
+
+  it('should not show youth email input field when parent is booking', () => {
+    DojoPage.openDojoWithLatLong(10, 89);
+    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.eventViewButtons(0).click();
+
+    const now = new Date();
+    const turned20 = new Date(now.getFullYear() - 20, now.getMonth(), now.getDate(), 0, 0, 0, 0);
+
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue(turned20.getDate());
+    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue(turned20.getMonth());
+    EventDobVerificationPage.dateOfBirthYearInput.selectByValue(turned20.getFullYear());
+    EventDobVerificationPage.verify.click();
+
+    EventSessionsPage.ticketCounterIncrement(1).click();
+    EventSessionsPage.ticketCounterIncrement(4).click();
+    EventSessionsPage.nextButton.click();
+
+    Booking.firstName.waitForVisible();
+
+    expect(Booking.sessionTicketEmailAddress[0]).to.equal(undefined);
   });
 
   it('should show the other gender', () => {
@@ -146,7 +207,6 @@ describe('Book event page', () => {
     Booking.sessionTicketDayOfBirth(0).selectByValue('1');
     Booking.sessionTicketMonthOfBirth(0).selectByValue('0');
     Booking.sessionTicketYearOfBirth(0).selectByValue('2008');
-    Booking.sessionTicketEmailAddress[0].setValue('child@one.org');
     Booking.sessionTicketGender('Other')[0].click();
     Booking.sessionOtherGender[0].setValue('another gender');
 
@@ -155,14 +215,12 @@ describe('Book event page', () => {
     Booking.sessionTicketDayOfBirth(1).selectByValue('10');
     Booking.sessionTicketMonthOfBirth(1).selectByValue('9');
     Booking.sessionTicketYearOfBirth(1).selectByValue('2006');
-    Booking.sessionTicketEmailAddress[1].setValue('child@two.org');
     Booking.sessionTicketGender('Female')[1].click();
 
     Booking.password.waitForVisible();
     Booking.password.setValue('Passw0rd');
     Booking.confirmPassword.setValue('Passw0rd');
     Booking.termsAndConditions.click();
-    Booking.dataConsent.click();
     Booking.checkRecaptcha();
 
     Booking.submitBookingButton.click();
@@ -195,7 +253,6 @@ describe('Book event page', () => {
     expect(Booking.passwordError.getText()).to.equal('The password field is required.');
     expect(Booking.confirmPasswordError.getText()).to.equal('The password confirmation field is required.');
     expect(Booking.termsAndConditionsError.getText()).to.equal('You must accept the terms and conditions before proceeding.');
-    expect(Booking.dataConsentError.getText()).to.equal('You must consent to the use of your data before proceeding.');
 
     Booking.password.setValue('foo');
     Booking.confirmPassword.setValue('foo');
@@ -348,11 +405,11 @@ describe('Book event page', () => {
     DojoDetailsPage.eventViewButtons(0).click();
 
     const now = new Date();
-    const turned13 = new Date(now.getFullYear() - 18, now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    const turned18 = new Date(now.getFullYear() - 18, now.getMonth(), now.getDate(), 0, 0, 0, 0);
 
-    EventDobVerificationPage.dateOfBirthDayInput.selectByValue(turned13.getDate());
-    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue(turned13.getMonth());
-    EventDobVerificationPage.dateOfBirthYearInput.selectByValue(turned13.getFullYear());
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue(turned18.getDate());
+    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue(turned18.getMonth());
+    EventDobVerificationPage.dateOfBirthYearInput.selectByValue(turned18.getFullYear());
 
     EventDobVerificationPage.verify.click();
 
