@@ -10,7 +10,7 @@
                         :placeholders="[$t('Date'), $t('Month'), $t('Year')]"
                         :proportions="[2, 2, 3]"></vue-dob-picker>
       </div>
-      <button @click="cancel" class="cd-event-dob-verification__cancel btn btn-primary">{{ $t('Cancel') }}</button>
+      <button @click="$router.back()" class="cd-event-dob-verification__cancel btn btn-primary">{{ $t('Cancel') }}</button>
       <input type="submit" class="cd-event-dob-verification__verify btn btn-primary" :value="$t('Verify')">
     </form>
   </div>
@@ -51,9 +51,6 @@
         StoreService.save('selected-event', this.eventDetails);
         StoreService.save('applicant-dob', this.date);
         this.$router.push({ name: 'EventSessions', params: { eventId: this.eventId } });
-      },
-      cancel() {
-        window.history.back();
       },
     },
     created() {

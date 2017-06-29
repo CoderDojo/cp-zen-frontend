@@ -32,24 +32,33 @@
       </div>
     </div>
     <div class="row">
-      <label class="cd-booking-create-account__label"><input type="checkbox"  name="termsConditionsAccepted" v-validate.initial="'required'"
+      <div class="cd-booking-create-account__label cd-booking-create-account__agreement">
+        <span class="cd-booking-create-account__agreement-left">
+          <input type="checkbox" name="termsConditionsAccepted" v-validate.initial="'required'"
                     v-model="termsConditionsAccepted"/>
-        <span v-html="$t('I agree with {openLinkTag}Terms & Conditions{closingLinkTag}', { openLinkTag: '<a class=\'cd-booking-create-account__terms-conditions-link\' href=\'https://zen.coderdojo.com/terms-and-conditions\'>', closingLinkTag: '</a>' })"></span>
-      </label>
+        </span>
+        <span class="cd-booking-create-account__agreement-right">
+          <span v-html="$t('I agree with {openLinkTag}Terms & Conditions{closingLinkTag}', { openLinkTag: '<a class=\'cd-booking-create-account__terms-conditions-link\' href=\'https://zen.coderdojo.com/terms-and-conditions\'>', closingLinkTag: '</a>' })"></span>
+        </span>
+      </div>
       <label class="text-danger cd-booking-create-account__terms-conditions-error"
              v-show="formValidated && errors.has('termsConditionsAccepted')">
-        {{ $t('You must accept the terms and conditions before proceeding.') }}
+          {{ $t('You must accept the terms and conditions before proceeding.') }}
       </label>
     </div>
     <div class="row">
-      <label class="cd-booking-create-account__label">
+      <div class="cd-booking-create-account__label cd-booking-create-account__agreement">
+        <span class="cd-booking-create-account__agreement-left">
         <input type="checkbox" name="dataConsentAccepted" id="consentData" v-validate.initial="'required'"
                v-model="dataConsentAccepted"/>
+        </span>
+        <span class="cd-booking-create-account__agreement-right">
         <span v-html="$t('I consent to the use of my data ({openLinkTag}Data policy{closingLinkTag})', { openLinkTag: '<a class=\'cd-booking-create-account__data-usage-link\' href=\'http://www.icecreammakesuhappy.ie/\'>', closingLinkTag: '</a>' })"></span>
-      </label>
+        </span>
+      </div>
       <label class="text-danger cd-booking-create-account__data-consent-error"
              v-show="formValidated && errors.has('dataConsentAccepted')">
-        {{ $t('You must consent to the use of your data before proceeding.') }}
+          {{ $t('You must consent to the use of your data before proceeding.') }}
       </label>
     </div>
     </div>
@@ -121,7 +130,6 @@
         forEachTicket(bookingData, (ticket) => {
           if (ticket.ticket.type === 'ninja') {
             const child = cloneDeep(ticket.user);
-            child.dob = new Date(child.dob.year, child.dob.month - 1, child.dob.date, 0, 0, 0, 0);
             promiseChain = promiseChain.then(() => UserService.addChild(child))
               .then((response) => {
                 ticket.user = response.body; // eslint-disable-line no-param-reassign
@@ -179,7 +187,6 @@
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
     &__recaptcha{
       margin-top: 33px;
-
     }
     &__header {
       background-color: #f4f5f6;
@@ -210,14 +217,52 @@
       margin-top: 4px;
       font-weight: 300;
     }
+    input[type=checkbox] {
+      width: 21px;
+      height: 21px;
+      position: relative;
+      margin-right:10px;
+      &:focus {
+        outline: 0;
+      }
+      &:after {
+        border-radius: 15%;
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0; right: 0;
+        bottom: 0; left: 0;
+        border: 1px solid #ccc;
+        background: white;
+        cursor: pointer;
+
+      }
+      &:hover:after, &:focus:after {
+        border-color: #000;
+      }
+      &:checked::after {
+        font-family: FontAwesome;
+        content: "\f00c";
+        text-align: center;
+        border-color: #000;
+      }
+    }
+    &__agreement {
+      display: flex;
+      &-left {
+        flex:0;
+      }
+      &-right {
+        padding-top: 3px;
+        flex:12;
+      }
+    }
   }
   .form-control[type=password] {
     width: 230px;
     display: inline-block;
     font-weight: 300;
-  }
-  .form-control[type=checkbox] {
-    box-shadow: none;
-
+    height: 36px;
+    color: black;
   }
 </style>
