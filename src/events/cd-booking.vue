@@ -46,7 +46,7 @@
           this.$refs.bookingParentFormRef.submitBooking();
           this.$refs.bookingCreateAccountRef.submitAccount()
             .then(() => {
-              this.$router.push(`/events/${this.eventId}/confirmation`);
+              this.$router.push({ name: 'EventBookingConfirmation', params: { eventId: this.eventId } });
             });
         }
       },

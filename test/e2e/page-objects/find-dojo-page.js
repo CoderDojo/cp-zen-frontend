@@ -59,12 +59,12 @@ const DojoPage = Object.create(BasePage, {
   },
   open: {
     value() {
-      return BasePage.open.call(this, '/');
+      return BasePage.open.call(this, '/v2/');
     },
   },
   openWithLatLong: {
     value(lat, long) {
-      return BasePage.open.call(this, `/${lat}/${long}`);
+      return BasePage.open.call(this, `/v2/${lat}/${long}`);
     },
   },
   openDojoWithLatLong: {

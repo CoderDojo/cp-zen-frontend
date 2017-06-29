@@ -50,7 +50,7 @@
         }
         StoreService.save('selected-event', this.eventDetails);
         StoreService.save('applicant-dob', this.date);
-        this.$router.push(`/events/${this.eventId}/sessions`);
+        this.$router.push({ name: 'EventSessions', params: { eventId: this.eventId } });
       },
       cancel() {
         window.history.back();

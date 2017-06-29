@@ -57,6 +57,7 @@ describe('Event DOB verification', () => {
       },
       eventDetails: mockEventData,
       date: mockDob,
+      eventId: 'foo',
     };
 
     vm.next.bind(data)();
@@ -65,7 +66,7 @@ describe('Event DOB verification', () => {
     expect(MockStoreService.save).to.be.calledTwice;
 
     expect(data.$router.push).to.be.calledOnce;
-    expect(data.$router.push).to.have.been.calledWith(`/events/${data.eventId}/sessions`);
+    expect(data.$router.push).to.have.been.calledWith({ name: 'EventSessions', params: { eventId: data.eventId } });
   });
 
   it('should allow adults', () => {
@@ -88,7 +89,7 @@ describe('Event DOB verification', () => {
     expect(MockStoreService.save).to.have.been.calledWith('selected-event', mockEventData);
 
     expect(vm.$router.push).to.be.calledOnce;
-    expect(vm.$router.push).to.have.been.calledWith(`/events/${vm.eventId}/sessions`);
+    expect(vm.$router.push).to.have.been.calledWith({ name: 'EventSessions', params: { eventId: vm.eventId } });
   });
 
   it('should allow someone who just turned 13', () => {
@@ -112,7 +113,7 @@ describe('Event DOB verification', () => {
     expect(MockStoreService.save).to.have.been.calledWith('selected-event', mockEventData);
 
     expect(vm.$router.push).to.be.calledOnce;
-    expect(vm.$router.push).to.have.been.calledWith(`/events/${vm.eventId}/sessions`);
+    expect(vm.$router.push).to.have.been.calledWith({ name: 'EventSessions', params: { eventId: vm.eventId } });
   });
 
   it('should not allow someone who is under 13', () => {
