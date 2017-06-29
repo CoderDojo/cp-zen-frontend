@@ -6,7 +6,7 @@
         <p class="cd-find-dojo__panel-form-info">{{ $t('Learn technology in an informal, creative and social environment. Find a dojo near you.') }}</p>
         <div class="cd-find-dojo__panel-form-search">
           <div class="cd-find-dojo__panel-form-search-input">
-            <input type="text" name="addressSearch" class="form-control input-lg" :placeholder="$t('Enter your city or locality')" v-model="searchCriteria">
+            <input type="text" name="addressSearch" class="form-control input-lg" :placeholder="$t('Enter your city or locality')" v-model="searchCriteria" autofocus>
           </div>
           <div class="cd-find-dojo__panel-form-search-submit">
             <input type="submit" class="btn btn-lg" :value="$t('Search Dojos')"/>
@@ -22,9 +22,12 @@
         <img src="../assets/characters/ninjas/ninja-female-2-laptop-sitting.svg" />
       </div>
     </div>
-    <div v-if="dojos.length > 0" class="cd-find-dojo__results">
-      <dojo-list class="cd-find-dojo__results-list" :dojos="dojos"></dojo-list>
-      <dojo-map :center="coordinates" class="cd-find-dojo__results-map" :dojos="dojos" style="width: 400px;height: 400px;"></dojo-map>
+    <div v-if="searchExecuted" class="cd-find-dojo__results">
+      <dojo-list v-if="dojos.length > 0" class="cd-find-dojo__results-list" :dojos="dojos"></dojo-list>
+      <h4 v-if="dojos.length === 0" class="cd-find-dojo__no-results-message">
+        {{ $t('Unfortunately there are no dojos in your area at the moment. Please search again or use the map to find the closest one.') }}
+      </h4>
+      <dojo-map :center="coordinates" class="cd-find-dojo__results-map" :dojos="allActiveDojos" style="width: 400px;height: 400px;"></dojo-map>
     </div>
   </div>
 
@@ -44,10 +47,17 @@
           latitude: null,
           longitude: null,
         },
+        searchExecuted: false,
         searchCriteria: null,
         dojos: [],
+        allDojos: [],
         detectingLocation: false,
       };
+    },
+    computed: {
+      allActiveDojos() {
+        return this.allDojos.filter(dojo => dojo.stage !== 4);
+      },
     },
     methods: {
       getCurrentLocation() {
@@ -61,6 +71,7 @@
         });
       },
       getDojosByLatLong() {
+        this.searchExecuted = true;
         DojosService.getDojosByLatLong(this.coordinates.latitude, this.coordinates.longitude)
           .then((response) => {
             this.detectingLocation = false;
@@ -74,6 +85,16 @@
             this.getDojosByLatLong();
           });
       },
+      getAllDojos() {
+        const query = {
+          verified: 1,
+          deleted: 0,
+          fields$: ['name', 'geo_point', 'stage', 'url_slug', 'private'],
+        };
+        DojosService.getDojos(query).then((response) => {
+          this.allDojos = response.body;
+        });
+      },
     },
     components: {
       DojoList,
@@ -85,6 +106,7 @@
         this.coordinates.longitude = this.long;
         this.getDojosByLatLong();
       }
+      this.getAllDojos();
     },
   };
 </script>
@@ -163,6 +185,10 @@
         flex: 5;
         padding-left: 16px;
       }
+    }
+
+    &__no-results-message {
+      flex: 7;
     }
   }
 </style>

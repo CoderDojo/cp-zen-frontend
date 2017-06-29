@@ -4,7 +4,7 @@ import GeolocationService from '@/geolocation/service';
 const radius = 50000;
 
 const DojosService = {
-  getDojos: () => Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos`),
+  getDojos: query => Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos`, { query }),
 
   getByUrlSlug(urlSlug) {
     return Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/find`,
