@@ -193,21 +193,6 @@ const BookingParentData = Object.create(EventDetails, {
       return $('.cd-booking-create-account__terms-conditions-error');
     },
   },
-  dataConsent: {
-    get() {
-      return $('input[name=dataConsentAccepted]');
-    },
-  },
-  dataConsentError: {
-    get() {
-      return $('.cd-booking-create-account__data-consent-error');
-    },
-  },
-  dataUsageLink: {
-    get() {
-      return $('.cd-booking-create-account__data-usage-link');
-    },
-  },
   termsAndConditionsLink: {
     get() {
       return $('.cd-booking-create-account__terms-conditions-link');

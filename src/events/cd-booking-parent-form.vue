@@ -38,12 +38,14 @@
                           id="dob" class="cd-booking-parent-form__child-dob"
                           show-labels="false" month-format="short"
                           :placeholders="['Date', 'Month', 'Year']"
-                          :proportions="[2, 2, 3]"></vue-dob-picker>
+                          :proportions="[7, 9, 9]"></vue-dob-picker>
         </div>
-        <label class="cd-booking-parent-form__label">
-          {{ $t('Email Address (optional)') }}
-        </label>
-        <input type="email" :placeholder="$t('Email address')" v-model="selectedTicket.user.email" class="cd-booking-parent-form__child-email form-control" />
+        <span v-if="isYouthOverThirteen">
+          <label class="cd-booking-parent-form__label">
+            {{ $t('Email Address (optional)') }}
+          </label>
+          <input type="email" :placeholder="$t('Email address')" v-model="selectedTicket.user.email" class="cd-booking-parent-form__child-email form-control" />
+        </span>
         <label class="cd-booking-parent-form__label">{{ $t('Gender') }}</label>
         <div class="cd-booking-parent-form__child-gender">
           <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Male" v-model="selectedTicket.user.gender" /><span> {{ $t('Male') }}</span></label>
@@ -63,6 +65,7 @@
   import moment from 'moment';
   import VueDobPicker from 'vue-dob-picker';
   import StoreService from '@/store/store-service';
+  import UsersUtil from '@/users/util';
 
   function getTicketsByType(tickets, type) {
     const matchedTickets = {};
@@ -90,6 +93,7 @@
       };
     },
     computed: {
+      isYouthOverThirteen: () => UsersUtil.isYouthOverThirteen(new Date(StoreService.load('applicant-dob'))),
       ninjaTickets() {
         return getTicketsByType(this.tickets, 'ninja');
       },
@@ -212,7 +216,7 @@
         font-weight: 300;
       }
       &-dob-wrapper {
-        max-width: 37%;
+        width: 266px;
       }
     }
     &__other {

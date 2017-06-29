@@ -9,58 +9,43 @@
       </div>
     </div>
     <div class="cd-booking-create-account__container">
-    <div class="row">
-      <label class="cd-booking-create-account__label" for="password">{{ $t('Password') }}</label>
-      <input type="password" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
-             v-validate.initial="'required|confirmed:confirmPassword|cd-password'" v-model="password"/>
-      <label class="text-danger cd-booking-create-account__password-error"
-             v-show="formValidated && errors.has('password')">{{ $t(errors.first('password')) }}</label>
-    </div>
-    <div class="row cd-booking-create-account__password-hint">
-      {{ $t('Password must be at least 8 characters with at least one numeric.') }}
-    </div>
-    <div class="row">
-      <label class="cd-booking-create-account__label" for="password">{{ $t('Confirm Password') }}</label>
-      <input type="password" class="form-control" placeholder="Password" name="confirmPassword" id="confirmPassword" data-vv-as="password confirmation"
-             v-validate.initial="'required'" v-model="confirmPassword"/>
-      <label class="text-danger cd-booking-create-account__password-confirmation-error"
-             v-show="formValidated && errors.has('confirmPassword')">{{ $t(errors.first('confirmPassword')) }}</label>
-    </div>
-    <div class="row">
-      <div class="cd-booking-create-account__recaptcha">
-        <vue-recaptcha :sitekey="recaptchaSiteKey" @verify="onRecaptchaVerify"></vue-recaptcha>
+      <div class="row">
+        <label class="cd-booking-create-account__label" for="password">{{ $t('Password') }}</label>
+        <input type="password" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
+               v-validate.initial="'required|confirmed:confirmPassword|cd-password'" v-model="password"/>
+        <label class="text-danger cd-booking-create-account__password-error"
+               v-show="formValidated && errors.has('password')">{{ $t(errors.first('password')) }}</label>
       </div>
-    </div>
-    <div class="row">
-      <div class="cd-booking-create-account__label cd-booking-create-account__agreement">
-        <span class="cd-booking-create-account__agreement-left">
-          <input type="checkbox" name="termsConditionsAccepted" v-validate.initial="'required'"
-                    v-model="termsConditionsAccepted"/>
-        </span>
-        <span class="cd-booking-create-account__agreement-right">
-          <span v-html="$t('I agree with {openLinkTag}Terms & Conditions{closingLinkTag}', { openLinkTag: '<a class=\'cd-booking-create-account__terms-conditions-link\' href=\'https://zen.coderdojo.com/terms-and-conditions\'>', closingLinkTag: '</a>' })"></span>
-        </span>
+      <div class="row cd-booking-create-account__password-hint">
+        {{ $t('Password must be at least 8 characters with at least one numeric.') }}
       </div>
-      <label class="text-danger cd-booking-create-account__terms-conditions-error"
-             v-show="formValidated && errors.has('termsConditionsAccepted')">
-          {{ $t('You must accept the terms and conditions before proceeding.') }}
-      </label>
-    </div>
-    <div class="row">
-      <div class="cd-booking-create-account__label cd-booking-create-account__agreement">
-        <span class="cd-booking-create-account__agreement-left">
-        <input type="checkbox" name="dataConsentAccepted" id="consentData" v-validate.initial="'required'"
-               v-model="dataConsentAccepted"/>
-        </span>
-        <span class="cd-booking-create-account__agreement-right">
-        <span v-html="$t('I consent to the use of my data ({openLinkTag}Data policy{closingLinkTag})', { openLinkTag: '<a class=\'cd-booking-create-account__data-usage-link\' href=\'http://www.icecreammakesuhappy.ie/\'>', closingLinkTag: '</a>' })"></span>
-        </span>
+      <div class="row">
+        <label class="cd-booking-create-account__label" for="password">{{ $t('Confirm Password') }}</label>
+        <input type="password" class="form-control" placeholder="Password" name="confirmPassword" id="confirmPassword" data-vv-as="password confirmation"
+               v-validate.initial="'required'" v-model="confirmPassword"/>
+        <label class="text-danger cd-booking-create-account__password-confirmation-error"
+               v-show="formValidated && errors.has('confirmPassword')">{{ $t(errors.first('confirmPassword')) }}</label>
       </div>
-      <label class="text-danger cd-booking-create-account__data-consent-error"
-             v-show="formValidated && errors.has('dataConsentAccepted')">
-          {{ $t('You must consent to the use of your data before proceeding.') }}
-      </label>
-    </div>
+      <div class="row">
+        <div class="cd-booking-create-account__recaptcha">
+          <vue-recaptcha :sitekey="recaptchaSiteKey" @verify="onRecaptchaVerify"></vue-recaptcha>
+        </div>
+      </div>
+      <div class="row">
+        <div class="cd-booking-create-account__label cd-booking-create-account__agreement">
+          <span class="cd-booking-create-account__agreement-left">
+            <input type="checkbox" name="termsConditionsAccepted" v-validate.initial="'required'"
+                      v-model="termsConditionsAccepted"/>
+          </span>
+          <span class="cd-booking-create-account__agreement-right">
+            <span v-html="$t('I agree with {openLinkTag}Terms & Conditions{closingLinkTag}', { openLinkTag: '<a class=\'cd-booking-create-account__terms-conditions-link\' href=\'https://zen.coderdojo.com/terms-and-conditions\'>', closingLinkTag: '</a>' })"></span>
+          </span>
+        </div>
+        <label class="text-danger cd-booking-create-account__terms-conditions-error"
+               v-show="formValidated && errors.has('termsConditionsAccepted')">
+            {{ $t('You must accept the terms and conditions before proceeding.') }}
+        </label>
+      </div>
     </div>
   </div>
 </template>
@@ -90,7 +75,6 @@
         password: null,
         confirmPassword: null,
         termsConditionsAccepted: false,
-        dataConsentAccepted: false,
         recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
         recaptchaResponse: null,
         formValidated: false,
