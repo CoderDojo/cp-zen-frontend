@@ -12,13 +12,7 @@ Vue.use(Router);
 
 export default new Router({
   mode: 'history',
-  base: '/v2',
   routes: [
-    {
-      path: '/',
-      name: 'FindDojo',
-      component: FindDojo,
-    },
     {
       path: '/dojos/:country([A-Za-z]{2})/:path+',
       name: 'DojoDetails',
@@ -26,41 +20,54 @@ export default new Router({
       props: true,
     },
     {
-      path: '/events/:eventId',
-      component: EventDetails,
-      props: true,
+      path: '/v2',
+      component: {
+        template: '<router-view></router-view>',
+      },
       children: [
         {
           path: '',
-          name: 'EventDobVerification',
-          component: EventDobVerification,
+          name: 'FindDojo',
+          component: FindDojo,
+        },
+        {
+          path: 'events/:eventId',
+          component: EventDetails,
+          props: true,
+          children: [
+            {
+              path: '',
+              name: 'EventDobVerification',
+              component: EventDobVerification,
+              props: true,
+            },
+            {
+              path: 'sessions',
+              name: 'EventSessions',
+              component: EventSessions,
+              props: true,
+            },
+            {
+              path: 'book',
+              name: 'EventBookingForm',
+              component: Booking,
+              props: true,
+            },
+          ],
+        },
+        {
+          path: 'events/:eventId/confirmation',
+          name: 'EventBookingConfirmation',
+          component: BookingConfirmation,
           props: true,
         },
         {
-          path: 'sessions',
-          name: 'EventSessions',
-          component: EventSessions,
-          props: true,
-        },
-        {
-          path: 'book',
-          name: 'EventBookingForm',
-          component: Booking,
+          path: ':lat/:long',
+          name: 'FindDojoWithLatAndLong',
+          component: FindDojo,
           props: true,
         },
       ],
-    },
-    {
-      path: '/events/:eventId/confirmation',
-      name: 'EventBookingConfirmation',
-      component: BookingConfirmation,
-      props: true,
-    },
-    {
-      path: '/:lat/:long',
-      name: 'FindDojoWithLatAndLong',
-      component: FindDojo,
-      props: true,
     },
   ],
 });

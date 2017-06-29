@@ -129,7 +129,7 @@ describe('Booking Page', () => {
       expect(vm.isValidChildForm).to.be.calledOnce;
       expect(MockBookingParentForm.submitBooking).to.be.calledOnce;
       expect(MockBookingCreateAccount.submitAccount).to.be.calledOnce;
-      expect(vm.$router.push).to.be.calledWith('/events/1/confirmation');
+      expect(vm.$router.push).to.be.calledWith({ name: 'EventBookingConfirmation', params: { eventId: vm.eventId } });
       done();
     });
   });

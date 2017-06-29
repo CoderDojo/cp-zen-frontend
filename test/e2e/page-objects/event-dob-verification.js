@@ -44,7 +44,7 @@ const EventDobVerification = Object.create(EventDetails, {
   },
   open: {
     value(eventId) {
-      return BasePage.open.call(this, `/events/${eventId}`);
+      return BasePage.open.call(this, `/v2/events/${eventId}`);
     },
   },
 
