@@ -77,18 +77,18 @@ describe('Book event page', () => {
     expect(Booking.attendeeTypeHeader[1].getText()).to.equal('Laptop required (Arduino)');
     Booking.sessionTicketFirstName[0].setValue('Child');
     Booking.sessionTicketLastName[0].setValue('One');
-    Booking.sessionTicketDayOfBirth[0].setValue('01');
-    Booking.sessionTicketMonthOfBirth[0].setValue('01');
-    Booking.sessionTicketYearOfBirth[0].setValue('2008');
+    Booking.sessionTicketDayOfBirth(0).selectByValue('1');
+    Booking.sessionTicketMonthOfBirth(0).selectByValue('0');
+    Booking.sessionTicketYearOfBirth(0).selectByValue('2008');
     Booking.sessionTicketEmailAddress[0].setValue('child@one.org');
     Booking.sessionTicketGender('Male')[0].click();
 
     expect(Booking.attendeeTypeHeader[2].getText()).to.equal('Laptop required (Arduino)');
     Booking.sessionTicketFirstName[1].setValue('Child');
     Booking.sessionTicketLastName[1].setValue('Two');
-    Booking.sessionTicketDayOfBirth[1].setValue('10');
-    Booking.sessionTicketMonthOfBirth[1].setValue('10');
-    Booking.sessionTicketYearOfBirth[1].setValue('2006');
+    Booking.sessionTicketDayOfBirth(1).selectByValue('10');
+    Booking.sessionTicketMonthOfBirth(1).selectByValue('9');
+    Booking.sessionTicketYearOfBirth(1).selectByValue('2006');
     Booking.sessionTicketEmailAddress[1].setValue('child@two.org');
     Booking.sessionTicketGender('Female')[1].click();
 
@@ -143,18 +143,18 @@ describe('Book event page', () => {
 
     Booking.sessionTicketFirstName[0].setValue('Child');
     Booking.sessionTicketLastName[0].setValue('One');
-    Booking.sessionTicketDayOfBirth[0].setValue('01');
-    Booking.sessionTicketMonthOfBirth[0].setValue('01');
-    Booking.sessionTicketYearOfBirth[0].setValue('2008');
+    Booking.sessionTicketDayOfBirth(0).selectByValue('1');
+    Booking.sessionTicketMonthOfBirth(0).selectByValue('0');
+    Booking.sessionTicketYearOfBirth(0).selectByValue('2008');
     Booking.sessionTicketEmailAddress[0].setValue('child@one.org');
     Booking.sessionTicketGender('Other')[0].click();
     Booking.sessionOtherGender[0].setValue('another gender');
 
     Booking.sessionTicketFirstName[1].setValue('Child');
     Booking.sessionTicketLastName[1].setValue('Two');
-    Booking.sessionTicketDayOfBirth[1].setValue('10');
-    Booking.sessionTicketMonthOfBirth[1].setValue('10');
-    Booking.sessionTicketYearOfBirth[1].setValue('2006');
+    Booking.sessionTicketDayOfBirth(1).selectByValue('10');
+    Booking.sessionTicketMonthOfBirth(1).selectByValue('9');
+    Booking.sessionTicketYearOfBirth(1).selectByValue('2006');
     Booking.sessionTicketEmailAddress[1].setValue('child@two.org');
     Booking.sessionTicketGender('Female')[1].click();
 
@@ -358,5 +358,11 @@ describe('Book event page', () => {
 
     expect(EventSessionsPage.eventSessions(0).getText()).contains('Parent');
     expect(EventSessionsPage.eventSessions(1).getText()).contains('Parent');
+  });
+
+  it('should allow modifying of selected tickets after they have been selected', () => {
+    startBooking();
+    Booking.modifyButton.click();
+    EventSessionsPage.sessionsHeader.waitForVisible();
   });
 });

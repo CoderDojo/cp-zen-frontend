@@ -131,18 +131,21 @@ const BookingParentData = Object.create(EventDetails, {
     },
   },
   sessionTicketDayOfBirth: {
-    get() {
-      return $$('.cd-booking-parent-form__child-dob-date');
+    value(index) {
+      let datePicker = $$('.cd-booking-parent-form__child-dob')[index];
+      return datePicker.$$('select')[0];
     },
   },
   sessionTicketMonthOfBirth: {
-    get() {
-      return $$('.cd-booking-parent-form__child-dob-month');
+    value(index) {
+      let datePicker = $$('.cd-booking-parent-form__child-dob')[index];
+      return datePicker.$$('select')[1];
     },
   },
   sessionTicketYearOfBirth: {
-    get() {
-      return $$('.cd-booking-parent-form__child-dob-year');
+    value(index) {
+      let datePicker = $$('.cd-booking-parent-form__child-dob')[index];
+      return datePicker.$$('select')[2];
     },
   },
   sessionTicketEmailAddress: {
@@ -220,6 +223,11 @@ const BookingParentData = Object.create(EventDetails, {
       browser.click('.recaptcha-checkbox');
       browser.waitForVisible('.recaptcha-checkbox[aria-checked="true"]');
       browser.frame();
+    },
+  },
+  modifyButton: {
+    get() {
+      return $('.cd-booking__modify');
     },
   },
 });

@@ -1,7 +1,6 @@
 <template>
   <div class="cd-event-sessions">
     <h1 class="cd-event-sessions__header">{{ $t('Select Event Tickets') }}</h1>
-
     <div class="cd-event-sessions__session" v-for="session in sessions">
       <h3 class="cd-event-sessions__name">{{ session.name }}</h3>
       <p class="cd-event-sessions__description">{{ session.description }}</p>

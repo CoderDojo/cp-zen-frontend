@@ -2,7 +2,12 @@
   <div class="cd-booking">
     <div class="cd-booking__attendee-heading">Attendee Information</div>
     <div class="cd-booking__ticket-box">
-      <div class="cd-booking__selected-tickets-heading">Selected Tickets</div>
+
+      <div class="cd-booking__header-container">
+        <div class="cd-booking__selected-tickets-heading">Selected Tickets</div>
+        <a class="cd-booking__modify" @click="$router.back()">Modify</a>
+      </div>
+
       <div class="row cd-booking__tickets" v-for="ticket in tickets">
         <span class="col-md-4">
          {{ticket.selectedTickets.length}} x {{ ticket.selectedTickets[0].ticket.name }}
@@ -23,7 +28,6 @@
   import StoreService from '@/store/store-service';
   import BookingParentForm from '@/events/cd-booking-parent-form';
   import BookingCreateAccount from '@/events/cd-booking-create-account';
-
 
   export default {
     name: 'Booking',
@@ -98,6 +102,18 @@
       border-radius: 4px;
       font-size: 16px;
       border: none;
+    }
+    &__header-container{
+      display: flex;
+    }
+    &__selected-tickets-heading {
+       flex: 1;
+    }
+    &__modify {
+      margin-right: 10px;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 </style>

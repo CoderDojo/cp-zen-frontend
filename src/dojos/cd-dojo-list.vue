@@ -5,7 +5,6 @@
   </div>
 </template>
 <script>
-  // import path from 'path';
   import DojoListItem from './cd-dojo-list-item';
 
   export default {

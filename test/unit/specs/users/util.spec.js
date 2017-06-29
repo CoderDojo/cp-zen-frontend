@@ -64,7 +64,7 @@ describe('User Utils', () => {
       // ACT + ASSERT
       expect(UserUtils.isYouthOverThirteen(dob)).to.be.false;
     });
-    it('should return false if given dob is under 13 years old years old', () => {
+    it('should return false if given dob is under 13 years old', () => {
       // ARRANGE
       const dob = new Date();
       dob.setFullYear(dob.getFullYear() - 12);

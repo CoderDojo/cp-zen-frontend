@@ -33,9 +33,13 @@
         <label class="cd-booking-parent-form__label">
           {{ $t('Date of Birth') }}
         </label>
-        <input type="text" :placeholder="$t('Date')" v-model="selectedTicket.user.dob.date" class="cd-booking-parent-form__child-dob-date form-control" />
-        <input type="text" :placeholder="$t('Month')" v-model="selectedTicket.user.dob.month" class="cd-booking-parent-form__child-dob-month form-control" />
-        <input type="text" :placeholder="$t('Year')" v-model="selectedTicket.user.dob.year" class="cd-booking-parent-form__child-dob-year form-control" />
+        <div class="cd-booking-parent-form__child-dob-wrapper">
+          <vue-dob-picker v-model="selectedTicket.user.dob" select-class="form-control"
+                          id="dob" class="cd-booking-parent-form__child-dob"
+                          show-labels="false" month-format="short"
+                          :placeholders="['Date', 'Month', 'Year']"
+                          :proportions="[2, 2, 3]"></vue-dob-picker>
+        </div>
         <label class="cd-booking-parent-form__label">
           {{ $t('Email Address (optional)') }}
         </label>
@@ -131,7 +135,7 @@
       Object.keys(this.bookedTickets).forEach((ticketId) => {
         const ticketData = this.bookedTickets[ticketId];
         ticketData.selectedTickets.forEach((selectedTicket) => {
-          selectedTicket.user = { dob: {} }; // eslint-disable-line no-param-reassign
+          selectedTicket.user = { dob: null }; // eslint-disable-line no-param-reassign
         });
       });
     },
@@ -148,7 +152,6 @@
       padding-bottom: 9px;
       border-bottom: solid 1px #bdc3c6;
     }
-
     &__label {
       margin-top: 32px;
       margin-bottom: 10px;
@@ -156,7 +159,6 @@
       font-weight: normal;
       display: block;
     }
-
     input[type=radio] {
       width: 20px;
       height: 20px;
@@ -183,40 +185,42 @@
        border-color: #000;
      }
     }
-
     &__parent-dob {
       width: 266px;
     }
-
-    &__child-gender-option{
-      display: flex;
-      align-items: center;
-      font-size: 14px;
-      height: 17px;
-      margin-bottom: 20px;
-      font-weight: normal;
-      span {
-        padding-left: 8px;
+    input[placeholder="First Name"] {
+      margin-right: 6px;
+    }
+    &__child {
+      &-gender-option {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        height: 17px;
+        margin-bottom: 20px;
+        font-weight: normal;
+        span {
+          padding-left: 8px;
+        }
+      }
+      &-first-name {
+        width: 170px !important;
+        font-weight: 300;
+      }
+      &-last-name{
+        width: 170px !important;
+        font-weight: 300;
+      }
+      &-dob-wrapper {
+        max-width: 37%;
       }
     }
-
-    &__child-first-name{
-       width: 170px !important;
-       font-weight: 300;
-    }
-
-    &__child-last-name{
-       width: 170px !important;
-       font-weight: 300;
-    }
-
     &__other {
       margin-bottom: 20px;
       margin-left: 20px;
       margin-top: -7px;
     }
   }
-
   .form-control[type=text], .form-control[type=email] {
     width: 230px;
     display: inline-block;
@@ -224,6 +228,8 @@
     font-size: 14px;
     text-align: left;
     font-weight: 300;
+    height: 36px;
+    color: black;
   }
   .form-control[name="firstName"], .form-control[name="lastName"]{
     width: 170px;

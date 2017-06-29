@@ -217,11 +217,7 @@ describe('Booking Create Account Form', () => {
               user: {
                 firstName: 'Fee',
                 lastName: 'Bar',
-                dob: {
-                  date: '1',
-                  month: '2',
-                  year: '2002',
-                },
+                dob: '2002-02-01T00:00:00.000Z',
                 gender: 'Female',
                 otherGender: '',
               },
@@ -234,11 +230,7 @@ describe('Booking Create Account Form', () => {
               user: {
                 firstName: 'Fie',
                 lastName: 'Bar',
-                dob: {
-                  date: '2',
-                  month: '3',
-                  year: '2010',
-                },
+                dob: '2010-03-02T00:00:00.000Z',
                 gender: 'Male',
                 otherGender: '',
               },
@@ -256,11 +248,7 @@ describe('Booking Create Account Form', () => {
               user: {
                 firstName: 'Foe',
                 lastName: 'Bar',
-                dob: {
-                  date: '3',
-                  month: '4',
-                  year: '2008',
-                },
+                dob: '2008-04-03T00:00:00.000Z',
                 gender: 'Other',
                 otherGender: 'Fluid',
               },
@@ -288,21 +276,21 @@ describe('Booking Create Account Form', () => {
         expect(MockUsersService.addChild.getCall(0).args[0]).to.deep.equal({
           firstName: 'Fee',
           lastName: 'Bar',
-          dob: new Date(2002, 1, 1, 0, 0, 0, 0),
+          dob: '2002-02-01T00:00:00.000Z',
           gender: 'Female',
           otherGender: '',
         });
         expect(MockUsersService.addChild.getCall(1).args[0]).to.deep.equal({
           firstName: 'Fie',
           lastName: 'Bar',
-          dob: new Date(2010, 2, 2, 0, 0, 0, 0),
+          dob: '2010-03-02T00:00:00.000Z',
           gender: 'Male',
           otherGender: '',
         });
         expect(MockUsersService.addChild.getCall(2).args[0]).to.deep.equal({
           firstName: 'Foe',
           lastName: 'Bar',
-          dob: new Date(2008, 3, 3, 0, 0, 0, 0),
+          dob: '2008-04-03T00:00:00.000Z',
           gender: 'Other',
           otherGender: 'Fluid',
         });

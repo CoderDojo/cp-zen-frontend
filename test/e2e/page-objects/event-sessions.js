@@ -42,6 +42,11 @@ const EventSessionsPage = Object.create(EventDetails, {
       return $$('.cd-number-spinner__decrement')[index];
     },
   },
+  sessionsHeader: {
+    get() {
+      return $('.cd-event-sessions__header');
+    },
+  },
 });
 
 module.exports = EventSessionsPage;
