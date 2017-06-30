@@ -14,6 +14,11 @@ export default new Router({
   mode: 'history',
   routes: [
     {
+      path: '/',
+      name: 'FindDojo',
+      component: FindDojo,
+    },
+    {
       path: '/dojos/:country([A-Za-z]{2})/:path+',
       name: 'DojoDetails',
       component: DojoDetails,
@@ -25,11 +30,6 @@ export default new Router({
         template: '<router-view></router-view>',
       },
       children: [
-        {
-          path: '',
-          name: 'FindDojo',
-          component: FindDojo,
-        },
         {
           path: 'events/:eventId',
           component: EventDetails,
@@ -68,6 +68,15 @@ export default new Router({
           props: true,
         },
       ],
+    },
+    {
+      path: '/:path+',
+      component: {
+        template: '<div></div>',
+        created() {
+          window.location.reload(true);
+        },
+      },
     },
   ],
 });

@@ -36,6 +36,16 @@ exports.register = function (server, options, next) {
     }
   });
 
+  server.route({
+    method: 'GET',
+    path: '/',
+    handler: {
+      file: {
+        path: __dirname + '/dist/index.html'
+      }
+    }
+  });
+
   next();
 };
 
