@@ -72,12 +72,12 @@ const DojoDetailsPage = Object.create(BasePage, {
   },
   twitter: {
     get() {
-      return $('.cd-dojo-details__twitter').getAttribute('href');;
+      return $('.cd-dojo-details__twitter').getAttribute('href');
     },
   },
   googleGroup: {
     get() {
-      return $('.cd-dojo-details__google-group').getAttribute('href');;
+      return $('.cd-dojo-details__google-group').getAttribute('href');
     },
   },
   errorMessage: {

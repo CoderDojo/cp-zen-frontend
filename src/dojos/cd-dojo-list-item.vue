@@ -1,7 +1,9 @@
 <template>
   <div class="cd-dojo-list-item media">
     <div class="media-left">
-      <img v-img-fallback="{src: imageUrl, fallback: loadImage}" class="img-circle cd-dojo-list-item__dojo-image"/>
+      <router-link :to="detailsPageUrl">
+        <img v-img-fallback="{src: imageUrl, fallback: loadImage}" class="img-circle cd-dojo-list-item__dojo-image"/>
+      </router-link>
     </div>
     <div class="media-body">
       <h4 class="media-heading">
@@ -9,8 +11,8 @@
           {{dojo.name}} ({{ $t(privacy) }})
         </router-link>
       </h4>
-      <p>{{dojo.address1}}</p>
-      <p>{{dojo.time}}</p>
+      <p class="cd-dojo-list-item__meta">{{dojo.address1}}</p>
+      <p class="cd-dojo-list-item__meta">{{dojo.time}}</p>
     </div>
   </div>
 </template>
@@ -44,9 +46,16 @@
 <style scoped lang="less">
 
   .cd-dojo-list-item {
+    margin: 32px 0;
+
     &__dojo-image {
       width: 42px;
       height: 42px;
+    }
+
+    &__meta {
+      font-size: 16px;
+      margin-bottom: 0;
     }
   }
 

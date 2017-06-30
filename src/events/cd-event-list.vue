@@ -8,7 +8,7 @@
             {{ event.name }}
           </h3>
           <h4 class="cd-event-list__event-sessions">
-            {{ $t('Sessions') }}: {{ getSessionListForEvent(event) }}
+            <strong>{{ $t('Sessions') }}:</strong> {{ getSessionListForEvent(event) }}
           </h4>
         </header>
         <ul class="cd-event-list__datetime">
@@ -66,10 +66,12 @@
 
   .cd-event-list {
     &__header {
-      color: @cd-purple;
+      color: @cd-black;
       font-size: 18px;
-      text-transform: uppercase;
       margin: 45px 0 16px 0;
+      font-weight: bold;
+      border-bottom: 1px solid #bebebe;
+      padding-bottom: 8px;
     }
 
     &__event {
@@ -95,7 +97,7 @@
       &-sessions {
         font-size: 16px;
         color: #7b8082;
-        margin: 4px 0;
+        margin: 8px 0;
       }
 
       &-date, &-times {

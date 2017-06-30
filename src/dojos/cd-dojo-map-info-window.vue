@@ -26,6 +26,7 @@
     }
 
     p {
+      font-size: 14px;
       margin: 0 0 4px;
     }
   }
