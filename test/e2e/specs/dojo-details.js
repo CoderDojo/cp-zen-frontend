@@ -25,12 +25,6 @@ describe('Dojo details page', () => {
     const address = DojoDetailsPage.address.getText();
     expect(address).to.equal('CHQ Building,1 Custom House Quay, North Dock, Dublin, Ireland');
 
-    const detailsLabel = DojoDetailsPage.detailsLabel.getText();
-    expect(detailsLabel).to.equal('DETAILS');
-
-    const details = DojoDetailsPage.details.getHTML(false);
-    expect(details).to.equal('<p>This is the Dojo details section</p>\n');
-
     const emailLabel = DojoDetailsPage.emailLabel.getText();
     expect(emailLabel).to.equal('EMAIL');
 
@@ -50,7 +44,13 @@ describe('Dojo details page', () => {
     expect(twitter).to.equal('https://twitter.com/CoderDojo');
 
     const googleGroup = DojoDetailsPage.googleGroup;
-    expect(googleGroup).to.equal('mailto:dublinninjakids@google.group.com');
+    expect(googleGroup).to.equal('https://google.group.com/dublinninjakids');
+
+    const detailsLabel = DojoDetailsPage.detailsLabel.getText();
+    expect(detailsLabel).to.equal('Details');
+
+    const details = DojoDetailsPage.details.getHTML(false);
+    expect(details).to.equal('<p>This is the Dojo details section</p>\n');
   });
 
   it('should show dojo\'s events', () => {

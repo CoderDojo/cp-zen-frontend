@@ -9,13 +9,13 @@
             <input type="text" name="addressSearch" class="form-control input-lg" :placeholder="$t('Enter your city or locality')" v-model="searchCriteria" autofocus>
           </div>
           <div class="cd-find-dojo__panel-form-search-submit">
-            <input type="submit" class="btn btn-lg" :value="$t('Search Dojos')"/>
+            <input type="submit" class="btn btn-lg" :value="$t('Search for Dojos')"/>
           </div>
         </div>
         <button @click.prevent="getCurrentLocation" class="cd-find-dojo__panel-form-detect-location">
           <i class="fa fa-location-arrow" aria-hidden="true" v-show="!detectingLocation"></i>
           <i class="fa fa-spinner fa-spin" aria-hidden="true" v-show="detectingLocation"></i>
-          {{ $t('Detect My Location') }}
+          {{ $t('Detect my location') }}
         </button>
       </form>
       <div class="cd-find-dojo__panel-illustration">
@@ -122,16 +122,18 @@
 
       &-form {
         flex: 3;
-        padding: 64px 32px;
+        padding: 64px 32px 96px;
 
         &-header {
           font-size: 40px;
           font-weight: 300;
+          margin-bottom: 4px;
         }
 
         &-info {
           font-size: 18px;
           font-weight: 300;
+          margin-bottom: 32px;
         }
 
         &-search {
@@ -148,6 +150,11 @@
             flex: 1;
             > .btn {
               background: #2a8244;
+
+              &:hover {
+                background: #154c25;
+                color: @cd-white;
+              }
             }
           }
         }
@@ -172,6 +179,9 @@
         align-self: flex-end;
         padding: 0 32px;
         transform: rotateY(180deg) translateY(15%);
+        img {
+          max-width: 240px;
+        }
       }
     }
     &__results {

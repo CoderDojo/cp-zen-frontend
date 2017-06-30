@@ -2,13 +2,11 @@
   <div>
     <div class="row">
       <div class="cd-dojo-details__banner col-sm-12">
-          <div class="col-sm-1 headerContent">
+          <div>
             <img v-if="dojoDetails.id" v-img-fallback="{src: imageUrl, fallback: loadImage}"
                  class="img-circle cd-dojo-details__dojo-image"/>
           </div>
-          <div class="col-sm-11 headerContent">
-            <div class="cd-dojo-details__name align-middle">{{ dojoDetails.name}}</div>
-          </div>
+          <div class="cd-dojo-details__name align-middle">{{ dojoDetails.name}}</div>
         </div>
     </div>
     <div class="cd-dojo-details__container">
@@ -34,7 +32,9 @@
             <div class="fa fa-envelope-o col-md-1" aria-hidden="true"></div>
             <div class="col-md-11 purple_label">{{ $t('Email') }}</div>
           </div>
-          <div class="cd-dojo-details__email col-md-12">{{dojoDetails.email}}</div>
+          <div class="cd-dojo-details__email col-md-12">
+            <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
+          </div>
         </div>
 
         <div class="row cd-dojo-details__section">
@@ -46,9 +46,9 @@
         </div>
 
         <div class="row cd-dojo-details__social-media-section col-md-12">
-            <a v-if="dojoDetails.facebook" class="fa fa-facebook-square cd-dojo-details__facebook sm-icon" :href="dojoDetails.facebook">&nbsp;</a>
-            <a v-if="dojoDetails.twitter" class="fa fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="dojoDetails.twitter"></a>
-            <a v-if="dojoDetails.googleGroup" class="fa fa-google cd-dojo-details__google-group sm-icon" aria-hidden="true" :href="'mailto:' + dojoDetails.googleGroup"></a>
+            <a v-if="dojoDetails.facebook" class="fa fa-2x fa-facebook-square cd-dojo-details__facebook sm-icon" :href="dojoDetails.facebook"></a>
+            <a v-if="dojoDetails.twitter" class="fa fa-2x fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="dojoDetails.twitter"></a>
+            <a v-if="dojoDetails.googleGroup" class="fa fa-2x fa-google cd-dojo-details__google-group sm-icon" aria-hidden="true" :href="dojoDetails.googleGroup"></a>
         </div>
       </div>
 
@@ -129,11 +129,17 @@
 
     &__banner {
       background-color: @cd-purple;
+      padding: 0 32px;
+      min-height: 108px;
+      display: flex;
+      align-items: center;
     }
 
     &__name {
       font-size: 30px;
       color: @cd-white;
+      margin-left: 16px;
+      padding: 16px 0;
     }
 
     &__left_column {
@@ -166,9 +172,8 @@
       margin-top: 32px;
 
      .sm-icon {
-        text-decoration: none;
-        margin-right: 14px;
-        font-size: 18px;
+       text-decoration: none;
+       margin-right: 16px;
      }
 
       .fa-facebook-square {
@@ -185,9 +190,12 @@
     }
 
     &__details-label {
+      color: #000;
       font-size: 18px;
-      color: @cd-purple;
-      text-transform: uppercase;
+      margin: 45px 0 16px 0;
+      font-weight: bold;
+      border-bottom: 1px solid #bebebe;
+      padding-bottom: 8px;
     }
   }
 

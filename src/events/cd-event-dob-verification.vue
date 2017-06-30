@@ -2,7 +2,7 @@
   <div class="cd-event-dob-verification">
     <form @submit.prevent="next">
       <h2 v-if="isDobUnderage" class="cd-event-dob-verification__dob-error">{{ $t('You will need your parent to carry out the registration.') }}</h2>
-      <label class="cd-event-dob-verification__verify-age-message">{{ $t('To continue, we need to verify your age.') }}</label>
+      <label class="cd-event-dob-verification__verify-age-message">{{ $t('Please verify your age') }}</label>
       <label class="cd-event-dob-verification__dob-input-label" for="dob">{{ $t('Enter your Date of Birth') }}</label>
       <div class="cd-event-dob-verification__dob-picker-wrapper">
         <vue-dob-picker v-model="date" select-class="form-control" id="dob" class="cd-event-dob-verification__dob"
@@ -63,12 +63,14 @@
     &__verify-age-message {
       display: block;
       margin-bottom: 30px;
-      font-size: 16px;
+      font-size: 24px;
       margin-top: 45px;
+      font-weight: bold;
     }
     &__dob-input-label {
       font-size: 16px;
-      margin-bottom: 9px;
+      margin-bottom: 8px;
+      font-weight: normal;
     }
     &__verify {
       margin-top: 60px;

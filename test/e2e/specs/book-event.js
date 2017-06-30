@@ -36,7 +36,7 @@ function startBooking() {
   DojoDetailsPage.name.waitForVisible();
   DojoDetailsPage.eventViewButtons(0).click();
 
-  expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('To continue, we need to verify your age.');
+  expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('Please verify your age');
   expect(EventDobVerificationPage.dobInputLabel.getText()).to.equal('Enter your Date of Birth');
 
   EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
@@ -317,7 +317,7 @@ describe('Book event page', () => {
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.eventViewButtons(1).click();
 
-    expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('To continue, we need to verify your age.');
+    expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('Please verify your age');
     expect(EventDobVerificationPage.dobInputLabel.getText()).to.equal('Enter your Date of Birth');
     checkRecurringEventDetails(EventDobVerificationPage);
 
@@ -340,7 +340,7 @@ describe('Book event page', () => {
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.eventViewButtons(0).click();
 
-    expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('To continue, we need to verify your age.');
+    expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('Please verify your age');
     expect(EventDobVerificationPage.dobInputLabel.getText()).to.equal('Enter your Date of Birth');
     checkEventDetails(EventDobVerificationPage);
 

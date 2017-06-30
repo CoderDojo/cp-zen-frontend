@@ -33,7 +33,7 @@ const DojoPage = Object.create(BasePage, {
   },
   addressSearchButton: {
     get() {
-      return $('input[value="Search Dojos"]');
+      return $('input[value="Search for Dojos"]');
     },
   },
   dojoListItems: {

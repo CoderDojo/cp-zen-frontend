@@ -114,14 +114,20 @@
       background-color: @cd-purple;
       color: white;
       text-align: center;
+      min-height: 108px;
+      display: flex;
+      align-items: center;
     }
     &__book-event-title {
       font-size: 30px;
-      margin-top: 20px;
+      line-height: 30px;
+      margin: 16px 0 8px 0;
     }
     &__event-title {
       font-size: 18px;
-      margin-bottom: 25px;
+      line-height: 18px;
+      margin: 8px 0 16px 0;
+      font-weight: bold;
     }
     &__container {
        display: flex;
