@@ -104,6 +104,24 @@ describe('Dojos Service', () => {
     });
   });
 
+  describe('findDojoById', () => {
+    it('should load dojo by ID', (done) => {
+      const id = '3ed47c6d-a689-46a0-883b-1f3fd46e9c77';
+      const expectedDojo = {
+        id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+        name: 'Dublin Ninja Kids',
+      };
+
+      const getMock = sandbox.stub(Vue.http, 'get');
+      getMock.withArgs(`${Vue.config.apiServer}/api/2.0/dojos/${id}`).returns(Promise.resolve({ body: expectedDojo }));
+
+      DojosServiceWithMocks.getDojoById(id).then((res) => {
+        expect(res.body).to.deep.equal(expectedDojo);
+        done();
+      });
+    });
+  });
+
   describe('joinDojo', () => {
     it('should join a user to a dojo, based off userId, dojoId and roles', (done) => {
       // ARRANGE

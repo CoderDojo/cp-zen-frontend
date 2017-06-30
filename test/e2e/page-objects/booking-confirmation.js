@@ -36,9 +36,44 @@ const BookingConfirmation = Object.create(BasePage, {
       return $('.cd-booking-confirmation__booking-confirmation');
     },
   },
+  joinedDojoConfirmation: {
+    get() {
+      return $('.cd-booking-confirmation__joined-dojo-confirmation');
+    },
+  },
+  dojoName: {
+    get() {
+      return $('.cd-booking-confirmation__dojo-name');
+    },
+  },
+  eventName: {
+    get() {
+      return $('.cd-booking-confirmation__event-name');
+    },
+  },
+  eventLocation: {
+    get() {
+      return $('.cd-booking-confirmation__event-location');
+    },
+  },
+  eventDescription: {
+    get() {
+      return $('.cd-booking-confirmation__event-description');
+    },
+  },
   bookingTicketName: {
     get() {
       return $$('.cd-booking-confirmation__booking-ticket-name');
+    },
+  },
+  bookingTicketType: {
+    get() {
+      return $$('.cd-booking-confirmation__booking-ticket-type');
+    },
+  },
+  bookingTicketSessionName: {
+    get() {
+      return $$('.cd-booking-confirmation__booking-ticket-session-name');
     },
   },
   bookingFirstName: {

@@ -101,27 +101,41 @@ describe('Book event page', () => {
     BookingConfirmation.firstName.waitForVisible();
 
     expect(BookingConfirmation.accountCreationConfirmation.getText()).to.equal('Account created');
+    expect(BookingConfirmation.joinedDojoConfirmation.getText()).to.equal('Dojo joined successfully')
+    expect(BookingConfirmation.dojoName.getText()).to.equal('Dublin Ninja Kids');
+
+    expect(BookingConfirmation.bookingConfirmationMessage.getText()).to.equal('Your booking is completed successfully');
+
     expect(BookingConfirmation.firstName.getText()).to.equal('John');
     expect(BookingConfirmation.lastName.getText()).to.equal('Doe');
     expect(BookingConfirmation.dateOfBirth.getText()).to.equal('1980-04-27T00:00:00.000Z');
     expect(BookingConfirmation.phoneNumber.getText()).to.equal('1555123456');
     expect(BookingConfirmation.email.getText()).to.equal('john.doe@example.com');
 
+    expect(BookingConfirmation.eventName.getText()).to.equal('My First Amazing Event');
+    expect(BookingConfirmation.eventLocation.getText()).to.equal('CHQ');
+    expect(BookingConfirmation.eventDescription.getText()).to.equal('LEARN ALL THE THINGS');
+
+    expect(BookingConfirmation.bookingTicketSessionName[0].getText()).to.equal('Scratch');
+    expect(BookingConfirmation.bookingTicketType[0].getText()).to.equal('parent-guardian');
     expect(BookingConfirmation.bookingFirstName[0].getText()).to.equal('John');
     expect(BookingConfirmation.bookingLastName[0].getText()).to.equal('Doe');
     expect(BookingConfirmation.bookingEmailAddress[0].getText()).to.equal('john.doe@example.com');
 
+    expect(BookingConfirmation.bookingTicketSessionName[1].getText()).to.equal('Arduino');
+    expect(BookingConfirmation.bookingTicketType[1].getText()).to.equal('ninja');
     expect(BookingConfirmation.bookingFirstName[1].getText()).to.equal('Child');
     expect(BookingConfirmation.bookingLastName[1].getText()).to.equal('One');
     expect(BookingConfirmation.bookingDateOfBirth[1].getText()).to.equal('2008-01-01T00:00:00.000Z');
     expect(BookingConfirmation.bookingGender[1].getText()).to.equal('Male');
 
+    expect(BookingConfirmation.bookingTicketSessionName[2].getText()).to.equal('Arduino');
+    expect(BookingConfirmation.bookingTicketType[2].getText()).to.equal('ninja');
     expect(BookingConfirmation.bookingFirstName[2].getText()).to.equal('Child');
     expect(BookingConfirmation.bookingLastName[2].getText()).to.equal('Two');
     expect(BookingConfirmation.bookingDateOfBirth[2].getText()).to.equal('2006-10-10T00:00:00.000Z');
     expect(BookingConfirmation.bookingGender[2].getText()).to.equal('Female');
 
-    expect(BookingConfirmation.bookingConfirmationMessage.getText()).to.equal('Your booking is completed successfully');
   });
 
   it('should show youth email input field when youth is booking', () => {
