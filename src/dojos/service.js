@@ -6,6 +6,8 @@ const radius = 50000;
 const DojosService = {
   getDojos: query => Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos`, { query }),
 
+  getDojoById: id => Vue.http.get(`${Vue.config.apiServer}/api/2.0/dojos/${id}`),
+
   getByUrlSlug(urlSlug) {
     return Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/find`,
       {
@@ -20,7 +22,6 @@ const DojosService = {
       radius,
     },
   }),
-
   getDojosByAddress(address) {
     return GeolocationService.getIpCountryDetails()
       .then(response => GeolocationService.geocode({
@@ -33,7 +34,6 @@ const DojosService = {
         return this.getDojosByLatLong(lat, long);
       });
   },
-
   joinDojo(userId, dojoId, userTypes) {
     return Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/save-usersdojos`, {
       userDojo: {
