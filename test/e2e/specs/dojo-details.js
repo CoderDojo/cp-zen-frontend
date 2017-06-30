@@ -51,6 +51,11 @@ describe('Dojo details page', () => {
 
     const details = DojoDetailsPage.details.getHTML(false);
     expect(details).to.equal('<p>This is the Dojo details section</p>\n');
+
+    const sponsorLabel = DojoDetailsPage.sponsorHeading.getText();
+    expect(sponsorLabel).to.equal('Dojo supported by');
+
+    DojoDetailsPage.sponsorImage.waitForVisible();
   });
 
   it('should show dojo\'s events', () => {

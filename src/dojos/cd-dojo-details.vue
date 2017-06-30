@@ -51,14 +51,18 @@
             <a v-if="dojoDetails.googleGroup" class="fa fa-2x fa-google cd-dojo-details__google-group sm-icon" aria-hidden="true" :href="dojoDetails.googleGroup"></a>
         </div>
       </div>
-
       <div class="cd-dojo-details__main_content">
         <events-list v-if="dojoDetails.id" v-bind:dojoId="dojoDetails.id"></events-list>
         <div class="cd-dojo-details__details-label">{{ $t('Details') }}</div>
         <div class="cd-dojo-details__details" v-html="dojoDetails.notes"></div>
+        <div v-if="dojoDetails.supporterImage" class="cd-dojo-details__sponsor_heading">
+          {{ $t('Dojo supported by') }}
+        </div>
+        <div>
+          <img v-if="dojoDetails.supporterImage" class="cd-dojo-details__sponsor_image" :src="dojoDetails.supporterImage"/>
+        </div>
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -196,6 +200,21 @@
       font-weight: bold;
       border-bottom: 1px solid #bebebe;
       padding-bottom: 8px;
+    }
+
+    &__sponsor {
+      &_heading {
+        color: #000;
+        font-size: 18px;
+        margin: 45px 0 24px 0;
+        font-weight: bold;
+        border-bottom: 1px solid #bebebe;
+        padding-bottom: 8px;
+      }
+      &_image {
+        max-width: 360px;
+        max-height: 360px;
+      }
     }
   }
 

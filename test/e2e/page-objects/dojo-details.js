@@ -45,6 +45,16 @@ const DojoDetailsPage = Object.create(BasePage, {
       return $('.cd-dojo-details__details');
     },
   },
+  sponsorHeading: {
+    get() {
+      return $('.cd-dojo-details__sponsor_heading');
+    },
+  },
+  sponsorImage: {
+    get() {
+      return $('.cd-dojo-details__sponsor_image');
+    },
+  },
   emailLabel: {
     get() {
       return $('.cd-dojo-details__email-label');

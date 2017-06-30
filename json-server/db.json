@@ -20,7 +20,8 @@
       "notes": "<h2>Suggested Notes:<br />\n<br />\nPlease bring:</h2>\n\n<ul>\n\t<li>\n\t<h2>A laptop. Borrow one from somebody if needs be.</h2>\n\t</li>\n\t<li>\n\t<h2><strong>A parent! (Very important). If you are 12 or under, your parent must stay with you during the session.</strong></h2>\n\t</li>\n</ul>\n\n<h2>&nbsp;</h2>\n",
       "placeName": "Dublin",
       "time": "Sunday 10am",
-      "website": null
+      "website": null,
+      "supporterImage": "http://www.xconomy.com/wordpress/wp-content/images/2013/01/dogpatch-labs-logo.png"
     },
     {
       "entity$": "-/cd/dojos",
@@ -42,7 +43,8 @@
       "notes": "<p>Suggested Notes:<br />\n<br />\nPlease bring:</p>\n\n<ul>\n\t<li>\n\t<p>A laptop. Borrow one from somebody if needs be.</p>\n\t</li>\n\t<li>\n\t<p><strong>A parent! (Very important). If you are 12 or under, your parent must stay with you during the session.</strong></p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n",
       "placeName": "Smithfield",
       "time": "Saturdays, 5-7pm",
-      "website": null
+      "website": null,
+      "supporterImage": "http://www.xconomy.com/wordpress/wp-content/images/2013/01/dogpatch-labs-logo.png"
     },
     {
       "entity$": "-/cd/dojos",
@@ -64,7 +66,8 @@
       "notes": "<p>This is the Dojo details section</p>\n",
       "placeName": "Dublin",
       "time": "Saturdays 11 am - 1 pm",
-      "website": "www.dublinninjakids.com"
+      "website": "www.dublinninjakids.com",
+      "supporterImage": "http://www.xconomy.com/wordpress/wp-content/images/2013/01/dogpatch-labs-logo.png"
     }
   ],
   "events": [
