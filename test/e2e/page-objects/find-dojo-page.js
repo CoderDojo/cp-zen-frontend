@@ -73,9 +73,9 @@ const DojoPage = Object.create(BasePage, {
     },
   },
   openDojoWithLatLong: {
-    value(lat, long) {
+    value(lat, long, index = 2) {
       this.openWithLatLong(lat, long);
-      this.dojoListItems[2].click();
+      this.dojoListItems[index].click();
     },
   },
 });

@@ -95,6 +95,16 @@ const DojoDetailsPage = Object.create(InfoColumn, {
       return $('.cd-dojo-details__error-message');
     },
   },
+  noEventsHeader: {
+    get() {
+      return $('.cd-event-list__no-events-header');
+    },
+  },
+  noEventsContent: {
+    get() {
+      return $('.cd-event-list__no-events-content');
+    },
+  },
   eventNames: {
     value(index) {
       return $$('.cd-event-list__event-name')[index];

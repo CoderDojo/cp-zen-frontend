@@ -41,7 +41,7 @@ describe('Event list component', () => {
 
     const EventListWithMock = setUpEventListComponentWithMockEvents(mockEventDataResponse);
     const vm = new Vue(EventListWithMock);
-    vm.dojoId = '3ed47c6d-a689-46a0-883b-1f3fd46e9c77';
+    vm.dojo = { id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77' };
     vm.loadEvents();
     requestAnimationFrame(() => {
       expect(vm.events).to.deep.equal(mockEventDataResponse);
