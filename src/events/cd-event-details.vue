@@ -7,47 +7,29 @@
       </div>
     </div>
     <div class="cd-event-details__container">
-      <div class="cd-event-details__left-column">
-        <div class="cd-event-details__left-column-section">
-          <div class="row">
-            <div class="fa fa-clock-o cd-event-details__left-column-section-icon col-md-1"></div>
-            <div class="cd-event-details__left-column-section-heading col-md-11">
-              {{ $t('Time') }}
-            </div>
+      <info-column class="cd-event-details__left-column">
+        <info-column-section icon="clock-o" :header="$t('Time')">
+          <div v-if="!isRecurring()" class="cd-event-details__left-column-section-value">
+            {{ eventDetails.dates[0].startTime |  cdDateFormatter }}
           </div>
-          <div class="row">
-            <div v-if="!isRecurring()" class="cd-event-details__left-column-section-value col-md-12">
-              {{ eventDetails.dates[0].startTime |  cdDateFormatter }}
-            </div>
-            <div v-else class="cd-event-details__left-column-section-value col-md-12">
-              {{ $t('Next in series:') }} <span class="cd-event-details__left-column-section-value-next-session">{{ getNextStartTime() |  cdDateFormatter }}</span>
-            </div>
+          <div v-else class="cd-event-details__left-column-section-value">
+            {{ $t('Next in series:') }} <span class="cd-event-details__left-column-section-value-next-session">{{ getNextStartTime() |  cdDateFormatter }}</span>
           </div>
-          <div class="row">
-            <div class="cd-event-details__left-column-section-value col-md-12">
-              {{ eventDetails.dates[0].startTime | cdTimeFormatter }} - {{ eventDetails.dates[0].endTime | cdTimeFormatter }}
-            </div>
+          <div class="cd-event-details__left-column-section-value">
+            {{ eventDetails.dates[0].startTime | cdTimeFormatter }} - {{ eventDetails.dates[0].endTime | cdTimeFormatter }}
           </div>
-          <div v-if="isRecurring()" class="row cd-event-details__left-column-section-value-frequency">
-            <div class="cd-event-details__left-column-section-value col-md-12">
+          <div v-if="isRecurring()" class="cd-event-details__left-column-section-value-frequency">
+            <div class="cd-event-details__left-column-section-value">
               {{ buildRecurringFrequencyInfo() }}
             </div>
           </div>
-        </div>
-        <div class="cd-event-details__left-column-section">
-          <div class="row">
-            <div class="fa fa-map-marker cd-event-details__left-column-section-icon col-md-1"></div>
-            <div class="cd-event-details__left-column-section-heading col-md-11">
-              {{ $t('Location') }}
-            </div>
+        </info-column-section>
+        <info-column-section icon="map-marker" :header="$t('Location')">
+          <div class="cd-event-details__left-column-section-value">
+            {{ getFullAddress() }}
           </div>
-          <div class="row">
-            <div class="cd-event-details__left-column-section-value col-md-12">
-              {{ getFullAddress() }}
-            </div>
-          </div>
-        </div>
-      </div>
+        </info-column-section>
+      </info-column>
       <div class="cd-event-details__main-content">
         <router-view></router-view>
       </div>
@@ -59,6 +41,8 @@
   import moment from 'moment';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
+  import InfoColumn from '@/common/cd-info-column';
+  import InfoColumnSection from '@/common/cd-info-column-section';
   import service from './service';
 
   export default {
@@ -74,6 +58,10 @@
     filters: {
       cdDateFormatter,
       cdTimeFormatter,
+    },
+    components: {
+      InfoColumn,
+      InfoColumnSection,
     },
     methods: {
       loadEvent() {
@@ -136,28 +124,9 @@
 
     &__left-column {
       flex: 4;
-      background-color: #f4f5f6;
       max-width: 340px;
-      &-section {
-        font-size: 16px;
-        margin-top: 48px;
-        margin-left: 30px;
-        margin-right: 32px;
 
-        &-icon {
-         color: @cd-purple;
-         height: 19px;
-         margin-bottom: 4px;
-        }
-        &-heading {
-         color: @cd-purple;
-         font-weight: bold;
-         height: 19px;
-         margin-bottom: 4px;
-         margin-left: -7px;
-         line-height: 1;
-         text-transform: uppercase;
-        }
+      &-section {
         &-value {
           &-frequency {
             margin-top: 16px;

@@ -10,47 +10,25 @@
         </div>
     </div>
     <div class="cd-dojo-details__container">
-      <div class="cd-dojo-details__left_column">
-        <div class="row cd-dojo-details__section">
-          <div class="cd-dojo-details__time-label">
-            <div class="fa fa-clock-o col-md-1" aria-hidden="true"></div>
-            <div class="col-md-11 purple_label">{{ $t('Time') }}</div>
-          </div>
-          <div class="cd-dojo-details__time col-md-12">{{dojoDetails.time}}</div>
-        </div>
-
-        <div class="row cd-dojo-details__section">
-          <div class="cd-dojo-details__address-label">
-            <div class="fa fa-map-marker col-md-1" aria-hidden="true"></div>
-            <div class="col-md-11 purple_label">{{ $t('Location') }}</div>
-          </div>
-          <div class="cd-dojo-details__address col-md-12">{{address}}</div>
-        </div>
-
-        <div class="row cd-dojo-details__section">
-          <div class="cd-dojo-details__email-label">
-            <div class="fa fa-envelope-o col-md-1" aria-hidden="true"></div>
-            <div class="col-md-11 purple_label">{{ $t('Email') }}</div>
-          </div>
-          <div class="cd-dojo-details__email col-md-12">
-            <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
-          </div>
-        </div>
-
-        <div class="row cd-dojo-details__section">
-          <div class="cd-dojo-details__website-label">
-            <div class="fa fa-globe col-md-1" aria-hidden="true"></div>
-            <div class="col-md-11 purple_label">{{ $t('Website') }}</div>
-          </div>
-          <div class="cd-dojo-details__website col-md-12">{{dojoDetails.website}}</div>
-        </div>
-
-        <div class="row cd-dojo-details__social-media-section col-md-12">
-            <a v-if="dojoDetails.facebook" class="fa fa-2x fa-facebook-square cd-dojo-details__facebook sm-icon" :href="dojoDetails.facebook"></a>
-            <a v-if="dojoDetails.twitter" class="fa fa-2x fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="dojoDetails.twitter"></a>
-            <a v-if="dojoDetails.googleGroup" class="fa fa-2x fa-google cd-dojo-details__google-group sm-icon" aria-hidden="true" :href="dojoDetails.googleGroup"></a>
-        </div>
-      </div>
+      <info-column class="cd-dojo-details__left_column">
+        <info-column-section icon="clock-o" :header="$t('Time')">
+          {{ dojoDetails.time }}
+        </info-column-section>
+        <info-column-section icon="map-marker" :header="$t('Location')">
+          {{ address }}
+        </info-column-section>
+        <info-column-section icon="envelope-o" :header="$t('Email')">
+          <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
+        </info-column-section>
+        <info-column-section icon="globe" :header="$t('Website')">
+          {{ dojoDetails.website }}
+        </info-column-section>
+        <info-column-section class="cd-dojo-details__social-media">
+          <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
+          <a v-if="dojoDetails.twitter" class="cd-dojo-details__social-media-icon fa fa-2x fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="dojoDetails.twitter"></a>
+          <a v-if="dojoDetails.googleGroup" class="cd-dojo-details__social-media-icon fa fa-2x fa-google cd-dojo-details__google-group sm-icon" aria-hidden="true" :href="dojoDetails.googleGroup"></a>
+        </info-column-section>
+      </info-column>
       <div class="cd-dojo-details__main_content">
         <events-list v-if="dojoDetails.id" v-bind:dojoId="dojoDetails.id"></events-list>
         <div class="cd-dojo-details__details-label">{{ $t('Details') }}</div>
@@ -67,6 +45,8 @@
 </template>
 <script>
   import ImgFallback from '@/common/directives/cd-img-fallback';
+  import InfoColumn from '@/common/cd-info-column';
+  import InfoColumnSection from '@/common/cd-info-column-section';
   import service from './service';
   import eventsList from '../events/cd-event-list';
 
@@ -77,7 +57,9 @@
       ImgFallback,
     },
     components: {
-      'events-list': eventsList,
+      eventsList,
+      InfoColumn,
+      InfoColumnSection,
     },
     props: ['country', 'path'],
     data() {
@@ -128,7 +110,8 @@
     }
 
     &__container {
-       display:flex;
+      display:flex;
+      margin: 0 -16px;
     }
 
     &__banner {
@@ -147,11 +130,8 @@
     }
 
     &__left_column {
-      background-color: #f4f5f6;
       max-width: 340px;
-      font-size: 16px;
       flex: 4;
-      margin: 0 -16px;
     }
 
     &__main_content {
@@ -159,26 +139,11 @@
       margin-left: 32px;
     }
 
-    &__section {
-      margin-top: 45px;
-      margin-left: 14px;
-      padding-right: 30px;
-
-      .fa {
-        font-size: 16px;
-        color: @cd-purple;
-        line-height: 1;
+    &__social-media {
+      &-icon {
+        text-decoration: none;
+        margin-right: 16px;
       }
-    }
-
-    &__social-media-section {
-      margin-left: 14px;
-      margin-top: 32px;
-
-     .sm-icon {
-       text-decoration: none;
-       margin-right: 16px;
-     }
 
       .fa-facebook-square {
         color: #3b5998;
@@ -221,18 +186,4 @@
   .headerContent{
     line-height: 3;
   }
-
-  .purple_label {
-    width: 39px;
-    height: 19px;
-    font-size: 16px;
-    font-weight: bold;
-    color: @cd-purple;
-    margin-left: -7px;
-    line-height: 1;
-    text-transform: uppercase;
-  }
-
-
-
 </style>
