@@ -136,7 +136,7 @@
 
     &__main_content {
       flex: 8;
-      margin-left: 32px;
+      margin: 0 32px 0 16px;
     }
 
     &__social-media {
