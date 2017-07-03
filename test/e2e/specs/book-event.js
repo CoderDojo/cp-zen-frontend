@@ -11,24 +11,24 @@ function checkHeaderContent(page) {
 }
 
 function checkEventDetails(page) {
-  page.sectionIcon[0].waitForVisible();
-  expect(page.sectionHeading[0].getText()).to.equal('TIME');
-  expect(page.sectionValue[0].getText()).to.equal('June 6, 2017');
-  expect(page.sectionValue[1].getText()).to.equal('4:30pm - 6pm');
-  page.sectionIcon[1].waitForVisible();
-  expect(page.sectionHeading[1].getText()).to.equal('LOCATION');
-  expect(page.sectionValue[2].getText()).to.equal('CHQ, Dublin, Ireland');
+  page.sectionIcons[0].waitForVisible();
+  expect(page.sectionHeaders[0].getText()).to.equal('TIME');
+  expect(page.sectionContents[0].getText()).to.have.string('June 6, 2017');
+  expect(page.sectionContents[0].getText()).to.have.string('4:30pm - 6pm');
+  page.sectionIcons[1].waitForVisible();
+  expect(page.sectionHeaders[1].getText()).to.equal('LOCATION');
+  expect(page.sectionContents[1].getText()).to.equal('CHQ, Dublin, Ireland');
 }
 
 function checkRecurringEventDetails(page) {
-  page.sectionIcon[0].waitForVisible();
-  expect(page.sectionHeading[0].getText()).to.equal('TIME');
-  expect(page.sectionValue[0].getText()).to.equal('Next in series: July 1, 2017');
-  expect(page.sectionValue[1].getText()).to.equal('10am - 12pm');
-  expect(page.sectionValue[2].getText()).to.equal('Every two weeks on Saturdays');
-  page.sectionIcon[1].waitForVisible();
-  expect(page.sectionHeading[1].getText()).to.equal('LOCATION');
-  expect(page.sectionValue[3].getText()).to.equal('CHQ, Dublin, Ireland');
+  page.sectionIcons[0].waitForVisible();
+  expect(page.sectionHeaders[0].getText()).to.equal('TIME');
+  expect(page.sectionContents[0].getText()).to.have.string('Next in series: July 15, 2017');
+  expect(page.sectionContents[0].getText()).to.have.string('10am - 12pm');
+  expect(page.sectionContents[0].getText()).to.have.string('Every two weeks on Saturdays');
+  page.sectionIcons[1].waitForVisible();
+  expect(page.sectionHeaders[1].getText()).to.equal('LOCATION');
+  expect(page.sectionContents[1].getText()).to.equal('CHQ, Dublin, Ireland');
 }
 
 function startBooking() {
@@ -58,8 +58,10 @@ describe('Book event page', () => {
     expect(Booking.attendeeHeading.getText()).to.equal('Attendee Information');
     expect(Booking.selectedTicketsHeading.getText()).to.equal('Selected Tickets');
     expect(Booking.allTickets().length).to.equal(2);
-    expect(Booking.tickets(0).getText()).to.equal('1 x Parent\nScratch');
-    expect(Booking.tickets(1).getText()).to.equal('2 x Laptop required\nArduino');
+    expect(Booking.tickets(0).getText()).to.have.string('1 x Parent');
+    expect(Booking.tickets(0).getText()).to.have.string('Scratch');
+    expect(Booking.tickets(1).getText()).to.have.string('2 x Laptop required');
+    expect(Booking.tickets(1).getText()).to.have.string('Arduino');
 
     expect(Booking.attendeeTypeHeader[0].getText()).to.equal('Parent / Guardian');
     expect(Booking.nameLabel.getText()).to.equal('Name');

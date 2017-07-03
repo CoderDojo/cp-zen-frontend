@@ -1,0 +1,19 @@
+<template>
+  <div class="cd-info-column">
+    <slot></slot>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: 'InfoColumn',
+  };
+</script>
+
+<style scoped lang="less">
+  @import "~cd-common/common/_colors";
+
+  .cd-info-column {
+    background-color: #f4f5f6;
+  }
+</style>

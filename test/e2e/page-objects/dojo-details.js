@@ -1,7 +1,7 @@
 var path = require('path');
-const BasePage = require('./base-page');
+const InfoColumn = require('./info-column');
 
-const DojoDetailsPage = Object.create(BasePage, {
+const DojoDetailsPage = Object.create(InfoColumn, {
   /**
    * define elements
    */
@@ -17,22 +17,42 @@ const DojoDetailsPage = Object.create(BasePage, {
   },
   timeLabel: {
     get() {
-      return $('.cd-dojo-details__time-label');
+      return InfoColumn.sectionHeaders[0];
     },
   },
   time: {
     get() {
-      return $('.cd-dojo-details__time');
+      return InfoColumn.sectionContents[0];
     },
   },
   addressLabel: {
     get() {
-      return $('.cd-dojo-details__address-label');
+      return InfoColumn.sectionHeaders[1];
     },
   },
   address: {
     get() {
-      return $('.cd-dojo-details__address');
+      return InfoColumn.sectionContents[1];
+    },
+  },
+  emailLabel: {
+    get() {
+      return InfoColumn.sectionHeaders[2];
+    },
+  },
+  email: {
+    get() {
+      return InfoColumn.sectionContents[2];
+    },
+  },
+  websiteLabel: {
+    get() {
+      return InfoColumn.sectionHeaders[3];
+    },
+  },
+  website: {
+    get() {
+      return InfoColumn.sectionContents[3];
     },
   },
   detailsLabel: {
@@ -53,26 +73,6 @@ const DojoDetailsPage = Object.create(BasePage, {
   sponsorImage: {
     get() {
       return $('.cd-dojo-details__sponsor_image');
-    },
-  },
-  emailLabel: {
-    get() {
-      return $('.cd-dojo-details__email-label');
-    },
-  },
-  email: {
-    get() {
-      return $('.cd-dojo-details__email');
-    },
-  },
-  websiteLabel: {
-    get() {
-      return $('.cd-dojo-details__website-label');
-    },
-  },
-  website: {
-    get() {
-      return $('.cd-dojo-details__website');
     },
   },
   facebook: {

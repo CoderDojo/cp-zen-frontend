@@ -1,6 +1,6 @@
-const BasePage = require('./base-page');
+const InfoColumn = require('./info-column');
 
-const EventDetails = Object.create(BasePage, {
+const EventDetails = Object.create(InfoColumn, {
   bookEventTitle: {
     get() {
       return $('.cd-event-details__book-event-title');
@@ -9,21 +9,6 @@ const EventDetails = Object.create(BasePage, {
   eventTitle: {
     get() {
       return $('.cd-event-details__event-title');
-    },
-  },
-  sectionIcon: {
-    get() {
-      return $$('.cd-event-details__left-column-section-icon');
-    },
-  },
-  sectionHeading: {
-    get() {
-      return $$('.cd-event-details__left-column-section-heading');
-    },
-  },
-  sectionValue: {
-    get() {
-      return $$('.cd-event-details__left-column-section-value');
     },
   },
 });
