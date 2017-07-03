@@ -83,6 +83,14 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.eventTimes(5).getText()).to.equal('10am - 12pm');
   });
 
+  it('should show message if no events are scheduled', () => {
+    DojoPage.openDojoWithLatLong(10, 89, 0);
+    DojoDetailsPage.name.waitForVisible();
+
+    expect(DojoDetailsPage.noEventsHeader.getText()).to.equal('No Upcoming Events');
+    expect(DojoDetailsPage.noEventsContent.getText()).to.equal('There are no upcoming events planned for this Dojo. Please email cdrom@example.com if you have any questions.');
+  });
+
   it('should show event details after clicking on an event', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();

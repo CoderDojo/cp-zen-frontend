@@ -30,7 +30,7 @@
         </info-column-section>
       </info-column>
       <div class="cd-dojo-details__main_content">
-        <events-list v-if="dojoDetails.id" v-bind:dojoId="dojoDetails.id"></events-list>
+        <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
         <div class="cd-dojo-details__details-label">{{ $t('Details') }}</div>
         <div class="cd-dojo-details__details" v-html="dojoDetails.notes"></div>
         <div v-if="dojoDetails.supporterImage" class="cd-dojo-details__sponsor_heading">

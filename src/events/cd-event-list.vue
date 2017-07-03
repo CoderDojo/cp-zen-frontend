@@ -1,6 +1,15 @@
 <template>
   <div class="cd-event-list">
     <h1 class="cd-event-list__header">{{ $t('Upcoming Events') }}</h1>
+    <div v-if="events.length === 0" class="cd-event-list__event">
+      <div class="cd-event-list__no-events">
+        <div class="cd-event-list__no-events-header">
+          {{ $t('No Upcoming Events') }}
+        </div>
+        <p class="cd-event-list__no-events-content" v-html="$t('There are no upcoming events planned for this Dojo. Please email {email} if you have any questions.', { email: '<a href=\'mailto:' + dojo.email + '\'>' + dojo.email + '</a>' })">
+        </p>
+      </div>
+    </div>
     <div v-for="event in events" class="cd-event-list__event">
       <div class="cd-event-list__event-details">
         <header class="cd-event-list__event-header">
@@ -36,7 +45,7 @@
 
   export default {
     name: 'event-list',
-    props: ['dojoId'],
+    props: ['dojo'],
     data() {
       return {
         events: [],
@@ -48,7 +57,7 @@
     },
     methods: {
       loadEvents() {
-        service.loadEvents(this.dojoId).then((response) => {
+        service.loadEvents(this.dojo.id).then((response) => {
           this.events = response.body;
         });
       },
@@ -119,6 +128,21 @@
 
       &-view {
         margin-top: 32px;
+      }
+    }
+
+    &__no-events {
+      padding: 16px;
+      text-align: center;
+      &-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+      &-content {
+        font-size: 16px;
+        color: #7b8082;
+        margin-top: 8px;
       }
     }
 
