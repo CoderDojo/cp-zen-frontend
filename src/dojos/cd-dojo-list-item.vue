@@ -44,6 +44,7 @@
 </script>
 
 <style scoped lang="less">
+@import "../common/variables";
 
   .cd-dojo-list-item {
     margin: 32px 0;
@@ -56,6 +57,20 @@
     &__meta {
       font-size: 16px;
       margin-bottom: 0;
+    }
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-dojo-list-item {
+      margin: 24px 0;
+
+      &__name {
+        font-size: 16px;
+      }
+
+      &__meta {
+        font-size: 14px;
+      }
     }
   }
 

@@ -261,6 +261,41 @@ describe('The Find dojo vue ', () => {
     });
   });
 
+  describe('toggleMap()', () => {
+    it('should toggle showMap and trigger resize event when map is shown', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(cdFindDojo());
+      vm.showMap = false;
+      Vue.$gmapDefaultResizeBus = {
+        $emit: sandbox.stub(),
+      };
+
+      // ACT
+      vm.toggleMap();
+
+      // ASSERT
+      expect(vm.showMap).to.equal(true);
+      expect(Vue.$gmapDefaultResizeBus.$emit).to.have.been.calledOnce;
+      expect(Vue.$gmapDefaultResizeBus.$emit).to.have.been.calledWith('resize');
+    });
+
+    it('should toggle showMap and not trigger resize event when map is hidden', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(cdFindDojo());
+      vm.showMap = true;
+      Vue.$gmapDefaultResizeBus = {
+        $emit: sandbox.stub(),
+      };
+
+      // ACT
+      vm.toggleMap();
+
+      // ASSERT
+      expect(vm.showMap).to.equal(false);
+      expect(Vue.$gmapDefaultResizeBus.$emit).to.not.have.been.called;
+    });
+  });
+
   describe('computed.allActiveDojos', () => {
     it('should filter out non-active dojos from allDojos', () => {
       // ARRANGE

@@ -30,4 +30,49 @@ describe('Find Dojo page', () => {
     DojoPage.noResultsMessage.waitForVisible();
     expect(DojoPage.noResultsMessage.isVisible()).to.equal(true);
   });
+
+  describe('Mobile specific tests', () => {
+    beforeEach(() => {
+      DojoPage.open();
+      browser.setViewportSize({
+        width: 320,
+        height: 586,
+      }); // iPhone 5 (smallest screen)
+    });
+
+    it('should still show the dojo list count', () => {
+      DojoPage.addressSearchInput.waitForVisible();
+      DojoPage.addressSearchInput.setValue('CHQ');
+      DojoPage.addressSearchButton.click();
+      DojoPage.showDojoListCountMobile.waitForVisible();
+      expect(DojoPage.showDojoListCountMobile.getText()).to.have.string('Showing 3 Dojos');
+    });
+
+    it('should show/hide the map when clicking the toggle button', () => {
+      DojoPage.addressSearchInput.waitForVisible();
+      DojoPage.addressSearchInput.setValue('CHQ');
+      DojoPage.addressSearchButton.click();
+      DojoPage.toggleMap.waitForVisible();
+      expect(DojoPage.map.isVisible()).to.equal(false);
+      expect(DojoPage.toggleMap.getText()).to.have.string('Show Map');
+      DojoPage.toggleMap.click();
+      expect(DojoPage.map.isVisible()).to.equal(true);
+      expect(DojoPage.toggleMap.getText()).to.have.string('Hide Map');
+      DojoPage.toggleMap.click();
+      expect(DojoPage.map.isVisible()).to.equal(false);
+      expect(DojoPage.toggleMap.getText()).to.have.string('Show Map');
+    });
+
+    it('should show/hide the map when clicking the inline message toggle', () => {
+      DojoPage.addressSearchInput.waitForVisible();
+      DojoPage.addressSearchInput.setValue('Galway');
+      DojoPage.addressSearchButton.click();
+      DojoPage.noResultsMessageMapLink.waitForVisible();
+      expect(DojoPage.map.isVisible()).to.equal(false);
+      DojoPage.noResultsMessageMapLink.click();
+      expect(DojoPage.map.isVisible()).to.equal(true);
+      DojoPage.noResultsMessageMapLink.click();
+      expect(DojoPage.map.isVisible()).to.equal(false);
+    });
+  });
 });
