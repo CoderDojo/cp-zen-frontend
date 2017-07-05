@@ -15,5 +15,6 @@
 
   .cd-info-column {
     background-color: #f4f5f6;
+    padding: 0 32px;
   }
 </style>

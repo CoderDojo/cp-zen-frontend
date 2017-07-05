@@ -10,34 +10,51 @@
         </div>
     </div>
     <div class="cd-dojo-details__container">
-      <info-column class="cd-dojo-details__left_column">
-        <info-column-section icon="clock-o" :header="$t('Time')">
+      <info-column class="cd-dojo-details__left-column">
+        <info-column-section class="cd-dojo-details__left-column-section" icon="clock-o" :header="$t('Time')">
           {{ dojoDetails.time }}
         </info-column-section>
-        <info-column-section icon="map-marker" :header="$t('Location')">
+        <info-column-section class="cd-dojo-details__left-column-section" icon="map-marker" :header="$t('Location')">
           {{ address }}
         </info-column-section>
-        <info-column-section icon="envelope-o" :header="$t('Email')">
+        <info-column-section class="hidden-xs" icon="envelope-o" :header="$t('Email')">
           <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
         </info-column-section>
-        <info-column-section icon="globe" :header="$t('Website')">
+        <info-column-section class="hidden-xs" icon="globe" :header="$t('Website')">
           {{ dojoDetails.website }}
         </info-column-section>
-        <info-column-section class="cd-dojo-details__social-media">
+        <info-column-section class="cd-dojo-details__social-media hidden-xs">
           <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
           <a v-if="dojoDetails.twitter" class="cd-dojo-details__social-media-icon fa fa-2x fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="dojoDetails.twitter"></a>
           <a v-if="dojoDetails.googleGroup" class="cd-dojo-details__social-media-icon fa fa-2x fa-google cd-dojo-details__google-group sm-icon" aria-hidden="true" :href="dojoDetails.googleGroup"></a>
         </info-column-section>
       </info-column>
       <div class="cd-dojo-details__main_content">
+        <div class="cd-dojo-details__heading">{{ $t('Upcoming Events') }}</div>
         <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
-        <div class="cd-dojo-details__details-label">{{ $t('Details') }}</div>
+        <div class="cd-dojo-details__heading">{{ $t('Details') }}</div>
         <div class="cd-dojo-details__details" v-html="dojoDetails.notes"></div>
-        <div v-if="dojoDetails.supporterImage" class="cd-dojo-details__sponsor_heading">
+        <div class="visible-xs">
+          <div class="cd-dojo-details__heading">{{ $t('Contact Dojo') }}</div>
+          <div class="cd-dojo-details__contact">
+            <info-column-section icon="envelope-o" :header="$t('Email')">
+              <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
+            </info-column-section>
+            <info-column-section icon="globe" :header="$t('Website')">
+              {{ dojoDetails.website }}
+            </info-column-section>
+            <info-column-section class="cd-dojo-details__social-media">
+              <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
+              <a v-if="dojoDetails.twitter" class="cd-dojo-details__social-media-icon fa fa-2x fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="dojoDetails.twitter"></a>
+              <a v-if="dojoDetails.googleGroup" class="cd-dojo-details__social-media-icon fa fa-2x fa-google cd-dojo-details__google-group sm-icon" aria-hidden="true" :href="dojoDetails.googleGroup"></a>
+            </info-column-section>
+          </div>
+        </div>
+        <div v-if="dojoDetails.supporterImage" class="cd-dojo-details__heading">
           {{ $t('Dojo supported by') }}
         </div>
-        <div>
-          <img v-if="dojoDetails.supporterImage" class="cd-dojo-details__sponsor_image" :src="dojoDetails.supporterImage"/>
+        <div class="cd-dojo-details__sponsor-image">
+          <img v-if="dojoDetails.supporterImage" :src="dojoDetails.supporterImage"/>
         </div>
       </div>
     </div>
@@ -99,7 +116,7 @@
   };
 </script>
 <style scoped lang="less">
-  @import "~cd-common/common/_colors";
+  @import "../common/variables";
 
   .cd-dojo-details {
 
@@ -129,7 +146,7 @@
       padding: 16px 0;
     }
 
-    &__left_column {
+    &__left-column {
       max-width: 340px;
       flex: 4;
     }
@@ -158,25 +175,21 @@
       }
     }
 
-    &__details-label {
+    &__heading {
       color: #000;
       font-size: 18px;
-      margin: 45px 0 16px 0;
+      margin: 64px 0 16px 0;
       font-weight: bold;
       border-bottom: 1px solid #bebebe;
       padding-bottom: 8px;
+
+      &:first-child {
+        margin-top: 45px;
+      }
     }
 
-    &__sponsor {
-      &_heading {
-        color: #000;
-        font-size: 18px;
-        margin: 45px 0 24px 0;
-        font-weight: bold;
-        border-bottom: 1px solid #bebebe;
-        padding-bottom: 8px;
-      }
-      &_image {
+    &__sponsor-image {
+      > img {
         max-width: 360px;
         max-height: 360px;
       }
@@ -185,5 +198,44 @@
 
   .headerContent{
     line-height: 3;
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-dojo-details {
+      &__dojo-image {
+        width: 42px;
+        height: 42px;
+      }
+      &__banner {
+        min-height: 74px;
+        padding: 0 16px;
+      }
+      &__name {
+        font-size: 21px;
+      }
+      &__container {
+        flex-direction: column;
+      }
+      &__left-column {
+        text-align: center;
+        max-width: none;
+
+        &-section {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+      }
+      &__main_content {
+        margin: 0 16px;
+      }
+      &__sponsor-image {
+        text-align: center;
+        > img {
+          width: 100%;
+        }
+      }
+    }
   }
 </style>
