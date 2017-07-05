@@ -1,6 +1,5 @@
 <template>
   <div class="cd-event-list">
-    <h1 class="cd-event-list__header">{{ $t('Upcoming Events') }}</h1>
     <div v-if="events.length === 0" class="cd-event-list__event">
       <div class="cd-event-list__no-events">
         <div class="cd-event-list__no-events-header">
@@ -20,21 +19,23 @@
             <strong>{{ $t('Sessions') }}:</strong> {{ getSessionListForEvent(event) }}
           </h4>
         </header>
-        <ul class="cd-event-list__datetime">
-          <li v-for="date in event.dates">
+        <div class="cd-event-list__datetime">
+          <div v-for="date in event.dates">
             <div class="cd-event-list__event-date-timestamp">
               {{ date.startTime | cdDateFormatter }}
             </div>
             <div class="cd-event-list__event-times-timestamp">
               {{ date.startTime | cdTimeFormatter }} - {{ date.endTime | cdTimeFormatter }}
             </div>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
-      <router-link :to="{name: 'EventDobVerification', params: {eventId: event.id}}"
-                   tag="button" class="btn btn-lg btn-primary cd-event-list__event-view">
-        {{ $t('See Details and Book') }}
-      </router-link>
+      <div class="cd-event-list__event-view-wrapper">
+        <router-link :to="{name: 'EventDobVerification', params: {eventId: event.id}}"
+                     tag="button" class="btn btn-lg btn-primary cd-event-list__event-view">
+          {{ $t('See Details and Book') }}
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -71,18 +72,9 @@
   };
 </script>
 <style scoped lang="less">
-  @import "~cd-common/common/_colors";
+  @import "../common/variables";
 
   .cd-event-list {
-    &__header {
-      color: @cd-black;
-      font-size: 18px;
-      margin: 45px 0 16px 0;
-      font-weight: bold;
-      border-bottom: 1px solid #bebebe;
-      padding-bottom: 8px;
-    }
-
     &__event {
       border-style: solid;
       border-color: @cd-orange;
@@ -147,8 +139,32 @@
     }
 
     &__datetime {
-      list-style-type: none;
       margin-right: 27px;
-     }
+    }
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-event-list {
+      &__event {
+        &-details {
+          flex-direction: column;
+        }
+        &-name {
+          font-size: 18px;
+          font-weight: bold;
+        }
+        &-sessions {
+          font-size: 14px;
+        }
+        &-view-wrapper {
+          text-align: center;
+        }
+      }
+      &__datetime {
+        margin-right: 0;
+        margin-top: 16px;
+        text-align: center;
+      }
+    }
   }
 </style>

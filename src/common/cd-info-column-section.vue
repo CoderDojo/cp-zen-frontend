@@ -1,6 +1,6 @@
 <template>
   <div class="cd-info-column-section">
-    <div class="cd-info-column-section__header">
+    <div class="cd-info-column-section__header" v-if="header">
       <div class="cd-info-column-section__header-icon">
         <i :class="'fa fa-' + icon" aria-hidden="true"></i>
       </div>
@@ -22,11 +22,11 @@
 </script>
 
 <style scoped lang="less">
-  @import "~cd-common/common/_colors";
+  @import "../common/variables";
 
   .cd-info-column-section {
     font-size: 16px;
-    margin: 48px 32px;
+    margin: 48px 0;
 
     &__header {
       color: @cd-purple;
@@ -42,6 +42,13 @@
         text-transform: uppercase;
         font-weight: bold;
       }
+    }
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-info-column-section {
+      margin: 16px 0;
+      font-size: 14px;
     }
   }
 </style>

@@ -57,7 +57,7 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   detailsLabel: {
     get() {
-      return $('.cd-dojo-details__details-label');
+      return $$('.cd-dojo-details__heading')[1];
     },
   },
   details: {
@@ -67,12 +67,12 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   sponsorHeading: {
     get() {
-      return $('.cd-dojo-details__sponsor_heading');
+      return $$('.cd-dojo-details__heading')[3];
     },
   },
   sponsorImage: {
     get() {
-      return $('.cd-dojo-details__sponsor_image');
+      return $('.cd-dojo-details__sponsor-image');
     },
   },
   facebook: {
@@ -129,6 +129,41 @@ const DojoDetailsPage = Object.create(InfoColumn, {
     value(index) {
       return $$('.cd-event-list__event-view')[index];
     }
+  },
+  emailLabelMobile: {
+    get() {
+      return InfoColumn.sectionHeaders[4];
+    },
+  },
+  emailMobile: {
+    get() {
+      return InfoColumn.sectionContents[5];
+    },
+  },
+  websiteLabelMobile: {
+    get() {
+      return InfoColumn.sectionHeaders[5];
+    },
+  },
+  websiteMobile: {
+    get() {
+      return InfoColumn.sectionContents[6];
+    },
+  },
+  facebookMobile: {
+    get() {
+      return $$('.cd-dojo-details__facebook')[1].getAttribute('href');
+    },
+  },
+  twitterMobile: {
+    get() {
+      return $$('.cd-dojo-details__twitter')[1].getAttribute('href');
+    },
+  },
+  googleGroupMobile: {
+    get() {
+      return $$('.cd-dojo-details__google-group')[1].getAttribute('href');
+    },
   },
   open: {
     value(urlSlug) {

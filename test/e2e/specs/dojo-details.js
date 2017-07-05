@@ -146,4 +146,65 @@ describe('Dojo details page', () => {
     expect(EventDobVerificationPage.dateOfBirthError.getText()).to.equal('You will need your parent to carry out the registration.');
   });
 
+  describe('Mobile specific tests', () => {
+    beforeEach(() => {
+      DojoPage.openDojoWithLatLong(10, 89);
+      DojoDetailsPage.name.waitForVisible();
+      browser.setViewportSize({
+        width: 320,
+        height: 586,
+      }); // iPhone 5 (smallest screen)
+    });
+
+    it('should show dojo details', () => {
+      DojoDetailsPage.dojoImage.waitForVisible();
+
+      const name = DojoDetailsPage.name.getText();
+      expect(name).to.equal('Dublin Ninja Kids');
+
+      const timeLabel = DojoDetailsPage.timeLabel.getText();
+      expect(timeLabel).to.equal('TIME');
+
+      const time = DojoDetailsPage.time.getText();
+      expect(time).to.equal('Saturdays 11 am - 1 pm');
+
+      const addressLabel = DojoDetailsPage.addressLabel.getText();
+      expect(addressLabel).to.equal('LOCATION');
+
+      const address = DojoDetailsPage.address.getText();
+      expect(address).to.equal('CHQ Building,1 Custom House Quay, North Dock, Dublin, Ireland');
+
+      const emailLabel = DojoDetailsPage.emailLabelMobile.getText();
+      expect(emailLabel).to.equal('EMAIL');
+
+      const email = DojoDetailsPage.emailMobile.getText();
+      expect(email).to.equal('dublinninjakids@gmail.com');
+
+      const websiteLabel = DojoDetailsPage.websiteLabelMobile.getText();
+      expect(websiteLabel).to.equal('WEBSITE');
+
+      const website = DojoDetailsPage.websiteMobile.getText();
+      expect(website).to.equal('www.dublinninjakids.com');
+
+      const facebook = DojoDetailsPage.facebookMobile;
+      expect(facebook).to.equal('https://www.facebook.com/CoderDojo');
+
+      const twitter = DojoDetailsPage.twitterMobile;
+      expect(twitter).to.equal('https://twitter.com/CoderDojo');
+
+      const googleGroup = DojoDetailsPage.googleGroupMobile;
+      expect(googleGroup).to.equal('https://google.group.com/dublinninjakids');
+
+      const detailsLabel = DojoDetailsPage.detailsLabel.getText();
+      expect(detailsLabel).to.equal('Details');
+
+      const details = DojoDetailsPage.details.getHTML(false);
+      expect(details).to.equal('<p>This is the Dojo details section</p>\n');
+
+      const sponsorLabel = DojoDetailsPage.sponsorHeading.getText();
+      expect(sponsorLabel).to.equal('Dojo supported by');
+
+      DojoDetailsPage.sponsorImage.waitForVisible();
+    });
+  });
 });
