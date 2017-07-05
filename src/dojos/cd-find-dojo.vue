@@ -22,21 +22,44 @@
         <img src="../assets/characters/ninjas/ninja-female-2-laptop-sitting.svg" />
       </div>
     </div>
-    <div v-if="searchExecuted" class="cd-find-dojo__results">
-      <dojo-list v-if="dojos.length > 0" class="cd-find-dojo__results-list" :dojos="dojos"></dojo-list>
-      <h4 v-if="dojos.length === 0" class="cd-find-dojo__no-results-message">
-        {{ $t('Unfortunately there are no dojos in your area at the moment. Please search again or use the map to find the closest one.') }}
-      </h4>
-      <dojo-map :center="coordinates" class="cd-find-dojo__results-map" :dojos="allActiveDojos" style="width: 400px;height: 400px;"></dojo-map>
+    <div v-if="searchExecuted" class="cd-find-dojo__results-header cd-find-dojo__results-header--mobile">
+      <span>{{ $t('Showing {total} Dojos', { total: dojos.length }) }}</span>
+      <button class="cd-find-dojo__results-header-map-toggle btn btn-link" @click="toggleMap"><i class="fa fa-map-o" aria-hidden="true"></i> {{ showMap ? $t('Hide Map') : $t('Show Map') }}</button>
     </div>
+    <div v-if="searchExecuted" class="cd-find-dojo__results">
+      <div class="cd-find-dojo__results-list">
+        <div class="cd-find-dojo__results-header hidden-xs">
+          <span>{{ $t('Showing {total} Dojos', { total: dojos.length }) }}</span>
+        </div>
+        <dojo-list :dojos="dojos"></dojo-list>
+        <h4 v-if="dojos.length === 0" class="cd-find-dojo__no-results-message">
+          <no-results-desktop class="cd-find-dojo__no-results-message--desktop hidden-xs"></no-results-desktop>
+          <no-results-mobile @toggleMap="toggleMap" class="cd-find-dojo__no-results-message--mobile visible-xs"></no-results-mobile>
+        </h4>
+      </div>
+      <dojo-map :center="coordinates" :class="{ 'cd-find-dojo__results-map': true, 'cd-find-dojo__results-map--hidden': !showMap }" :dojos="allActiveDojos"></dojo-map>
+    </div>
+
   </div>
 
 </template>
 <script>
+  import Vue from 'vue';
   import DojoList from '@/dojos/cd-dojo-list';
   import DojoMap from '@/dojos/cd-dojo-map';
   import GeolocationService from '@/geolocation/service';
+  import translationComponentGenerator from '@/common/cd-translation-component-generator';
   import DojosService from './service';
+
+  const noResultsString = 'Try modifying your search location, or zoom out on the {openLink}map{closeLink} to find the nearest dojos.';
+  const NoResultsDesktop = translationComponentGenerator(noResultsString, {
+    openLink: '',
+    closeLink: '',
+  });
+  const NoResultsMobile = translationComponentGenerator(noResultsString, {
+    openLink: '<a @click="$emit(\'toggleMap\')">',
+    closeLink: '</a>',
+  });
 
   export default {
     name: 'findDojo',
@@ -52,6 +75,7 @@
         dojos: [],
         allDojos: [],
         detectingLocation: false,
+        showMap: false,
       };
     },
     computed: {
@@ -95,10 +119,18 @@
           this.allDojos = response.body;
         });
       },
+      toggleMap() {
+        this.showMap = !this.showMap;
+        if (this.showMap) {
+          Vue.$gmapDefaultResizeBus.$emit('resize');
+        }
+      },
     },
     components: {
       DojoList,
       DojoMap,
+      NoResultsDesktop,
+      NoResultsMobile,
     },
     created() {
       if (this.lat && this.long) {
@@ -111,7 +143,7 @@
   };
 </script>
 <style scoped lang="less">
-  @import "~cd-common/common/_colors";
+  @import "../common/variables";
 
   .cd-find-dojo {
     &__panel {
@@ -186,7 +218,27 @@
     }
     &__results {
      display: flex;
-     padding: 32px 16px;
+     padding: 0 16px 32px 16px;
+
+      &-header {
+        border-bottom: solid 1px #bebebe;
+        margin-top: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &--mobile {
+          display: none;
+        }
+
+        > span {
+          font-size: 14px;
+          color: #a2a1a0;
+          font-weight: 200;
+          padding: 8px 0;
+        }
+      }
+
       &-list {
         flex: 7
       }
@@ -194,11 +246,84 @@
       &-map {
         flex: 5;
         padding-left: 16px;
+        margin-top: 32px;
       }
     }
 
     &__no-results-message {
       flex: 7;
+      margin: 16px 0;
+
+      &--mobile {
+        font-size: 16px;
+
+      }
+    }
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-find-dojo {
+      &__panel {
+        &-illustration {
+          display: none;
+        }
+        &-form {
+          padding: 64px 16px 64px;
+
+          &-header {
+            font-size: 30px;
+          }
+
+          &-info {
+            font-size: 14px;
+          }
+
+          &-search {
+            &-input {
+              width: 100%;
+              flex: none;
+              margin-right: 0;
+              min-width: auto;
+            }
+            &-submit {
+              margin-top: 8px;
+              > .btn {
+                width: 100%;
+              }
+            }
+          }
+
+          &-detect-location {
+            width: 100%;
+            margin-top: 16px;
+          }
+        }
+      }
+
+      &__results {
+        flex-direction: column-reverse;
+        padding: 0 0 32px 0;
+
+        &-header {
+          &--mobile {
+            display: flex;
+          }
+          &-map-toggle {
+            > .fa {
+              margin-right: 4px;
+            }
+          }
+        }
+
+        &-map {
+          padding-left: 0;
+          margin-top: 8px;
+
+          &--hidden {
+            display: none;
+          }
+        }
+      }
     }
   }
 </style>

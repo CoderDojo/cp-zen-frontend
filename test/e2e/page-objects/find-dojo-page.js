@@ -49,7 +49,17 @@ const DojoPage = Object.create(BasePage, {
   },
   showDojoListCount: {
     get() {
-      return $('.cd-dojo-list__show-dojo-list-count');
+      return $('.cd-find-dojo__results-header:not(.cd-find-dojo__results-header--mobile)');
+    },
+  },
+  showDojoListCountMobile: {
+    get() {
+      return $('.cd-find-dojo__results-header--mobile');
+    },
+  },
+  toggleMap: {
+    get() {
+      return $('.cd-find-dojo__results-header-map-toggle');
     },
   },
   map: {
@@ -60,6 +70,11 @@ const DojoPage = Object.create(BasePage, {
   noResultsMessage: {
     get() {
       return $('.cd-find-dojo__no-results-message');
+    },
+  },
+  noResultsMessageMapLink: {
+    get() {
+      return $('.cd-find-dojo__no-results-message--mobile a');
     },
   },
   open: {
