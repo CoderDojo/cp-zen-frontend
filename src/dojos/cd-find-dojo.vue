@@ -51,7 +51,7 @@
   import translationComponentGenerator from '@/common/cd-translation-component-generator';
   import DojosService from './service';
 
-  const noResultsString = 'Try modifying your search location, or zoom out on the {openLink}map{closeLink} to find the nearest dojos.';
+  const noResultsString = 'Try modifying your search location, or zoom out on the {openLink}map{closeLink} to find the nearest Dojos.';
   const NoResultsDesktop = translationComponentGenerator(noResultsString, {
     openLink: '',
     closeLink: '',
