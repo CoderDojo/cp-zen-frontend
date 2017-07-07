@@ -63,4 +63,73 @@ describe('Event list component', () => {
       expect(vm.getSessionListForEvent(eventMock)).to.equal('Scratch, Arduino, HTML');
     });
   });
+
+  describe('isEventFull()', () => {
+    it('should return true for an event which is full and false for one which is not full', () => {
+      const vm = vueUnitHelper(eventList());
+      vm.events = [
+        {
+          id: 1,
+          sessions: [
+            {
+              tickets: [
+                {
+                  quantity: 3,
+                  approvedApplications: 3,
+                },
+                {
+                  quantity: 4,
+                  approvedApplications: 4,
+                },
+              ],
+            },
+            {
+              tickets: [
+                {
+                  quantity: 2,
+                  approvedApplications: 2,
+                },
+                {
+                  quantity: 5,
+                  approvedApplications: 5,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
+          sessions: [
+            {
+              tickets: [
+                {
+                  quantity: 3,
+                  approvedApplications: 2,
+                },
+                {
+                  quantity: 4,
+                  approvedApplications: 3,
+                },
+              ],
+            },
+            {
+              tickets: [
+                {
+                  quantity: 2,
+                  approvedApplications: 1,
+                },
+                {
+                  quantity: 5,
+                  approvedApplications: 4,
+                },
+              ],
+            },
+          ],
+        },
+      ];
+
+      expect(vm.isEventFull(1)).to.equal(true);
+      expect(vm.isEventFull(2)).to.equal(false);
+    });
+  });
 });
