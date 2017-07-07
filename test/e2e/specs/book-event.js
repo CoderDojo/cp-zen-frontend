@@ -375,7 +375,7 @@ describe('Book event page', () => {
     checkEventDetails(Booking);
   });
 
-  it('should show the event name in the header', ()=>{
+  it('should show the event name in the header', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.eventViewButtons(0).click();
@@ -437,5 +437,12 @@ describe('Book event page', () => {
     startBooking();
     Booking.modifyButton.click();
     EventSessionsPage.sessionsHeader.waitForVisible();
+  });
+
+  it('should not allow the user to continue in the booking flow when the event is full', () => {
+    DojoPage.openDojoWithLatLong(10, 89, 1);
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.eventViewButtons(0).getText()).equals('FULL');
+    expect(DojoDetailsPage.eventViewButtons(0).isEnabled()).equals(false);
   });
 });

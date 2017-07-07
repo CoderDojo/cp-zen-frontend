@@ -32,14 +32,21 @@
       </div>
       <div class="cd-event-list__event-view-wrapper">
         <router-link :to="{name: 'EventDobVerification', params: {eventId: event.id}}"
+                     v-if="!isEventFull(event.id)"
                      tag="button" class="btn btn-lg btn-primary cd-event-list__event-view">
           {{ $t('See Details and Book') }}
+        </router-link>
+        <router-link :to="{name: 'EventDobVerification', params: {eventId: event.id}}"
+                     v-if="isEventFull(event.id)" disabled="disabled"
+                     tag="button" class="btn btn-lg cd-event-list__event-view cd-event-list__event-view--disabled">
+          {{ $t('FULL') }}
         </router-link>
       </div>
     </div>
   </div>
 </template>
 <script>
+  import { forEach } from 'lodash';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import service from './service';
@@ -64,6 +71,18 @@
       },
       getSessionListForEvent(event) {
         return event.sessions.map(session => session.name).join(', ');
+      },
+      isEventFull(eventId) {
+        const currentEvent = this.events.find(event => event.id === eventId);
+        let totalEventCapacity = 0;
+        let totalTicketsBooked = 0;
+        forEach(currentEvent.sessions, (session) => {
+          forEach(session.tickets, (ticket) => {
+            totalEventCapacity += ticket.quantity;
+            totalTicketsBooked += ticket.approvedApplications;
+          });
+        });
+        return totalEventCapacity === totalTicketsBooked;
       },
     },
     created() {
@@ -120,6 +139,12 @@
 
       &-view {
         margin-top: 32px;
+        &--disabled {
+          background-color: #bdc3c6;
+          color: white;
+          font-weight: bold;
+          width: 220px;
+        }
       }
     }
 
