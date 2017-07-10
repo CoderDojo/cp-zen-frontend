@@ -1,29 +1,9 @@
 const BasePage = require('./base-page');
 
 const BookingConfirmation = Object.create(BasePage, {
-  firstName: {
+  emailMessage: {
     get() {
-      return $('.cd-booking-confirmation__first-name');
-    },
-  },
-  lastName: {
-    get() {
-      return $('.cd-booking-confirmation__last-name');
-    },
-  },
-  dateOfBirth: {
-    get() {
-      return $('.cd-booking-confirmation__dob');
-    },
-  },
-  phoneNumber: {
-    get() {
-      return $('.cd-booking-confirmation__phone-number');
-    },
-  },
-  email: {
-    get() {
-      return $('.cd-booking-confirmation__email');
+      return $('.cd-booking-confirmation__email-message');
     },
   },
   accountCreationConfirmation: {
@@ -38,12 +18,12 @@ const BookingConfirmation = Object.create(BasePage, {
   },
   joinedDojoConfirmation: {
     get() {
-      return $('.cd-booking-confirmation__joined-dojo-confirmation');
+      return $('.cd-booking-confirmation__account-dojo-confirmation');
     },
   },
-  dojoName: {
+  hostedByMessage: {
     get() {
-      return $('.cd-booking-confirmation__dojo-name');
+      return $('.cd-booking-confirmation__hosted-by-message');
     },
   },
   eventName: {
@@ -51,54 +31,49 @@ const BookingConfirmation = Object.create(BasePage, {
       return $('.cd-booking-confirmation__event-name');
     },
   },
+  detailsBoxTitle: {
+    value(index) {
+      return $$('.cd-booking-confirmation__booking-details-box-title')[index];
+    },
+  },
+  eventDate: {
+    get() {
+      return $('.cd-booking-confirmation__event-date');
+    },
+  },
+  eventTimes: {
+    get() {
+      return $('.cd-booking-confirmation__event-times');
+    },
+  },
+  recurringFrequencyInfo: {
+    get() {
+      return $('.cd-booking-confirmation__recurring-frequency-info');
+    },
+  },
   eventLocation: {
     get() {
       return $('.cd-booking-confirmation__event-location');
     },
   },
+  bookingName: {
+    value(index) {
+      return $$('.cd-booking-confirmation__booking-name')[index];
+    },
+  },
+  bookingSessionTicket: {
+    value(index) {
+      return $$('.cd-booking-confirmation__booking-session-ticket')[index];
+    },
+  },
+  eventDetailsHeader: {
+    get() {
+      return $('.cd-booking-confirmation__event-details-header');
+    },
+  },
   eventDescription: {
     get() {
       return $('.cd-booking-confirmation__event-description');
-    },
-  },
-  bookingTicketName: {
-    get() {
-      return $$('.cd-booking-confirmation__booking-ticket-name');
-    },
-  },
-  bookingTicketType: {
-    get() {
-      return $$('.cd-booking-confirmation__booking-ticket-type');
-    },
-  },
-  bookingTicketSessionName: {
-    get() {
-      return $$('.cd-booking-confirmation__booking-ticket-session-name');
-    },
-  },
-  bookingFirstName: {
-    get() {
-      return $$('.cd-booking-confirmation__booking-first-name');
-    },
-  },
-  bookingLastName: {
-    get() {
-      return $$('.cd-booking-confirmation__booking-last-name');
-    },
-  },
-  bookingDateOfBirth: {
-    get() {
-      return $$('.cd-booking-confirmation__booking-dob');
-    },
-  },
-  bookingEmailAddress: {
-    get() {
-      return $$('.cd-booking-confirmation__booking-email');
-    },
-  },
-  bookingGender: {
-    get() {
-      return $$('.cd-booking-confirmation__booking-gender');
     },
   },
 });
