@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-3">
         <p>{{ $t('Maintained by') }}</p>
-        <img class="cd-footer__foundation-logo" src="~cd-common/dist/coderdojo-foundation.svg" />
+        <img class="cd-footer__foundation-logo" src="~@coderdojo/cd-common/dist/coderdojo-foundation.svg" />
         </svg>
       </div>
       <div class="col-sm-3">
@@ -87,5 +87,6 @@ export default {
 };
 </script>
 
-<style src="cd-common/dist/cd-common.min.css">
+<style lang="less">
+  @import "~@coderdojo/cd-common/cd-common";
 </style>

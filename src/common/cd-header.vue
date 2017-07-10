@@ -1,9 +1,9 @@
 <template>
-  <header class="header">
-    <div class="cd-menu cd-menu__desktop-nav">
+  <header class="cd-menu">
+    <div class="cd-menu__desktop-nav">
       <div class="cd-menu__first-row">
         <a href="/">
-          <img src="~cd-common/dist/coderdojo-logo-light-bg.svg" width="120" height="44" />
+          <img src="~@coderdojo/cd-common/dist/coderdojo-logo-light-bg.svg" width="120" height="44" />
         </a>
         <a href="https://coderdojo.com/donate/" class="cd-menu__donate-button">{{ $t('Donate') }}</a>
         <form class="cd-menu__search" role="search" action="https://coderdojo.com/">
@@ -53,7 +53,7 @@
         <span class="cd-menu__hamburger-bar"></span>
       </button>
       <a href="/">
-        <img src="~cd-common/dist/coderdojo-logo-light-bg.svg" width="120" height="44" style="padding-left: 5px;" />
+        <img src="~@coderdojo/cd-common/dist/coderdojo-logo-light-bg.svg" width="120" height="44" style="padding-left: 5px;" />
       </a>
     </div>
     <div class="cd-menu__scrim"></div>
@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import 'cd-common/dist/cd-common.min';
+import '@coderdojo/cd-common/dist/cd-common.min';
 
 export default {
   name: 'cd-header',
@@ -196,6 +196,6 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style src="cd-common/dist/cd-common.min.css">
-
+<style lang="less">
+  @import "~@coderdojo/cd-common/cd-common";
 </style>
