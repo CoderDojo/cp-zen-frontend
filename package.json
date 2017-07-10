@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
-    "cd-common": "git+https://github.com/CoderDojo/cd-common.git#1.1.5",
+    "@coderdojo/cd-common": "1.1.5",
     "font-awesome": "^4.7.0",
     "js-cookie": "^2.1.4",
     "lodash": "^4.17.4",

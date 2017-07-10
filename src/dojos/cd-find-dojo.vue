@@ -150,11 +150,11 @@
       display: flex;
       background: @cd-green;
       color: @cd-white;
-      margin: -16px -16px 0 -16px;
+      margin: 0 -16px;
 
       &-form {
         flex: 3;
-        padding: 64px 32px 96px;
+        padding: 48px 32px 96px;
 
         &-header {
           font-size: 40px;

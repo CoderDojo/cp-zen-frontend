@@ -15,7 +15,7 @@ dependencies:
     - google-chrome --version
   override:
     - npm install
-    - if [ "$CIRCLE_BRANCH" = "staging" ]; then npm install --save cp-translations@staging; fi
+    - if [ "$CIRCLE_BRANCH" = "staging" ]; then npm install --save cp-translations@staging cd-common@staging; fi
 test:
   override:
     - npm run test

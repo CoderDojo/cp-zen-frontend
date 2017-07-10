@@ -90,7 +90,7 @@
   };
 </script>
 <style scoped lang="less">
-  @import "~cd-common/common/_colors";
+  @import "~@coderdojo/cd-common/common/_colors";
 
   .cd-event-details {
 
