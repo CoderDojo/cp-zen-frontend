@@ -128,8 +128,8 @@ describe('Event list component', () => {
         },
       ];
 
-      expect(vm.isEventFull(1)).to.equal(true);
-      expect(vm.isEventFull(2)).to.equal(false);
+      expect(vm.isEventFull(vm.events[0])).to.equal(true);
+      expect(vm.isEventFull(vm.events[1])).to.equal(false);
     });
   });
 });
