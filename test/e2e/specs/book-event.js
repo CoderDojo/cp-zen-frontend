@@ -100,44 +100,35 @@ describe('Book event page', () => {
 
     Booking.submitBookingButton.click();
 
-    BookingConfirmation.firstName.waitForVisible();
+    BookingConfirmation.bookingConfirmationMessage.waitForVisible();
 
-    expect(BookingConfirmation.accountCreationConfirmation.getText()).to.equal('Account created');
-    expect(BookingConfirmation.joinedDojoConfirmation.getText()).to.equal('Dojo joined successfully')
-    expect(BookingConfirmation.dojoName.getText()).to.equal('Dublin Ninja Kids');
-
-    expect(BookingConfirmation.bookingConfirmationMessage.getText()).to.equal('Your booking is completed successfully');
-
-    expect(BookingConfirmation.firstName.getText()).to.equal('John');
-    expect(BookingConfirmation.lastName.getText()).to.equal('Doe');
-    expect(BookingConfirmation.dateOfBirth.getText()).to.equal('1980-04-27T00:00:00.000Z');
-    expect(BookingConfirmation.phoneNumber.getText()).to.equal('1555123456');
-    expect(BookingConfirmation.email.getText()).to.equal('john.doe@example.com');
+    expect(BookingConfirmation.bookingConfirmationMessage.getText()).to.equal('Booking Complete');
+    expect(BookingConfirmation.emailMessage.getText()).to.equal('A confirmation email has been sent to john.doe@example.com');
 
     expect(BookingConfirmation.eventName.getText()).to.equal('My First Amazing Event');
-    expect(BookingConfirmation.eventLocation.getText()).to.equal('CHQ');
+    expect(BookingConfirmation.hostedByMessage.getText()).to.equal('Event hosted by Dublin Ninja Kids');
+
+    expect(BookingConfirmation.detailsBoxTitle(0).getText()).to.equal('TIME');
+    expect(BookingConfirmation.eventDate.getText()).to.equal('June 6, 2017');
+    expect(BookingConfirmation.eventTimes.getText()).to.equal('4:30pm - 6pm');
+    expect(BookingConfirmation.recurringFrequencyInfo.isVisible()).to.equal(false);
+
+    expect(BookingConfirmation.detailsBoxTitle(1).getText()).to.equal('LOCATION');
+    expect(BookingConfirmation.eventLocation.getText()).to.equal('CHQ, Dublin, Ireland');
+
+    expect(BookingConfirmation.detailsBoxTitle(2).getText()).to.equal('ATTENDEES');
+    expect(BookingConfirmation.bookingName(0).getText()).to.equal('John Doe');
+    expect(BookingConfirmation.bookingSessionTicket(0).getText()).to.equal('Parent / Scratch');
+    expect(BookingConfirmation.bookingName(1).getText()).to.equal('Child One');
+    expect(BookingConfirmation.bookingSessionTicket(1).getText()).to.equal('Laptop required / Arduino');
+    expect(BookingConfirmation.bookingName(2).getText()).to.equal('Child Two');
+    expect(BookingConfirmation.bookingSessionTicket(2).getText()).to.equal('Laptop required / Arduino');
+
+    expect(BookingConfirmation.accountCreationConfirmation.getText()).to.equal('CoderDojo Account has been created\nYou can log in and find events hosted by this dojo in My Dojos');
+    expect(BookingConfirmation.joinedDojoConfirmation.getText()).to.equal('You are now subscribed to Dublin Ninja Kids dojo\nYou will be notified about future events hosted by this dojo');
+
+    expect(BookingConfirmation.eventDetailsHeader.getText()).to.equal('Event Details');
     expect(BookingConfirmation.eventDescription.getText()).to.equal('LEARN ALL THE THINGS');
-
-    expect(BookingConfirmation.bookingTicketSessionName[0].getText()).to.equal('Scratch');
-    expect(BookingConfirmation.bookingTicketType[0].getText()).to.equal('parent-guardian');
-    expect(BookingConfirmation.bookingFirstName[0].getText()).to.equal('John');
-    expect(BookingConfirmation.bookingLastName[0].getText()).to.equal('Doe');
-    expect(BookingConfirmation.bookingEmailAddress[0].getText()).to.equal('john.doe@example.com');
-
-    expect(BookingConfirmation.bookingTicketSessionName[1].getText()).to.equal('Arduino');
-    expect(BookingConfirmation.bookingTicketType[1].getText()).to.equal('ninja');
-    expect(BookingConfirmation.bookingFirstName[1].getText()).to.equal('Child');
-    expect(BookingConfirmation.bookingLastName[1].getText()).to.equal('One');
-    expect(BookingConfirmation.bookingDateOfBirth[1].getText()).to.equal('2008-01-01T00:00:00.000Z');
-    expect(BookingConfirmation.bookingGender[1].getText()).to.equal('Male');
-
-    expect(BookingConfirmation.bookingTicketSessionName[2].getText()).to.equal('Arduino');
-    expect(BookingConfirmation.bookingTicketType[2].getText()).to.equal('ninja');
-    expect(BookingConfirmation.bookingFirstName[2].getText()).to.equal('Child');
-    expect(BookingConfirmation.bookingLastName[2].getText()).to.equal('Two');
-    expect(BookingConfirmation.bookingDateOfBirth[2].getText()).to.equal('2006-10-10T00:00:00.000Z');
-    expect(BookingConfirmation.bookingGender[2].getText()).to.equal('Female');
-
   });
 
   it('should show youth email input field when youth is booking', () => {
@@ -148,6 +139,7 @@ describe('Book event page', () => {
     const now = new Date();
     const turned13 = new Date(now.getFullYear() - 13, now.getMonth(), now.getDate(), 0, 0, 0, 0);
 
+    EventDobVerificationPage.dateOfBirthDayInput.waitForVisible();
     EventDobVerificationPage.dateOfBirthDayInput.selectByValue(turned13.getDate());
     EventDobVerificationPage.dateOfBirthMonthInput.selectByValue(turned13.getMonth());
     EventDobVerificationPage.dateOfBirthYearInput.selectByValue(turned13.getFullYear());
@@ -157,32 +149,6 @@ describe('Book event page', () => {
     EventSessionsPage.nextButton.click();
 
     Booking.sessionTicketEmailAddress[0].waitForVisible();
-    Booking.firstName.setValue('John');
-    Booking.lastName.setValue('Doe');
-    Booking.dateOfBirthDayInput.selectByValue('27');
-    Booking.dateOfBirthMonthInput.selectByValue('3');
-    Booking.dateOfBirthYearInput.selectByValue('1980');
-    Booking.phoneNumber.setValue('1555123456');
-    Booking.email.setValue('john.doe@example.com');
-
-    Booking.sessionTicketFirstName[0].setValue('Child');
-    Booking.sessionTicketLastName[0].setValue('One');
-    Booking.sessionTicketDayOfBirth(0).selectByValue('1');
-    Booking.sessionTicketMonthOfBirth(0).selectByValue('0');
-    Booking.sessionTicketYearOfBirth(0).selectByValue('2008');
-    Booking.sessionTicketEmailAddress[0].setValue('child@one.org');
-    Booking.sessionTicketGender('Male')[0].click();
-
-    Booking.password.setValue('Passw0rd');
-    Booking.confirmPassword.setValue('Passw0rd');
-    Booking.termsAndConditions.click();
-    Booking.checkRecaptcha();
-
-    Booking.submitBookingButton.click();
-
-    BookingConfirmation.firstName.waitForVisible();
-
-    expect(BookingConfirmation.bookingEmailAddress[0].getText()).to.equal('child@one.org');
   });
 
   it('should not show youth email input field when parent is booking', () => {
@@ -193,6 +159,7 @@ describe('Book event page', () => {
     const now = new Date();
     const turned20 = new Date(now.getFullYear() - 20, now.getMonth(), now.getDate(), 0, 0, 0, 0);
 
+    EventDobVerificationPage.dateOfBirthDayInput.waitForVisible();
     EventDobVerificationPage.dateOfBirthDayInput.selectByValue(turned20.getDate());
     EventDobVerificationPage.dateOfBirthMonthInput.selectByValue(turned20.getMonth());
     EventDobVerificationPage.dateOfBirthYearInput.selectByValue(turned20.getFullYear());
@@ -205,45 +172,6 @@ describe('Book event page', () => {
     Booking.firstName.waitForVisible();
 
     expect(Booking.sessionTicketEmailAddress[0]).to.equal(undefined);
-  });
-
-  it('should show the other gender', () => {
-    startBooking();
-
-    Booking.firstName.setValue('John');
-    Booking.lastName.setValue('Doe');
-    Booking.dateOfBirthDayInput.selectByValue('27');
-    Booking.dateOfBirthMonthInput.selectByValue('3');
-    Booking.dateOfBirthYearInput.selectByValue('1980');
-    Booking.phoneNumber.setValue('1555123456');
-    Booking.email.setValue('john.doe@example.com');
-
-    Booking.sessionTicketFirstName[0].setValue('Child');
-    Booking.sessionTicketLastName[0].setValue('One');
-    Booking.sessionTicketDayOfBirth(0).selectByValue('1');
-    Booking.sessionTicketMonthOfBirth(0).selectByValue('0');
-    Booking.sessionTicketYearOfBirth(0).selectByValue('2008');
-    Booking.sessionTicketGender('Other')[0].click();
-    Booking.sessionOtherGender[0].setValue('another gender');
-
-    Booking.sessionTicketFirstName[1].setValue('Child');
-    Booking.sessionTicketLastName[1].setValue('Two');
-    Booking.sessionTicketDayOfBirth(1).selectByValue('10');
-    Booking.sessionTicketMonthOfBirth(1).selectByValue('9');
-    Booking.sessionTicketYearOfBirth(1).selectByValue('2006');
-    Booking.sessionTicketGender('Female')[1].click();
-
-    Booking.password.waitForVisible();
-    Booking.password.setValue('Passw0rd');
-    Booking.confirmPassword.setValue('Passw0rd');
-    Booking.termsAndConditions.click();
-    Booking.checkRecaptcha();
-
-    Booking.submitBookingButton.click();
-
-    BookingConfirmation.firstName.waitForVisible();
-
-    expect(BookingConfirmation.bookingGender[1].getText()).to.equal('another gender');
   });
 
   it('should report validation errors for not filling in required fields', () => {
@@ -405,6 +333,7 @@ describe('Book event page', () => {
     const now = new Date();
     const turned13 = new Date(now.getFullYear() - 13, now.getMonth(), now.getDate(), 0, 0, 0, 0);
 
+    EventDobVerificationPage.dateOfBirthDayInput.waitForVisible();
     EventDobVerificationPage.dateOfBirthDayInput.selectByValue(turned13.getDate());
     EventDobVerificationPage.dateOfBirthMonthInput.selectByValue(turned13.getMonth());
     EventDobVerificationPage.dateOfBirthYearInput.selectByValue(turned13.getFullYear());
@@ -423,6 +352,7 @@ describe('Book event page', () => {
     const now = new Date();
     const turned18 = new Date(now.getFullYear() - 18, now.getMonth(), now.getDate(), 0, 0, 0, 0);
 
+    EventDobVerificationPage.dateOfBirthDayInput.waitForVisible();
     EventDobVerificationPage.dateOfBirthDayInput.selectByValue(turned18.getDate());
     EventDobVerificationPage.dateOfBirthMonthInput.selectByValue(turned18.getMonth());
     EventDobVerificationPage.dateOfBirthYearInput.selectByValue(turned18.getFullYear());
@@ -437,5 +367,45 @@ describe('Book event page', () => {
     startBooking();
     Booking.modifyButton.click();
     EventSessionsPage.sessionsHeader.waitForVisible();
+  });
+
+  it('should show recurring frequency on confirmation page for recurring event', () => {
+    DojoPage.openDojoWithLatLong(10, 89);
+    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.eventViewButtons(1).click();
+
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
+    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('3');
+    EventDobVerificationPage.dateOfBirthYearInput.selectByValue('1980');
+    EventDobVerificationPage.verify.click();
+
+    EventSessionsPage.ticketCounterIncrement(4).click();
+
+    EventSessionsPage.nextButton.click();
+
+    Booking.firstName.setValue('John');
+    Booking.lastName.setValue('Doe');
+    Booking.dateOfBirthDayInput.selectByValue('27');
+    Booking.dateOfBirthMonthInput.selectByValue('3');
+    Booking.dateOfBirthYearInput.selectByValue('1980');
+    Booking.phoneNumber.setValue('1555123456');
+    Booking.email.setValue('john.doe@example.com');
+
+    Booking.sessionTicketFirstName[0].setValue('Child');
+    Booking.sessionTicketLastName[0].setValue('One');
+    Booking.sessionTicketDayOfBirth(0).selectByValue('1');
+    Booking.sessionTicketMonthOfBirth(0).selectByValue('0');
+    Booking.sessionTicketYearOfBirth(0).selectByValue('2008');
+    Booking.sessionTicketGender('Male')[0].click();
+
+    Booking.password.setValue('Passw0rd');
+    Booking.confirmPassword.setValue('Passw0rd');
+    Booking.termsAndConditions.click();
+    Booking.checkRecaptcha();
+
+    Booking.submitBookingButton.click();
+
+    BookingConfirmation.recurringFrequencyInfo.waitForVisible();
+    expect(BookingConfirmation.recurringFrequencyInfo.getText()).to.equal('Every two weeks on Saturdays');
   });
 });
