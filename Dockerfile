@@ -1,4 +1,4 @@
-IMAGE node:boron-alpine
+FROM node:boron-alpine
 MAINTAINER butlerx <butlerx@notthe.cloud>
 
 RUN apk add --update git build-base python && \
