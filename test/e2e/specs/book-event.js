@@ -25,7 +25,7 @@ function checkRecurringEventDetails(page) {
   expect(page.sectionHeaders[0].getText()).to.equal('TIME');
   expect(page.sectionContents[0].getText()).to.have.string('Next in series: July 15, 2017');
   expect(page.sectionContents[0].getText()).to.have.string('10am - 12pm');
-  expect(page.sectionContents[0].getText()).to.have.string('Every two weeks on Saturdays');
+  expect(page.sectionContents[0].getText()).to.have.string('Every two weeks on Saturday');
   page.sectionIcons[1].waitForVisible();
   expect(page.sectionHeaders[1].getText()).to.equal('LOCATION');
   expect(page.sectionContents[1].getText()).to.equal('CHQ, Dublin, Ireland');
@@ -125,10 +125,17 @@ describe('Book event page', () => {
     expect(BookingConfirmation.bookingSessionTicket(2).getText()).to.equal('Laptop required / Arduino');
 
     expect(BookingConfirmation.accountCreationConfirmation.getText()).to.equal('CoderDojo Account has been created\nYou can log in and find events hosted by this dojo in My Dojos');
+    expect(BookingConfirmation.accountCreationConfirmation.$('a').getAttribute('href')).to.match(/\/dashboard\/my-dojos$/);
     expect(BookingConfirmation.joinedDojoConfirmation.getText()).to.equal('You are now subscribed to Dublin Ninja Kids dojo\nYou will be notified about future events hosted by this dojo');
 
     expect(BookingConfirmation.eventDetailsHeader.getText()).to.equal('Event Details');
     expect(BookingConfirmation.eventDescription.getText()).to.equal('LEARN ALL THE THINGS');
+
+    const hostedByLink = BookingConfirmation.hostedByMessage.$('a');
+    hostedByLink.scroll(0, -200);
+    hostedByLink.click();
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.name.getText()).to.equal('Dublin Ninja Kids');
   });
 
   it('should show youth email input field when youth is booking', () => {
@@ -413,6 +420,6 @@ describe('Book event page', () => {
     Booking.submitBookingButton.click();
 
     BookingConfirmation.recurringFrequencyInfo.waitForVisible();
-    expect(BookingConfirmation.recurringFrequencyInfo.getText()).to.equal('Every two weeks on Saturdays');
+    expect(BookingConfirmation.recurringFrequencyInfo.getText()).to.equal('Every two weeks on Saturday');
   });
 });

@@ -27,6 +27,7 @@ describe('Translation Component Generator', () => {
   it('should return an component definition using the given str and interpolationOptions as a template', () => {
     // ARRANGE
     const compiledTemplateMock = {
+      props: ['props'],
       render: 'render',
       staticRenderFns: 'staticRenderFns',
     };
@@ -41,6 +42,7 @@ describe('Translation Component Generator', () => {
     // ASSERT
     expect(component).to.deep.equal({
       name: 'Translation',
+      props: compiledTemplateMock.props,
       render: compiledTemplateMock.render,
       staticRenderFns: compiledTemplateMock.staticRenderFns,
     });

@@ -125,19 +125,6 @@ describe('Event Details', () => {
     });
   });
 
-  describe('buildRecurringFrequencyInfo()', () => {
-    it('should return true when event type is recurring', () => {
-      // ARRANGE
-      vm.eventDetails = mockRecurringEventData;
-
-      // ACT
-      const message = vm.buildRecurringFrequencyInfo();
-
-      // ASSERT
-      expect(message).to.equal('Every two weeks on Saturdays');
-    });
-  });
-
   describe('getNextStartTime', () => {
     it('should return the first event startTime date after now', () => {
       // ARRANGE
