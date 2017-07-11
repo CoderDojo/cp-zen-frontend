@@ -25,15 +25,6 @@ describe('The Dojo List Item vue', () => {
     website: null,
   };
 
-  it('should compute a details page url', () => {
-    // ARRANGE
-    const vm = vueUnitHelper(cdDojoListItem);
-    vm.dojo = mockDojo;
-
-    // ASSERT
-    expect(vm.detailsPageUrl).to.equal('/dojos/ie/dublin/cd-rom');
-  });
-
   it('should compute an image url for given dojo id', () => {
     // ARRANGE
     const vm = vueUnitHelper(cdDojoListItem);

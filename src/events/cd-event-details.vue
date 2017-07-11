@@ -20,7 +20,7 @@
           </div>
           <div v-if="isRecurring()" class="cd-event-details__left-column-section-value-frequency">
             <div class="cd-event-details__left-column-section-value">
-              {{ buildRecurringFrequencyInfo() }}
+              {{ buildRecurringFrequencyInfo(eventDetails) }}
             </div>
           </div>
         </info-column-section>
@@ -43,6 +43,7 @@
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import InfoColumn from '@/common/cd-info-column';
   import InfoColumnSection from '@/common/cd-info-column-section';
+  import EventsUtil from '@/events/util';
   import service from './service';
 
   export default {
@@ -51,7 +52,6 @@
     data() {
       return {
         eventDetails: null,
-        termEvent: { biweekly: 'Every two weeks', weekly: 'Weekly' },
         now: moment(),
       };
     },
@@ -82,11 +82,7 @@
         }, this);
         return nextDateInfo.startTime;
       },
-      buildRecurringFrequencyInfo() {
-        const dayName = moment(this.eventDetails.dates[0].startTime).format('dddd');
-        const recurrence = this.termEvent[this.eventDetails.recurringType];
-        return `${this.$i18n.t(recurrence)} ${this.$i18n.t('on')} ${dayName}s`;
-      },
+      buildRecurringFrequencyInfo: EventsUtil.buildRecurringFrequencyInfo,
     },
     created() {
       this.loadEvent();

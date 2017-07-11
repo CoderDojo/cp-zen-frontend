@@ -25,12 +25,12 @@ describe('Booking Confirmation Component', () => {
     sandbox.restore();
   });
 
-  describe('methods.getDojoName', () => {
-    it('should load dojo name', (done) => {
+  describe('methods.getDojo', () => {
+    it('should load dojo', (done) => {
       // ARRANGE
       const vm = vueUnitHelper(BookingConfirmationComponentWithMocks);
       vm.selectedEvent = { dojoId: '1' };
-      vm.dojoName = '';
+      vm.dojo = '';
       const expectedDojo = { name: 'foo' };
 
       MockDojoService.getDojoById.withArgs('1').returns(
@@ -42,11 +42,11 @@ describe('Booking Confirmation Component', () => {
       );
 
       // ACT
-      vm.getDojoName();
+      vm.getDojo();
 
       // ASSERT
       requestAnimationFrame(() => {
-        expect(vm.dojoName).to.equal(expectedDojo.name);
+        expect(vm.dojo).to.equal(expectedDojo);
         done();
       });
     });
@@ -218,14 +218,14 @@ describe('Booking Confirmation Component', () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingConfirmationComponentWithMocks);
       sandbox.stub(vm, 'loadBookingData');
-      sandbox.stub(vm, 'getDojoName');
+      sandbox.stub(vm, 'getDojo');
 
       // ACT
       vm.$lifecycleMethods.created();
 
       // ASSERT
       expect(vm.loadBookingData).to.have.been.calledOnce;
-      expect(vm.getDojoName).to.have.been.calledOnce;
+      expect(vm.getDojo).to.have.been.calledOnce;
     });
   });
 });

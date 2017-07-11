@@ -3,22 +3,22 @@ const BasePage = require('./base-page');
 const BookingConfirmation = Object.create(BasePage, {
   emailMessage: {
     get() {
-      return $('.cd-booking-confirmation__email-message');
+      return $('.cd-booking-confirmation__banner-subtitle');
     },
   },
   accountCreationConfirmation: {
     get() {
-      return $('.cd-booking-confirmation__account-creation-confirmation');
+      return $$('.cd-booking-confirmation__account-confirmation')[0];
     },
   },
   bookingConfirmationMessage: {
     get() {
-      return $('.cd-booking-confirmation__booking-confirmation');
+      return $('.cd-booking-confirmation__banner-title');
     },
   },
   joinedDojoConfirmation: {
     get() {
-      return $('.cd-booking-confirmation__account-dojo-confirmation');
+      return $$('.cd-booking-confirmation__account-confirmation')[1];
     },
   },
   hostedByMessage: {

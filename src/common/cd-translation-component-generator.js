@@ -7,6 +7,7 @@ export default function (str, interpolationOptions) {
 
   return {
     name: 'Translation',
+    props: ['props'],
     render: res.render,
     staticRenderFns: res.staticRenderFns,
   };
