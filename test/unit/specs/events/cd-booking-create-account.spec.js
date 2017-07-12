@@ -55,7 +55,7 @@ describe('Booking Create Account Form', () => {
         name: 'parent-guardian',
       },
       termsConditionsAccepted: true,
-      isSubscribedToMailingList: true,
+      mailingList: true,
     };
     const profile = {
       firstName: 'John',
