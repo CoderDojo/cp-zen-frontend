@@ -136,7 +136,7 @@
 
     &__main-content {
       flex: 8;
-      padding: 0 16px;
+      padding: 0 16px 32px 16px;
     }
   }
 </style>

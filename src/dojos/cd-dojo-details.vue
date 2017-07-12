@@ -153,7 +153,7 @@
 
     &__main_content {
       flex: 8;
-      margin: 0 32px 0 16px;
+      margin: 0 32px 32px 16px;
     }
 
     &__social-media {
