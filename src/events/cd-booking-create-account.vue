@@ -104,7 +104,7 @@
             name: 'parent-guardian',
           },
           termsConditionsAccepted: this.termsConditionsAccepted,
-          isSubscribedToMailingList: this.isSubscribedToMailingList,
+          mailingList: this.isSubscribedToMailingList,
         });
       },
     },
