@@ -168,7 +168,7 @@
       background-color: @cd-purple;
       color: white;
       display: flex;
-      padding: 0 0 0 30px;
+      padding: 0 0 0 32px;
       &-left {
         flex: 10;
       }
@@ -180,7 +180,7 @@
       }
 
       &-subtitle {
-        margin-bottom: 30px;
+        margin-bottom: 32px;
         font-size: 18px;
       }
 
@@ -255,7 +255,7 @@
       &-details {
         &-section {
           background-color: #ffffff;
-          padding: 48px 30px;
+          padding: 48px 32px;
         }
         &-header {
           font-size: 18px;
@@ -285,7 +285,7 @@
 
         &-wrapper {
           display: flex;
-          margin: 48px 30px;
+          margin: 48px 32px;
         }
 
         &-icon {
