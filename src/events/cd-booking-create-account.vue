@@ -31,6 +31,18 @@
           <vue-recaptcha :sitekey="recaptchaSiteKey" @verify="onRecaptchaVerify"></vue-recaptcha>
         </div>
       </div>
+
+      <div class="row">
+        <div class="cd-booking-create-account__label cd-booking-create-account__agreement">
+          <span class="cd-booking-create-account__agreement-left">
+            <input type="checkbox" name="isSubscribedToMailingList" v-model="isSubscribedToMailingList"/>
+          </span>
+          <span class="cd-booking-create-account__agreement-right">
+            <span>{{ $t('I want to join the CoderDojo Mailing List') }}</span>
+          </span>
+        </div>
+      </div>
+
       <div class="row">
         <div class="cd-booking-create-account__label cd-booking-create-account__agreement">
           <span class="cd-booking-create-account__agreement-left">
@@ -46,6 +58,7 @@
             {{ $t('You must accept the terms and conditions before proceeding.') }}
         </label>
       </div>
+
     </div>
   </div>
 </template>
@@ -75,6 +88,7 @@
         password: null,
         confirmPassword: null,
         termsConditionsAccepted: false,
+        isSubscribedToMailingList: false,
         recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
         recaptchaResponse: null,
         formValidated: false,
@@ -90,6 +104,7 @@
             name: 'parent-guardian',
           },
           termsConditionsAccepted: this.termsConditionsAccepted,
+          isSubscribedToMailingList: this.isSubscribedToMailingList,
         });
       },
     },

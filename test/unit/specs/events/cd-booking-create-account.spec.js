@@ -55,6 +55,7 @@ describe('Booking Create Account Form', () => {
         name: 'parent-guardian',
       },
       termsConditionsAccepted: true,
+      isSubscribedToMailingList: true,
     };
     const profile = {
       firstName: 'John',
@@ -68,6 +69,7 @@ describe('Booking Create Account Form', () => {
     vm.password = 'Passw0rd';
     vm.recaptchaResponse = 'abc123';
     vm.termsConditionsAccepted = true;
+    vm.isSubscribedToMailingList = true;
 
     // ACT
     const user = vm.user;
