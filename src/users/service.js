@@ -4,13 +4,15 @@ import { clone } from 'lodash';
 import UserUtils from '@/users/util';
 
 const UserService = {
+  login: (email, password) => Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/login`, {
+    email,
+    password,
+  }),
+
   register: (user, profile) => Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/register`, {
     profile,
     user,
-  }).then(() => Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/login`, {
-    email: user.email,
-    password: user.password,
-  })),
+  }).then(() => UserService.login(user.email, user.password)),
 
   getCurrentUser: () => Vue.http.get(`${Vue.config.apiServer}/api/2.0/users/instance`),
 

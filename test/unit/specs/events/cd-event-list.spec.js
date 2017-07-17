@@ -1,17 +1,25 @@
-import Vue from 'vue';
 import vueUnitHelper from 'vue-unit-helper';
 import eventList from '!!vue-loader?inject!@/events/cd-event-list';
 
 describe('Event list component', () => {
-  function setUpEventListComponentWithMockEvents(mockEventsBody) {
-    const mockService = {
-      loadEvents: (/* dojoId */) => Promise.resolve({ body: mockEventsBody }),
+  let sandbox;
+  let EventListWithMocks;
+  let MockEventsService;
+  let MockUsersService;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    MockEventsService = {
+      loadEvents: sandbox.stub(),
     };
-    const eventListWithMocks = eventList({
-      './service': mockService,
+    MockUsersService = {
+      getCurrentUser: sandbox.stub(),
+    };
+    EventListWithMocks = eventList({
+      '@/users/service': MockUsersService,
+      './service': MockEventsService,
     });
-    return eventListWithMocks;
-  }
+  });
 
   it('should show the list of dojo events', (done) => {
     const mockEventDataResponse = [
@@ -39,8 +47,8 @@ describe('Event list component', () => {
       },
     ];
 
-    const EventListWithMock = setUpEventListComponentWithMockEvents(mockEventDataResponse);
-    const vm = new Vue(EventListWithMock);
+    MockEventsService.loadEvents.returns(Promise.resolve({ body: mockEventDataResponse }));
+    const vm = vueUnitHelper(EventListWithMocks);
     vm.dojo = { id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77' };
     vm.loadEvents();
     requestAnimationFrame(() => {
@@ -130,6 +138,71 @@ describe('Event list component', () => {
 
       expect(vm.isEventFull(vm.events[0])).to.equal(true);
       expect(vm.isEventFull(vm.events[1])).to.equal(false);
+    });
+  });
+
+  describe('computed.canBook', () => {
+    let vm;
+
+    beforeEach(() => {
+      vm = vueUnitHelper(eventList());
+    });
+
+    it('should be false if this.currentUser is falsey and dojo is private', () => {
+      // ARRANGE
+      vm.currentUser = null;
+      vm.dojo = {
+        private: 1,
+      };
+
+      // ASSERT
+      expect(vm.canBook).to.equal(false);
+    });
+
+    it('should be true if this.currentUser is truthy, but dojo is private', () => {
+      // ARRANGE
+      vm.currentUser = {
+        id: 'foo',
+      };
+      vm.dojo = {
+        private: 1,
+      };
+
+      // ASSERT
+      expect(vm.canBook).to.equal(true);
+    });
+
+    it('should be true if this.currentUser is falsey and dojo is public', () => {
+      // ARRANGE
+      vm.currentUser = null;
+      vm.dojo = {
+        private: 0,
+      };
+
+      // ASSERT
+      expect(vm.canBook).to.equal(true);
+    });
+  });
+
+  describe('methods', () => {
+    describe('loadCurrentUser', () => {
+      it('should load the current user', (done) => {
+        // ARRANGE
+        const mockUser = {
+          id: 'foo',
+        };
+        MockUsersService.getCurrentUser.returns(Promise.resolve({ body: { user: mockUser } }));
+        const vm = vueUnitHelper(EventListWithMocks);
+
+        // ACT
+        vm.loadCurrentUser();
+
+        // ASSERT
+        requestAnimationFrame(() => {
+          expect(vm.currentUser).to.deep.equal(mockUser);
+          done();
+        });
+      });
     });
   });
 });

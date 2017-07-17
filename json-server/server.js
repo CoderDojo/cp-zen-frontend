@@ -1,7 +1,9 @@
 // server.js
 const jsonServer = require('json-server');
+const express = require('express');
 const path = require('path');
 const uuidv1 = require('uuid/v1');
+const users = require('./users');
 
 const server = jsonServer.create();
 const router = jsonServer.router(path.join(__dirname, 'db.json'));
@@ -19,8 +21,6 @@ const pathsToReturnSingular = [
   '/api/2.0/dojos/find',
 ];
 const nonResourcePostUrls = [
-  '/api/2.0/users/register',
-  '/api/2.0/users/login',
   '/api/2.0/dojos/save-usersdojos',
 ]
 const rewriteRules = {
@@ -31,6 +31,7 @@ const rewriteRules = {
 };
 
 server.use(middlewares);
+server.use(require('cookie-parser')());
 server.use(require('body-parser').json());
 server.use(jsonServer.rewriter(rewriteRules));
 server.use((req, res, next) => {
@@ -74,6 +75,34 @@ server.post('/api/2.0/profiles/youth/create', (req, res) => {
   child.id = uuidv1();
   child.userId = uuidv1();
   res.send(child);
+});
+
+server.post('/api/2.0/users/register', (req, res) => {
+  users[req.body.user.email] = req.body.user;
+  users[req.body.user.email].id = uuidv1();
+  users[req.body.user.email].name = `${req.body.user.firstName} ${req.body.user.lastName}`;
+  users[req.body.user.email].roles = ['basic-user'];
+  users[req.body.user.email].initUserType = JSON.stringify(users[req.body.user.email].initUserType);
+  res.send();
+});
+
+server.post('/api/2.0/users/login', (req, res) => {
+  res.cookie('loggedIn', req.body.email, { maxAge: 900000, httpOnly: true });
+  res.send();
+});
+server.get('/api/2.0/users/instance', (req, res) => {
+  if (req.cookies.loggedIn) {
+    res.send({
+      login: {},
+      ok: true,
+      user: users[req.cookies.loggedIn],
+    });
+  } else {
+    res.send({
+      login: {},
+      ok: false,
+    });
+  }
 });
 server.use('/api/2.0', router);
 server.get('/locale/data', (req, res) => {
