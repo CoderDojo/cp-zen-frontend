@@ -168,6 +168,13 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(1);
   });
 
+  it('should link to the dojo website', () => {
+    DojoPage.openDojoWithLatLong(10, 89);
+
+    DojoDetailsPage.website.waitForVisible();
+    expect(DojoDetailsPage.website.getAttribute('href')).to.equal('http://www.dublinninjakids.com/');
+  });
+
   describe('Mobile specific tests', () => {
     beforeEach(() => {
       DojoPage.openDojoWithLatLong(10, 89);
