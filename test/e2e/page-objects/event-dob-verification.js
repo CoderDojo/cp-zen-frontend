@@ -19,17 +19,23 @@ const EventDobVerification = Object.create(EventDetails, {
   },
   dateOfBirthDayInput: {
     get() {
-      return $$('.cd-event-dob-verification__dob select')[0];
+      const selector = '.cd-event-dob-verification__dob select';
+      $(selector).waitForVisible();
+      return $$(selector)[0];
     },
   },
   dateOfBirthMonthInput: {
     get() {
-      return $$('.cd-event-dob-verification__dob select')[1];
+      const selector = '.cd-event-dob-verification__dob select';
+      $(selector).waitForVisible();
+      return $$(selector)[1];
     },
   },
   dateOfBirthYearInput: {
     get() {
-      return $$('.cd-event-dob-verification__dob select')[2];
+      const selector = '.cd-event-dob-verification__dob select';
+      $(selector).waitForVisible();
+      return $$(selector)[2];
     },
   },
   verify: {

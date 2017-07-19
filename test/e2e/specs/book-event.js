@@ -347,8 +347,8 @@ describe('Book event page', () => {
 
     EventDobVerificationPage.verify.click();
 
-    expect(EventSessionsPage.eventSessions(0).getText()).not.contains('Parent');
-    expect(EventSessionsPage.eventSessions(1).getText()).not.contains('Parent');
+    expect(EventSessionsPage.eventSessions[0].getText()).not.contains('Parent');
+    expect(EventSessionsPage.eventSessions[1].getText()).not.contains('Parent');
   });
 
   it('should show parent tickets for someone over 18', () => {
@@ -366,8 +366,8 @@ describe('Book event page', () => {
 
     EventDobVerificationPage.verify.click();
 
-    expect(EventSessionsPage.eventSessions(0).getText()).contains('Parent');
-    expect(EventSessionsPage.eventSessions(1).getText()).contains('Parent');
+    expect(EventSessionsPage.eventSessions[0].getText()).contains('Parent');
+    expect(EventSessionsPage.eventSessions[1].getText()).contains('Parent');
   });
 
   it('should allow modifying of selected tickets after they have been selected', () => {

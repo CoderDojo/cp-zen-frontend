@@ -66,13 +66,13 @@ describe('Dojo details page', () => {
 
     const firstEventName = DojoDetailsPage.eventNames(0).getText();
     expect(firstEventName).to.equal('My First Amazing Event');
-    expect(DojoDetailsPage.eventSessions(0).getText()).to.equal('Sessions: Scratch, Arduino');
+    expect(DojoDetailsPage.eventSessions[0].getText()).to.equal('Sessions: Scratch, Arduino');
     expect(DojoDetailsPage.eventDate(0).getText()).to.equal('June 6, 2017');
     expect(DojoDetailsPage.eventTimes(0).getText()).to.equal('4:30pm - 6pm');
 
     const secondEventName = DojoDetailsPage.eventNames(1).getText();
     expect(secondEventName).to.equal('My Second Amazing Event');
-    expect(DojoDetailsPage.eventSessions(1).getText()).to.equal('Sessions: Raspberry Pi, Unity');
+    expect(DojoDetailsPage.eventSessions[1].getText()).to.equal('Sessions: Raspberry Pi, Unity');
     expect(DojoDetailsPage.eventDate(1).getText()).to.equal('June 3, 2017');
     expect(DojoDetailsPage.eventTimes(1).getText()).to.equal('10am - 12pm');
     expect(DojoDetailsPage.eventDate(2).getText()).to.equal('June 17, 2017');
@@ -104,15 +104,15 @@ describe('Dojo details page', () => {
     EventDobVerificationPage.verify.click();
 
     expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
-    expect(EventSessionsPage.eventSessions(0).getText()).to.have.string('Scratch');
-    expect(EventSessionsPage.eventSessions(0).getText()).to.have.string('Beginners welcome');
+    expect(EventSessionsPage.eventSessions[0].getText()).to.have.string('Scratch');
+    expect(EventSessionsPage.eventSessions[0].getText()).to.have.string('Beginners welcome');
     expect(EventSessionsPage.eventTickets(0).getText()).to.have.string('Laptop Required');
     expect(EventSessionsPage.eventTickets(1).getText()).to.have.string('Parent');
     expect(EventSessionsPage.eventTickets(2).getText()).to.have.string('Mentor');
     expect(EventSessionsPage.eventTickets(3).getText()).to.have.string('Bringing a laptop');
 
-    expect(EventSessionsPage.eventSessions(1).getText()).to.have.string('Arduino');
-    expect(EventSessionsPage.eventSessions(1).getText()).to.have.string('Intermediate');
+    expect(EventSessionsPage.eventSessions[1].getText()).to.have.string('Arduino');
+    expect(EventSessionsPage.eventSessions[1].getText()).to.have.string('Intermediate');
     expect(EventSessionsPage.eventTickets(4).getText()).to.have.string('Laptop required');
 
     expect(EventSessionsPage.ticketCounterValues.length).to.equal(8);

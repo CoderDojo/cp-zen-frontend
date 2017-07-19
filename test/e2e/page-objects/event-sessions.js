@@ -12,8 +12,10 @@ const EventSessionsPage = Object.create(EventDetails, {
     },
   },
   eventSessions: {
-    value(index) {
-      return $$('.cd-event-sessions__session')[index];
+    get() {
+      const selector = '.cd-event-sessions__session';
+      $(selector).waitForVisible();
+      return $$(selector);
     },
   },
   eventTickets: {
