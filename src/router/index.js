@@ -7,6 +7,7 @@ import EventDobVerification from '@/events/cd-event-dob-verification';
 import EventSessions from '@/events/cd-event-sessions';
 import Booking from '@/events/cd-booking';
 import BookingConfirmation from '@/events/cd-booking-confirmation';
+import Login from '@/users/cd-login';
 
 Vue.use(Router);
 
@@ -60,6 +61,11 @@ export default new Router({
           name: 'EventBookingConfirmation',
           component: BookingConfirmation,
           props: true,
+        },
+        {
+          path: 'login',
+          name: 'Login',
+          component: Login,
         },
         {
           path: ':lat/:long',

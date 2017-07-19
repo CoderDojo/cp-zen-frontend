@@ -13,12 +13,13 @@ describe('Find Dojo page', () => {
     DojoPage.addressSearchInput.setValue('CHQ');
     DojoPage.addressSearchButton.click();
     DojoPage.showDojoListCount.waitForVisible();
-    expect(DojoPage.showDojoListCount.getText()).to.have.string('Showing 3 Dojos');
+    expect(DojoPage.showDojoListCount.getText()).to.have.string('Showing 4 Dojos');
     const dojosList = DojoPage.dojoListItems;
-    expect(dojosList.length).to.equal(3);
+    expect(dojosList.length).to.equal(4);
     expect(dojosList[0].getText()).to.have.string('CD ROM');
     expect(dojosList[1].getText()).to.have.string('Smithfield Awesome Dojo');
     expect(dojosList[2].getText()).to.have.string('Dublin Ninja Kids');
+    expect(dojosList[3].getText()).to.have.string('Super Secret Dojo');
     expect(DojoPage.map.isVisible()).to.equal(true);
   });
 
@@ -45,7 +46,7 @@ describe('Find Dojo page', () => {
       DojoPage.addressSearchInput.setValue('CHQ');
       DojoPage.addressSearchButton.click();
       DojoPage.showDojoListCountMobile.waitForVisible();
-      expect(DojoPage.showDojoListCountMobile.getText()).to.have.string('Showing 3 Dojos');
+      expect(DojoPage.showDojoListCountMobile.getText()).to.have.string('Showing 4 Dojos');
     });
 
     it('should show/hide the map when clicking the toggle button', () => {

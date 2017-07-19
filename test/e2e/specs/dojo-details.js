@@ -2,6 +2,8 @@ const DojoPage = require('../page-objects/find-dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
 const EventDobVerificationPage = require('../page-objects/event-dob-verification');
 const EventSessionsPage = require('../page-objects/event-sessions');
+const LoginPage = require('../page-objects/login');
+const FindDojoPage = require('../page-objects/find-dojo-page');
 
 describe('Dojo details page', () => {
   it('should show dojo details', () => {
@@ -94,7 +96,7 @@ describe('Dojo details page', () => {
   it('should show event details after clicking on an event', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
-    DojoDetailsPage.eventViewButtons(0).click();
+    DojoDetailsPage.eventViewButtons[0].click();
 
     EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
     EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('3');
@@ -136,7 +138,7 @@ describe('Dojo details page', () => {
   it('should not allow an underage person to proceed in the flow', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
-    DojoDetailsPage.eventViewButtons(0).click();
+    DojoDetailsPage.eventViewButtons[0].click();
 
     EventDobVerificationPage.dateOfBirthDayInput.selectByValue('25');
     EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('5');
@@ -144,6 +146,26 @@ describe('Dojo details page', () => {
     EventDobVerificationPage.verify.click();
     EventDobVerificationPage.dateOfBirthError.waitForVisible();
     expect(EventDobVerificationPage.dateOfBirthError.getText()).to.equal('You will need your parent to carry out the registration.');
+  });
+
+  it('should hide book button on private dojos when not logged in', () => {
+    DojoPage.openDojoWithLatLong(10, 89, 3);
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.eventViewButtons.length).to.equal(0);
+
+    const dojoUrl = browser.getUrl();
+
+    LoginPage.open();
+    LoginPage.email.waitForVisible();
+    LoginPage.email.setValue('parent1@example.com');
+    LoginPage.password.setValue('testparent1');
+    LoginPage.login.click();
+
+    FindDojoPage.header.waitForVisible();
+    browser.url(dojoUrl);
+
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.eventViewButtons.length).to.equal(1);
   });
 
   describe('Mobile specific tests', () => {
