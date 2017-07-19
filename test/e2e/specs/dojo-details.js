@@ -168,6 +168,20 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(1);
   });
 
+  it('should link to the dojo website', () => {
+    DojoPage.openDojoWithLatLong(10, 89);
+
+    DojoDetailsPage.website.waitForVisible();
+    expect(DojoDetailsPage.website.getAttribute('href')).to.equal('http://www.dublinninjakids.com/');
+  });
+
+  it('should not show website label if dojo has no website', () => {
+    DojoPage.openDojoWithLatLong(10, 89, 0);
+
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.websiteLabel.isVisible()).to.equal(false);
+  });
+
   describe('Mobile specific tests', () => {
     beforeEach(() => {
       DojoPage.openDojoWithLatLong(10, 89);
@@ -227,6 +241,13 @@ describe('Dojo details page', () => {
       expect(sponsorLabel).to.equal('Dojo supported by');
 
       DojoDetailsPage.sponsorImage.waitForVisible();
+    });
+
+    it('should link to the dojo website', () => {
+      DojoPage.openDojoWithLatLong(10, 89);
+
+      DojoDetailsPage.websiteMobile.waitForVisible();
+      expect(DojoDetailsPage.websiteMobile.getAttribute('href')).to.equal('http://www.dublinninjakids.com/');
     });
   });
 });
