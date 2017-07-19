@@ -112,8 +112,8 @@ const DojoDetailsPage = Object.create(InfoColumn, {
     }
   },
   eventSessions: {
-    value(index) {
-      return $$('.cd-event-list__event-sessions')[index];
+    get() {
+      return $$('.cd-event-list__event-sessions');
     }
   },
   eventDate: {
