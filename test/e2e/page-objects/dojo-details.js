@@ -52,7 +52,8 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   website: {
     get() {
-      return InfoColumn.sectionContents[3];
+      let infoColumnSectionContent = InfoColumn.sectionContents[3];
+      return infoColumnSectionContent.$('a');
     },
   },
   detailsLabel: {
@@ -147,7 +148,8 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   websiteMobile: {
     get() {
-      return InfoColumn.sectionContents[6];
+      let infoColumnSectionContent = InfoColumn.sectionContents[6];
+      return infoColumnSectionContent.$('a');
     },
   },
   facebookMobile: {
