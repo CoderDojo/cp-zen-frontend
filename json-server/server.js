@@ -1,6 +1,5 @@
 // server.js
 const jsonServer = require('json-server');
-const express = require('express');
 const path = require('path');
 const uuidv1 = require('uuid/v1');
 const users = require('./users');

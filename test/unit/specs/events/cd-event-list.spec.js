@@ -21,6 +21,10 @@ describe('Event list component', () => {
     });
   });
 
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   it('should show the list of dojo events', (done) => {
     const mockEventDataResponse = [
       {
