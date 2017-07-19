@@ -148,7 +148,8 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   websiteMobile: {
     get() {
-      return InfoColumn.sectionContents[6];
+      let infoColumnSectionContent = InfoColumn.sectionContents[6];
+      return infoColumnSectionContent.$('a');
     },
   },
   facebookMobile: {

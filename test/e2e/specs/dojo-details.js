@@ -235,5 +235,12 @@ describe('Dojo details page', () => {
 
       DojoDetailsPage.sponsorImage.waitForVisible();
     });
+
+    it('should link to the dojo website', () => {
+      DojoPage.openDojoWithLatLong(10, 89);
+
+      DojoDetailsPage.websiteMobile.waitForVisible();
+      expect(DojoDetailsPage.websiteMobile.getAttribute('href')).to.equal('http://www.dublinninjakids.com/');
+    });
   });
 });

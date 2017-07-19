@@ -23,6 +23,11 @@ describe('Dojo details component', () => {
       countryName: 'Ireland',
     };
 
+  const dojoDetailsWithWebsite =
+    {
+      website: 'www.dublinninjakids.com',
+    };
+
   const dojoDetailsWithoutAddress =
     {
       id: 1,
@@ -82,6 +87,20 @@ describe('Dojo details component', () => {
       };
       const address = DojoDetailsWithMock.computed.address.bind({ dojoDetails: mockDojoDetails })();
       expect(address).to.not.be.undefined;
+    });
+  });
+
+  describe('methods.formatDojoWebsite()', () => {
+    const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithWebsite);
+    const vm = new Vue(DojoDetailsWithMock);
+    it('should append http:// to a url which is missing it', () => {
+      expect(vm.formatDojoWebsite()).to.equal('http://www.dublinninjakids.com');
+    });
+    it('should not append http:// to a url which contains http:// or https://', () => {
+      vm.dojoDetails.website = 'http://www.dublinninjakids.com';
+      expect(vm.formatDojoWebsite()).to.equal('http://www.dublinninjakids.com');
+      vm.dojoDetails.website = 'https://www.dublinninjakids.com';
+      expect(vm.formatDojoWebsite()).to.equal('https://www.dublinninjakids.com');
     });
   });
 });

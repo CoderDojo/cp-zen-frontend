@@ -21,7 +21,7 @@
           <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
         </info-column-section>
         <info-column-section class="hidden-xs" icon="globe" :header="$t('Website')">
-          <a :href="'http://' + dojoDetails.website" target="_blank">{{ dojoDetails.website }}</a>
+          <a v-if="dojoDetails.website" :href="formatDojoWebsite()" target="_blank">{{ dojoDetails.website }}</a>
         </info-column-section>
         <info-column-section class="cd-dojo-details__social-media hidden-xs">
           <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
@@ -41,7 +41,7 @@
               <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
             </info-column-section>
             <info-column-section icon="globe" :header="$t('Website')">
-              {{ dojoDetails.website }}
+              <a v-if="dojoDetails.website" :href="formatDojoWebsite()" target="_blank">{{ dojoDetails.website }}</a>
             </info-column-section>
             <info-column-section class="cd-dojo-details__social-media">
               <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
@@ -108,6 +108,12 @@
           this.dojoDetails = response.body;
         }, () => {
         });
+      },
+      formatDojoWebsite() {
+        if (this.dojoDetails.website.substring(0, 7) === 'http://' || this.dojoDetails.website.substring(0, 8) === 'https://') {
+          return this.dojoDetails.website;
+        }
+        return `http://${this.dojoDetails.website}`;
       },
     },
     created() {
