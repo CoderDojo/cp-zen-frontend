@@ -175,6 +175,13 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.website.getAttribute('href')).to.equal('http://www.dublinninjakids.com/');
   });
 
+  it('should not show website label if dojo has no website', () => {
+    DojoPage.openDojoWithLatLong(10, 89, 0);
+
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.websiteLabel.isVisible()).to.equal(false);
+  });
+
   describe('Mobile specific tests', () => {
     beforeEach(() => {
       DojoPage.openDojoWithLatLong(10, 89);

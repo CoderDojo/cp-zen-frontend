@@ -20,8 +20,8 @@
         <info-column-section class="hidden-xs" icon="envelope-o" :header="$t('Email')">
           <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
         </info-column-section>
-        <info-column-section class="hidden-xs" icon="globe" :header="$t('Website')">
-          <a v-if="dojoDetails.website" :href="formatDojoWebsite()" target="_blank">{{ dojoDetails.website }}</a>
+        <info-column-section v-if="dojoDetails.website" class="hidden-xs" icon="globe" :header="$t('Website')">
+          <a :href="formatDojoWebsite()" target="_blank">{{ dojoDetails.website }}</a>
         </info-column-section>
         <info-column-section class="cd-dojo-details__social-media hidden-xs">
           <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
@@ -40,8 +40,8 @@
             <info-column-section icon="envelope-o" :header="$t('Email')">
               <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
             </info-column-section>
-            <info-column-section icon="globe" :header="$t('Website')">
-              <a v-if="dojoDetails.website" :href="formatDojoWebsite()" target="_blank">{{ dojoDetails.website }}</a>
+            <info-column-section v-if="dojoDetails.website" icon="globe" :header="$t('Website')">
+              <a :href="formatDojoWebsite()" target="_blank">{{ dojoDetails.website }}</a>
             </info-column-section>
             <info-column-section class="cd-dojo-details__social-media">
               <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
