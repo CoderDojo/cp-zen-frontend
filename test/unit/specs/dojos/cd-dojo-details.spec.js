@@ -85,18 +85,23 @@ describe('Dojo details component', () => {
     });
   });
 
-  describe('computed.formatDojoWebsite()', () => {
-    const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
-    const vm = vueUnitHelper(DojoDetailsWithMock);
-    vm.dojoDetails.website = 'www.dublinninjakids.com';
+  describe('computed.formattedDojoWebsite()', () => {
+    let vm;
+
+    beforeEach(() => {
+      const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
+      vm = vueUnitHelper(DojoDetailsWithMock);
+    });
+
     it('should append http:// to a url which is missing it', () => {
-      expect(vm.formatDojoWebsite).to.equal('http://www.dublinninjakids.com');
+      vm.dojoDetails.website = 'www.dublinninjakids.com';
+      expect(vm.formattedDojoWebsite).to.equal('http://www.dublinninjakids.com');
     });
     it('should not append http:// to a url which contains http:// or https://', () => {
       vm.dojoDetails.website = 'http://www.dublinninjakids.com';
-      expect(vm.formatDojoWebsite).to.equal('http://www.dublinninjakids.com');
+      expect(vm.formattedDojoWebsite).to.equal('http://www.dublinninjakids.com');
       vm.dojoDetails.website = 'https://www.dublinninjakids.com';
-      expect(vm.formatDojoWebsite).to.equal('https://www.dublinninjakids.com');
+      expect(vm.formattedDojoWebsite).to.equal('https://www.dublinninjakids.com');
     });
   });
 });

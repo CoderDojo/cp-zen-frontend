@@ -21,7 +21,7 @@
           <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
         </info-column-section>
         <info-column-section v-if="dojoDetails.website" class="hidden-xs" icon="globe" :header="$t('Website')">
-          <a :href="formatDojoWebsite" target="_blank">{{ dojoDetails.website }}</a>
+          <a :href="formattedDojoWebsite" target="_blank">{{ dojoDetails.website }}</a>
         </info-column-section>
         <info-column-section class="cd-dojo-details__social-media hidden-xs">
           <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
@@ -41,7 +41,7 @@
               <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
             </info-column-section>
             <info-column-section v-if="dojoDetails.website" icon="globe" :header="$t('Website')">
-              <a :href="formatDojoWebsite" target="_blank">{{ dojoDetails.website }}</a>
+              <a :href="formattedDojoWebsite" target="_blank">{{ dojoDetails.website }}</a>
             </info-column-section>
             <info-column-section class="cd-dojo-details__social-media">
               <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
@@ -101,7 +101,7 @@
       loadImage() {
         return require('../assets/avatars/dojo-default-logo.png');
       },
-      formatDojoWebsite() {
+      formattedDojoWebsite() {
         if (this.dojoDetails.website.substring(0, 7) === 'http://' || this.dojoDetails.website.substring(0, 8) === 'https://') {
           return this.dojoDetails.website;
         }
