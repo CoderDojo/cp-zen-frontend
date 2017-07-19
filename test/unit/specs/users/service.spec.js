@@ -12,29 +12,45 @@ describe('UserService', () => {
 
   describe('register()', () => {
     it('should register an account', (done) => {
-      const profile = {};
-
-      const user = {
-        firstName: 'Foo',
-        lastName: 'Bar',
-        email: 'foo.bar@baz.com',
-        initUserType: {
-          title: 'Parent/Guardian',
-          name: 'parent-guardian',
-        },
-        password: 'Passw0rd',
-        termsConditionsAccepted: true,
-        'g-recaptcha-response': 'abc123',
+      // ARRANGE
+      const profile = {
+        id: 'bar',
       };
 
-      sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
-      UserService.register(user, profile).then(() => {
-        expect(Vue.http.post.firstCall.args[0]).to.equal(`${Vue.config.apiServer}/api/2.0/users/register`);
-        expect(Vue.http.post.firstCall.args[1]).to.deep.equal({ profile, user });
+      const user = {
+        id: 'foo',
+      };
 
-        expect(Vue.http.post.secondCall.args[0]).to.equal(`${Vue.config.apiServer}/api/2.0/users/login`);
-        expect(Vue.http.post.secondCall.args[1])
-          .to.deep.equal({ email: user.email, password: user.password });
+      sandbox.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/users/register`, {
+        profile,
+        user,
+      }).returns(Promise.resolve());
+      sandbox.stub(UserService, 'login').returns(Promise.resolve());
+
+      // ACT
+      UserService.register(user, profile).then(() => {
+        // ASSERT
+        expect(UserService.login).to.have.been.calledOnce;
+        expect(UserService.login).to.have.been.calledWith(user.email, user.password);
+        done();
+      });
+    });
+  });
+
+  describe('login()', () => {
+    it('should login with the given email address and password', (done) => {
+      // ARRANGE
+      const email = 'email';
+      const password = 'password';
+      sandbox.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/users/login`, {
+        email,
+        password,
+      }).returns(Promise.resolve('foo'));
+
+      // ACT
+      UserService.login(email, password).then((resp) => {
+        // ASSERT
+        expect(resp).to.equal('foo');
         done();
       });
     });

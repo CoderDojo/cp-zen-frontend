@@ -123,12 +123,12 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   eventTimes: {
     value(index) {
       return $$('.cd-event-list__event-times-timestamp')[index];
-    }
+    },
   },
   eventViewButtons: {
-    value(index) {
-      return $$('.cd-event-list__event-view')[index];
-    }
+    get() {
+      return $$('.cd-event-list__event-view');
+    },
   },
   emailLabelMobile: {
     get() {

@@ -55,7 +55,7 @@
       },
       "stage": 0,
       "urlSlug": "ie/dublin/dublin-ninja-kids",
-      "private": 1,
+      "private": 0,
       "id": "3ed47c6d-a689-46a0-883b-1f3fd46e9c77",
       "address1": "CHQ Building,1 Custom House Quay, North Dock",
       "countryName": "Ireland",
@@ -68,6 +68,29 @@
       "time": "Saturdays 11 am - 1 pm",
       "website": "www.dublinninjakids.com",
       "supporterImage": "http://www.xconomy.com/wordpress/wp-content/images/2013/01/dogpatch-labs-logo.png"
+    },
+    {
+      "entity$": "-/cd/dojos",
+      "name": "Super Secret Dojo",
+      "geoPoint": {
+        "lat": 53.7278863,
+        "lon": -7.7986504
+      },
+      "stage": 0,
+      "urlSlug": "ie/longford/super-secret-dojo",
+      "private": 1,
+      "id": "70e868a9-f2b2-4b73-8f83-7e3a79dfa150",
+      "address1": "Longford Shopping Center, Longford",
+      "countryName": "Ireland",
+      "email": "longforddojo@example.com",
+      "facebook": null,
+      "googleGroup": null,
+      "twitter": null,
+      "notes": "<p>What's the password?</p>\n",
+      "placeName": "Longford",
+      "time": "For us to know, and you to find out.",
+      "website": null,
+      "supporterImage": ""
     }
   ],
   "events": [
@@ -478,6 +501,86 @@
           ]
         }
       ]
+    },
+    {
+      "entity$": "-/cd/events",
+      "id": "63636e6d-da21-407f-9d73-f553ab8a1fb6",
+      "name": "My First Amazing Event",
+      "country": {
+        "countryName": "Ireland",
+        "countryNumber": 372,
+        "continent": "EU",
+        "alpha2": "IE",
+        "alpha3": "IRL"
+      },
+      "city": {
+        "nameWithHierarchy": "Dublin"
+      },
+      "address": "CHQ",
+      "createdAt": "2017-05-29T13:53:16.502Z",
+      "createdBy": "e73a4435-fcd2-4578-b081-bb9ae004f83b",
+      "type": "one-off",
+      "description": "<p>LEARN ALL THE THINGS</p>\n",
+      "dojoId": "70e868a9-f2b2-4b73-8f83-7e3a79dfa150",
+      "position": null,
+      "public": true,
+      "status": "published",
+      "recurringType": "weekly",
+      "dates": [
+        {
+          "startTime": "2017-06-06T16:30:00.000Z",
+          "endTime": "2017-06-06T18:00:00.000Z"
+        }
+      ],
+      "ticketApproval": true,
+      "sessions": [
+        {
+          "entity$": "-/cd/sessions",
+          "id": "dc666f88-b14e-44f5-b76a-08e8e62c0e24",
+          "name": "Hardware",
+          "description": "Advanced",
+          "eventId": "63636e6d-da21-407f-9d73-f553ab8a1fb6",
+          "status": "active",
+          "tickets": [
+            {
+              "entity$": "-/cd/tickets",
+              "id": "a8b2a03a-c742-4388-b195-469397eb0ed1",
+              "sessionId": "dc666f88-b14e-44f5-b76a-08e8e62c0e24",
+              "name": "Ninja",
+              "type": "ninja",
+              "quantity": 2,
+              "deleted": 0,
+              "invites": null,
+              "totalApplications": 0,
+              "approvedApplications": 0
+            },
+            {
+              "entity$": "-/cd/tickets",
+              "id": "d9c37e5b-4df1-47d4-bd43-226fbc29d997",
+              "sessionId": "dc666f88-b14e-44f5-b76a-08e8e62c0e24",
+              "name": "Mentor",
+              "type": "mentor",
+              "quantity": 2,
+              "deleted": 0,
+              "invites": null,
+              "totalApplications": 0,
+              "approvedApplications": 0
+            },
+            {
+              "entity$": "-/cd/tickets",
+              "id": "e2921b09-54a5-475a-9c51-7a65dd87ed28",
+              "sessionId": "dc666f88-b14e-44f5-b76a-08e8e62c0e24",
+              "name": "Parent",
+              "type": "parent-guardian",
+              "quantity": 4,
+              "deleted": 0,
+              "invites": null,
+              "totalApplications": 0,
+              "approvedApplications": 0
+            }
+          ]
+        }
+      ]
     }
   ],
   "sessions": [
@@ -818,15 +921,5 @@
       "tld": ".ie"
     }
   },
-  "users": [
-    {
-      "id": "instance",
-      "login": {},
-      "ok": true,
-      "user": {
-        "id": "a8a2b3e7-aafb-453d-8dd4-2b1b44352226"
-      }
-    }
-  ],
   "bulk-apply-applications": []
 }

@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-      <div class="cd-event-list__event-view-wrapper">
+      <div v-if="canBook" class="cd-event-list__event-view-wrapper">
         <router-link :to="{name: 'EventDobVerification', params: {eventId: event.id}}"
                      :disabled="isEventFull(event)"
                      tag="button" class="btn btn-lg btn-primary cd-event-list__event-view">
@@ -43,6 +43,7 @@
 <script>
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
+  import UserService from '@/users/service';
   import service from './service';
 
   export default {
@@ -50,14 +51,26 @@
     props: ['dojo'],
     data() {
       return {
+        currentUser: null,
         events: [],
       };
+    },
+    computed: {
+      canBook() {
+        return !!this.currentUser || this.dojo.private === 0;
+      },
     },
     filters: {
       cdDateFormatter,
       cdTimeFormatter,
     },
     methods: {
+      loadCurrentUser() {
+        UserService.getCurrentUser()
+          .then((response) => {
+            this.currentUser = response.body.user;
+          });
+      },
       loadEvents() {
         service.loadEvents(this.dojo.id).then((response) => {
           this.events = response.body;
@@ -80,6 +93,7 @@
     },
     created() {
       this.loadEvents();
+      this.loadCurrentUser();
     },
   };
 </script>
