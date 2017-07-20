@@ -2,7 +2,12 @@
 
 'use strict';
 
+var fs = require('fs');
 var _ = require('lodash');
+var Handlebars = require('handlebars');
+
+var openGraphTemplateString = fs.readFileSync(__dirname + '/dist/opengraph.hbs', { encoding: 'UTF-8' });
+var openGraphTemplate = Handlebars.compile(openGraphTemplateString);
 
 exports.register = function (server, options, next) {
 
@@ -28,10 +33,17 @@ exports.register = function (server, options, next) {
 
   server.route({
     method: 'GET',
-    path: '/dojos/{country}/{path*}',
-    handler: {
-      file: {
-        path: __dirname + '/dist/index.html'
+    path: '/dojos/{id}/{alpha2*}',
+    handler: function (request, reply) {
+      reply(openGraphTemplate({
+        openGraphProperties: request.locals.context.preload
+      }));
+    },
+    config: {
+      plugins: {
+        senecaPreloader: {
+          handler: 'seneca-dojo-preloader'
+        }
       }
     }
   });
