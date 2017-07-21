@@ -53,11 +53,14 @@
     data() {
       return {
         currentUser: null,
-        isMember: null,
+        usersDojos: [],
         events: [],
       };
     },
     computed: {
+      isMember() {
+        return !!(this.usersDojos.length);
+      },
       canBook() {
         return (!!this.currentUser && this.isMember) || this.dojo.private === 0;
       },
@@ -96,8 +99,8 @@
     watch: {
       currentUser(newUser) {
         if (newUser) {
-          DojosService.isUserMemberOfDojo(newUser.id, this.dojo.id).then((response) => {
-            this.isMember = !!response.body;
+          DojosService.getUsersDojos(newUser.id, this.dojo.id).then((response) => {
+            this.usersDojos = response.body;
           });
         }
       },

@@ -113,10 +113,10 @@ server.post('/api/2.0/dojos/users', (req, res) => {
     if (dojos[req.body.query.dojoId]) {
       res.send(dojos[req.body.query.dojoId]);
     } else {
-      res.send(null);
+      res.send([]);
     }
   } else {
-    res.send(null);
+    res.send([]);
   }
 });
 

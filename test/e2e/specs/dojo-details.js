@@ -164,7 +164,7 @@ describe('Dojo details page', () => {
     FindDojoPage.header.waitForVisible();
     browser.url(dojoUrl);
 
-    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.detailsLabel.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(1);
   });
 
@@ -176,7 +176,7 @@ describe('Dojo details page', () => {
     LoginPage.login.click();
 
     DojoPage.openDojoWithLatLong(10, 89, 3);
-    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.detailsLabel.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(0);
   });
 
@@ -188,7 +188,7 @@ describe('Dojo details page', () => {
     LoginPage.login.click();
 
     DojoPage.openDojoWithLatLong(10, 89, 3);
-    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.detailsLabel.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(1);
   });
 

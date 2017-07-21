@@ -14,7 +14,7 @@ describe('Event list component', () => {
       loadEvents: sandbox.stub(),
     };
     MockDojosService = {
-      isUserMemberOfDojo: sandbox.stub(),
+      getUsersDojos: sandbox.stub(),
     };
     MockUsersService = {
       getCurrentUser: sandbox.stub(),
@@ -251,13 +251,14 @@ describe('Event list component', () => {
         vm.dojo = {
           id: 'dojo',
         };
-        MockDojosService.isUserMemberOfDojo.returns(Promise.resolve({ body: 'foo' }));
+        MockDojosService.getUsersDojos.returns(Promise.resolve({ body: ['foo'] }));
 
         // ACT
         vm.$watchers.currentUser('foo');
 
         // ASSERT
         requestAnimationFrame(() => {
+          expect(vm.usersDojos).to.deep.equal(['foo']);
           expect(vm.isMember).to.equal(true);
           done();
         });
@@ -268,13 +269,14 @@ describe('Event list component', () => {
         vm.dojo = {
           id: 'dojo',
         };
-        MockDojosService.isUserMemberOfDojo.returns(Promise.resolve({ body: null }));
+        MockDojosService.getUsersDojos.returns(Promise.resolve({ body: [] }));
 
         // ACT
         vm.$watchers.currentUser('bar');
 
         // ASSERT
         requestAnimationFrame(() => {
+          expect(vm.usersDojos).to.deep.equal([]);
           expect(vm.isMember).to.equal(false);
           done();
         });

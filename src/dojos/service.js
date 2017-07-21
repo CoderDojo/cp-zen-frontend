@@ -8,7 +8,7 @@ const DojosService = {
 
   getDojos: query => Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos`, { query }),
 
-  isUserMemberOfDojo(userId, dojoId) {
+  getUsersDojos(userId, dojoId) {
     return Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/users`, {
       query: {
         userId,
