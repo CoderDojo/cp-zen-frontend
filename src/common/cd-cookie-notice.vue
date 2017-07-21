@@ -1,7 +1,7 @@
 <template>
   <div v-show="!confirmed" class="cd-cookie-notice">
     <span v-html="$t('By using this website you agree to the use of cookies. You can read about our cookie policy <a href=\'/privacy-statement#cookies\'>here</a>.')"></span>
-    <i class="fa fa-times-circle cd-cookie-notice__dismiss" aria-label="Dismiss" @click="confirmed = true"></i>
+    <i class="fa fa-times-circle cd-cookie-notice__dismiss" aria-label="Dismiss" @click="dismissNotice"></i>
   </div>
 </template>
 
@@ -12,19 +12,26 @@
     name: 'CookieNotice',
     data() {
       return {
-        confirmed: null,
+        confirmed: false,
       };
     },
-    watch: {
-      $route() {
-        if (!this.confirmed) this.confirmed = true;
-      },
-      confirmed(val) {
-        if (val) Cookie.set('cookieDisclaimer', 'confirmed');
+    methods: {
+      dismissNotice() {
+        this.confirmed = true;
+        Cookie.set('cookieDisclaimer', 'confirmed');
+        // Won't hide the element first if we destroy it immediately
+        this.$nextTick(() => {
+          this.$destroy();
+        });
       },
     },
+    watch: {
+      $route: 'dismissNotice',
+    },
     created() {
-      this.confirmed = (Cookie.get('cookieDisclaimer') === 'confirmed');
+      if (Cookie.get('cookieDisclaimer') === 'confirmed') {
+        this.dismissNotice();
+      }
     },
   };
 </script>

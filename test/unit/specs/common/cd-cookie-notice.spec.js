@@ -23,53 +23,33 @@ describe('Cookie Notice component', () => {
     sandbox.restore();
   });
 
-  describe('watchers', () => {
-    describe('$route', () => {
-      it('should set confirmed to true if it isn\'t already', () => {
+  describe('methods', () => {
+    describe('dismissNotice', () => {
+      it('should set cookieDisclaimer cookie to confirmed if value is true', (done) => {
         // ARRANGE
-        vm.confirmed = null;
+        sandbox.stub(vm, '$destroy');
 
         // ACT
-        vm.$watchers.$route();
+        vm.dismissNotice();
 
         // ASSERT
         expect(vm.confirmed).to.equal(true);
-      });
-
-      it('shouldn\'t do anything if confirmed is already true', () => {
-        // ARRANGE
-        vm.confirmed = true;
-
-        // ACT
-        vm.$watchers.$route();
-
-        // ASSERT
-        expect(vm.confirmed).to.equal(true);
-      });
-    });
-
-    describe('cookieDisclaimer', () => {
-      it('should set cookieDisclaimer cookie to confirmed if value is true', () => {
-        // ACT
-        vm.$watchers.confirmed(true);
-
-        // ASSERT
         expect(CookieMock.set).to.have.been.calledOnce;
         expect(CookieMock.set).to.have.been.calledWith('cookieDisclaimer', 'confirmed');
-      });
-
-      it('should not set cookieDisclaimer cookie to confirmed if value is false', () => {
-        // ACT
-        vm.$watchers.confirmed(false);
-
-        // ASSERT
-        expect(CookieMock.set).to.have.not.been.called;
+        vm.$nextTick(() => {
+          expect(vm.$destroy).to.have.been.calledOnce;
+          done();
+        });
       });
     });
   });
 
   describe('created()', () => {
-    it('should set confirmed to true if cookieDisclaimer cookie is confirmed', () => {
+    beforeEach(() => {
+      sandbox.stub(vm, 'dismissNotice');
+    });
+
+    it('should call dismissNotice if cookieDisclaimer cookie is confirmed', () => {
       // ARRANGE
       CookieMock.get.withArgs('cookieDisclaimer').returns('confirmed');
 
@@ -77,7 +57,7 @@ describe('Cookie Notice component', () => {
       vm.$lifecycleMethods.created();
 
       // ASSERT
-      expect(vm.confirmed).to.equal(true);
+      expect(vm.dismissNotice).to.have.been.calledOnce;
     });
 
     it('should set confirmed to false if cookieDisclaimer cookie is not confirmed', () => {
@@ -88,7 +68,7 @@ describe('Cookie Notice component', () => {
       vm.$lifecycleMethods.created();
 
       // ASSERT
-      expect(vm.confirmed).to.equal(false);
+      expect(vm.dismissNotice).to.not.have.been.called;
     });
 
     it('should set confirmed to false if cookieDisclaimer cookie is undefined', () => {
@@ -99,7 +79,7 @@ describe('Cookie Notice component', () => {
       vm.$lifecycleMethods.created();
 
       // ASSERT
-      expect(vm.confirmed).to.equal(false);
+      expect(vm.dismissNotice).to.not.have.been.called;
     });
   });
 });
