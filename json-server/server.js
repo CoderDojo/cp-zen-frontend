@@ -3,6 +3,7 @@ const jsonServer = require('json-server');
 const path = require('path');
 const uuidv1 = require('uuid/v1');
 const users = require('./users');
+const usersDojos = require('./users-dojos');
 
 const server = jsonServer.create();
 const router = jsonServer.router(path.join(__dirname, 'db.json'));
@@ -89,6 +90,7 @@ server.post('/api/2.0/users/login', (req, res) => {
   res.cookie('loggedIn', req.body.email, { maxAge: 900000, httpOnly: true });
   res.send();
 });
+
 server.get('/api/2.0/users/instance', (req, res) => {
   if (req.cookies.loggedIn) {
     res.send({
@@ -103,6 +105,21 @@ server.get('/api/2.0/users/instance', (req, res) => {
     });
   }
 });
+
+server.post('/api/2.0/dojos/users', (req, res) => {
+  let dojos;
+  if (usersDojos[req.body.query.userId]) {
+    dojos = usersDojos[req.body.query.userId];
+    if (dojos[req.body.query.dojoId]) {
+      res.send(dojos[req.body.query.dojoId]);
+    } else {
+      res.send([]);
+    }
+  } else {
+    res.send([]);
+  }
+});
+
 server.use('/api/2.0', router);
 server.get('/locale/data', (req, res) => {
   const lang = req.query.lang || 'en_US';
