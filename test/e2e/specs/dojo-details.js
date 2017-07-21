@@ -164,7 +164,31 @@ describe('Dojo details page', () => {
     FindDojoPage.header.waitForVisible();
     browser.url(dojoUrl);
 
-    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.detailsLabel.waitForVisible();
+    expect(DojoDetailsPage.eventViewButtons.length).to.equal(1);
+  });
+
+  it('should hide book button on private dojos when logged in and not a member of the dojo', () => {
+    LoginPage.open();
+    LoginPage.email.waitForVisible();
+    LoginPage.email.setValue('parent2@example.com');
+    LoginPage.password.setValue('testparent2');
+    LoginPage.login.click();
+
+    DojoPage.openDojoWithLatLong(10, 89, 3);
+    DojoDetailsPage.detailsLabel.waitForVisible();
+    expect(DojoDetailsPage.eventViewButtons.length).to.equal(0);
+  });
+
+  it('should show book button on private dojos when logged in and a member of the dojo', () => {
+    LoginPage.open();
+    LoginPage.email.waitForVisible();
+    LoginPage.email.setValue('parent1@example.com');
+    LoginPage.password.setValue('testparent1');
+    LoginPage.login.click();
+
+    DojoPage.openDojoWithLatLong(10, 89, 3);
+    DojoDetailsPage.detailsLabel.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(1);
   });
 
