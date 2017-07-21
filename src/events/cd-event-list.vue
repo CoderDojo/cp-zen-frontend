@@ -44,6 +44,7 @@
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import UserService from '@/users/service';
+  import DojosService from '@/dojos/service';
   import service from './service';
 
   export default {
@@ -52,12 +53,13 @@
     data() {
       return {
         currentUser: null,
+        isMember: null,
         events: [],
       };
     },
     computed: {
       canBook() {
-        return !!this.currentUser || this.dojo.private === 0;
+        return (!!this.currentUser && this.isMember) || this.dojo.private === 0;
       },
     },
     filters: {
@@ -89,6 +91,15 @@
           });
         });
         return totalEventCapacity === totalTicketsBooked;
+      },
+    },
+    watch: {
+      currentUser(newUser) {
+        if (newUser) {
+          DojosService.isUserMemberOfDojo(newUser.id, this.dojo.id).then((response) => {
+            this.isMember = !!response.body;
+          });
+        }
       },
     },
     created() {

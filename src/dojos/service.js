@@ -4,9 +4,18 @@ import GeolocationService from '@/geolocation/service';
 const radius = 50000;
 
 const DojosService = {
+  getDojoById: id => Vue.http.get(`${Vue.config.apiServer}/api/2.0/dojos/${id}`),
+
   getDojos: query => Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos`, { query }),
 
-  getDojoById: id => Vue.http.get(`${Vue.config.apiServer}/api/2.0/dojos/${id}`),
+  isUserMemberOfDojo(userId, dojoId) {
+    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/users`, {
+      query: {
+        userId,
+        dojoId,
+      },
+    });
+  },
 
   getByUrlSlug(urlSlug) {
     return Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/find`,

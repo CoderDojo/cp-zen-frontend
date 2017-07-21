@@ -5,6 +5,7 @@ describe('Event list component', () => {
   let sandbox;
   let EventListWithMocks;
   let MockEventsService;
+  let MockDojosService;
   let MockUsersService;
 
   beforeEach(() => {
@@ -12,11 +13,15 @@ describe('Event list component', () => {
     MockEventsService = {
       loadEvents: sandbox.stub(),
     };
+    MockDojosService = {
+      isUserMemberOfDojo: sandbox.stub(),
+    };
     MockUsersService = {
       getCurrentUser: sandbox.stub(),
     };
     EventListWithMocks = eventList({
       '@/users/service': MockUsersService,
+      '@/dojos/service': MockDojosService,
       './service': MockEventsService,
     });
   });
@@ -163,11 +168,12 @@ describe('Event list component', () => {
       expect(vm.canBook).to.equal(false);
     });
 
-    it('should be true if this.currentUser is truthy, but dojo is private', () => {
+    it('should be true if this.currentUser is truthy and they are a member of the dojo, but dojo is private', () => {
       // ARRANGE
       vm.currentUser = {
         id: 'foo',
       };
+      vm.isMember = true;
       vm.dojo = {
         private: 1,
       };
@@ -185,6 +191,33 @@ describe('Event list component', () => {
 
       // ASSERT
       expect(vm.canBook).to.equal(true);
+    });
+
+    it('should be true if this.currentUser is truthy and dojo is public', () => {
+      // ARRANGE
+      vm.currentUser = {
+        id: 'foo',
+      };
+      vm.dojo = {
+        private: 0,
+      };
+
+      // ASSERT
+      expect(vm.canBook).to.equal(true);
+    });
+
+    it('should be false if this.currentUser is true and they are not a member of the dojo, but the dojo is private', () => {
+      // ARRANGE
+      vm.currentUser = {
+        id: 'foo',
+      };
+      vm.isMember = false;
+      vm.dojo = {
+        private: 1,
+      };
+
+      // ASSERT
+      expect(vm.canBook).to.equal(false);
     });
   });
 
@@ -204,6 +237,45 @@ describe('Event list component', () => {
         // ASSERT
         requestAnimationFrame(() => {
           expect(vm.currentUser).to.deep.equal(mockUser);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('watch', () => {
+    describe('currentUser', () => {
+      it('should set isMember to true if the new currentUser is a member of the dojo', (done) => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.dojo = {
+          id: 'dojo',
+        };
+        MockDojosService.isUserMemberOfDojo.returns(Promise.resolve({ body: 'foo' }));
+
+        // ACT
+        vm.$watchers.currentUser('foo');
+
+        // ASSERT
+        requestAnimationFrame(() => {
+          expect(vm.isMember).to.equal(true);
+          done();
+        });
+      });
+      it('should set isMember to false if the new currentUser is not a member of the dojo', (done) => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.dojo = {
+          id: 'dojo',
+        };
+        MockDojosService.isUserMemberOfDojo.returns(Promise.resolve({ body: null }));
+
+        // ACT
+        vm.$watchers.currentUser('bar');
+
+        // ASSERT
+        requestAnimationFrame(() => {
+          expect(vm.isMember).to.equal(false);
           done();
         });
       });
