@@ -31,8 +31,11 @@
         </div>
       </div>
       <div v-if="canBook" class="cd-event-list__event-view-wrapper">
+        <div v-if="event.eventbriteId">
+          <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-event-list__event-view">{{ $t('See Details and Book') }}</a>
+        </div>
         <router-link :to="{name: 'EventDobVerification', params: {eventId: event.id}}"
-                     :disabled="isEventFull(event)"
+                     :disabled="isEventFull(event)" v-if="!event.eventbriteId"
                      tag="button" class="btn btn-lg btn-primary cd-event-list__event-view">
           {{ isEventFull(event) ? $t('Full') : $t('See Details and Book') }}
         </router-link>
@@ -43,6 +46,7 @@
 <script>
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
+  import cdUrlFormatter from '@/common/filters/cd-url-formatter';
   import UserService from '@/users/service';
   import DojosService from '@/dojos/service';
   import service from './service';
@@ -68,6 +72,7 @@
     filters: {
       cdDateFormatter,
       cdTimeFormatter,
+      cdUrlFormatter,
     },
     methods: {
       loadCurrentUser() {

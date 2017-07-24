@@ -84,24 +84,4 @@ describe('Dojo details component', () => {
       expect(address).to.not.be.undefined;
     });
   });
-
-  describe('computed.formattedDojoWebsite()', () => {
-    let vm;
-
-    beforeEach(() => {
-      const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
-      vm = vueUnitHelper(DojoDetailsWithMock);
-    });
-
-    it('should append http:// to a url which is missing it', () => {
-      vm.dojoDetails.website = 'www.dublinninjakids.com';
-      expect(vm.formattedDojoWebsite).to.equal('http://www.dublinninjakids.com');
-    });
-    it('should not append http:// to a url which contains http:// or https://', () => {
-      vm.dojoDetails.website = 'http://www.dublinninjakids.com';
-      expect(vm.formattedDojoWebsite).to.equal('http://www.dublinninjakids.com');
-      vm.dojoDetails.website = 'https://www.dublinninjakids.com';
-      expect(vm.formattedDojoWebsite).to.equal('https://www.dublinninjakids.com');
-    });
-  });
 });

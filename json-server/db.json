@@ -91,6 +91,29 @@
       "time": "For us to know, and you to find out.",
       "website": null,
       "supporterImage": ""
+    },
+    {
+      "entity$": "-/cd/dojos",
+      "name": "Eventbrite Dojo",
+      "geoPoint": {
+        "lat": 8.128535,
+        "lon": 80.633043
+      },
+      "stage": 0,
+      "urlSlug": "lk/ganewalpola/eventbrite-dojo",
+      "private": 0,
+      "id": "70ezk4a9-q0pm-4bk2-8f83-200a799y2k50",
+      "address1": "Ganewalpola Road, Ganewalpola",
+      "countryName": "Sri Lanka",
+      "email": "eventbritedojo@example.com",
+      "facebook": null,
+      "googleGroup": null,
+      "twitter": null,
+      "notes": "<p>We use Eventbrite!</p>\n",
+      "placeName": "Ganewalpola",
+      "time": "Saturdays from 4pm to 6pm",
+      "website": null,
+      "supporterImage": ""
     }
   ],
   "events": [
@@ -114,6 +137,8 @@
       "type": "one-off",
       "description": "<p>LEARN ALL THE THINGS</p>\n",
       "dojoId": "3ed47c6d-a689-46a0-883b-1f3fd46e9c77",
+      "eventbriteId": null,
+      "eventbriteUrl": null,
       "position": null,
       "public": true,
       "status": "published",
@@ -264,6 +289,8 @@
       "type": "recurring",
       "description": "<p>Learn all the other things</p>\n",
       "dojoId": "3ed47c6d-a689-46a0-883b-1f3fd46e9c77",
+      "eventbriteId": null,
+      "eventbriteUrl": null,
       "position": null,
       "public": true,
       "status": "published",
@@ -430,6 +457,8 @@
       "type": "one-off",
       "description": "<p>LEARN ALL THE THINGS</p>\n",
       "dojoId": "4e591bbe-667b-4782-bc9c-180c6d321883",
+      "eventbriteId": null,
+      "eventbriteUrl": null,
       "position": null,
       "public": true,
       "status": "published",
@@ -522,6 +551,8 @@
       "type": "one-off",
       "description": "<p>LEARN ALL THE THINGS</p>\n",
       "dojoId": "70e868a9-f2b2-4b73-8f83-7e3a79dfa150",
+      "eventbriteId": null,
+      "eventbriteUrl": null,
       "position": null,
       "public": true,
       "status": "published",
@@ -573,6 +604,76 @@
               "name": "Parent",
               "type": "parent-guardian",
               "quantity": 4,
+              "deleted": 0,
+              "invites": null,
+              "totalApplications": 0,
+              "approvedApplications": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "entity$": "-/cd/events",
+      "id": "63636e6d-da21-407f-9d73-f553ab8a1ab2",
+      "name": "Sri Lannnka",
+      "country": {
+        "countryName": "Sri Lanka",
+        "countryNumber": 92,
+        "continent": "ASIA",
+        "alpha2": "LK",
+        "alpha3": "LK"
+      },
+      "city": {
+        "nameWithHierarchy": "Ganewalpola"
+      },
+      "address": "Ganewalpola",
+      "createdAt": "2017-05-29T13:53:16.502Z",
+      "createdBy": "e73a4435-fcd2-4578-b081-bb9ae004f83b",
+      "type": "one-off",
+      "description": "<p>LEARN ALL THE THINGS</p>\n",
+      "dojoId": "70ezk4a9-q0pm-4bk2-8f83-200a799y2k50",
+      "eventbriteId": "k2ivy3lc-9ebc-p0bn-gcvd-bb9ae0048h33",
+      "eventbriteUrl": "www.eventbrite.com",
+      "position": null,
+      "public": true,
+      "status": "published",
+      "recurringType": "weekly",
+      "dates": [
+        {
+          "startTime": "2017-08-06T16:30:00.000Z",
+          "endTime": "2017-08-06T18:00:00.000Z"
+        }
+      ],
+      "ticketApproval": true,
+      "sessions": [
+        {
+          "entity$": "-/cd/sessions",
+          "id": "dc666f88-b14e-44f5-b76a-08e8e62c0e25",
+          "name": "Hardware",
+          "description": "Advanced",
+          "eventId": "63636e6d-da21-407f-9d73-f553ab8a1ab2",
+          "status": "active",
+          "tickets": [
+            {
+              "entity$": "-/cd/tickets",
+              "id": "a8b2a03a-c742-4388-b195-469397eb0er4",
+              "sessionId": "dc666f88-b14e-44f5-b76a-08e8e62c0e25",
+              "name": "Ninja",
+              "type": "ninja",
+              "quantity": 2,
+              "deleted": 0,
+              "invites": null,
+              "totalApplications": 0,
+              "approvedApplications": 0
+            },
+            {
+              "entity$": "-/cd/tickets",
+              "id": "d9c37e5b-4df1-47d4-bd43-226fbc29d955",
+              "sessionId": "dc666f88-b14e-44f5-b76a-08e8e62c0e25",
+              "name": "Mentor",
+              "type": "mentor",
+              "quantity": 2,
               "deleted": 0,
               "invites": null,
               "totalApplications": 0,
@@ -871,6 +972,40 @@
           "invites": null,
           "totalApplications": 0,
           "approvedApplications": 2
+        }
+      ]
+    },
+    {
+      "entity$": "-/cd/sessions",
+      "id": "dc666f88-b14e-44f5-b76a-08e8e62c0e25",
+      "name": "Hardware",
+      "description": "Advanced",
+      "eventId": "63636e6d-da21-407f-9d73-f553ab8a1ab2",
+      "status": "active",
+      "tickets": [
+        {
+          "entity$": "-/cd/tickets",
+          "id": "a8b2a03a-c742-4388-b195-469397eb0er4",
+          "sessionId": "dc666f88-b14e-44f5-b76a-08e8e62c0e25",
+          "name": "Ninja",
+          "type": "ninja",
+          "quantity": 2,
+          "deleted": 0,
+          "invites": null,
+          "totalApplications": 0,
+          "approvedApplications": 0
+        },
+        {
+          "entity$": "-/cd/tickets",
+          "id": "d9c37e5b-4df1-47d4-bd43-226fbc29d955",
+          "sessionId": "dc666f88-b14e-44f5-b76a-08e8e62c0e25",
+          "name": "Mentor",
+          "type": "mentor",
+          "quantity": 2,
+          "deleted": 0,
+          "invites": null,
+          "totalApplications": 0,
+          "approvedApplications": 0
         }
       ]
     }

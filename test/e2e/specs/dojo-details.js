@@ -206,6 +206,13 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.websiteLabel.isVisible()).to.equal(false);
   });
 
+  it('should link to eventbrite for eventbrite events', () => {
+    DojoPage.openDojoWithLatLong(10, 89, 4);
+
+    (DojoDetailsPage.eventViewButtons[0]).waitForVisible();
+    expect((DojoDetailsPage.eventViewButtons[0]).getAttribute('href')).to.equal('http://www.eventbrite.com/');
+  });
+
   describe('Mobile specific tests', () => {
     beforeEach(() => {
       DojoPage.openDojoWithLatLong(10, 89);
