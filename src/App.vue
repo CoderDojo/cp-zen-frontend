@@ -3,6 +3,7 @@
     <cd-header></cd-header>
     <div class="cd-menu__content-container">
       <router-view></router-view>
+      <cd-cookie-notice></cd-cookie-notice>
     </div>
     <cd-footer></cd-footer>
   </div>
@@ -11,12 +12,14 @@
 <script>
   import cdHeader from './common/cd-header';
   import cdFooter from './common/cd-footer';
+  import cdCookieNotice from './common/cd-cookie-notice';
 
   export default {
     name: 'app',
     components: {
-      'cd-header': cdHeader,
-      'cd-footer': cdFooter,
+      cdHeader,
+      cdFooter,
+      cdCookieNotice,
     },
   };
 </script>

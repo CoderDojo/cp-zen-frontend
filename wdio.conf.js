@@ -194,8 +194,10 @@ exports.config = {
      * Function to be executed before a test (in Mocha/Jasmine) or a step (in Cucumber) starts.
      * @param {Object} test test details
      */
-    // beforeTest: function (test) {
-    // },
+    beforeTest: function (test) {
+      // Cookie notice gets in the way, so let's dismiss it when we're not testing it
+      browser.setCookie({ name: 'cookieDisclaimer', value: 'confirmed' });
+    },
     /**
      * Runs before a WebdriverIO command gets executed.
      * @param {String} commandName hook command name
