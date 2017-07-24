@@ -1,18 +1,21 @@
-import Vue from 'vue';
 import vueUnitHelper from 'vue-unit-helper';
 import dojoDetails from '!!vue-loader?inject!@/dojos/cd-dojo-details';
 
-function setUpDojoDetailsComponent(mockBody) {
-  const mock = {
-    getByUrlSlug: (/* urlSlug */) => Promise.resolve({ body: mockBody }),
-  };
-  const dojoDetailsWithMocks = dojoDetails({
-    './service': mock,
-  });
-  return dojoDetailsWithMocks;
-}
-
 describe('Dojo details component', () => {
+  let sandbox;
+  let DojoDetailsWithMocks;
+  let DojoServiceMock;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    DojoServiceMock = {
+      getByUrlSlug: sandbox.stub(),
+    };
+    DojoDetailsWithMocks = dojoDetails({
+      './service': DojoServiceMock,
+    });
+  });
+
   const dojoDetailsWithAddress =
     {
       id: 1,
@@ -23,16 +26,9 @@ describe('Dojo details component', () => {
       countryName: 'Ireland',
     };
 
-  const dojoDetailsWithoutAddress =
-    {
-      id: 1,
-      name: 'Dublin Ninja Kids',
-      location: 'Dublin',
-    };
-
   it('should show dojo details', (done) => {
-    const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
-    const vm = new Vue(DojoDetailsWithMock);
+    DojoServiceMock.getByUrlSlug.returns(Promise.resolve({ body: dojoDetailsWithAddress }));
+    const vm = vueUnitHelper(DojoDetailsWithMocks);
 
     vm.loadDojoDetails();
     requestAnimationFrame(() => {
@@ -43,8 +39,8 @@ describe('Dojo details component', () => {
 
   it('should build the urlSlug from path parameters', () => {
     // ARRANGE
-    const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
-    const vm = vueUnitHelper(DojoDetailsWithMock);
+    DojoServiceMock.getByUrlSlug.returns(Promise.resolve({ body: dojoDetailsWithAddress }));
+    const vm = vueUnitHelper(DojoDetailsWithMocks);
     vm.country = 'za';
     vm.path = 'gauteng/johannesburg-rock-stars';
 
@@ -54,8 +50,8 @@ describe('Dojo details component', () => {
 
   it('should compute an image url for given dojo id', (done) => {
     // ARRANGE
-    const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
-    const vm = new Vue(DojoDetailsWithMock);
+    DojoServiceMock.getByUrlSlug.returns(Promise.resolve({ body: dojoDetailsWithAddress }));
+    const vm = vueUnitHelper(DojoDetailsWithMocks);
 
     // ASSERT
     vm.loadDojoDetails();
@@ -67,21 +63,35 @@ describe('Dojo details component', () => {
 
   describe('computed.address()', () => {
     it('should return undefined when address1 is falsey', () => {
-      const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithoutAddress);
-      const mockDojoDetails = {};
-      const address = DojoDetailsWithMock.computed.address.bind({ dojoDetails: mockDojoDetails })();
-      expect(address).to.be.undefined;
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm.dojoDetails = {};
+      expect(vm.address).to.be.undefined;
     });
 
     it('should return computed address when address1 is truthy', () => {
-      const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
-      const mockDojoDetails = {
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm.dojoDetails = {
         address1: 'CHQ',
         placeName: 'Dublin',
         countryName: 'Ireland',
       };
-      const address = DojoDetailsWithMock.computed.address.bind({ dojoDetails: mockDojoDetails })();
-      expect(address).to.not.be.undefined;
+      expect(vm.address).to.equal('CHQ, Dublin, Ireland');
+    });
+  });
+
+  describe('computed.googleMapsLink', () => {
+    it('should return a link to google maps with the Dojos lat and long', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm.dojoDetails = {
+        geoPoint: {
+          lat: 53.349351,
+          lon: -6.247585999999956,
+        },
+      };
+
+      // ASSERT
+      expect(vm.googleMapsLink).to.equal('https://www.google.com/maps/search/?api=1&query=53.349351,-6.247585999999956');
     });
   });
 
@@ -89,8 +99,7 @@ describe('Dojo details component', () => {
     let vm;
 
     beforeEach(() => {
-      const DojoDetailsWithMock = setUpDojoDetailsComponent(dojoDetailsWithAddress);
-      vm = vueUnitHelper(DojoDetailsWithMock);
+      vm = vueUnitHelper(DojoDetailsWithMocks);
     });
 
     it('should append http:// to a url which is missing it', () => {
