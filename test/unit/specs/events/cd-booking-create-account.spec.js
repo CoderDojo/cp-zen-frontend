@@ -205,7 +205,7 @@ describe('Booking Create Account Form', () => {
   });
 
   describe('addChildren', () => {
-    it('should create a profile for each child', (done) => {
+    it('should create a profile for each child', async () => {
       // ARRANGE
       const mockBookingData = {
         foo: {
@@ -272,44 +272,43 @@ describe('Booking Create Account Form', () => {
       });
 
       // ACT
-      vm.addChildren().then(() => {
-        // ASSERT
-        expect(MockUsersService.addChild).to.have.callCount(3);
-        expect(MockUsersService.addChild.getCall(0).args[0]).to.deep.equal({
-          firstName: 'Fee',
-          lastName: 'Bar',
-          dob: '2002-02-01T00:00:00.000Z',
-          gender: 'Female',
-          otherGender: '',
-        });
-        expect(MockUsersService.addChild.getCall(1).args[0]).to.deep.equal({
-          firstName: 'Fie',
-          lastName: 'Bar',
-          dob: '2010-03-02T00:00:00.000Z',
-          gender: 'Male',
-          otherGender: '',
-        });
-        expect(MockUsersService.addChild.getCall(2).args[0]).to.deep.equal({
-          firstName: 'Foe',
-          lastName: 'Bar',
-          dob: '2008-04-03T00:00:00.000Z',
-          gender: 'Other',
-          otherGender: 'Fluid',
-        });
-        expect(mockBookingData.foo.selectedTickets[0].user.id).to.equal(1);
-        expect(mockBookingData.foo.selectedTickets[1].user.id).to.equal(2);
-        expect(mockBookingData.abc.selectedTickets[0].user.id).to.equal(3);
-        expect(mockBookingData.foo.selectedTickets[0].user.userId).to.equal(1001);
-        expect(mockBookingData.foo.selectedTickets[1].user.userId).to.equal(1002);
-        expect(mockBookingData.abc.selectedTickets[0].user.userId).to.equal(1003);
-        expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, mockBookingData);
-        done();
+      await vm.addChildren();
+
+      // ASSERT
+      expect(MockUsersService.addChild).to.have.callCount(3);
+      expect(MockUsersService.addChild.getCall(0).args[0]).to.deep.equal({
+        firstName: 'Fee',
+        lastName: 'Bar',
+        dob: '2002-02-01T00:00:00.000Z',
+        gender: 'Female',
+        otherGender: '',
       });
+      expect(MockUsersService.addChild.getCall(1).args[0]).to.deep.equal({
+        firstName: 'Fie',
+        lastName: 'Bar',
+        dob: '2010-03-02T00:00:00.000Z',
+        gender: 'Male',
+        otherGender: '',
+      });
+      expect(MockUsersService.addChild.getCall(2).args[0]).to.deep.equal({
+        firstName: 'Foe',
+        lastName: 'Bar',
+        dob: '2008-04-03T00:00:00.000Z',
+        gender: 'Other',
+        otherGender: 'Fluid',
+      });
+      expect(mockBookingData.foo.selectedTickets[0].user.id).to.equal(1);
+      expect(mockBookingData.foo.selectedTickets[1].user.id).to.equal(2);
+      expect(mockBookingData.abc.selectedTickets[0].user.id).to.equal(3);
+      expect(mockBookingData.foo.selectedTickets[0].user.userId).to.equal(1001);
+      expect(mockBookingData.foo.selectedTickets[1].user.userId).to.equal(1002);
+      expect(mockBookingData.abc.selectedTickets[0].user.userId).to.equal(1003);
+      expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, mockBookingData);
     });
   });
 
   describe('joinDojo', () => {
-    it('should join the logged in user to the dojo', (done) => {
+    it('should join the logged in user to the dojo', async () => {
       // ARRANGE
       const userId = '74afa4b8-8449-46e4-a553-8febda8614ad';
       const dojoId = '4e591bbe-667b-4782-bc9c-180c6d321883';
@@ -333,16 +332,15 @@ describe('Booking Create Account Form', () => {
       MockStoreService.load.withArgs('selected-event').returns({ dojoId });
 
       // ACT
-      vm.joinDojo().then(() => {
-        // ASSERT
-        expect(MockDojoService.joinDojo).to.have.been.calledWith(userId, dojoId, userTypes);
-        done();
-      });
+      await vm.joinDojo();
+
+      // ASSERT
+      expect(MockDojoService.joinDojo).to.have.been.calledWith(userId, dojoId, userTypes);
     });
   });
 
   describe('bookTickets()', () => {
-    it('should put together a list of applications and send them to event service to book', (done) => {
+    it('should put together a list of applications and send them to event service to book', async () => {
       // ARRANGE
       const currentUserResponseMock = {
         login: {},
@@ -404,43 +402,42 @@ describe('Booking Create Account Form', () => {
       MockUsersService.getCurrentUser.returns(Promise.resolve({ body: currentUserResponseMock }));
 
       // ACT
-      vm.bookTickets().then(() => {
-        // ASSERT
-        expect(MockEventsService.bookTickets).to.have.been.calledOnce;
-        expect(MockEventsService.bookTickets).to.have.been.calledWith([
-          {
-            dojoId: mockSelectedEvent.dojoId,
-            eventId: mockSelectedEvent.id,
-            sessionId: 'bar',
-            ticketName: 'Foo',
-            ticketType: 'ninja',
-            ticketId: 'foo',
-            userId: 1,
-            notes: 'N/A',
-          },
-          {
-            dojoId: mockSelectedEvent.dojoId,
-            eventId: mockSelectedEvent.id,
-            sessionId: 'bar',
-            ticketName: 'Foo',
-            ticketType: 'ninja',
-            ticketId: 'foo',
-            userId: 2,
-            notes: 'N/A',
-          },
-          {
-            dojoId: mockSelectedEvent.dojoId,
-            eventId: mockSelectedEvent.id,
-            sessionId: 'xyz',
-            ticketName: 'ABC',
-            ticketType: 'parent-guardian',
-            ticketId: 'abc',
-            userId: 'foo',
-            notes: 'N/A',
-          },
-        ]);
-        done();
-      });
+      await vm.bookTickets();
+
+      // ASSERT
+      expect(MockEventsService.bookTickets).to.have.been.calledOnce;
+      expect(MockEventsService.bookTickets).to.have.been.calledWith([
+        {
+          dojoId: mockSelectedEvent.dojoId,
+          eventId: mockSelectedEvent.id,
+          sessionId: 'bar',
+          ticketName: 'Foo',
+          ticketType: 'ninja',
+          ticketId: 'foo',
+          userId: 1,
+          notes: 'N/A',
+        },
+        {
+          dojoId: mockSelectedEvent.dojoId,
+          eventId: mockSelectedEvent.id,
+          sessionId: 'bar',
+          ticketName: 'Foo',
+          ticketType: 'ninja',
+          ticketId: 'foo',
+          userId: 2,
+          notes: 'N/A',
+        },
+        {
+          dojoId: mockSelectedEvent.dojoId,
+          eventId: mockSelectedEvent.id,
+          sessionId: 'xyz',
+          ticketName: 'ABC',
+          ticketType: 'parent-guardian',
+          ticketId: 'abc',
+          userId: 'foo',
+          notes: 'N/A',
+        },
+      ]);
     });
   });
 });

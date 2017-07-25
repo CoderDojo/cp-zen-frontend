@@ -70,10 +70,14 @@
   import DojoService from '@/dojos/service';
   import StoreService from '@/store/store-service';
 
-  function forEachTicket(bookingData, cb) {
+  async function forEachTicket(bookingData, cb) {
+    const promises = [];
     Object.keys(bookingData).forEach((ticketId) => {
-      bookingData[ticketId].selectedTickets.forEach(cb);
+      bookingData[ticketId].selectedTickets.forEach((ticket) => {
+        promises.push(cb(ticket));
+      });
     });
+    return Promise.all(promises);
   }
 
   export default {
@@ -113,61 +117,52 @@
         this.formValidated = true;
         return (!this.errors.any() && !!this.recaptchaResponse);
       },
-      submitAccount() {
-        return this.register()
-          .then(this.addChildren)
-          .then(this.joinDojo)
-          .then(this.bookTickets);
+      async submitAccount() {
+        await this.register();
+        await this.addChildren();
+        await this.joinDojo();
+        return this.bookTickets();
       },
-      register() {
+      async register() {
         this.profile = StoreService.load(`booking-${this.eventId}-user`);
         return UserService.register(this.user, this.profile);
       },
-      addChildren() {
+      async addChildren() {
         const bookingData = StoreService.load(`booking-${this.eventId}-sessions`);
-        let promiseChain = Promise.resolve();
-        forEachTicket(bookingData, (ticket) => {
+        await forEachTicket(bookingData, async (ticket) => {
           if (ticket.ticket.type === 'ninja') {
             const child = cloneDeep(ticket.user);
-            promiseChain = promiseChain.then(() => UserService.addChild(child))
-              .then((response) => {
-                ticket.user = response.body; // eslint-disable-line no-param-reassign
-              });
+            const response = await UserService.addChild(child);
+            ticket.user = response.body; // eslint-disable-line no-param-reassign
           }
         });
-        promiseChain = promiseChain.then(() => {
-          StoreService.save(`booking-${this.eventId}-sessions`, bookingData);
-          return Promise.resolve();
-        });
-        return promiseChain;
+        StoreService.save(`booking-${this.eventId}-sessions`, bookingData);
       },
-      joinDojo() {
-        return UserService.getCurrentUser().then((response) => {
-          const user = response.body.user;
-          const selectedEvent = StoreService.load('selected-event');
-          return DojoService.joinDojo(user.id, selectedEvent.dojoId, [this.user.initUserType.name]);
-        });
+      async joinDojo() {
+        const response = await UserService.getCurrentUser();
+        const user = response.body.user;
+        const selectedEvent = StoreService.load('selected-event');
+        return DojoService.joinDojo(user.id, selectedEvent.dojoId, [this.user.initUserType.name]);
       },
-      bookTickets() {
-        return UserService.getCurrentUser().then((response) => {
-          const loggedInUser = response.body.user;
-          const selectedEvent = StoreService.load('selected-event');
-          const bookingSessions = StoreService.load(`booking-${this.eventId}-sessions`);
-          const applications = [];
-          forEachTicket(bookingSessions, (ticket) => {
-            applications.push({
-              dojoId: selectedEvent.dojoId,
-              eventId: selectedEvent.id,
-              sessionId: ticket.ticket.sessionId,
-              ticketName: ticket.ticket.name,
-              ticketType: ticket.ticket.type,
-              ticketId: ticket.ticket.id,
-              userId: (ticket.user && ticket.user.userId) || loggedInUser.id,
-              notes: 'N/A',
-            });
+      async bookTickets() {
+        const response = await UserService.getCurrentUser();
+        const loggedInUser = response.body.user;
+        const selectedEvent = StoreService.load('selected-event');
+        const bookingSessions = StoreService.load(`booking-${this.eventId}-sessions`);
+        const applications = [];
+        forEachTicket(bookingSessions, (ticket) => {
+          applications.push({
+            dojoId: selectedEvent.dojoId,
+            eventId: selectedEvent.id,
+            sessionId: ticket.ticket.sessionId,
+            ticketName: ticket.ticket.name,
+            ticketType: ticket.ticket.type,
+            ticketId: ticket.ticket.id,
+            userId: (ticket.user && ticket.user.userId) || loggedInUser.id,
+            notes: 'N/A',
           });
-          return EventsService.bookTickets(applications);
         });
+        return EventsService.bookTickets(applications);
       },
       getRecaptchaResponse() {
         return this.recaptchaResponse;

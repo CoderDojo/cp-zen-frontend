@@ -11,7 +11,7 @@ describe('UserService', () => {
   });
 
   describe('register()', () => {
-    it('should register an account', (done) => {
+    it('should register an account', async () => {
       // ARRANGE
       const profile = {
         id: 'bar',
@@ -28,17 +28,16 @@ describe('UserService', () => {
       sandbox.stub(UserService, 'login').returns(Promise.resolve());
 
       // ACT
-      UserService.register(user, profile).then(() => {
-        // ASSERT
-        expect(UserService.login).to.have.been.calledOnce;
-        expect(UserService.login).to.have.been.calledWith(user.email, user.password);
-        done();
-      });
+      await UserService.register(user, profile);
+
+      // ASSERT
+      expect(UserService.login).to.have.been.calledOnce;
+      expect(UserService.login).to.have.been.calledWith(user.email, user.password);
     });
   });
 
   describe('login()', () => {
-    it('should login with the given email address and password', (done) => {
+    it('should login with the given email address and password', async () => {
       // ARRANGE
       const email = 'email';
       const password = 'password';
@@ -48,16 +47,15 @@ describe('UserService', () => {
       }).returns(Promise.resolve('foo'));
 
       // ACT
-      UserService.login(email, password).then((resp) => {
-        // ASSERT
-        expect(resp).to.equal('foo');
-        done();
-      });
+      const resp = await UserService.login(email, password);
+
+      // ASSERT
+      expect(resp).to.equal('foo');
     });
   });
 
   describe('getCurrentUser()', () => {
-    it('should return a promise that resolves with the currently logged in user', (done) => {
+    it('should return a promise that resolves with the currently logged in user', async () => {
       // ARRANGE
       const userMock = {
         key: 'val',
@@ -66,16 +64,15 @@ describe('UserService', () => {
         .returns(Promise.resolve({ body: userMock }));
 
       // ACT
-      UserService.getCurrentUser().then((user) => {
-        // ASSERT
-        expect(user.body).to.deep.equal(userMock);
-        done();
-      });
+      const user = await UserService.getCurrentUser();
+
+      // ASSERT
+      expect(user.body).to.deep.equal(userMock);
     });
   });
 
   describe('addChild()', () => {
-    it('should add the given u13 child profile to the current user', (done) => {
+    it('should add the given u13 child profile to the current user', async () => {
       // ARRANGE
       const mockProfile = {
         gender: 'foo',
@@ -93,14 +90,13 @@ describe('UserService', () => {
       sandbox.stub(UserUtils, 'isUnderAge').withArgs(mockProfile.dob).returns(true);
 
       // ACT
-      UserService.addChild(mockProfile).then(() => {
-        // ASSERT
-        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, expectedPayload);
-        done();
-      });
+      await UserService.addChild(mockProfile);
+
+      // ASSERT
+      expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, expectedPayload);
     });
 
-    it('should add the given o13 child profile to the current user', (done) => {
+    it('should add the given o13 child profile to the current user', async () => {
       // ARRANGE
       const mockProfile = {
         gender: 'foo',
@@ -118,14 +114,13 @@ describe('UserService', () => {
       sandbox.stub(UserUtils, 'isUnderAge').withArgs(mockProfile.dob).returns(false);
 
       // ACT
-      UserService.addChild(mockProfile).then(() => {
-        // ASSERT
-        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, expectedPayload);
-        done();
-      });
+      await UserService.addChild(mockProfile);
+
+      // ASSERT
+      expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, expectedPayload);
     });
 
-    it('should use otherGender if gender is "Other"', (done) => {
+    it('should use otherGender if gender is "Other"', async () => {
       // ARRANGE
       const mockProfile = {
         gender: 'Other',
@@ -145,11 +140,10 @@ describe('UserService', () => {
       sandbox.stub(UserUtils, 'isUnderAge').withArgs(mockProfile.dob).returns(false);
 
       // ACT
-      UserService.addChild(mockProfile).then(() => {
-        // ASSERT
-        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, expectedPayload);
-        done();
-      });
+      await UserService.addChild(mockProfile);
+
+      // ASSERT
+      expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, expectedPayload);
     });
   });
 });
