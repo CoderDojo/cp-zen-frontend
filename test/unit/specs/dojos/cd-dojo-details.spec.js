@@ -94,23 +94,4 @@ describe('Dojo details component', () => {
       expect(vm.googleMapsLink).to.equal('https://www.google.com/maps/search/?api=1&query=53.349351,-6.247585999999956');
     });
   });
-
-  describe('computed.formattedDojoWebsite()', () => {
-    let vm;
-
-    beforeEach(() => {
-      vm = vueUnitHelper(DojoDetailsWithMocks);
-    });
-
-    it('should append http:// to a url which is missing it', () => {
-      vm.dojoDetails.website = 'www.dublinninjakids.com';
-      expect(vm.formattedDojoWebsite).to.equal('http://www.dublinninjakids.com');
-    });
-    it('should not append http:// to a url which contains http:// or https://', () => {
-      vm.dojoDetails.website = 'http://www.dublinninjakids.com';
-      expect(vm.formattedDojoWebsite).to.equal('http://www.dublinninjakids.com');
-      vm.dojoDetails.website = 'https://www.dublinninjakids.com';
-      expect(vm.formattedDojoWebsite).to.equal('https://www.dublinninjakids.com');
-    });
-  });
 });
