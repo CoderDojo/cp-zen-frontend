@@ -16,6 +16,7 @@
         </info-column-section>
         <info-column-section class="cd-dojo-details__left-column-section" icon="map-marker" :header="$t('Location')">
           {{ address }}
+          <a class="cd-dojo-details__google-maps-link" target="_blank" rel="noopener noreferrer" v-if="dojoDetails.geoPoint" :href="googleMapsLink">{{ $t('Open in Google Maps') }} <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
         </info-column-section>
         <info-column-section class="hidden-xs" icon="envelope-o" :header="$t('Email')">
           <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
@@ -90,11 +91,11 @@
     },
     computed: {
       address() {
-        return !this.dojoDetails.address1 ? undefined : `
-          ${this.dojoDetails.address1},
-          ${this.dojoDetails.placeName},
-          ${this.dojoDetails.countryName}
-        `;
+        return !this.dojoDetails.address1 ? undefined : [
+          this.dojoDetails.address1,
+          this.dojoDetails.placeName,
+          this.dojoDetails.countryName,
+        ].join(', ');
       },
       urlSlug() {
         return `${this.country}/${this.path}`;
@@ -104,6 +105,9 @@
       },
       loadImage() {
         return require('../assets/avatars/dojo-default-logo.png');
+      },
+      googleMapsLink() {
+        return `https://www.google.com/maps/search/?api=1&query=${this.dojoDetails.geoPoint.lat},${this.dojoDetails.geoPoint.lon}`;
       },
     },
     methods: {
@@ -197,6 +201,11 @@
         max-width: 360px;
         max-height: 360px;
       }
+    }
+
+    &__google-maps-link {
+      display: block;
+      margin: 4px 0;
     }
   }
 

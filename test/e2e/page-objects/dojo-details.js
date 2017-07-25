@@ -35,6 +35,11 @@ const DojoDetailsPage = Object.create(InfoColumn, {
       return InfoColumn.sectionContents[1];
     },
   },
+  addressGoogleMapsLink: {
+    get() {
+      return $('.cd-dojo-details__google-maps-link');
+    },
+  },
   emailLabel: {
     get() {
       return InfoColumn.sectionHeaders[2];

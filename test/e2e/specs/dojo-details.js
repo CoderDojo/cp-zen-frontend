@@ -25,7 +25,7 @@ describe('Dojo details page', () => {
     expect(addressLabel).to.equal('LOCATION');
 
     const address = DojoDetailsPage.address.getText();
-    expect(address).to.equal('CHQ Building,1 Custom House Quay, North Dock, Dublin, Ireland');
+    expect(address).to.contain('CHQ Building,1 Custom House Quay, North Dock, Dublin, Ireland');
 
     const emailLabel = DojoDetailsPage.emailLabel.getText();
     expect(emailLabel).to.equal('EMAIL');
@@ -239,7 +239,7 @@ describe('Dojo details page', () => {
       expect(addressLabel).to.equal('LOCATION');
 
       const address = DojoDetailsPage.address.getText();
-      expect(address).to.equal('CHQ Building,1 Custom House Quay, North Dock, Dublin, Ireland');
+      expect(address).to.contain('CHQ Building,1 Custom House Quay, North Dock, Dublin, Ireland');
 
       const emailLabel = DojoDetailsPage.emailLabelMobile.getText();
       expect(emailLabel).to.equal('EMAIL');
