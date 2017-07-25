@@ -67,7 +67,7 @@ describe('Dojo details page', () => {
     const firstEventName = DojoDetailsPage.eventNames[0].getText();
     expect(firstEventName).to.equal('My First Amazing Event');
     expect(DojoDetailsPage.eventSessions[0].getText()).to.equal('Sessions: Scratch, Arduino');
-    expect(DojoDetailsPage.eventDate(0).getText()).to.equal('June 6, 2017');
+    expect(DojoDetailsPage.eventDate(0).getText()).to.equal('September 6, 2017');
     expect(DojoDetailsPage.eventTimes(0).getText()).to.equal('4:30pm - 6pm');
 
     const secondEventName = DojoDetailsPage.eventNames[1].getText();
@@ -193,6 +193,13 @@ describe('Dojo details page', () => {
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(2);
     browser.deleteCookie();
+  });
+
+  it('should hide book button if an event is a past event', () => {
+    DojoPage.openDojoWithLatLong(10, 89, 1);
+    DojoDetailsPage.name.waitForVisible();
+
+    expect(DojoDetailsPage.eventViewButtons.length).to.equal(1);
   });
 
   it('should link to the dojo website', () => {

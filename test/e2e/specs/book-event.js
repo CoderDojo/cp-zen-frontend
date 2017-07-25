@@ -13,7 +13,7 @@ function checkHeaderContent(page) {
 function checkEventDetails(page) {
   page.sectionIcons[0].waitForVisible();
   expect(page.sectionHeaders[0].getText()).to.equal('TIME');
-  expect(page.sectionContents[0].getText()).to.have.string('June 6, 2017');
+  expect(page.sectionContents[0].getText()).to.have.string('September 6, 2017');
   expect(page.sectionContents[0].getText()).to.have.string('4:30pm - 6pm');
   page.sectionIcons[1].waitForVisible();
   expect(page.sectionHeaders[1].getText()).to.equal('LOCATION');
@@ -110,7 +110,7 @@ describe('Book event page', () => {
     expect(BookingConfirmation.hostedByMessage.getText()).to.equal('Event hosted by Dublin Ninja Kids');
 
     expect(BookingConfirmation.detailsBoxTitle(0).getText()).to.equal('TIME');
-    expect(BookingConfirmation.eventDate.getText()).to.equal('June 6, 2017');
+    expect(BookingConfirmation.eventDate.getText()).to.equal('September 6, 2017');
     expect(BookingConfirmation.eventTimes.getText()).to.equal('4:30pm - 6pm');
     expect(BookingConfirmation.recurringFrequencyInfo.isVisible()).to.equal(false);
 

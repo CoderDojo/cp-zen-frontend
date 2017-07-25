@@ -211,5 +211,82 @@ describe('Event list item component', () => {
         expect(vm.getSessionListForEvent).to.equal('Scratch, Arduino, HTML');
       });
     });
+    describe('isPastEvent', () => {
+      it('should return true for a one-off event whose date is before now', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListItem);
+        vm.event = {
+          dates: [
+            {
+              startTime: '2017-06-10T16:30:00.000Z',
+            },
+          ],
+        };
+
+        // ACT & ASSERT
+        expect(vm.isPastEvent).to.equal(true);
+      });
+      it('should return true for a recurring event whose last date is before now', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListItem);
+        vm.event = {
+          type: 'recurring',
+          dates: [
+            {
+              startTime: '2017-06-10T16:30:00.000Z',
+            },
+            {
+              startTime: '2017-06-17T16:30:00.000Z',
+            },
+            {
+              startTime: '2017-06-24T16:30:00.000Z',
+            },
+          ],
+        };
+
+        // ACT & ASSERT
+        expect(vm.isPastEvent).to.equal(true);
+      });
+      it('should return false for a one-off event whose date is after now', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListItem);
+        const now = moment();
+        const startTime = now.add(1, 'day');
+        vm.event = {
+          dates: [
+            {
+              startTime,
+            },
+          ],
+        };
+
+        // ACT & ASSERT
+        expect(vm.isPastEvent).to.equal(false);
+      });
+      it('should return false for a recurring event whose last date is after now', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListItem);
+        const now = moment();
+        const startTime = now.add(1, 'day');
+
+        vm.event = {
+          type: 'recurring',
+          dates: [
+            {
+              startTime: '2017-06-17T16:30:00.000Z',
+            },
+            {
+              startTime: '2017-06-24T16:30:00.000Z',
+            },
+            {
+              startTime,
+            },
+          ],
+        };
+
+        // ACT & ASSERT
+        expect(vm.isPastEvent).to.equal(false);
+      });
+    });
   });
 });

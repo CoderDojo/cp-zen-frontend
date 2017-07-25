@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <div v-if="canBook" class="cd-event-list-item__view-wrapper">
+    <div v-if="canBook && !isPastEvent(event)" class="cd-event-list-item__view-wrapper">
       <div v-if="event.eventbriteId">
         <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-event-list-item__view">{{ $t('See Details and Book') }}</a>
       </div>
@@ -66,6 +66,12 @@
       },
       getSessionListForEvent() {
         return this.event.sessions.map(session => session.name).join(', ');
+      },
+      isPastEvent() {
+        const now = moment();
+        let eventStartTime = moment(this.event.dates[this.event.dates.length - 1].startTime);
+        eventStartTime.subtract(eventStartTime.utcOffset(), 'minutes');
+        return now.isAfter(eventStartTime);
       },
     },
     filters: {
