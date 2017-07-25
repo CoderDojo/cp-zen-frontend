@@ -5,6 +5,5 @@ describe('Url formatting filter', () => {
     expect(cdUrlFormatter('www.example.com')).to.equal('http://www.example.com');
     expect(cdUrlFormatter('http://www.example.com')).to.equal('http://www.example.com');
     expect(cdUrlFormatter('https://www.example.com')).to.equal('https://www.example.com');
-    expect(cdUrlFormatter('http:/www.example.com')).to.equal('http://http:/www.example.com');
   });
 });
