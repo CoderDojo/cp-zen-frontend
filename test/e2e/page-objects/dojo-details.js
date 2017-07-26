@@ -131,6 +131,11 @@ const DojoDetailsPage = Object.create(InfoColumn, {
       return $$('.cd-event-list__event-times-timestamp')[index];
     },
   },
+  firstEventViewButton: {
+    get() {
+      return $('.cd-event-list__event-view');
+    },
+  },
   eventViewButtons: {
     get() {
       return $$('.cd-event-list__event-view');
