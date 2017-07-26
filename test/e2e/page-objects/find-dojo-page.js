@@ -83,13 +83,13 @@ const DojoPage = Object.create(BasePage, {
     },
   },
   openWithLatLong: {
-    value(lat, long) {
-      return BasePage.open.call(this, `/v2/${lat}/${long}`);
+    value(lat, long, clearCookie) {
+      return BasePage.open.call(this, `/v2/${lat}/${long}`, clearCookie);
     },
   },
   openDojoWithLatLong: {
-    value(lat, long, index = 2) {
-      this.openWithLatLong(lat, long);
+    value(lat, long, index = 2, clearCookie = true) {
+      this.openWithLatLong(lat, long, clearCookie);
       this.dojoListItems[index].click();
     },
   },
