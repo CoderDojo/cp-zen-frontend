@@ -34,6 +34,7 @@ function checkRecurringEventDetails(page) {
 function startBooking() {
   DojoPage.openDojoWithLatLong(10, 89);
   DojoDetailsPage.name.waitForVisible();
+  DojoDetailsPage.firstEventViewButton.waitForVisible();
   DojoDetailsPage.eventViewButtons[0].click();
 
   expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('Please verify your age');
@@ -141,6 +142,7 @@ describe('Book event page', () => {
   it('should show youth email input field when youth is booking', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
 
     const now = new Date();
@@ -161,6 +163,7 @@ describe('Book event page', () => {
   it('should not show youth email input field when parent is booking', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
 
     const now = new Date();
@@ -266,6 +269,7 @@ describe('Book event page', () => {
   it('should show the proper event details for recurring event', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[1].click();
 
     expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('Please verify your age');
@@ -289,6 +293,7 @@ describe('Book event page', () => {
   it('should show the proper event details for non recurring event', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
 
     expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('Please verify your age');
@@ -313,6 +318,7 @@ describe('Book event page', () => {
   it('should show the event name in the header', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
 
     checkHeaderContent(EventDobVerificationPage);
@@ -335,6 +341,7 @@ describe('Book event page', () => {
   it('should not show parent tickets for a youth over 13', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
 
     const now = new Date();
@@ -354,6 +361,7 @@ describe('Book event page', () => {
   it('should show parent tickets for someone over 18', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
 
     const now = new Date();
@@ -379,6 +387,7 @@ describe('Book event page', () => {
   it('should not allow the user to continue in the booking flow when the event is full', () => {
     DojoPage.openDojoWithLatLong(10, 89, 1);
     DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons[0].getText()).equals('FULL');
     expect(DojoDetailsPage.eventViewButtons[0].isEnabled()).equals(false);
   });
@@ -386,6 +395,7 @@ describe('Book event page', () => {
   it('should show recurring frequency on confirmation page for recurring event', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[1].click();
 
     EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
