@@ -8,7 +8,7 @@ describe('Cookie Notice', () => {
   });
 
   it('should disappear after navigating from first page, and persist', () => {
-    FindDojoPage.openWithLatLong(10, 89);
+    FindDojoPage.openWithLatLong(10, 89, false);
     expect(Footer.cookieNotice.isVisible()).to.equal(true);
     FindDojoPage.dojoListItems[0].click();
     DojoDetailsPage.name.waitForVisible();
@@ -19,7 +19,7 @@ describe('Cookie Notice', () => {
   });
 
   it('should disappear after dismissing, and persist', () => {
-    FindDojoPage.openWithLatLong(10, 89);
+    FindDojoPage.openWithLatLong(10, 89, false);
     expect(Footer.cookieNotice.isVisible()).to.equal(true);
     Footer.cookieNoticeDismissButton.click();
     expect(Footer.cookieNotice.isVisible()).to.equal(false);

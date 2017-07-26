@@ -119,7 +119,7 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: http://webdriver.io/guide/testrunner/reporters.html
-    reporters: ['allure'],
+    reporters: ['spec', 'allure'],
 
     //
     // Options to be passed to Jasmine.
@@ -194,10 +194,8 @@ exports.config = {
      * Function to be executed before a test (in Mocha/Jasmine) or a step (in Cucumber) starts.
      * @param {Object} test test details
      */
-    beforeTest: function (test) {
-      // Cookie notice gets in the way, so let's dismiss it when we're not testing it
-      browser.setCookie({ name: 'cookieDisclaimer', value: 'confirmed' });
-    },
+    // beforeTest: function (test) {
+    // },
     /**
      * Runs before a WebdriverIO command gets executed.
      * @param {String} commandName hook command name
