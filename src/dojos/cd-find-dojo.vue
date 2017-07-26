@@ -39,9 +39,7 @@
       </div>
       <dojo-map :center="coordinates" :class="{ 'cd-find-dojo__results-map': true, 'cd-find-dojo__results-map--hidden': !showMap }" :dojos="allActiveDojos"></dojo-map>
     </div>
-
   </div>
-
 </template>
 <script>
   import Vue from 'vue';
@@ -90,6 +88,7 @@
           this.coordinates.latitude = position.coords.latitude;
           this.coordinates.longitude = position.coords.longitude;
           this.getDojosByLatLong();
+          this.$router.push({ path: '/?currentLocation=true' });
         }, () => {
           this.detectingLocation = false;
         });
@@ -107,6 +106,7 @@
           .then((coords) => {
             this.coordinates = coords;
             this.getDojosByLatLong();
+            this.$router.push({ path: `/?q=${this.searchCriteria}` });
           });
       },
       getAllDojos() {
@@ -137,6 +137,13 @@
         this.coordinates.latitude = this.lat;
         this.coordinates.longitude = this.long;
         this.getDojosByLatLong();
+      }
+      if (this.$route.query.q) {
+        this.searchCriteria = this.$route.query.q;
+        this.searchDojosByAddress();
+      }
+      if (this.$route.query.currentLocation) {
+        this.getCurrentLocation();
       }
       this.getAllDojos();
     },

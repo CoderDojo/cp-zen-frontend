@@ -33,6 +33,33 @@ describe('Find Dojo page', () => {
     expect(DojoPage.noResultsMessage.isVisible()).to.equal(true);
   });
 
+  it('should populate search results based on query in url', () => {
+    DojoPage.open();
+    DojoPage.addressSearchInput.waitForVisible();
+    DojoPage.addressSearchInput.setValue('CHQ');
+    DojoPage.addressSearchButton.click();
+    DojoPage.showDojoListCount.waitForVisible();
+
+    DojoPage.dojoListItems[0].click();
+    browser.back();
+
+    DojoPage.addressSearchInput.waitForVisible();
+    expect(DojoPage.dojoListItems.length).to.equal(5);
+  });
+
+  it('should populate search results based on current location', () => {
+    DojoPage.open();
+    DojoPage.detectLocationButton.waitForVisible();
+    DojoPage.detectLocationButton.click();
+    DojoPage.showDojoListCount.waitForVisible();
+
+    DojoPage.dojoListItems[0].click();
+    browser.back();
+
+    DojoPage.detectLocationButton.waitForVisible();
+    expect(DojoPage.dojoListItems.length).to.equal(5);
+  });
+
   describe('Mobile specific tests', () => {
     beforeEach(() => {
       DojoPage.open();

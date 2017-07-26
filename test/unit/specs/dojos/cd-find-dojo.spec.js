@@ -120,12 +120,17 @@ describe('The Find dojo vue ', () => {
         },
       });
     });
-    const vm = new Vue(cdFindDojo());
+
+    const vm = vueUnitHelper(cdFindDojo());
+    vm.$router = {
+      push: sandbox.spy(),
+    };
     vm.getCurrentLocation();
     requestAnimationFrame(() => {
       expect(vm.detectingLocation).to.equal(true);
       expect(vm.coordinates.latitude).to.equal(10);
       expect(vm.coordinates.longitude).to.equal(89);
+      expect(vm.$router.push).to.have.been.calledOnce;
       done();
     });
   });
@@ -150,6 +155,12 @@ describe('The Find dojo vue ', () => {
     vm.long = 88;
     sandbox.stub(vm, 'getDojosByLatLong');
     sandbox.stub(vm, 'getAllDojos');
+    vm.$route = {
+      query: {
+        q: null,
+        currentLocation: null,
+      },
+    };
 
     vm.$lifecycleMethods.created();
 
@@ -166,6 +177,12 @@ describe('The Find dojo vue ', () => {
     vm.long = undefined;
     sandbox.stub(vm, 'getDojosByLatLong');
     sandbox.stub(vm, 'getAllDojos');
+    vm.$route = {
+      query: {
+        q: null,
+        currentLocation: null,
+      },
+    };
 
     vm.$lifecycleMethods.created();
 
@@ -188,6 +205,9 @@ describe('The Find dojo vue ', () => {
     const vm = vueUnitHelper(FindDojoWithMock);
     sandbox.stub(vm, 'getDojosByLatLong');
     vm.searchCriteria = 'CHQ';
+    vm.$router = {
+      push: sandbox.spy(),
+    };
 
     // ACT
     vm.searchDojosByAddress();
@@ -199,6 +219,7 @@ describe('The Find dojo vue ', () => {
         longiutide: 84,
       });
       expect(vm.getDojosByLatLong).to.have.been.calledOnce;
+      expect(vm.$router.push).to.have.been.calledOnce;
       done();
     });
   });
