@@ -241,6 +241,44 @@ describe('Event list component', () => {
         });
       });
     });
+    describe('isEventShown', () => {
+      let vm;
+      let mockEvent;
+
+      beforeEach(() => {
+        vm = vueUnitHelper(EventListWithMocks);
+        mockEvent = {
+          public: null,
+        };
+      });
+
+      it('should return true if the user is a member of the dojo', () => {
+        // ARRANGE
+        vm.isMember = true;
+        mockEvent.public = false;
+
+        // ACT & ASSERT
+        expect(vm.isEventShown(mockEvent)).to.equal(true);
+        mockEvent.public = true;
+        expect(vm.isEventShown(mockEvent)).to.equal(true);
+      });
+      it('should return true if the user is not a member of the dojo and the event is public', () => {
+        // ARRANGE
+        vm.isMember = false;
+        mockEvent.public = true;
+
+        // ACT & ASSERT
+        expect(vm.isEventShown(mockEvent)).to.equal(true);
+      });
+      it('should return false if the user is not a member of the dojo and the event is private', () => {
+        // ARRANGE
+        vm.isMember = false;
+        mockEvent.public = false;
+
+        // ACT & ASSERT
+        expect(vm.isEventShown(mockEvent)).to.equal(false);
+      });
+    });
   });
 
   describe('watch', () => {

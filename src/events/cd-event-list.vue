@@ -9,7 +9,7 @@
         </p>
       </div>
     </div>
-    <div v-for="event in events" class="cd-event-list__event">
+    <div v-for="event in events" v-if="isEventShown(event)" class="cd-event-list__event">
       <div class="cd-event-list__event-details">
         <header class="cd-event-list__event-header">
           <h3 class="cd-event-list__event-name">
@@ -35,7 +35,7 @@
           <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-event-list__event-view">{{ $t('See Details and Book') }}</a>
         </div>
         <router-link :to="{name: 'EventDobVerification', params: {eventId: event.id}}"
-                     :disabled="isEventFull(event)" v-else 
+                     :disabled="isEventFull(event)" v-else
                      tag="button" class="btn btn-lg btn-primary cd-event-list__event-view">
           {{ isEventFull(event) ? $t('Full') : $t('See Details and Book') }}
         </router-link>
@@ -99,6 +99,12 @@
           });
         });
         return totalEventCapacity === totalTicketsBooked;
+      },
+      isEventShown(event) {
+        if (!this.isMember) {
+          return event.public;
+        }
+        return true;
       },
     },
     watch: {
