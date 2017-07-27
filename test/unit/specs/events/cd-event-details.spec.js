@@ -1,4 +1,3 @@
-import moment from 'moment';
 import vueUnitHelper from 'vue-unit-helper';
 import EventDetails from '!!vue-loader?inject!@/events/cd-event-details';
 
@@ -99,43 +98,6 @@ describe('Event Details', () => {
     requestAnimationFrame(() => {
       expect(vm.eventDetails).to.deep.equal(mockRecurringEventData);
       done();
-    });
-  });
-
-  describe('isRecurring()', () => {
-    it('should return true when event type is recurring', () => {
-      // ARRANGE
-      vm.eventDetails = mockRecurringEventData;
-
-      // ACT
-      const recurring = vm.isRecurring();
-
-      // ASSERT
-      expect(recurring).to.be.true;
-    });
-
-    it('should return false when event type is not recurring', () => {
-      // ARRANGE
-      vm.eventDetails = mockEventData;
-
-      // ACT
-      const recurring = vm.isRecurring();
-      // ASSERT
-      expect(recurring).to.be.false;
-    });
-  });
-
-  describe('getNextStartTime', () => {
-    it('should return the first event startTime date after now', () => {
-      // ARRANGE
-      vm.eventDetails = mockRecurringEventData;
-      vm.now = moment('2017-06-22T00:00:00Z');
-
-      // ACT
-      const nextStartTime = vm.getNextStartTime();
-
-      // ASSERT
-      expect(nextStartTime).to.deep.equal('2017-07-01T10:00:00.000Z');
     });
   });
 });

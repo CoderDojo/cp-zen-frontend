@@ -1,3 +1,4 @@
+import { find } from 'lodash';
 import moment from 'moment';
 import i18n from '@/i18n';
 
@@ -11,5 +12,16 @@ export default {
     const dayName = moment(event.dates[0].startTime).format('dddd');
     const recurrence = recurrences[event.recurringType];
     return `${i18n.t(recurrence)} ${i18n.t('on')} ${dayName}`;
+  },
+  getNextStartTime(event) {
+    const now = moment();
+    const nextDateInfo = find(event.dates, (dateInfo) => {
+      const dateMoment = moment(dateInfo.startTime);
+      return dateMoment.isAfter(now);
+    });
+    return nextDateInfo.startTime;
+  },
+  isRecurring(event) {
+    return event.type === 'recurring';
   },
 };

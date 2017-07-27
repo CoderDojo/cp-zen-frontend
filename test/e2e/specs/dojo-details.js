@@ -73,16 +73,11 @@ describe('Dojo details page', () => {
     const secondEventName = DojoDetailsPage.eventNames[1].getText();
     expect(secondEventName).to.equal('My Second Amazing Event');
     expect(DojoDetailsPage.eventSessions[1].getText()).to.equal('Sessions: Raspberry Pi, Unity');
+    expect(DojoDetailsPage.eventDateSeries[0].getText()).to.equal('Next in series:');
     expect(DojoDetailsPage.eventDate(1).getText()).to.equal('June 3, 2018');
     expect(DojoDetailsPage.eventTimes(1).getText()).to.equal('10am - 12pm');
-    expect(DojoDetailsPage.eventDate(2).getText()).to.equal('June 17, 2018');
-    expect(DojoDetailsPage.eventTimes(2).getText()).to.equal('10am - 12pm');
-    expect(DojoDetailsPage.eventDate(3).getText()).to.equal('July 1, 2018');
-    expect(DojoDetailsPage.eventTimes(3).getText()).to.equal('10am - 12pm');
-    expect(DojoDetailsPage.eventDate(4).getText()).to.equal('July 15, 2018');
-    expect(DojoDetailsPage.eventTimes(4).getText()).to.equal('10am - 12pm');
-    expect(DojoDetailsPage.eventDate(5).getText()).to.equal('July 29, 2018');
-    expect(DojoDetailsPage.eventTimes(5).getText()).to.equal('10am - 12pm');
+    expect(DojoDetailsPage.eventRecurringInfoIcon[0].isVisible()).to.equal(true);
+    expect(DojoDetailsPage.eventRecurringInfoText[0].getText()).to.equal('Every two weeks on Sunday at 10am - 12pm');
   });
 
   it('should show message if no events are scheduled', () => {

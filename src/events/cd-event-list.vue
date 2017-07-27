@@ -17,6 +17,7 @@
   import DojosService from '@/dojos/service';
   import EventListItem from '@/events/cd-event-list-item';
   import service from './service';
+  import EventsUtil from './util';
 
   export default {
     name: 'event-list',

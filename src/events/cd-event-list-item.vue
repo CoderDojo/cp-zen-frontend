@@ -10,17 +10,23 @@
         </h4>
       </header>
       <div class="cd-event-list-item__datetime">
-        <div v-for="date in event.dates">
-          <div class="cd-event-list-item__date-timestamp">
-            {{ date.startTime | cdDateFormatter }}
-          </div>
-          <div class="cd-event-list-item__times-timestamp">
-            {{ date.startTime | cdTimeFormatter }} - {{ date.endTime | cdTimeFormatter }}
-          </div>
+        <div v-if="!isRecurring" class="cd-event-list-item__date-timestamp">
+          {{ event.dates[0].startTime | cdDateFormatter }}
+        </div>
+        <div v-else>
+          <div class="cd-event-list-item__date-series">{{ $t('Next in series:') }}</div>
+          <span class="cd-event-list-item__date-timestamp">{{ nextStartTime |  cdDateFormatter }}</span>
+        </div>
+        <div class="cd-event-list-item__times-timestamp">
+          {{ event.dates[0].startTime | cdTimeFormatter }} - {{ event.dates[0].endTime | cdTimeFormatter }}
+        </div>
+        <div v-if="isRecurring" class="cd-event-list-item__recurring-info">
+          <span class="fa fa-info-circle cd-event-list-item__recurring-info-icon"></span>
+          <span class="cd-event-list-item__recurring-info-text">{{ `${recurringFrequencyInfo} ${$t('at')}` }} {{ event.dates[0].startTime | cdTimeFormatter }} - {{ event.dates[0].endTime | cdTimeFormatter }}</span>
         </div>
       </div>
     </div>
-    <div v-if="canBook" class="cd-event-list-item__view-wrapper">
+    <div v-if="canBook && !isPastEvent" class="cd-event-list-item__view-wrapper">
       <div v-if="event.eventbriteId">
         <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-event-list-item__view">{{ $t('See Details and Book') }}</a>
       </div>
@@ -33,9 +39,11 @@
   </div>
 </template>
 <script>
+  import moment from 'moment';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import cdUrlFormatter from '@/common/filters/cd-url-formatter';
+  import EventsUtil from './util.js';
 
   export default {
     name: 'event-list-item',
@@ -66,6 +74,21 @@
       },
       getSessionListForEvent() {
         return this.event.sessions.map(session => session.name).join(', ');
+      },
+      isPastEvent() {
+        const now = moment();
+        const eventStartTime = moment(this.event.dates[this.event.dates.length - 1].startTime);
+        eventStartTime.subtract(eventStartTime.utcOffset(), 'minutes');
+        return now.isAfter(eventStartTime);
+      },
+      nextStartTime() {
+        return EventsUtil.getNextStartTime(this.event);
+      },
+      isRecurring() {
+        return EventsUtil.isRecurring(this.event);
+      },
+      recurringFrequencyInfo() {
+        return EventsUtil.buildRecurringFrequencyInfo(this.event);
       },
     },
     filters: {
@@ -107,12 +130,31 @@
       }
     }
 
-    &__date-timestamp {
-      font-size: 18px;
+    &__date {
+      &-timestamp {
+        font-size: 18px;
+      }
+
+      &-series {
+        font-size: 14px;
+        color: #7b8082;
+      }
     }
 
     &__times-timestamp {
       font-size: 16px;
+    }
+
+    &__recurring-info {
+      color: #7b8082;
+      margin-top: 16px;
+      width: 130px;
+      &-icon {
+        font-size: 16px;
+      }
+      &-text {
+        font-size: 14px;
+      }
     }
 
     &__view {
@@ -134,20 +176,22 @@
 
   @media (max-width: @screen-xs-max) {
     .cd-event-list-item {
-      &__event {
-        &-details {
-          flex-direction: column;
-        }
-        &-name {
-          font-size: 18px;
-          font-weight: bold;
-        }
-        &-sessions {
-          font-size: 14px;
-        }
-        &-view-wrapper {
-          text-align: center;
-        }
+      &__details {
+        flex-direction: column;
+      }
+      &__name {
+        font-size: 18px;
+        font-weight: bold;
+      }
+      &__sessions {
+        font-size: 14px;
+      }
+      &__view-wrapper {
+        text-align: center;
+      }
+      &__recurring-info {
+        padding: 0 24px;
+        width: auto;
       }
       &__datetime {
         margin-right: 0;
