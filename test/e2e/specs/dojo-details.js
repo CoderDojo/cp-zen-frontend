@@ -209,7 +209,7 @@ describe('Dojo details page', () => {
   it('should link to eventbrite for eventbrite events', () => {
     DojoPage.openDojoWithLatLong(10, 89, 4);
 
-    (DojoDetailsPage.eventViewButtons[0]).waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
     expect((DojoDetailsPage.eventViewButtons[0]).getAttribute('href')).to.equal('http://www.eventbrite.com/');
   });
 

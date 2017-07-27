@@ -88,7 +88,7 @@
           this.coordinates.latitude = position.coords.latitude;
           this.coordinates.longitude = position.coords.longitude;
           this.getDojosByLatLong();
-          this.$router.push({ path: '/?currentLocation=true' });
+          this.$router.push({ query: { currentLocation: true } });
         }, () => {
           this.detectingLocation = false;
         });
@@ -102,11 +102,11 @@
           });
       },
       searchDojosByAddress() {
+        this.$router.push({ query: { q: this.searchCriteria } });
         GeolocationService.getLatitudeLongitudeByAddress(this.searchCriteria)
           .then((coords) => {
             this.coordinates = coords;
             this.getDojosByLatLong();
-            this.$router.push({ path: `/?q=${this.searchCriteria}` });
           });
       },
       getAllDojos() {
@@ -141,8 +141,7 @@
       if (this.$route.query.q) {
         this.searchCriteria = this.$route.query.q;
         this.searchDojosByAddress();
-      }
-      if (this.$route.query.currentLocation) {
+      } else if (this.$route.query.currentLocation) {
         this.getCurrentLocation();
       }
       this.getAllDojos();
