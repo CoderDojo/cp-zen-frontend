@@ -23,11 +23,8 @@ elif [[ $BUILD_BRANCH =~ ^pull\/[0-9]+$ ]]; then
   fi
 
   # cd-common
-  CD_COMMON_BRANCH_STATUS=`curl -I "https://api.github.com/repos/${GITHUB_USERNAME}/cd-common/branches/${PR_BRANCH_NAME}" 2>/dev/null | head -n 1 | cut -d$' ' -f2`
-  if [[ $CD_COMMON_BRANCH_STATUS == "200" ]]; then
-    echo "Installing cd-common from ${GITHUB_USERNAME}:${PR_BRANCH_NAME}"
-    npm install git://github.com/${GITHUB_USERNAME}/cd-common.git#${PR_BRANCH_NAME} --save
-  elif [[ $PR_TARGET_BRANCH_NAME == "staging" ]]; then
+  # TODO: Allow install from PR branch
+  if [[ $PR_TARGET_BRANCH_NAME == "staging" ]]; then
     echo "Installing @coderdojo/cd-common@staging"
     npm install --save @coderdojo/cd-common@staging
   fi
