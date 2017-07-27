@@ -19,7 +19,7 @@ dependencies:
 test:
   override:
     - npm run test
-    - npm run build
+    - GIT_BRANCH=$CIRCLE_BRANCH npm run build
 deployment:
   production:
     branch: master
