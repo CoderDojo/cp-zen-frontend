@@ -120,12 +120,18 @@ describe('The Find dojo vue ', () => {
         },
       });
     });
-    const vm = new Vue(cdFindDojo());
+
+    const vm = vueUnitHelper(cdFindDojo());
+    vm.$router = {
+      push: sandbox.spy(),
+    };
     vm.getCurrentLocation();
     requestAnimationFrame(() => {
       expect(vm.detectingLocation).to.equal(true);
       expect(vm.coordinates.latitude).to.equal(10);
       expect(vm.coordinates.longitude).to.equal(89);
+      expect(vm.$router.push).to.have.been.calledOnce;
+      expect(vm.$router.push).to.have.been.calledWith({ query: { currentLocation: true } });
       done();
     });
   });
@@ -150,6 +156,12 @@ describe('The Find dojo vue ', () => {
     vm.long = 88;
     sandbox.stub(vm, 'getDojosByLatLong');
     sandbox.stub(vm, 'getAllDojos');
+    vm.$route = {
+      query: {
+        q: null,
+        currentLocation: null,
+      },
+    };
 
     vm.$lifecycleMethods.created();
 
@@ -166,11 +178,71 @@ describe('The Find dojo vue ', () => {
     vm.long = undefined;
     sandbox.stub(vm, 'getDojosByLatLong');
     sandbox.stub(vm, 'getAllDojos');
+    vm.$route = {
+      query: {
+        q: null,
+        currentLocation: null,
+      },
+    };
 
     vm.$lifecycleMethods.created();
 
     expect(vm.getDojosByLatLong).not.to.have.been.called;
     expect(vm.getAllDojos).to.have.been.calledOnce;
+  });
+
+  it('should get dojos based on query in url when query is present', () => {
+    const vm = vueUnitHelper(cdFindDojo());
+    sandbox.stub(vm, 'searchDojosByAddress');
+    sandbox.stub(vm, 'getCurrentLocation');
+
+    vm.$route = {
+      query: {
+        q: 'Dublin',
+        currentLocation: null,
+      },
+    };
+
+    vm.$lifecycleMethods.created();
+
+    expect(vm.searchDojosByAddress).to.have.been.calledOnce;
+    expect(vm.getCurrentLocation).not.to.have.been.called;
+  });
+
+  it('should get dojos based on currentLocation in url when currentLocation is present', () => {
+    const vm = vueUnitHelper(cdFindDojo());
+    sandbox.stub(vm, 'searchDojosByAddress');
+    sandbox.stub(vm, 'getCurrentLocation');
+
+    vm.$route = {
+      query: {
+        q: null,
+        currentLocation: true,
+      },
+    };
+
+    vm.$lifecycleMethods.created();
+
+    expect(vm.searchDojosByAddress).not.to.have.been.called;
+    expect(vm.getCurrentLocation).to.have.been.calledOnce;
+  });
+
+  it('should get dojos based on query in url when query and currentLocation are present', () => {
+    const vm = vueUnitHelper(cdFindDojo());
+    sandbox.stub(vm, 'searchDojosByAddress');
+    sandbox.stub(vm, 'getCurrentLocation');
+
+    vm.$route = {
+      query: {
+        q: 'Dublin',
+        currentLocation: true,
+      },
+    };
+
+    vm.$lifecycleMethods.created();
+
+    expect(vm.searchDojosByAddress).to.have.been.calledOnce;
+    expect(vm.getCurrentLocation).not.to.have.been.called;
   });
 
   it('should search dojo\'s by address', (done) => {
@@ -188,6 +260,9 @@ describe('The Find dojo vue ', () => {
     const vm = vueUnitHelper(FindDojoWithMock);
     sandbox.stub(vm, 'getDojosByLatLong');
     vm.searchCriteria = 'CHQ';
+    vm.$router = {
+      push: sandbox.spy(),
+    };
 
     // ACT
     vm.searchDojosByAddress();
@@ -199,6 +274,8 @@ describe('The Find dojo vue ', () => {
         longiutide: 84,
       });
       expect(vm.getDojosByLatLong).to.have.been.calledOnce;
+      expect(vm.$router.push).to.have.been.calledOnce;
+      expect(vm.$router.push).to.have.been.calledWith({ query: { q: 'CHQ' } });
       done();
     });
   });
