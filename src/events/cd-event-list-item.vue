@@ -107,7 +107,7 @@
     }
 
     &__header {
-      flex: 3;
+      flex: 4;
     }
 
     &__name {
@@ -148,7 +148,6 @@
     &__recurring-info {
       color: #7b8082;
       margin-top: 16px;
-      width: 130px;
       &-icon {
         font-size: 16px;
       }
@@ -171,6 +170,7 @@
 
     &__datetime {
       margin-right: 27px;
+      flex: 1;
     }
   }
 
