@@ -6,14 +6,14 @@ if [[ $BUILD_BRANCH == "staging" ]]; then
 elif [[ $BUILD_BRANCH =~ ^pull\/[0-9]+$ ]]; then
   echo "Building PR"
   PR_ID=`echo ${BUILD_BRANCH} | cut -d '/' -f 2`
-  PR_JSON=`curl "https://api.github.com/repos/coderdojo/cp-zen-frontend/pulls/${PR_ID}"`
+  PR_JSON=`curl "https://api.github.com/repos/coderdojo/cp-zen-frontend/pulls/${PR_ID}" 2>/dev/null`
   PR_BRANCH_NAME=`echo $PR_JSON | jq -r '.head.ref'`
   PR_TARGET_BRANCH_NAME=`echo $PR_JSON | jq -r '.base.ref'`
   echo "Source branch: ${PR_BRANCH_NAME}"
   echo "Target branch: ${PR_TARGET_BRANCH_NAME}"
 
   # cp-translations
-  CP_TRANSLATIONS_BRANCH_STATUS=`curl -I "https://api.github.com/repos/${GITHUB_USERNAME}/cp-translations/branches/${PR_BRANCH_NAME}" | head -n 1 | cut -d$' ' -f2`
+  CP_TRANSLATIONS_BRANCH_STATUS=`curl -I "https://api.github.com/repos/${GITHUB_USERNAME}/cp-translations/branches/${PR_BRANCH_NAME}" 2>/dev/null | head -n 1 | cut -d$' ' -f2`
   if [[ $CP_TRANSLATIONS_BRANCH_STATUS == "200" ]]; then
     echo "Installing cp-translations from ${GITHUB_USERNAME}:${PR_BRANCH_NAME}"
     npm install git://github.com/${GITHUB_USERNAME}/cp-translations.git#${PR_BRANCH_NAME} --save
@@ -23,7 +23,7 @@ elif [[ $BUILD_BRANCH =~ ^pull\/[0-9]+$ ]]; then
   fi
 
   # cd-common
-  CD_COMMON_BRANCH_STATUS=`curl -I "https://api.github.com/repos/${GITHUB_USERNAME}/cd-common/branches/${PR_BRANCH_NAME}" | head -n 1 | cut -d$' ' -f2`
+  CD_COMMON_BRANCH_STATUS=`curl -I "https://api.github.com/repos/${GITHUB_USERNAME}/cd-common/branches/${PR_BRANCH_NAME}" 2>/dev/null | head -n 1 | cut -d$' ' -f2`
   if [[ $CD_COMMON_BRANCH_STATUS == "200" ]]; then
     echo "Installing cd-common from ${GITHUB_USERNAME}:${PR_BRANCH_NAME}"
     npm install git://github.com/${GITHUB_USERNAME}/cd-common.git#${PR_BRANCH_NAME} --save
