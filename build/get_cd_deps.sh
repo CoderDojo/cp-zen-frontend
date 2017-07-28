@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 echo "BUILD_BRANCH: ${BUILD_BRANCH}"
 if [[ $BUILD_BRANCH == "staging" ]]; then
   echo "Building staging"
@@ -6,14 +7,14 @@ if [[ $BUILD_BRANCH == "staging" ]]; then
 elif [[ "${BUILD_BRANCH}" =~ ^pull/[0-9]+$ ]]; then
   echo "Building PR"
   PR_ID=$(echo "${BUILD_BRANCH}" | cut -d '/' -f 2)
-  PR_JSON=$(curl "https://api.github.com/repos/coderdojo/cp-zen-frontend/pulls/${PR_ID}" 2>/dev/null)
+  PR_JSON=$(curl "https://api.github.com/repos/coderdojo/cp-zen-frontend/pulls/${PR_ID}?auth_token=${GITHUB_AUTH_TOKEN}")
   PR_BRANCH_NAME=$(echo "${PR_JSON}" | jq -r '.head.ref')
   PR_TARGET_BRANCH_NAME=$(echo "${PR_JSON}" | jq -r '.base.ref')
   echo "Source branch: ${PR_BRANCH_NAME}"
   echo "Target branch: ${PR_TARGET_BRANCH_NAME}"
 
   # cp-translations
-  CP_TRANSLATIONS_BRANCH_STATUS=$(curl -I "https://api.github.com/repos/${GITHUB_USERNAME}/cp-translations/branches/${PR_BRANCH_NAME}" 2>/dev/null | head -n 1 | cut -d$' ' -f2)
+  CP_TRANSLATIONS_BRANCH_STATUS=$(curl -I "https://api.github.com/repos/${GITHUB_USERNAME}/cp-translations/branches/${PR_BRANCH_NAME}?auth_token=${GITHUB_AUTH_TOKEN}" | head -n 1 | cut -d$' ' -f2)
   if [[ "${CP_TRANSLATIONS_BRANCH_STATUS}" == "200" ]]; then
     echo "Installing cp-translations from ${GITHUB_USERNAME}:${PR_BRANCH_NAME}"
     npm install "git://github.com/${GITHUB_USERNAME}/cp-translations.git#${PR_BRANCH_NAME}" --save
