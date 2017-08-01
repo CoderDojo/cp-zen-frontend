@@ -313,8 +313,8 @@
           "endTime": "2017-07-15T12:00:00.000Z"
         },
         {
-          "startTime": "2017-07-29T10:00:00.000Z",
-          "endTime": "2017-07-29T12:00:00.000Z"
+          "startTime": "2018-07-29T10:00:00.000Z",
+          "endTime": "2018-07-29T12:00:00.000Z"
         }
       ],
       "ticketApproval": false,
@@ -601,6 +601,88 @@
               "entity$": "-/cd/tickets",
               "id": "e2921b09-54a5-475a-9c51-7a65dd87ed28",
               "sessionId": "dc666f88-b14e-44f5-b76a-08e8e62c0e24",
+              "name": "Parent",
+              "type": "parent-guardian",
+              "quantity": 4,
+              "deleted": 0,
+              "invites": null,
+              "totalApplications": 0,
+              "approvedApplications": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "entity$": "-/cd/events",
+      "id": "67636e6d-da21-407f-9d73-f553ab8a1fb6",
+      "name": "My First Private Event",
+      "country": {
+        "countryName": "Ireland",
+        "countryNumber": 372,
+        "continent": "EU",
+        "alpha2": "IE",
+        "alpha3": "IRL"
+      },
+      "city": {
+        "nameWithHierarchy": "Dublin"
+      },
+      "address": "CHQ",
+      "createdAt": "2017-05-29T13:53:16.502Z",
+      "createdBy": "e73a4435-fcd2-4578-b081-bb9ae004f83b",
+      "type": "one-off",
+      "description": "<p>LEARN ALL THE THINGS</p>\n",
+      "dojoId": "70e868a9-f2b2-4b73-8f83-7e3a79dfa150",
+      "eventbriteId": null,
+      "eventbriteUrl": null,
+      "position": null,
+      "public": false,
+      "status": "published",
+      "recurringType": "weekly",
+      "dates": [
+        {
+          "startTime": "2017-09-06T16:30:00.000Z",
+          "endTime": "2017-09-06T18:00:00.000Z"
+        }
+      ],
+      "ticketApproval": true,
+      "sessions": [
+        {
+          "entity$": "-/cd/sessions",
+          "id": "dc777f88-b14e-44f5-b76a-08e8e62c0e24",
+          "name": "Hardware",
+          "description": "Advanced",
+          "eventId": "67636e6d-da21-407f-9d73-f553ab8a1fb6",
+          "status": "active",
+          "tickets": [
+            {
+              "entity$": "-/cd/tickets",
+              "id": "a8b5a03a-c742-4388-b195-469397eb0ed1",
+              "sessionId": "dc777f88-b14e-44f5-b76a-08e8e62c0e24",
+              "name": "Ninja",
+              "type": "ninja",
+              "quantity": 2,
+              "deleted": 0,
+              "invites": null,
+              "totalApplications": 0,
+              "approvedApplications": 0
+            },
+            {
+              "entity$": "-/cd/tickets",
+              "id": "d9c37e5b-4df1-47d4-bf43-226fbc29d997",
+              "sessionId": "dc777f88-b14e-44f5-b76a-08e8e62c0e24",
+              "name": "Mentor",
+              "type": "mentor",
+              "quantity": 2,
+              "deleted": 0,
+              "invites": null,
+              "totalApplications": 0,
+              "approvedApplications": 0
+            },
+            {
+              "entity$": "-/cd/tickets",
+              "id": "e2921b09-66a5-475a-9c51-7a65dd87ed28",
+              "sessionId": "dc777f88-b14e-44f5-b76a-08e8e62c0e24",
               "name": "Parent",
               "type": "parent-guardian",
               "quantity": 4,
@@ -1002,6 +1084,52 @@
           "name": "Mentor",
           "type": "mentor",
           "quantity": 2,
+          "deleted": 0,
+          "invites": null,
+          "totalApplications": 0,
+          "approvedApplications": 0
+        }
+      ]
+    },
+    {
+      "entity$": "-/cd/sessions",
+      "id": "dc777f88-b14e-44f5-b76a-08e8e62c0e24",
+      "name": "Hardware",
+      "description": "Advanced",
+      "eventId": "67636e6d-da21-407f-9d73-f553ab8a1fb6",
+      "status": "active",
+      "tickets": [
+        {
+          "entity$": "-/cd/tickets",
+          "id": "a8b5a03a-c742-4388-b195-469397eb0ed1",
+          "sessionId": "dc777f88-b14e-44f5-b76a-08e8e62c0e24",
+          "name": "Ninja",
+          "type": "ninja",
+          "quantity": 2,
+          "deleted": 0,
+          "invites": null,
+          "totalApplications": 0,
+          "approvedApplications": 0
+        },
+        {
+          "entity$": "-/cd/tickets",
+          "id": "d9c37e5b-4df1-47d4-bf43-226fbc29d997",
+          "sessionId": "dc777f88-b14e-44f5-b76a-08e8e62c0e24",
+          "name": "Mentor",
+          "type": "mentor",
+          "quantity": 2,
+          "deleted": 0,
+          "invites": null,
+          "totalApplications": 0,
+          "approvedApplications": 0
+        },
+        {
+          "entity$": "-/cd/tickets",
+          "id": "e2921b09-66a5-475a-9c51-7a65dd87ed28",
+          "sessionId": "dc777f88-b14e-44f5-b76a-08e8e62c0e24",
+          "name": "Parent",
+          "type": "parent-guardian",
+          "quantity": 4,
           "deleted": 0,
           "invites": null,
           "totalApplications": 0,

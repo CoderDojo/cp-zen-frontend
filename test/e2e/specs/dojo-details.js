@@ -64,13 +64,13 @@ describe('Dojo details page', () => {
     DojoPage.openDojoWithLatLong(10, 89);
     DojoDetailsPage.name.waitForVisible();
 
-    const firstEventName = DojoDetailsPage.eventNames(0).getText();
+    const firstEventName = DojoDetailsPage.eventNames[0].getText();
     expect(firstEventName).to.equal('My First Amazing Event');
     expect(DojoDetailsPage.eventSessions[0].getText()).to.equal('Sessions: Scratch, Arduino');
     expect(DojoDetailsPage.eventDate(0).getText()).to.equal('June 6, 2017');
     expect(DojoDetailsPage.eventTimes(0).getText()).to.equal('4:30pm - 6pm');
 
-    const secondEventName = DojoDetailsPage.eventNames(1).getText();
+    const secondEventName = DojoDetailsPage.eventNames[1].getText();
     expect(secondEventName).to.equal('My Second Amazing Event');
     expect(DojoDetailsPage.eventSessions[1].getText()).to.equal('Sessions: Raspberry Pi, Unity');
     expect(DojoDetailsPage.eventDate(1).getText()).to.equal('June 3, 2017');
@@ -81,7 +81,7 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.eventTimes(3).getText()).to.equal('10am - 12pm');
     expect(DojoDetailsPage.eventDate(4).getText()).to.equal('July 15, 2017');
     expect(DojoDetailsPage.eventTimes(4).getText()).to.equal('10am - 12pm');
-    expect(DojoDetailsPage.eventDate(5).getText()).to.equal('July 29, 2017');
+    expect(DojoDetailsPage.eventDate(5).getText()).to.equal('July 29, 2018');
     expect(DojoDetailsPage.eventTimes(5).getText()).to.equal('10am - 12pm');
   });
 
@@ -165,7 +165,7 @@ describe('Dojo details page', () => {
     browser.url(dojoUrl);
 
     DojoDetailsPage.detailsLabel.waitForVisible();
-    expect(DojoDetailsPage.eventViewButtons.length).to.equal(1);
+    expect(DojoDetailsPage.eventViewButtons.length).to.equal(2);
   });
 
   it('should hide book button on private dojos when logged in and not a member of the dojo', () => {
@@ -178,6 +178,7 @@ describe('Dojo details page', () => {
     DojoPage.openDojoWithLatLong(10, 89, 3);
     DojoDetailsPage.detailsLabel.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(0);
+    browser.deleteCookie();
   });
 
   it('should show book button on private dojos when logged in and a member of the dojo', () => {
@@ -189,7 +190,8 @@ describe('Dojo details page', () => {
 
     DojoPage.openDojoWithLatLong(10, 89, 3);
     DojoDetailsPage.detailsLabel.waitForVisible();
-    expect(DojoDetailsPage.eventViewButtons.length).to.equal(1);
+    expect(DojoDetailsPage.eventViewButtons.length).to.equal(2);
+    browser.deleteCookie();
   });
 
   it('should link to the dojo website', () => {
@@ -211,6 +213,41 @@ describe('Dojo details page', () => {
 
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     expect((DojoDetailsPage.eventViewButtons[0]).getAttribute('href')).to.equal('http://www.eventbrite.com/');
+  });
+
+  it('should show all events when logged in and a member of the dojo', () => {
+    LoginPage.open();
+    LoginPage.email.waitForVisible();
+    LoginPage.email.setValue('parent1@example.com');
+    LoginPage.password.setValue('testparent1');
+    LoginPage.login.click();
+
+    DojoPage.openDojoWithLatLong(10, 89, 3);
+
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.eventNames.length).to.equal(2);
+    browser.deleteCookie();
+  });
+
+  it('should show only public events when not logged in', () => {
+    DojoPage.openDojoWithLatLong(10, 89, 3);
+
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.eventNames.length).to.equal(1);
+  });
+
+  it('should show only public events when logged in and not a member of the dojo', () => {
+    LoginPage.open();
+    LoginPage.email.waitForVisible();
+    LoginPage.email.setValue('parent2@example.com');
+    LoginPage.password.setValue('testparent2');
+    LoginPage.login.click();
+
+    DojoPage.openDojoWithLatLong(10, 89, 3);
+
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.eventNames.length).to.equal(1);
+    browser.deleteCookie();
   });
 
   describe('Mobile specific tests', () => {

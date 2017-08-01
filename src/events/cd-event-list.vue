@@ -9,46 +9,13 @@
         </p>
       </div>
     </div>
-    <div v-for="event in events" class="cd-event-list__event">
-      <div class="cd-event-list__event-details">
-        <header class="cd-event-list__event-header">
-          <h3 class="cd-event-list__event-name">
-            {{ event.name }}
-          </h3>
-          <h4 class="cd-event-list__event-sessions">
-            <strong>{{ $t('Sessions') }}:</strong> {{ getSessionListForEvent(event) }}
-          </h4>
-        </header>
-        <div class="cd-event-list__datetime">
-          <div v-for="date in event.dates">
-            <div class="cd-event-list__event-date-timestamp">
-              {{ date.startTime | cdDateFormatter }}
-            </div>
-            <div class="cd-event-list__event-times-timestamp">
-              {{ date.startTime | cdTimeFormatter }} - {{ date.endTime | cdTimeFormatter }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="canBook" class="cd-event-list__event-view-wrapper">
-        <div v-if="event.eventbriteId">
-          <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-event-list__event-view">{{ $t('See Details and Book') }}</a>
-        </div>
-        <router-link :to="{name: 'EventDobVerification', params: {eventId: event.id}}"
-                     :disabled="isEventFull(event)" v-else 
-                     tag="button" class="btn btn-lg btn-primary cd-event-list__event-view">
-          {{ isEventFull(event) ? $t('Full') : $t('See Details and Book') }}
-        </router-link>
-      </div>
-    </div>
+    <event-list-item v-for="event in events" :key="event.id" :event="event" :dojo="dojo" :users-dojos="usersDojos" :user="currentUser" class="cd-event-list__event"></event-list-item>
   </div>
 </template>
 <script>
-  import cdDateFormatter from '@/common/filters/cd-date-formatter';
-  import cdTimeFormatter from '@/common/filters/cd-time-formatter';
-  import cdUrlFormatter from '@/common/filters/cd-url-formatter';
   import UserService from '@/users/service';
   import DojosService from '@/dojos/service';
+  import EventListItem from '@/events/cd-event-list-item';
   import service from './service';
 
   export default {
@@ -61,18 +28,8 @@
         events: [],
       };
     },
-    computed: {
-      isMember() {
-        return !!(this.usersDojos.length);
-      },
-      canBook() {
-        return (!!this.currentUser && this.isMember) || this.dojo.private === 0;
-      },
-    },
-    filters: {
-      cdDateFormatter,
-      cdTimeFormatter,
-      cdUrlFormatter,
+    components: {
+      EventListItem,
     },
     methods: {
       loadCurrentUser() {
@@ -85,20 +42,6 @@
         service.loadEvents(this.dojo.id).then((response) => {
           this.events = response.body;
         });
-      },
-      getSessionListForEvent(event) {
-        return event.sessions.map(session => session.name).join(', ');
-      },
-      isEventFull(event) {
-        let totalEventCapacity = 0;
-        let totalTicketsBooked = 0;
-        event.sessions.forEach((session) => {
-          session.tickets.forEach((ticket) => {
-            totalEventCapacity += ticket.quantity;
-            totalTicketsBooked += ticket.approvedApplications;
-          });
-        });
-        return totalEventCapacity === totalTicketsBooked;
       },
     },
     watch: {
@@ -126,54 +69,6 @@
       border-width: 1px 1px 3px 1px;
       padding: 16px;
       margin-bottom: 24px;
-
-      &-details {
-        display: flex;
-      }
-
-      &-header {
-        flex: 3;
-      }
-
-      &-name {
-        font-size: 24px;
-        margin: 0;
-      }
-
-      &-sessions {
-        font-size: 16px;
-        color: #7b8082;
-        margin: 8px 0;
-      }
-
-      &-date, &-times {
-       flex: 1;
-        &-timestamp {
-          list-style-type: none;
-          padding: 0;
-          font-size: 18px;
-        }
-      }
-
-      &-date-timestamp {
-        font-size: 18px;
-       }
-
-      &-times-timestamp {
-         font-size: 16px;
-       }
-
-      &-view {
-        margin-top: 32px;
-        &:disabled {
-          background-color: #bdc3c6;
-          color: white;
-          font-weight: bold;
-          width: 220px;
-          text-transform: uppercase;
-          border-color: transparent;
-        }
-      }
     }
 
     &__no-events {
@@ -188,35 +83,6 @@
         font-size: 16px;
         color: #7b8082;
         margin-top: 8px;
-      }
-    }
-
-    &__datetime {
-      margin-right: 27px;
-    }
-  }
-
-  @media (max-width: @screen-xs-max) {
-    .cd-event-list {
-      &__event {
-        &-details {
-          flex-direction: column;
-        }
-        &-name {
-          font-size: 18px;
-          font-weight: bold;
-        }
-        &-sessions {
-          font-size: 14px;
-        }
-        &-view-wrapper {
-          text-align: center;
-        }
-      }
-      &__datetime {
-        margin-right: 0;
-        margin-top: 16px;
-        text-align: center;
       }
     }
   }
