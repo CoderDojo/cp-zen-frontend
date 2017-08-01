@@ -23,9 +23,9 @@ function checkEventDetails(page) {
 function checkRecurringEventDetails(page) {
   page.sectionIcons[0].waitForVisible();
   expect(page.sectionHeaders[0].getText()).to.equal('TIME');
-  expect(page.sectionContents[0].getText()).to.have.string('Next in series: July 29, 2018');
+  expect(page.sectionContents[0].getText()).to.have.string('Next in series: June 3, 2018');
   expect(page.sectionContents[0].getText()).to.have.string('10am - 12pm');
-  expect(page.sectionContents[0].getText()).to.have.string('Every two weeks on Saturday');
+  expect(page.sectionContents[0].getText()).to.have.string('Every two weeks on Sunday');
   page.sectionIcons[1].waitForVisible();
   expect(page.sectionHeaders[1].getText()).to.equal('LOCATION');
   expect(page.sectionContents[1].getText()).to.equal('CHQ, Dublin, Ireland');
@@ -430,6 +430,6 @@ describe('Book event page', () => {
     Booking.submitBookingButton.click();
 
     BookingConfirmation.recurringFrequencyInfo.waitForVisible();
-    expect(BookingConfirmation.recurringFrequencyInfo.getText()).to.equal('Every two weeks on Saturday');
+    expect(BookingConfirmation.recurringFrequencyInfo.getText()).to.equal('Every two weeks on Sunday');
   });
 });

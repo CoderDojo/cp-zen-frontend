@@ -6,7 +6,7 @@ const users = require('./users');
 const usersDojos = require('./users-dojos');
 
 const server = jsonServer.create();
-const router = jsonServer.router(path.join(__dirname, 'db.json'));
+const router = jsonServer.router(require('./db'));
 const locales = require('./locales.js');
 const middlewares = jsonServer.defaults();
 

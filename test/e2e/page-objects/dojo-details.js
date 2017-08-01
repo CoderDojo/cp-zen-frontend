@@ -133,7 +133,7 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   firstEventViewButton: {
     get() {
-      return $('.cd-event-list__event-view');
+      return $('.cd-event-list-item__view');
     },
   },
   eventViewButtons: {
@@ -175,6 +175,26 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   googleGroupMobile: {
     get() {
       return $$('.cd-dojo-details__google-group')[1].getAttribute('href');
+    },
+  },
+  settingsDropdown: {
+    get() {
+      return $('.cd-dojo-details__settings-dropdown');
+    },
+  },
+  editDojo: {
+    get() {
+      return $('.cd-dojo-details__settings-dropdown li:nth-child(1) a');
+    },
+  },
+  manageUsers: {
+    get() {
+      return $('.cd-dojo-details__settings-dropdown li:nth-child(2) a');
+    },
+  },
+  manageEvents: {
+    get() {
+      return $('.cd-dojo-details__settings-dropdown li:nth-child(3) a');
     },
   },
   open: {
