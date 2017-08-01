@@ -32,9 +32,9 @@
       </info-column>
       <div class="cd-dojo-details__main_content">
         <dropdown v-if="user && user.roles && user.roles.indexOf('cdf-admin') > -1" class="cd-dojo-details__settings-dropdown" icon="gear" align="right">
-          <li><a :href="`/dashboard/edit-dojo/${dojoDetails.id}`"><i class="fa fa-pencil"></i>&nbsp;Edit Dojo</a></li>
-          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/users`"><i class="fa fa-calendar"></i>&nbsp;Manage Events</a></li>
-          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/events`"><i class="fa fa-users"></i>&nbsp;Manage Users</a></li>
+          <li><a :href="`/dashboard/edit-dojo/${dojoDetails.id}`"><i class="fa fa-pencil"></i>&nbsp;{{ $t('Edit Dojo') }}</a></li>
+          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/users`"><i class="fa fa-calendar"></i>&nbsp;{{ $t('Manage Events') }}</a></li>
+          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/events`"><i class="fa fa-users"></i>&nbsp;{{ $t('Manage Users') }}</a></li>
         </dropdown>
         <div class="cd-dojo-details__heading">{{ $t('Upcoming Events') }}</div>
         <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
