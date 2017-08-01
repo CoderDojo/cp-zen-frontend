@@ -112,19 +112,6 @@ describe('Event list component', () => {
           done();
         });
       });
-      it('should update usersDojos if the new currentUser is not a member of the dojo', (done) => {
-        // ARRANGE
-        MockDojosService.getUsersDojos.returns(Promise.resolve({ body: [] }));
-
-        // ACT
-        vm.$watchers.currentUser('bar');
-
-        // ASSERT
-        requestAnimationFrame(() => {
-          expect(vm.usersDojos).to.deep.equal([]);
-          done();
-        });
-      });
     });
   });
 });

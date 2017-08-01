@@ -81,7 +81,7 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.eventTimes(3).getText()).to.equal('10am - 12pm');
     expect(DojoDetailsPage.eventDate(4).getText()).to.equal('July 15, 2017');
     expect(DojoDetailsPage.eventTimes(4).getText()).to.equal('10am - 12pm');
-    expect(DojoDetailsPage.eventDate(5).getText()).to.equal('July 29, 2017');
+    expect(DojoDetailsPage.eventDate(5).getText()).to.equal('July 29, 2018');
     expect(DojoDetailsPage.eventTimes(5).getText()).to.equal('10am - 12pm');
   });
 

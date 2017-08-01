@@ -9,7 +9,7 @@
         </p>
       </div>
     </div>
-    <event-list-item v-for="event in events" :event="event" :dojo="dojo" :users-dojos="usersDojos" :user="currentUser" class="cd-event-list__event"></event-list-item>
+    <event-list-item v-for="event in events" :key="event.id" :event="event" :dojo="dojo" :users-dojos="usersDojos" :user="currentUser" class="cd-event-list__event"></event-list-item>
   </div>
 </template>
 <script>

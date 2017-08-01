@@ -1,13 +1,11 @@
 import vueUnitHelper from 'vue-unit-helper';
-import eventListItem from '!!vue-loader?inject!@/events/cd-event-list-item';
+import EventListItem from '@/events/cd-event-list-item';
 
 describe('Event list item component', () => {
   let sandbox;
-  let EventListItemWithMocks;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    EventListItemWithMocks = eventListItem();
   });
 
   afterEach(() => {
@@ -19,7 +17,7 @@ describe('Event list item component', () => {
       let vm;
 
       beforeEach(() => {
-        vm = vueUnitHelper(eventListItem());
+        vm = vueUnitHelper(EventListItem);
       });
 
       it('should be false if this.user is falsey and dojo is private', () => {
@@ -89,11 +87,11 @@ describe('Event list item component', () => {
       });
     });
 
-    describe('isEventShown', () => {
+    describe('isVisible', () => {
       let vm;
 
       beforeEach(() => {
-        vm = vueUnitHelper(EventListItemWithMocks);
+        vm = vueUnitHelper(EventListItem);
         vm.event = {
           public: null,
         };
@@ -105,9 +103,9 @@ describe('Event list item component', () => {
         vm.event.public = false;
 
         // ACT & ASSERT
-        expect(vm.isEventShown).to.equal(true);
+        expect(vm.isVisible).to.equal(true);
         vm.event.public = true;
-        expect(vm.isEventShown).to.equal(true);
+        expect(vm.isVisible).to.equal(true);
       });
 
       it('should return true if the user is not a member of the dojo and the event is public', () => {
@@ -117,7 +115,7 @@ describe('Event list item component', () => {
         vm.usersDojos = [];
 
         // ACT & ASSERT
-        expect(vm.isEventShown).to.equal(true);
+        expect(vm.isVisible).to.equal(true);
       });
 
       it('should return false if the user is not a member of the dojo and the event is private', () => {
@@ -127,13 +125,13 @@ describe('Event list item component', () => {
         vm.usersDojos = [];
 
         // ACT & ASSERT
-        expect(vm.isEventShown).to.equal(false);
+        expect(vm.isVisible).to.equal(false);
       });
     });
 
-    describe('isEventFull', () => {
+    describe('isFull', () => {
       it('should return true for an event which is full and false for one which is not full', () => {
-        const vm = vueUnitHelper(eventListItem());
+        const vm = vueUnitHelper(EventListItem);
         vm.event = {
           id: 1,
           sessions: [
@@ -164,7 +162,7 @@ describe('Event list item component', () => {
           ],
         };
 
-        expect(vm.isEventFull).to.equal(true);
+        expect(vm.isFull).to.equal(true);
 
         vm.event = {
           id: 2,
@@ -195,14 +193,14 @@ describe('Event list item component', () => {
             },
           ],
         };
+        expect(vm.isFull).to.equal(false);
 
-        expect(vm.isEventFull).to.equal(false);
       });
     });
 
     describe('getSessionListForEvent', () => {
       it('should return a list of session names for given event', () => {
-        const vm = vueUnitHelper(eventListItem());
+        const vm = vueUnitHelper(EventListItem);
         vm.event = {
           sessions: [
             { name: 'Scratch' },

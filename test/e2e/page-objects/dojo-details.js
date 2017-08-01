@@ -113,27 +113,27 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   eventNames: {
     get() {
-      return $$('.cd-event-list-item__event-name');
+      return $$('.cd-event-list-item__name');
     }
   },
   eventSessions: {
     get() {
-      return $$('.cd-event-list-item__event-sessions');
+      return $$('.cd-event-list-item__sessions');
     }
   },
   eventDate: {
     value(index) {
-      return $$('.cd-event-list-item__event-date-timestamp')[index];
+      return $$('.cd-event-list-item__date-timestamp')[index];
     }
   },
   eventTimes: {
     value(index) {
-      return $$('.cd-event-list-item__event-times-timestamp')[index];
+      return $$('.cd-event-list-item__times-timestamp')[index];
     },
   },
   eventViewButtons: {
     get() {
-      return $$('.cd-event-list-item__event-view');
+      return $$('.cd-event-list-item__view');
     },
   },
   emailLabelMobile: {

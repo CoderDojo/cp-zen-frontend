@@ -23,7 +23,7 @@ function checkEventDetails(page) {
 function checkRecurringEventDetails(page) {
   page.sectionIcons[0].waitForVisible();
   expect(page.sectionHeaders[0].getText()).to.equal('TIME');
-  expect(page.sectionContents[0].getText()).to.have.string('Next in series: July 29, 2017');
+  expect(page.sectionContents[0].getText()).to.have.string('Next in series: July 29, 2018');
   expect(page.sectionContents[0].getText()).to.have.string('10am - 12pm');
   expect(page.sectionContents[0].getText()).to.have.string('Every two weeks on Saturday');
   page.sectionIcons[1].waitForVisible();

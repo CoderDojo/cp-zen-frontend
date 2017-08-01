@@ -1,33 +1,33 @@
 <template>
-  <div class="cd-event-list-item" v-if="isEventShown">
-    <div class="cd-event-list-item__event-details">
-      <header class="cd-event-list-item__event-header">
-        <h3 class="cd-event-list-item__event-name">
+  <div class="cd-event-list-item" v-if="isVisible">
+    <div class="cd-event-list-item__details">
+      <header class="cd-event-list-item__header">
+        <h3 class="cd-event-list-item__name">
           {{ event.name }}
         </h3>
-        <h4 class="cd-event-list-item__event-sessions">
+        <h4 class="cd-event-list-item__sessions">
           <strong>{{ $t('Sessions') }}:</strong> {{ getSessionListForEvent }}
         </h4>
       </header>
       <div class="cd-event-list-item__datetime">
         <div v-for="date in event.dates">
-          <div class="cd-event-list-item__event-date-timestamp">
+          <div class="cd-event-list-item__date-timestamp">
             {{ date.startTime | cdDateFormatter }}
           </div>
-          <div class="cd-event-list-item__event-times-timestamp">
+          <div class="cd-event-list-item__times-timestamp">
             {{ date.startTime | cdTimeFormatter }} - {{ date.endTime | cdTimeFormatter }}
           </div>
         </div>
       </div>
     </div>
-    <div v-if="canBook" class="cd-event-list-item__event-view-wrapper">
+    <div v-if="canBook" class="cd-event-list-item__view-wrapper">
       <div v-if="event.eventbriteId">
-        <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-event-list-item__event-view">{{ $t('See Details and Book') }}</a>
+        <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-event-list-item__view">{{ $t('See Details and Book') }}</a>
       </div>
       <router-link :to="{name: 'EventDobVerification', params: {eventId: event.id}}"
-                   :disabled="isEventFull" v-else
-                   tag="button" class="btn btn-lg btn-primary cd-event-list-item__event-view">
-        {{ isEventFull ? $t('Full') : $t('See Details and Book') }}
+                   :disabled="isFull" v-else
+                   tag="button" class="btn btn-lg btn-primary cd-event-list-item__view">
+        {{ isFull ? $t('Full') : $t('See Details and Book') }}
       </router-link>
     </div>
   </div>
@@ -47,13 +47,13 @@
       canBook() {
         return (!!this.user && this.isMember) || this.dojo.private === 0;
       },
-      isEventShown() {
+      isVisible() {
         if (!this.isMember) {
           return this.event.public;
         }
         return true;
       },
-      isEventFull() {
+      isFull() {
         let totalEventCapacity = 0;
         let totalTicketsBooked = 0;
         this.event.sessions.forEach((session) => {
@@ -79,55 +79,54 @@
     @import "../common/variables";
 
   .cd-event-list-item {
-    &__event {
-      &-details {
-        display: flex;
-      }
+    &__details {
+      display: flex;
+    }
 
-      &-header {
-        flex: 3;
-      }
+    &__header {
+      flex: 3;
+    }
 
-      &-name {
-        font-size: 24px;
-        margin: 0;
-      }
+    &__name {
+      font-size: 24px;
+      margin: 0;
+    }
 
-      &-sessions {
-        font-size: 16px;
-        color: #7b8082;
-        margin: 8px 0;
-      }
+    &__sessions {
+      font-size: 16px;
+      color: #7b8082;
+      margin: 8px 0;
+    }
 
-      &-date, &-times {
-       flex: 1;
-        &-timestamp {
-          list-style-type: none;
-          padding: 0;
-          font-size: 18px;
-        }
-      }
-
-      &-date-timestamp {
+    &__date, &__times {
+      flex: 1;
+      &-timestamp {
+        list-style-type: none;
+        padding: 0;
         font-size: 18px;
-       }
+      }
+    }
 
-      &-times-timestamp {
-         font-size: 16px;
-       }
+    &__date-timestamp {
+      font-size: 18px;
+    }
 
-     &-view {
-       margin-top: 32px;
-       &:disabled {
+    &__times-timestamp {
+      font-size: 16px;
+    }
+
+    &__view {
+      margin-top: 32px;
+      &:disabled {
          background-color: #bdc3c6;
          color: white;
          font-weight: bold;
          width: 220px;
          text-transform: uppercase;
          border-color: transparent;
-       }
-     }
-   }
+      }
+    }
+
     &__datetime {
       margin-right: 27px;
     }
