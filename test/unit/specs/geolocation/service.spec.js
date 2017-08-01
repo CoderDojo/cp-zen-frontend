@@ -118,27 +118,32 @@ describe('Geolocation Service', () => {
 
     it('should get geolocation data for given search parameters', (done) => {
       status = 'OK';
-      GeolocationService.geocode({
-        address: 'CHQ',
-        region: 'IE',
-      }).then((results) => {
-        expect(window.google.maps.Geocoder).to.have.been.calledOnce;
-        expect(mockGeocoder.geocode).to.have.been.calledWithMatch({
+      requestAnimationFrame(() => {
+        GeolocationService.geocode({
           address: 'CHQ',
           region: 'IE',
+        }).then((results) => {
+          expect(window.google.maps.Geocoder).to.have.been.calledOnce;
+          expect(mockGeocoder.geocode).to.have.been.calledWithMatch({
+            address: 'CHQ',
+            region: 'IE',
+          });
+          expect(results).to.deep.equal(mockGeocoderResults);
+          expect(GeolocationService.geocoder).to.equal(mockGeocoder);
         });
-        expect(results).to.deep.equal(mockGeocoderResults);
-        expect(GeolocationService.geocoder).to.equal(mockGeocoder);
         done();
       });
     });
 
     it('should reject the promise if status is not OK', (done) => {
       status = 'ERROR';
-      GeolocationService.geocode({
-        address: 'CHQ',
-        region: 'IE',
-      }).catch(() => {
+      requestAnimationFrame(() => {
+        GeolocationService.geocode({
+          address: 'CHQ',
+          region: 'IE',
+        }).catch((cb) => {
+          cb();
+        });
         done();
       });
     });
@@ -150,14 +155,14 @@ describe('Geolocation Service', () => {
       };
       GeolocationService.geocoder = existingMockGeocoder;
 
-      GeolocationService.geocode({
-        address: 'CHQ',
-        region: 'IE',
-      });
-
       requestAnimationFrame(() => {
-        expect(existingMockGeocoder.geocode).to.have.been.calledOnce;
-        expect(window.google.maps.Geocoder).to.not.have.been.called;
+        GeolocationService.geocode({
+          address: 'CHQ',
+          region: 'IE',
+        }).then(() => {
+          expect(existingMockGeocoder.geocode).to.have.been.calledOnce;
+          expect(window.google.maps.Geocoder).to.not.have.been.called;
+        });
         done();
       });
     });
