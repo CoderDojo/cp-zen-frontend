@@ -123,7 +123,7 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   eventDateSeries: {
     get() {
-      return $$('.cd-event-list__event-date-series');
+      return $$('.cd-event-list-item__date-series');
     },
   },
   eventDate: {
@@ -143,12 +143,12 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   eventRecurringInfoIcon: {
     get() {
-      return $$('.cd-event-list__event-recurring-info-icon');
+      return $$('.cd-event-list-item__recurring-info-icon');
     },
   },
   eventRecurringInfoText: {
     get() {
-      return $$('.cd-event-list__event-recurring-info-text');
+      return $$('.cd-event-list-item__recurring-info-text');
     },
   },
   eventViewButtons: {

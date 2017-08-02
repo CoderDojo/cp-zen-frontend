@@ -9,7 +9,7 @@ const recurrences = {
 
 export default {
   buildRecurringFrequencyInfo(event) {
-    const dayName = moment(event.dates[0].startTime).format('dddd');
+    const dayName = moment(event.dates[0].startTime).utc().format('dddd');
     const recurrence = recurrences[event.recurringType];
     return `${i18n.t(recurrence)} ${i18n.t('on')} ${dayName}`;
   },
@@ -17,6 +17,7 @@ export default {
     const now = moment();
     const nextDateInfo = find(event.dates, (dateInfo) => {
       const dateMoment = moment(dateInfo.startTime);
+      dateMoment.subtract(dateMoment.utcOffset(), 'minutes');
       return dateMoment.isAfter(now);
     });
     return nextDateInfo.startTime;

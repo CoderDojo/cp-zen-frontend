@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div v-if="canBook && !isPastEvent" class="cd-event-list-item__view-wrapper">
+    <div v-if="canBook" class="cd-event-list-item__view-wrapper">
       <div v-if="event.eventbriteId">
         <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-event-list-item__view">{{ $t('See Details and Book') }}</a>
       </div>
@@ -39,11 +39,10 @@
   </div>
 </template>
 <script>
-  import moment from 'moment';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import cdUrlFormatter from '@/common/filters/cd-url-formatter';
-  import EventsUtil from './util.js';
+  import EventsUtil from './util';
 
   export default {
     name: 'event-list-item',
@@ -74,12 +73,6 @@
       },
       getSessionListForEvent() {
         return this.event.sessions.map(session => session.name).join(', ');
-      },
-      isPastEvent() {
-        const now = moment();
-        const eventStartTime = moment(this.event.dates[this.event.dates.length - 1].startTime);
-        eventStartTime.subtract(eventStartTime.utcOffset(), 'minutes');
-        return now.isAfter(eventStartTime);
       },
       nextStartTime() {
         return EventsUtil.getNextStartTime(this.event);
