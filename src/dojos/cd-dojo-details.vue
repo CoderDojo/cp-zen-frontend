@@ -33,8 +33,8 @@
       <div class="cd-dojo-details__main_content">
         <dropdown v-if="canAdmin" class="cd-dojo-details__settings-dropdown" icon="gear" align="right">
           <li><a :href="`/dashboard/edit-dojo/${dojoDetails.id}`"><i class="fa fa-pencil"></i>{{ $t('Edit Dojo') }}</a></li>
-          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/users`"><i class="fa fa-calendar"></i>{{ $t('Manage Events') }}</a></li>
-          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/events`"><i class="fa fa-users"></i>{{ $t('Manage Users') }}</a></li>
+          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/users`"><i class="fa fa-users"></i>{{ $t('Manage Users') }}</a></li>
+          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/events`"><i class="fa fa-calendar"></i>{{ $t('Manage Events') }}</a></li>
         </dropdown>
         <div class="cd-dojo-details__heading">{{ $t('Upcoming Events') }}</div>
         <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
