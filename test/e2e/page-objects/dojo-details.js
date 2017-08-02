@@ -121,6 +121,11 @@ const DojoDetailsPage = Object.create(InfoColumn, {
       return $$('.cd-event-list-item__sessions');
     }
   },
+  eventDateSeries: {
+    get() {
+      return $$('.cd-event-list-item__date-series');
+    },
+  },
   eventDate: {
     value(index) {
       return $$('.cd-event-list-item__date-timestamp')[index];
@@ -134,6 +139,16 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   firstEventViewButton: {
     get() {
       return $('.cd-event-list-item__view');
+    },
+  },
+  eventRecurringInfoIcon: {
+    get() {
+      return $$('.cd-event-list-item__recurring-info-icon');
+    },
+  },
+  eventRecurringInfoText: {
+    get() {
+      return $$('.cd-event-list-item__recurring-info-text');
     },
   },
   eventViewButtons: {
