@@ -147,8 +147,8 @@ module.exports = {
       recurringType: 'weekly',
       dates: [
         {
-          startTime: moment.utc([2017, 5, 6, 16, 30, 0]).toISOString(),
-          endTime: moment.utc([2017, 5, 6, 18, 0, 0]).toISOString()
+          startTime: moment.utc([2017, 8, 6, 16, 30, 0]).toISOString(),
+          endTime: moment.utc([2017, 8, 6, 18, 0, 0]).toISOString()
         }
       ],
       ticketApproval: true,
@@ -535,6 +535,64 @@ module.exports = {
     },
     {
       entity$: '-/cd/events',
+      id: 'd206004a-b0ce-ielc-bf07-kfue8113aa1a',
+      name: 'Past event',
+      country: {
+        countryName: 'Ireland',
+        countryNumber: 372,
+        continent: 'EU',
+        'alpha2': 'IE',
+        'alpha3': 'IRL'
+      },
+      city: {
+        nameWithHierarchy: 'Dublin'
+      },
+      address: 'CHQ',
+      createdAt: '2017-07-06T16:05:16.502Z',
+      createdBy: '7ae18cb2-582d-4bc9-90d1-47defc2a3563',
+      type: 'one-off',
+      description: '<p>PAST EVENT</p>\n',
+      dojoId: '4e591bbe-667b-4782-bc9c-180c6d321883',
+      eventbriteId: null,
+      eventbriteUrl: null,
+      position: null,
+      public: true,
+      status: 'published',
+      recurringType: 'weekly',
+      dates: [
+        {
+          startTime: '2017-06-10T16:30:00.000Z',
+          endTime: '2017-06-10T18:00:00.000Z'
+        }
+      ],
+      ticketApproval: true,
+      sessions: [
+        {
+          entity$: '-/cd/sessions',
+          id: '69624aec-e254-iwe3-b4c6-f623fdb0421j',
+          name: 'HTML',
+          description: 'HTML',
+          eventId: 'd206004a-b0ce-ielc-bf07-kfue8113aa1a',
+          status: 'active',
+          tickets: [
+            {
+              entity$: '-/cd/tickets',
+              id: 'e9552002-c0fb-4fa6-8a06-of9fae9e5f2n',
+              sessionId: '69624aec-e254-iwe3-b4c6-f623fdb0421j',
+              name: 'Laptop Required',
+              type: 'ninja',
+              quantity: 2,
+              deleted: 0,
+              invites: null,
+              totalApplications: 0,
+              approvedApplications: 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      entity$: '-/cd/events',
       id: '63636e6d-da21-407f-9d73-f553ab8a1fb6',
       name: 'My First Amazing Event',
       country: {
@@ -561,8 +619,8 @@ module.exports = {
       recurringType: 'weekly',
       dates: [
         {
-          startTime: '2017-06-06T16:30:00.000Z',
-          endTime: '2017-06-06T18:00:00.000Z'
+          startTime: '2017-08-06T16:30:00.000Z',
+          endTime: '2017-08-06T18:00:00.000Z'
         }
       ],
       ticketApproval: true,
@@ -974,6 +1032,28 @@ module.exports = {
           invites: null,
           totalApplications: 0,
           approvedApplications: 0
+        },
+        {
+          entity$: '-/cd/sessions',
+          id: '69624aec-e254-iwe3-b4c6-f623fdb0421j',
+          name: 'HTML',
+          description: 'HTML',
+          eventId: 'd206004a-b0ce-ielc-bf07-kfue8113aa1a',
+          status: 'active',
+          tickets: [
+            {
+              entity$: '-/cd/tickets',
+              id: 'e9552002-c0fb-4fa6-8a06-of9fae9e5f2n',
+              sessionId: '69624aec-e254-iwe3-b4c6-f623fdb0421j',
+              name: 'Laptop Required',
+              type: 'ninja',
+              quantity: 2,
+              deleted: 0,
+              invites: null,
+              totalApplications: 0,
+              approvedApplications: 2
+            }
+          ]
         },
         {
           entity$: '-/cd/tickets',

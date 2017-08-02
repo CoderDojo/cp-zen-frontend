@@ -1,5 +1,7 @@
 import vueUnitHelper from 'vue-unit-helper';
 import EventListItem from '@/events/cd-event-list-item';
+import TimeShift from 'timeshift-js';
+import moment from 'moment';
 
 describe('Event list item component', () => {
   let sandbox;
@@ -209,6 +211,145 @@ describe('Event list item component', () => {
         };
 
         expect(vm.getSessionListForEvent).to.equal('Scratch, Arduino, HTML');
+      });
+    });
+    describe('isPastEvent', () => {
+      it('should return true for a one-off event whose date is before now', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListItem);
+        vm.event = {
+          dates: [
+            {
+              startTime: '2017-06-10T16:30:00.000Z',
+            },
+          ],
+        };
+
+        // ACT & ASSERT
+        expect(vm.isPastEvent).to.equal(true);
+      });
+      it('should return true for a recurring event whose last date is before now', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListItem);
+        vm.event = {
+          type: 'recurring',
+          dates: [
+            {
+              startTime: '2017-06-10T16:30:00.000Z',
+            },
+            {
+              startTime: '2017-06-17T16:30:00.000Z',
+            },
+            {
+              startTime: '2017-06-24T16:30:00.000Z',
+            },
+          ],
+        };
+
+        // ACT & ASSERT
+        expect(vm.isPastEvent).to.equal(true);
+      });
+      it('should return false for a one-off event whose date is after now', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListItem);
+        const now = moment();
+        const startTime = now.add(1, 'day');
+        vm.event = {
+          dates: [
+            {
+              startTime,
+            },
+          ],
+        };
+
+        // ACT & ASSERT
+        expect(vm.isPastEvent).to.equal(false);
+      });
+      it('should return false for a recurring event whose last date is after now', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListItem);
+        const now = moment();
+        const startTime = now.add(1, 'day');
+
+        vm.event = {
+          type: 'recurring',
+          dates: [
+            {
+              startTime: '2017-06-17T16:30:00.000Z',
+            },
+            {
+              startTime: '2017-06-24T16:30:00.000Z',
+            },
+            {
+              startTime,
+            },
+          ],
+        };
+
+        // ACT & ASSERT
+        expect(vm.isPastEvent).to.equal(false);
+      });
+
+      describe('timezones', () => {
+        it('should work for one-off events where date is past in local timezone, but not UTC (UTC+2)', () => {
+          // ARRANGE
+          Date = TimeShift.Date; // eslint-disable-line no-global-assign
+          TimeShift.setTimezoneOffset(-120); // UTC+2 (Italy, summer time)
+          TimeShift.setTime(1501079400000); // 2017-07-26 16:30:00 GMT+02:00
+          const vm = vueUnitHelper(EventListItem);
+          vm.event = {
+            type: 'one-off',
+            dates: [
+              {
+                startTime: '2017-07-26T16:00:00.000Z',
+              },
+            ],
+          };
+
+          // ASSERT
+          expect(vm.isPastEvent).to.equal(true);
+        });
+
+        it('should work for one-off events where date is past in local timezone, but not UTC (UTC-4)', () => {
+          // ARRANGE
+          Date = TimeShift.Date; // eslint-disable-line no-global-assign
+          TimeShift.setTimezoneOffset(240); // UTC-4 (New York, summer time)
+          TimeShift.setTime(1501079400000); // 2017-07-26 10:30:00 GMT-04:00
+          const vm = vueUnitHelper(EventListItem);
+          vm.event = {
+            type: 'one-off',
+            dates: [
+              {
+                startTime: '2017-07-26T11:00:00.000Z',
+              },
+            ],
+          };
+
+          // ASSERT
+          expect(vm.isPastEvent).to.equal(false);
+        });
+
+        it('should work for recurring events where one date is past in local timezone, but not UTC, but another is in the future', () => {
+          // ARRANGE
+          Date = TimeShift.Date; // eslint-disable-line no-global-assign
+          TimeShift.setTimezoneOffset(-120); // UTC+2 (Italy, for example)
+          TimeShift.setTime(1501079400000); // 2017-07-26 16:30:00 GMT+02:00
+          const vm = vueUnitHelper(EventListItem);
+          vm.event = {
+            type: 'one-off',
+            dates: [
+              {
+                startTime: '2017-07-26T16:00:00.000Z',
+              },
+              {
+                startTime: '2017-07-26T17:00:00.000Z',
+              },
+            ],
+          };
+
+          // ASSERT
+          expect(vm.isPastEvent).to.equal(false);
+        });
       });
     });
   });
