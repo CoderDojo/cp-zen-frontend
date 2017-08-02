@@ -9,16 +9,16 @@
     <div class="cd-event-details__container">
       <info-column class="cd-event-details__left-column">
         <info-column-section icon="clock-o" :header="$t('Time')">
-          <div v-if="!isRecurring()" class="cd-event-details__left-column-section-value">
+          <div v-if="!isRecurring(eventDetails)" class="cd-event-details__left-column-section-value">
             {{ eventDetails.dates[0].startTime |  cdDateFormatter }}
           </div>
           <div v-else class="cd-event-details__left-column-section-value">
-            {{ $t('Next in series:') }} <span class="cd-event-details__left-column-section-value-next-session">{{ getNextStartTime() |  cdDateFormatter }}</span>
+            {{ $t('Next in series:') }} <span class="cd-event-details__left-column-section-value-next-session">{{ getNextStartTime(eventDetails) |  cdDateFormatter }}</span>
           </div>
           <div class="cd-event-details__left-column-section-value">
             {{ eventDetails.dates[0].startTime | cdTimeFormatter }} - {{ eventDetails.dates[0].endTime | cdTimeFormatter }}
           </div>
-          <div v-if="isRecurring()" class="cd-event-details__left-column-section-value-frequency">
+          <div v-if="isRecurring(eventDetails)" class="cd-event-details__left-column-section-value-frequency">
             <div class="cd-event-details__left-column-section-value">
               {{ buildRecurringFrequencyInfo(eventDetails) }}
             </div>
@@ -38,8 +38,6 @@
 </template>
 
 <script>
-  import { find } from 'lodash';
-  import moment from 'moment';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import InfoColumn from '@/common/cd-info-column';
@@ -53,7 +51,6 @@
     data() {
       return {
         eventDetails: null,
-        now: moment(),
       };
     },
     filters: {
@@ -73,17 +70,9 @@
       getFullAddress() {
         return `${this.eventDetails.address}, ${this.eventDetails.city.nameWithHierarchy}, ${this.eventDetails.country.countryName}`;
       },
-      isRecurring() {
-        return this.eventDetails.type === 'recurring';
-      },
-      getNextStartTime() {
-        const nextDateInfo = find(this.eventDetails.dates, (dateInfo) => {
-          const dateMoment = moment(dateInfo.startTime);
-          return dateMoment.isAfter(this.now);
-        });
-        return nextDateInfo.startTime;
-      },
       buildRecurringFrequencyInfo: EventsUtil.buildRecurringFrequencyInfo,
+      getNextStartTime: EventsUtil.getNextStartTime,
+      isRecurring: EventsUtil.isRecurring,
     },
     created() {
       this.loadEvent();
