@@ -1,5 +1,4 @@
 import vueUnitHelper from 'vue-unit-helper';
-import moment from 'moment';
 import eventList from '!!vue-loader?inject!@/events/cd-event-list';
 
 describe('Event list component', () => {
