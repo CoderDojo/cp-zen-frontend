@@ -31,10 +31,10 @@
         </info-column-section>
       </info-column>
       <div class="cd-dojo-details__main_content">
-        <dropdown v-if="user && user.roles && user.roles.indexOf('cdf-admin') > -1" class="cd-dojo-details__settings-dropdown" icon="gear" align="right">
-          <li><a :href="`/dashboard/edit-dojo/${dojoDetails.id}`"><i class="fa fa-pencil"></i>&nbsp;{{ $t('Edit Dojo') }}</a></li>
-          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/users`"><i class="fa fa-calendar"></i>&nbsp;{{ $t('Manage Events') }}</a></li>
-          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/events`"><i class="fa fa-users"></i>&nbsp;{{ $t('Manage Users') }}</a></li>
+        <dropdown v-if="canAdmin" class="cd-dojo-details__settings-dropdown" icon="gear" align="right">
+          <li><a :href="`/dashboard/edit-dojo/${dojoDetails.id}`"><i class="fa fa-pencil"></i>{{ $t('Edit Dojo') }}</a></li>
+          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/users`"><i class="fa fa-calendar"></i>{{ $t('Manage Events') }}</a></li>
+          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/events`"><i class="fa fa-users"></i>{{ $t('Manage Users') }}</a></li>
         </dropdown>
         <div class="cd-dojo-details__heading">{{ $t('Upcoming Events') }}</div>
         <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
@@ -117,6 +117,9 @@
       },
       googleMapsLink() {
         return `https://www.google.com/maps/search/?api=1&query=${this.dojoDetails.geoPoint.lat},${this.dojoDetails.geoPoint.lon}`;
+      },
+      canAdmin() {
+        return !!(this.user && this.user.roles && this.user.roles.indexOf('cdf-admin') > -1);
       },
     },
     methods: {
@@ -201,6 +204,10 @@
       position: absolute;
       top: 8px;
       right: 32px;
+      .fa {
+        width: 16px;
+        text-align: left;
+      }
     }
 
     &__heading {
@@ -261,13 +268,17 @@
         }
       }
       &__main_content {
-        margin: 0 16px;
+        padding: 45px 16px 0 16px;
       }
       &__sponsor-image {
         text-align: center;
         > img {
           width: 100%;
         }
+      }
+
+      &__settings-dropdown {
+        right: 16px;
       }
     }
   }

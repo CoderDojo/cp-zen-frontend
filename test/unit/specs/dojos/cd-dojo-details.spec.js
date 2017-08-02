@@ -94,4 +94,46 @@ describe('Dojo details component', () => {
       expect(vm.googleMapsLink).to.equal('https://www.google.com/maps/search/?api=1&query=53.349351,-6.247585999999956');
     });
   });
+
+  describe('computed.canAdmin', () => {
+    it('should return true when the logged in user is a CDF admin', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm.user = {
+        roles: ['cdf-admin'],
+      };
+
+      // ASSERT
+      expect(vm.canAdmin).to.equal(true);
+    });
+
+    it('should return false when user is null', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm.user = null;
+
+      // ASSERT
+      expect(vm.canAdmin).to.equal(false);
+    });
+
+    it('should return false when the logged in user is not a CDF admin', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm.user = {
+        roles: ['basic-user'],
+      };
+
+      // ASSERT
+      expect(vm.canAdmin).to.equal(false);
+    });
+
+    it('should return false when the logged in user has no roles', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm.user = {};
+
+      // ASSERT
+      expect(vm.canAdmin).to.equal(false);
+    });
+  });
 });
