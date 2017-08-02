@@ -1,7 +1,7 @@
 <template>
   <div class="cd-find-dojo">
     <div class="cd-find-dojo__panel">
-      <form class="cd-find-dojo__panel-form" @submit.prevent="searchDojosByAddress">
+      <form class="cd-find-dojo__panel-form" @submit.prevent="$router.push({ query: { q: searchCriteria } });">
         <h1 class="cd-find-dojo__panel-form-header">{{ $t('Find a Dojo to attend') }}</h1>
         <p class="cd-find-dojo__panel-form-info">{{ $t('Learn technology in an informal, creative and social environment. Find a dojo near you.') }}</p>
         <div class="cd-find-dojo__panel-form-search">
@@ -12,11 +12,11 @@
             <input type="submit" class="btn btn-lg" :value="$t('Search for Dojos')"/>
           </div>
         </div>
-        <button @click.prevent="getCurrentLocation" class="cd-find-dojo__panel-form-detect-location">
+        <router-link tag="button" :to="{ query: { currentLocation: true } }" class="cd-find-dojo__panel-form-detect-location">
           <i class="fa fa-location-arrow" aria-hidden="true" v-show="!detectingLocation"></i>
           <i class="fa fa-spinner fa-spin" aria-hidden="true" v-show="detectingLocation"></i>
           {{ $t('Detect my location') }}
-        </button>
+        </router-link>
       </form>
       <div class="cd-find-dojo__panel-illustration">
         <img src="../assets/characters/ninjas/ninja-female-2-laptop-sitting.svg" />
@@ -88,7 +88,6 @@
           this.coordinates.latitude = position.coords.latitude;
           this.coordinates.longitude = position.coords.longitude;
           this.getDojosByLatLong();
-          this.$router.push({ query: { currentLocation: true } });
         }, () => {
           this.detectingLocation = false;
         });
@@ -102,7 +101,6 @@
           });
       },
       searchDojosByAddress() {
-        this.$router.push({ query: { q: this.searchCriteria } });
         GeolocationService.getLatitudeLongitudeByAddress(this.searchCriteria)
           .then((coords) => {
             this.coordinates = coords;
@@ -131,6 +129,19 @@
       DojoMap,
       NoResultsDesktop,
       NoResultsMobile,
+    },
+    watch: {
+      $route(newRoute) {
+        if (newRoute.query.q) {
+          this.searchCriteria = newRoute.query.q;
+          this.searchDojosByAddress();
+        } else if (newRoute.query.currentLocation) {
+          this.getCurrentLocation();
+        } else {
+          this.searchExecuted = false;
+          this.searchCriteria = null;
+        }
+      },
     },
     created() {
       if (this.lat && this.long) {

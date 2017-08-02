@@ -130,13 +130,11 @@ describe('The Find dojo vue ', () => {
       expect(vm.detectingLocation).to.equal(true);
       expect(vm.coordinates.latitude).to.equal(10);
       expect(vm.coordinates.longitude).to.equal(89);
-      expect(vm.$router.push).to.have.been.calledOnce;
-      expect(vm.$router.push).to.have.been.calledWith({ query: { currentLocation: true } });
       done();
     });
   });
 
-  it('should stop he loading animation when user location not granted', (done) => {
+  it('should stop the loading animation when user location not granted', (done) => {
     sandbox.stub(navigator.geolocation, 'getCurrentPosition').callsFake((success, error) => {
       error();
     });
@@ -274,8 +272,6 @@ describe('The Find dojo vue ', () => {
         longiutide: 84,
       });
       expect(vm.getDojosByLatLong).to.have.been.calledOnce;
-      expect(vm.$router.push).to.have.been.calledOnce;
-      expect(vm.$router.push).to.have.been.calledWith({ query: { q: 'CHQ' } });
       done();
     });
   });
@@ -393,6 +389,60 @@ describe('The Find dojo vue ', () => {
         { name: 'Dojo3', stage: 2 },
         { name: 'Dojo4', stage: 0 },
       ]);
+    });
+  });
+
+  describe('watch', () => {
+    describe('$route', () => {
+      let vm;
+      beforeEach(() => {
+        vm = vueUnitHelper(cdFindDojo());
+        vm.$route = {};
+        vm.$route.query = {
+          q: null,
+          currentLocation: null,
+        };
+        sandbox.stub(vm, 'searchDojosByAddress');
+        sandbox.stub(vm, 'getCurrentLocation');
+      });
+      it('should call searchDojosByAddress() if there is a new query', () => {
+        // ARRANGE
+        vm.$route.query.q = 'Dublin';
+        vm.searchCriteria = null;
+
+        // ACT
+        vm.$watchers.$route(vm.$route);
+
+        // ASSERT
+        expect(vm.searchCriteria).to.equal('Dublin');
+        expect(vm.searchDojosByAddress).to.have.been.calledOnce;
+        expect(vm.getCurrentLocation).to.not.have.been.called;
+      });
+      it('should call getCurrentLocation() if there is a new location', () => {
+        // ARRANGE
+        vm.$route.query.currentLocation = true;
+
+        // ACT
+        vm.$watchers.$route(vm.$route);
+
+        // ASSERT
+        expect(vm.getCurrentLocation).to.have.been.calledOnce;
+        expect(vm.searchDojosByAddress).to.not.have.been.called;
+      });
+      it('should reset searchExecuted and searchCriteria if there is no query or location', () => {
+        // ARRANGE
+        vm.searchCriteria = 'Dublin';
+        vm.searchExecuted = true;
+
+        // ACT
+        vm.$watchers.$route(vm.$route);
+
+        // ASSERT
+        expect(vm.getCurrentLocation).to.not.have.been.called;
+        expect(vm.searchDojosByAddress).to.not.have.been.called;
+        expect(vm.searchExecuted).to.equal(false);
+        expect(vm.searchCriteria).to.equal(null);
+      });
     });
   });
 });
