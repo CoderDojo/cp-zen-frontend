@@ -194,7 +194,6 @@ describe('Event list item component', () => {
           ],
         };
         expect(vm.isFull).to.equal(false);
-
       });
     });
 

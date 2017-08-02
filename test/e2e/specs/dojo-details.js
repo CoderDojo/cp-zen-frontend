@@ -73,13 +73,13 @@ describe('Dojo details page', () => {
     const secondEventName = DojoDetailsPage.eventNames[1].getText();
     expect(secondEventName).to.equal('My Second Amazing Event');
     expect(DojoDetailsPage.eventSessions[1].getText()).to.equal('Sessions: Raspberry Pi, Unity');
-    expect(DojoDetailsPage.eventDate(1).getText()).to.equal('June 3, 2017');
+    expect(DojoDetailsPage.eventDate(1).getText()).to.equal('June 3, 2018');
     expect(DojoDetailsPage.eventTimes(1).getText()).to.equal('10am - 12pm');
-    expect(DojoDetailsPage.eventDate(2).getText()).to.equal('June 17, 2017');
+    expect(DojoDetailsPage.eventDate(2).getText()).to.equal('June 17, 2018');
     expect(DojoDetailsPage.eventTimes(2).getText()).to.equal('10am - 12pm');
-    expect(DojoDetailsPage.eventDate(3).getText()).to.equal('July 1, 2017');
+    expect(DojoDetailsPage.eventDate(3).getText()).to.equal('July 1, 2018');
     expect(DojoDetailsPage.eventTimes(3).getText()).to.equal('10am - 12pm');
-    expect(DojoDetailsPage.eventDate(4).getText()).to.equal('July 15, 2017');
+    expect(DojoDetailsPage.eventDate(4).getText()).to.equal('July 15, 2018');
     expect(DojoDetailsPage.eventTimes(4).getText()).to.equal('10am - 12pm');
     expect(DojoDetailsPage.eventDate(5).getText()).to.equal('July 29, 2018');
     expect(DojoDetailsPage.eventTimes(5).getText()).to.equal('10am - 12pm');
@@ -190,6 +190,7 @@ describe('Dojo details page', () => {
 
     DojoPage.openDojoWithLatLong(10, 89, 3);
     DojoDetailsPage.detailsLabel.waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(2);
     browser.deleteCookie();
   });
@@ -248,6 +249,31 @@ describe('Dojo details page', () => {
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.eventNames.length).to.equal(1);
     browser.deleteCookie();
+  });
+
+  it('should have a dropdown with manage functions for cdf-admin accounts', () => {
+    DojoPage.openDojoWithLatLong(10, 89);
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.settingsDropdown.isVisible()).to.equal(false);
+    const url = browser.getUrl();
+
+    LoginPage.open();
+    LoginPage.email.waitForVisible();
+    LoginPage.email.setValue('admin@coderdojo.org');
+    LoginPage.password.setValue('cdfadmin');
+    LoginPage.login.click();
+    FindDojoPage.header.waitForVisible();
+    browser.url(url);
+
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.settingsDropdown.isVisible()).to.equal(true);
+    DojoDetailsPage.settingsDropdown.click();
+    expect(DojoDetailsPage.editDojo.isVisible()).to.equal(true);
+    expect(DojoDetailsPage.editDojo.getAttribute('href')).to.contain('/dashboard/edit-dojo/3ed47c6d-a689-46a0-883b-1f3fd46e9c77');
+    expect(DojoDetailsPage.manageUsers.isVisible()).to.equal(true);
+    expect(DojoDetailsPage.manageUsers.getAttribute('href')).to.contain('/dashboard/my-dojos/3ed47c6d-a689-46a0-883b-1f3fd46e9c77/users');
+    expect(DojoDetailsPage.manageEvents.isVisible()).to.equal(true);
+    expect(DojoDetailsPage.manageEvents.getAttribute('href')).to.contain('/dashboard/my-dojos/3ed47c6d-a689-46a0-883b-1f3fd46e9c77/events');
   });
 
   describe('Mobile specific tests', () => {

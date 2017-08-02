@@ -31,6 +31,11 @@
         </info-column-section>
       </info-column>
       <div class="cd-dojo-details__main_content">
+        <dropdown v-if="canAdmin" class="cd-dojo-details__settings-dropdown" icon="gear" align="right">
+          <li><a :href="`/dashboard/edit-dojo/${dojoDetails.id}`"><i class="fa fa-pencil"></i>{{ $t('Edit Dojo') }}</a></li>
+          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/users`"><i class="fa fa-calendar"></i>{{ $t('Manage Events') }}</a></li>
+          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/events`"><i class="fa fa-users"></i>{{ $t('Manage Users') }}</a></li>
+        </dropdown>
         <div class="cd-dojo-details__heading">{{ $t('Upcoming Events') }}</div>
         <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
         <div class="cd-dojo-details__heading">{{ $t('Details') }}</div>
@@ -64,8 +69,10 @@
 <script>
   import ImgFallback from '@/common/directives/cd-img-fallback';
   import InfoColumn from '@/common/cd-info-column';
+  import Dropdown from '@/common/cd-dropdown';
   import InfoColumnSection from '@/common/cd-info-column-section';
   import cdUrlFormatter from '@/common/filters/cd-url-formatter';
+  import UserService from '@/users/service';
   import service from './service';
   import eventsList from '../events/cd-event-list';
 
@@ -82,11 +89,13 @@
       eventsList,
       InfoColumn,
       InfoColumnSection,
+      Dropdown,
     },
     props: ['country', 'path'],
     data() {
       return {
         dojoDetails: {},
+        user: {},
       };
     },
     computed: {
@@ -109,17 +118,24 @@
       googleMapsLink() {
         return `https://www.google.com/maps/search/?api=1&query=${this.dojoDetails.geoPoint.lat},${this.dojoDetails.geoPoint.lon}`;
       },
+      canAdmin() {
+        return !!(this.user && this.user.roles && this.user.roles.indexOf('cdf-admin') > -1);
+      },
     },
     methods: {
       loadDojoDetails() {
         service.getByUrlSlug(this.urlSlug).then((response) => {
           this.dojoDetails = response.body;
-        }, () => {
         });
+      },
+      async loadCurrentUser() {
+        const response = await UserService.getCurrentUser();
+        this.user = response.body.user;
       },
     },
     created() {
       this.loadDojoDetails();
+      this.loadCurrentUser();
     },
   };
 </script>
@@ -160,8 +176,9 @@
     }
 
     &__main_content {
+      position: relative;
       flex: 8;
-      margin: 0 32px 32px 16px;
+      padding: 45px 32px 32px 16px;
     }
 
     &__social-media {
@@ -183,16 +200,26 @@
       }
     }
 
+    &__settings-dropdown {
+      position: absolute;
+      top: 8px;
+      right: 32px;
+      .fa {
+        width: 16px;
+        text-align: left;
+      }
+    }
+
     &__heading {
       color: #000;
       font-size: 18px;
-      margin: 64px 0 16px 0;
+      margin: 0 0 16px 0;
       font-weight: bold;
       border-bottom: 1px solid #bebebe;
       padding-bottom: 8px;
 
-      &:first-child {
-        margin-top: 45px;
+      ~ .cd-dojo-details__heading {
+        margin-top: 64px;
       }
     }
 
@@ -241,13 +268,17 @@
         }
       }
       &__main_content {
-        margin: 0 16px;
+        padding: 45px 16px 0 16px;
       }
       &__sponsor-image {
         text-align: center;
         > img {
           width: 100%;
         }
+      }
+
+      &__settings-dropdown {
+        right: 16px;
       }
     }
   }
