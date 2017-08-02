@@ -278,6 +278,18 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.manageEvents.getAttribute('href')).to.contain('/dashboard/my-dojos/3ed47c6d-a689-46a0-883b-1f3fd46e9c77/events');
   });
 
+  it('should show private notice on private Dojos', () => {
+    DojoPage.openDojoWithLatLong(10, 89, 0);
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.privateNotice.isVisible()).to.equal(true);
+  });
+
+  it('should show not private notice on public Dojos', () => {
+    DojoPage.openDojoWithLatLong(10, 89, 2);
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.privateNotice.isVisible()).to.equal(false);
+  });
+
   describe('Mobile specific tests', () => {
     beforeEach(() => {
       DojoPage.openDojoWithLatLong(10, 89);
