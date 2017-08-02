@@ -38,6 +38,7 @@
 </template>
 
 <script>
+  import { find } from 'lodash';
   import moment from 'moment';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
@@ -76,10 +77,10 @@
         return this.eventDetails.type === 'recurring';
       },
       getNextStartTime() {
-        const nextDateInfo = this.eventDetails.dates.find((dateInfo) => {
+        const nextDateInfo = find(this.eventDetails.dates, (dateInfo) => {
           const dateMoment = moment(dateInfo.startTime);
           return dateMoment.isAfter(this.now);
-        }, this);
+        });
         return nextDateInfo.startTime;
       },
       buildRecurringFrequencyInfo: EventsUtil.buildRecurringFrequencyInfo,

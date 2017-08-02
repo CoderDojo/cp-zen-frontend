@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -e
+
+GITHUB_AUTH_TOKEN="cb22643b3777b22c663f09e8621a2a985b720426" # public read-only
+
 echo "BUILD_BRANCH: ${BUILD_BRANCH}"
 if [[ $BUILD_BRANCH == "staging" ]]; then
   echo "Building staging"
