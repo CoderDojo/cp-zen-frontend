@@ -1,8 +1,10 @@
 import Vue from 'vue';
-import GeolocationService from '@/geolocation/service';
+import GeolocationService from 'inject-loader!@/geolocation/service';
 
 describe('Geolocation Service', () => {
   let sandbox;
+  let VueGoogleMapsMock;
+  let GeolocationServiceWithMocks;
 
   const expectedIpCountryDetails = {
     continent: {
@@ -62,6 +64,12 @@ describe('Geolocation Service', () => {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
+    VueGoogleMapsMock = {
+      loaded: Promise.resolve(),
+    };
+    GeolocationServiceWithMocks = GeolocationService({
+      'vue2-google-maps': VueGoogleMapsMock,
+    }).default;
   });
 
   afterEach(() => {
@@ -74,7 +82,7 @@ describe('Geolocation Service', () => {
       httpStub.withArgs(`${Vue.config.apiServer}/api/2.0/ip-country-details`)
         .returns(Promise.resolve({ body: expectedIpCountryDetails }));
 
-      GeolocationService.getIpCountryDetails().then((response) => {
+      GeolocationServiceWithMocks.getIpCountryDetails().then((response) => {
         expect(response.body).to.deep.equal(expectedIpCountryDetails);
         done();
       });
@@ -84,11 +92,11 @@ describe('Geolocation Service', () => {
   describe('getLatitudeLongitudeByAddress()', () => {
     it('should return coordinates for given address', (done) => {
       // ARRANGE
-      sandbox.stub(GeolocationService, 'getIpCountryDetails').returns(Promise.resolve({ body: expectedIpCountryDetails }));
-      sandbox.stub(GeolocationService, 'geocode').returns(Promise.resolve(mockGeocoderResults));
+      sandbox.stub(GeolocationServiceWithMocks, 'getIpCountryDetails').returns(Promise.resolve({ body: expectedIpCountryDetails }));
+      sandbox.stub(GeolocationServiceWithMocks, 'geocode').returns(Promise.resolve(mockGeocoderResults));
 
       // ACT
-      GeolocationService.getLatitudeLongitudeByAddress()
+      GeolocationServiceWithMocks.getLatitudeLongitudeByAddress()
         .then((coords) => {
           // ASSERT
           expect(coords.latitude).to.equal(10);
@@ -118,7 +126,7 @@ describe('Geolocation Service', () => {
 
     it('should get geolocation data for given search parameters', (done) => {
       status = 'OK';
-      GeolocationService.geocode({
+      GeolocationServiceWithMocks.geocode({
         address: 'CHQ',
         region: 'IE',
       }).then((results) => {
@@ -128,14 +136,14 @@ describe('Geolocation Service', () => {
           region: 'IE',
         });
         expect(results).to.deep.equal(mockGeocoderResults);
-        expect(GeolocationService.geocoder).to.equal(mockGeocoder);
+        expect(GeolocationServiceWithMocks.geocoder).to.equal(mockGeocoder);
         done();
       });
     });
 
     it('should reject the promise if status is not OK', (done) => {
       status = 'ERROR';
-      GeolocationService.geocode({
+      GeolocationServiceWithMocks.geocode({
         address: 'CHQ',
         region: 'IE',
       }).catch(() => {
@@ -143,23 +151,25 @@ describe('Geolocation Service', () => {
       });
     });
 
-    it('should reuse existing geocoder if exists', (done) => {
+    it('should reuse existing geocoder if exists', async () => {
       // ARRANGE
       const existingMockGeocoder = {
-        geocode: sinon.stub(),
+        geocode(geocoderSearchOptions, cb) {
+          cb([], 'OK');
+        },
       };
-      GeolocationService.geocoder = existingMockGeocoder;
+      sandbox.spy(existingMockGeocoder, 'geocode');
+      GeolocationServiceWithMocks.geocoder = existingMockGeocoder;
 
-      GeolocationService.geocode({
+      // ACT
+      await GeolocationServiceWithMocks.geocode({
         address: 'CHQ',
         region: 'IE',
       });
 
-      requestAnimationFrame(() => {
-        expect(existingMockGeocoder.geocode).to.have.been.calledOnce;
-        expect(window.google.maps.Geocoder).to.not.have.been.called;
-        done();
-      });
+      // ASSERT
+      expect(existingMockGeocoder.geocode).to.have.been.calledOnce;
+      expect(window.google.maps.Geocoder).to.not.have.been.called;
     });
   });
 });

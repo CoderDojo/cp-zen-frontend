@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import * as VueGoogleMaps from 'vue2-google-maps';
 
 export default {
   gecoder: null,
@@ -6,16 +7,18 @@ export default {
   getIpCountryDetails: () => Vue.http.get(`${Vue.config.apiServer}/api/2.0/ip-country-details`),
 
   geocode(gecoderSearchOptions) {
-    if (!this.geocoder) {
-      this.geocoder = new google.maps.Geocoder();
-    }
-    return new Promise((resolve, reject) => {
-      this.geocoder.geocode(gecoderSearchOptions, (results, status) => {
-        if (status === 'OK') {
-          resolve(results);
-        } else {
-          reject(results);
-        }
+    return VueGoogleMaps.loaded.then(() => {
+      if (!this.geocoder) {
+        this.geocoder = new google.maps.Geocoder();
+      }
+      return new Promise((resolve, reject) => {
+        this.geocoder.geocode(gecoderSearchOptions, (results, status) => {
+          if (status === 'OK') {
+            resolve(results);
+          } else {
+            reject(results);
+          }
+        });
       });
     });
   },
