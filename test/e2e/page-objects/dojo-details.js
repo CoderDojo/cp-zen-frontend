@@ -212,6 +212,11 @@ const DojoDetailsPage = Object.create(InfoColumn, {
       return $('.cd-dojo-details__settings-dropdown li:nth-child(3) a');
     },
   },
+  privateNotice: {
+    get() {
+      return $('.cd-dojo-details__private-notice');
+    },
+  },
   open: {
     value(urlSlug) {
       return BasePage.open.call(this, path.join('/dojos', urlSlug));

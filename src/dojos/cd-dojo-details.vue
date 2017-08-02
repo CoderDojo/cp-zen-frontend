@@ -36,6 +36,11 @@
           <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/users`"><i class="fa fa-users"></i>{{ $t('Manage Users') }}</a></li>
           <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/events`"><i class="fa fa-calendar"></i>{{ $t('Manage Events') }}</a></li>
         </dropdown>
+        <div v-if="dojoDetails.private === 1" class="cd-dojo-details__private-notice">
+          <div class="cd-dojo-details__private-notice-header">{{ $t('This is a Private Dojo') }}</div>
+          <p>{{ $t('Private Dojos are by invite only or for specific people who are members of an organisation or school. The general public should not contact to attend this Dojo.') }}</p>
+          <p v-html="$t('To learn more please email {email}', { email: '<a href=\'mailto:' + dojoDetails.email + '\'>' + dojoDetails.email + '</a>' })"></p>
+        </div>
         <div class="cd-dojo-details__heading">{{ $t('Upcoming Events') }}</div>
         <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
         <div class="cd-dojo-details__heading">{{ $t('Details') }}</div>
@@ -233,6 +238,21 @@
     &__google-maps-link {
       display: block;
       margin: 4px 0;
+    }
+
+    &__private-notice {
+      margin-top: 45px;
+
+      &-header {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      > p {
+        color: #686d6f;
+      }
     }
   }
 
