@@ -21,7 +21,8 @@ module.exports = {
       twitter: null,
       notes: '<h2>Suggested Notes:<br />\n<br />\nPlease bring:</h2>\n\n<ul>\n\t<li>\n\t<h2>A laptop. Borrow one from somebody if needs be.</h2>\n\t</li>\n\t<li>\n\t<h2><strong>A parent! (Very important). If you are 12 or under, your parent must stay with you during the session.</strong></h2>\n\t</li>\n</ul>\n\n<h2>&nbsp;</h2>\n',
       placeName: 'Dublin',
-      time: 'Sunday 10am',
+      frequency: 'other',
+      alternativeFrequency: 'Sunday 10am',
       website: null,
       supporterImage: 'http://www.xconomy.com/wordpress/wp-content/images/2013/01/dogpatch-labs-logo.png'
     },
@@ -44,7 +45,8 @@ module.exports = {
       twitter: null,
       notes: '<p>Suggested Notes:<br />\n<br />\nPlease bring:</p>\n\n<ul>\n\t<li>\n\t<p>A laptop. Borrow one from somebody if needs be.</p>\n\t</li>\n\t<li>\n\t<p><strong>A parent! (Very important). If you are 12 or under, your parent must stay with you during the session.</strong></p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n',
       placeName: 'Smithfield',
-      time: 'Saturdays, 5-7pm',
+      frequency: 'other',
+      alternativeFrequency: 'Saturdays, 5-7pm',
       website: null,
       supporterImage: 'http://www.xconomy.com/wordpress/wp-content/images/2013/01/dogpatch-labs-logo.png'
     },
@@ -67,7 +69,11 @@ module.exports = {
       twitter: 'https://twitter.com/CoderDojo',
       notes: '<p>This is the Dojo details section</p>\n',
       placeName: 'Dublin',
-      time: 'Saturdays 11 am - 1 pm',
+      frequency: '1/m',
+      alternativeFrequency: '3rd',
+      day: 4,
+      startTime: '10:00',
+      endTime: '11:30',
       website: 'www.dublinninjakids.com',
       supporterImage: 'http://www.xconomy.com/wordpress/wp-content/images/2013/01/dogpatch-labs-logo.png'
     },
@@ -90,7 +96,8 @@ module.exports = {
       twitter: null,
       notes: '<p>What\'s the password?</p>\n',
       placeName: 'Longford',
-      time: 'For us to know, and you to find out.',
+      frequency: 'other',
+      alternativeFrequency: 'For us to know, and you to find out.',
       website: null,
       supporterImage: ''
     },
@@ -113,7 +120,8 @@ module.exports = {
       twitter: null,
       notes: '<p>We use Eventbrite!</p>\n',
       placeName: 'Ganewalpola',
-      time: 'Saturdays from 4pm to 6pm',
+      frequency: 'other',
+      alternativeFrequency: 'Saturdays from 4pm to 6pm',
       website: null,
       supporterImage: ''
     }

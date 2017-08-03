@@ -6,13 +6,13 @@
             <img v-if="dojoDetails.id" v-img-fallback="{src: imageUrl, fallback: loadImage}"
                  class="img-circle cd-dojo-details__dojo-image"/>
           </div>
-          <div class="cd-dojo-details__name align-middle">{{ dojoDetails.name}}</div>
+          <div class="cd-dojo-details__name align-middle">{{ dojoDetails.name }}</div>
         </div>
     </div>
     <div class="cd-dojo-details__container">
       <info-column class="cd-dojo-details__left-column">
         <info-column-section class="cd-dojo-details__left-column-section" icon="clock-o" :header="$t('Time')">
-          {{ dojoDetails.time }}
+          {{ buildDojoFrequency(dojoDetails) }}
         </info-column-section>
         <info-column-section class="cd-dojo-details__left-column-section" icon="map-marker" :header="$t('Location')">
           {{ address }}
@@ -80,6 +80,7 @@
   import UserService from '@/users/service';
   import service from './service';
   import eventsList from '../events/cd-event-list';
+  import DojoUtil from './util';
 
   /* eslint-disable global-require */
   export default {
@@ -137,6 +138,7 @@
         const response = await UserService.getCurrentUser();
         this.user = response.body.user;
       },
+      buildDojoFrequency: DojoUtil.buildDojoFrequency,
     },
     created() {
       this.loadDojoDetails();
