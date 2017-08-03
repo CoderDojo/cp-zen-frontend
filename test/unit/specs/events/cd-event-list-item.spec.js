@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import vueUnitHelper from 'vue-unit-helper';
 import EventListItem from '@/events/cd-event-list-item';
 import TimeShift from 'timeshift-js';
@@ -350,6 +351,30 @@ describe('Event list item component', () => {
           // ASSERT
           expect(vm.isPastEvent).to.equal(false);
         });
+      });
+    });
+
+    describe('bookLink', () => {
+      it('should return path to Vue booking page when GIT_BRANCH is not master', () => {
+        // ARRANGE
+        Vue.config.buildBranch = 'staging';
+        const vm = vueUnitHelper(EventListItem);
+        vm.dojo = { id: 'foo' };
+        vm.event = { id: 'bar' };
+
+        // ASSERT
+        expect(vm.bookLink).to.deep.equal({ name: 'EventDobVerification', params: { eventId: 'bar' } });
+      });
+
+      it('should return path to Angular booking page when GIT_BRANCH is master', () => {
+        // ARRANGE
+        Vue.config.buildBranch = 'master';
+        const vm = vueUnitHelper(EventListItem);
+        vm.dojo = { id: 'foo' };
+        vm.event = { id: 'bar' };
+
+        // ASSERT
+        expect(vm.bookLink).to.equal('/dojo/foo/event/bar');
       });
     });
   });

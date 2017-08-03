@@ -14,6 +14,7 @@ import i18n from './i18n';
 
 Vue.config.productionTip = false;
 Vue.config.apiServer = process.env.API_SERVER;
+Vue.config.buildBranch = process.env.GIT_BRANCH;
 
 Vue.use(VueResource);
 Vue.use(VeeValidate);
