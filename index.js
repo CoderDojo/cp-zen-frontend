@@ -11,15 +11,17 @@ var openGraphTemplate = Handlebars.compile(openGraphTemplateString);
 
 exports.register = function (server, options, next) {
 
-  server.route({
-    method: 'GET',
-    path: '/v2/{param*}',
-    handler: {
-      file: {
-        path: __dirname + '/dist/index.html'
+  if (process.env.NODE_ENV !== 'production') {
+    server.route({
+      method: 'GET',
+      path: '/v2/{param*}',
+      handler: {
+        file: {
+          path: __dirname + '/dist/index.html'
+        }
       }
-    }
-  });
+    });
+  }
 
   server.route({
     method: 'GET',
