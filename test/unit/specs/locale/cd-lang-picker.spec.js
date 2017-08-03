@@ -5,6 +5,7 @@ describe('Lang Picker', () => {
   let sandbox;
   let CookieMock;
   let LocaleServiceMock;
+  let MomentMock;
   let LangPickerWithMocks;
 
   beforeEach(() => {
@@ -16,14 +17,47 @@ describe('Lang Picker', () => {
     LocaleServiceMock = {
       getStrings: sandbox.stub(),
     };
+    MomentMock = {
+      locale: sandbox.stub(),
+    };
     LangPickerWithMocks = LangPicker({
       'js-cookie': CookieMock,
       './service': LocaleServiceMock,
+      moment: MomentMock,
     });
   });
 
   afterEach(() => {
     sandbox.restore();
+  });
+
+  describe('setMomentLocale(locale)', () => {
+    it('should set moment locale', () => {
+      // ARRANGE
+      MomentMock.locale.withArgs('es-ar').returns('es');
+      const vm = vueUnitHelper(LangPickerWithMocks);
+
+      // ACT
+      vm.setMomentLocale('es_AR');
+
+      // ASSERT
+      expect(MomentMock.locale).to.have.been.calledOnce;
+      expect(MomentMock.locale).to.have.been.calledWith('es-ar');
+    });
+
+    it('should default to en if setting locale fails', () => {
+      // ARRANGE
+      MomentMock.locale.withArgs('mt-mt').returns('zh-tw');
+      const vm = vueUnitHelper(LangPickerWithMocks);
+
+      // ACT
+      vm.setMomentLocale('mt_MT');
+
+      // ASSERT
+      expect(MomentMock.locale).to.have.been.calledTwice;
+      expect(MomentMock.locale.getCall(0).args[0]).to.equal('mt-mt');
+      expect(MomentMock.locale.getCall(1).args[0]).to.equal('en');
+    });
   });
 
   describe('watchers', () => {
@@ -41,6 +75,7 @@ describe('Lang Picker', () => {
           locale: 'en_US',
         };
         LocaleServiceMock.getStrings.withArgs('es_ES').returns(Promise.resolve({ body: stringsMock }));
+        sandbox.stub(vm, 'setMomentLocale');
 
         // ACT
         vm.$watchers.lang('es_ES');
@@ -48,6 +83,8 @@ describe('Lang Picker', () => {
         // ASSERT
         requestAnimationFrame(() => {
           expect(CookieMock.set).to.have.been.calledWith('NG_TRANSLATE_LANG_KEY', '"es_ES"');
+          expect(vm.setMomentLocale).to.have.been.calledOnce;
+          expect(vm.setMomentLocale).to.have.been.calledWith('es_ES');
           expect(vm.$i18n.setLocaleMessage).to.have.been.calledWith('es_ES', {
             Hello: 'Hola',
             'Thank you': 'Gracias',

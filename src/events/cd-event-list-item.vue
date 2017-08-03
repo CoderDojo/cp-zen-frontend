@@ -30,7 +30,7 @@
       <div v-if="event.eventbriteId">
         <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-event-list-item__view">{{ $t('See Details and Book') }}</a>
       </div>
-      <router-link :to="{name: 'EventDobVerification', params: {eventId: event.id}}"
+      <router-link :to="bookLink"
                    :disabled="isFull" v-else
                    tag="button" class="btn btn-lg btn-primary cd-event-list-item__view">
         {{ isFull ? $t('Full') : $t('See Details and Book') }}
@@ -39,6 +39,7 @@
   </div>
 </template>
 <script>
+  import Vue from 'vue';
   import moment from 'moment';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
@@ -89,6 +90,12 @@
         const eventStartTime = moment(this.event.dates[this.event.dates.length - 1].startTime);
         eventStartTime.subtract(eventStartTime.utcOffset(), 'minutes');
         return now.isAfter(eventStartTime);
+      },
+      bookLink() {
+        if (Vue.config.buildBranch === 'master') {
+          return `/dojo/${this.dojo.id}/event/${this.event.id}`;
+        }
+        return { name: 'EventDobVerification', params: { eventId: this.event.id } };
       },
     },
     filters: {
