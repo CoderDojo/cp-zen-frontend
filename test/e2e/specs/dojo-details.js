@@ -19,7 +19,7 @@ describe('Dojo details page', () => {
     expect(timeLabel).to.equal('TIME');
 
     const time = DojoDetailsPage.time.getText();
-    expect(time).to.equal('Saturdays 11 am - 1 pm');
+    expect(time).to.equal('Third Thursday of the month, 10am - 11:30am');
 
     const addressLabel = DojoDetailsPage.addressLabel.getText();
     expect(addressLabel).to.equal('LOCATION');
@@ -310,7 +310,7 @@ describe('Dojo details page', () => {
       expect(timeLabel).to.equal('TIME');
 
       const time = DojoDetailsPage.time.getText();
-      expect(time).to.equal('Saturdays 11 am - 1 pm');
+      expect(time).to.equal('Third Thursday of the month, 10am - 11:30am');
 
       const addressLabel = DojoDetailsPage.addressLabel.getText();
       expect(addressLabel).to.equal('LOCATION');
