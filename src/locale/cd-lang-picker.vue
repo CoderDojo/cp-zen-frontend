@@ -14,6 +14,7 @@
 
 <script>
   import { find } from 'lodash';
+  import moment from 'moment';
   import Cookie from 'js-cookie';
   import LocaleService from './service';
 
@@ -105,6 +106,15 @@
         ],
       };
     },
+    methods: {
+      setMomentLocale(locale) { // e.g. mt_MT
+        const momentLocale = locale.replace('_', '-').toLowerCase(); // mt-mt
+        const setMomentLocale = moment.locale(momentLocale); // zh-tw
+        if (momentLocale.indexOf(setMomentLocale) === -1) { // if mt-mt contains zh-tw
+          moment.locale('en'); // default to en
+        }
+      },
+    },
     watch: {
       lang(val) {
         Cookie.set('NG_TRANSLATE_LANG_KEY', `"${val}"`);
@@ -116,6 +126,7 @@
                 strings[key] = key;
               }
             });
+            this.setMomentLocale(val);
             this.$i18n.setLocaleMessage(val, strings);
             this.$i18n.locale = val;
           });
