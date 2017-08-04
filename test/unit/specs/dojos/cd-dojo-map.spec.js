@@ -42,6 +42,15 @@ describe('Dojo map', () => {
         lng: 2,
       });
     });
+
+    it('should return an empty object when dojo has no geoPoint or geo_point', () => {
+      const dojoMock = {
+        geoPoint: null,
+      };
+      const vm = vueUnitHelper(DojoMap);
+
+      expect(vm.getMarkerPosition(dojoMock)).to.deep.equal({});
+    });
   });
 
   describe('updateInfoWindow()', () => {

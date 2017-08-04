@@ -45,8 +45,11 @@
       },
       getMarkerPosition(dojo) {
         const coords = {};
-        coords.lat = dojo.geoPoint ? dojo.geoPoint.lat : dojo.geo_point.lat;
-        coords.lng = dojo.geoPoint ? dojo.geoPoint.lon : dojo.geo_point.lon;
+        const geoPoint = dojo.geoPoint || dojo.geo_point;
+        if (geoPoint) {
+          coords.lat = geoPoint.lat;
+          coords.lng = geoPoint.lon;
+        }
         return coords;
       },
     },
