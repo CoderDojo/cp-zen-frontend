@@ -43,6 +43,10 @@
         font-weight: bold;
       }
     }
+
+    &__content {
+      word-wrap: break-word;
+    }
   }
 
   @media (max-width: @screen-xs-max) {
