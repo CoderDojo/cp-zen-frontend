@@ -22,7 +22,7 @@
           <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
         </info-column-section>
         <info-column-section v-if="dojoDetails.website" class="hidden-xs" icon="globe" :header="$t('Website')">
-          <a :href="dojoDetails.website | cdUrlFormatter" target="_blank">{{ dojoDetails.website }}</a>
+          <a :href="dojoDetails.website | cdUrlFormatter" target="_blank" class="cd-dojo-details__website">{{ dojoDetails.website }}</a>
         </info-column-section>
         <info-column-section class="cd-dojo-details__social-media hidden-xs">
           <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
@@ -52,7 +52,7 @@
               <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
             </info-column-section>
             <info-column-section v-if="dojoDetails.website" icon="globe" :header="$t('Website')">
-              <a :href="dojoDetails.website | cdUrlFormatter" target="_blank">{{ dojoDetails.website }}</a>
+              <a :href="dojoDetails.website | cdUrlFormatter" target="_blank" class="cd-dojo-details__website">{{ dojoDetails.website }}</a>
             </info-column-section>
             <info-column-section class="cd-dojo-details__social-media">
               <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
@@ -186,6 +186,10 @@
       position: relative;
       flex: 8;
       padding: 45px 32px 32px 16px;
+    }
+
+    &__website {
+      word-wrap: break-word;
     }
 
     &__social-media {
