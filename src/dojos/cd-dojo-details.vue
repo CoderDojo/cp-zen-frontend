@@ -106,7 +106,17 @@
     },
     computed: {
       address() {
-        return !this.dojoDetails.address1 ? undefined : [
+        if (!this.dojoDetails.address1) {
+          return undefined;
+        } else if (this.dojoDetails.address1.includes(this.dojoDetails.countryName)) {
+          return this.dojoDetails.address1;
+        } else if (this.dojoDetails.address1.includes(this.dojoDetails.placeName)) {
+          return [
+            this.dojoDetails.address1,
+            this.dojoDetails.countryName,
+          ].join(', ');
+        }
+        return [
           this.dojoDetails.address1,
           this.dojoDetails.placeName,
           this.dojoDetails.countryName,
