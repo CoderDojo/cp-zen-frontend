@@ -1,11 +1,13 @@
 <template>
   <div class="cd-dojo-map-info-window">
     <p class="cd-dojo-map-info-window__name"><router-link :to="detailsPageUrl"> {{ dojo.name }}</router-link></p>
-    <p>{{ dojo.time }}</p>
+    <p>{{buildDojoFrequency(dojo)}}</p>
   </div>
 </template>
 
 <script>
+  import DojosUtil from '@/dojos/util';
+
   export default {
     name: 'DojoMapInfoWindow',
     props: ['dojo'],
@@ -13,6 +15,9 @@
       detailsPageUrl() {
         return `/dojos/${this.dojo.url_slug || this.dojo.urlSlug}`;
       },
+    },
+    methods: {
+      buildDojoFrequency: DojosUtil.buildDojoFrequency,
     },
   };
 </script>

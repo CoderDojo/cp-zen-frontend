@@ -627,8 +627,8 @@ module.exports = {
       recurringType: 'weekly',
       dates: [
         {
-          startTime: '2017-08-06T16:30:00.000Z',
-          endTime: '2017-08-06T18:00:00.000Z'
+          startTime: '2017-09-06T16:30:00.000Z',
+          endTime: '2017-09-06T18:00:00.000Z'
         }
       ],
       ticketApproval: true,
@@ -791,8 +791,8 @@ module.exports = {
       recurringType: 'weekly',
       dates: [
         {
-          startTime: '2017-08-06T16:30:00.000Z',
-          endTime: '2017-08-06T18:00:00.000Z'
+          startTime: '2017-09-06T16:30:00.000Z',
+          endTime: '2017-09-06T18:00:00.000Z'
         }
       ],
       ticketApproval: true,
