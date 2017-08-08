@@ -25,8 +25,8 @@
           <a :href="dojoDetails.website | cdUrlFormatter" target="_blank" class="cd-dojo-details__website">{{ dojoDetails.website }}</a>
         </info-column-section>
         <info-column-section class="cd-dojo-details__social-media hidden-xs">
-          <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
-          <a v-if="dojoDetails.twitter" class="cd-dojo-details__social-media-icon fa fa-2x fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="dojoDetails.twitter"></a>
+          <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="buildFacebookLink | cdUrlFormatter"></a>
+          <a v-if="dojoDetails.twitter" class="cd-dojo-details__social-media-icon fa fa-2x fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="buildTwitterLink | cdUrlFormatter"></a>
           <a v-if="dojoDetails.googleGroup" class="cd-dojo-details__social-media-icon fa fa-2x fa-google cd-dojo-details__google-group sm-icon" aria-hidden="true" :href="dojoDetails.googleGroup"></a>
         </info-column-section>
       </info-column>
@@ -55,8 +55,8 @@
               <a :href="dojoDetails.website | cdUrlFormatter" target="_blank" class="cd-dojo-details__website">{{ dojoDetails.website }}</a>
             </info-column-section>
             <info-column-section class="cd-dojo-details__social-media">
-              <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
-              <a v-if="dojoDetails.twitter" class="cd-dojo-details__social-media-icon fa fa-2x fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="dojoDetails.twitter"></a>
+              <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="buildFacebookLink | cdUrlFormatter"></a>
+              <a v-if="dojoDetails.twitter" class="cd-dojo-details__social-media-icon fa fa-2x fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="buildTwitterLink | cdUrlFormatter"></a>
               <a v-if="dojoDetails.googleGroup" class="cd-dojo-details__social-media-icon fa fa-2x fa-google cd-dojo-details__google-group sm-icon" aria-hidden="true" :href="dojoDetails.googleGroup"></a>
             </info-column-section>
           </div>
@@ -126,6 +126,20 @@
       },
       canAdmin() {
         return !!(this.user && this.user.roles && this.user.roles.indexOf('cdf-admin') > -1);
+      },
+      buildTwitterLink() {
+        const twitterData = this.dojoDetails.twitter;
+        if (/^[a-zA-Z0-9_@]{1,15}$/.test(twitterData)) {
+          return `https://twitter.com/${twitterData}`;
+        }
+        return twitterData;
+      },
+      buildFacebookLink() {
+        const facebookData = this.dojoDetails.facebook;
+        if (/^[a-zA-Z0-9.]{1,}$/.test(facebookData)) {
+          return `https://facebook.com/${facebookData}`;
+        }
+        return facebookData;
       },
     },
     methods: {
