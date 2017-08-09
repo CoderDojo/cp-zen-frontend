@@ -136,4 +136,74 @@ describe('Dojo details component', () => {
       expect(vm.canAdmin).to.equal(false);
     });
   });
+
+  describe('computed.buildTwitterLink', () => {
+    let vm;
+
+    beforeEach(() => {
+      vm = vueUnitHelper(dojoDetails());
+    });
+
+    it('should return a formatted url from a twitter handle', () => {
+      // ARRANGE
+      vm.dojoDetails = {
+        twitter: '@CoderDojo',
+      };
+
+      // ACT & ASSERT
+      expect(vm.buildTwitterLink).to.equal('https://twitter.com/@CoderDojo');
+
+      // ARRANGE
+      vm.dojoDetails = {
+        twitter: 'CoderDojo',
+      };
+
+      // ACT & ASSERT
+      expect(vm.buildTwitterLink).to.equal('https://twitter.com/CoderDojo');
+    });
+    it('should return a url if one is supplied', () => {
+      // ARRANGE
+      vm.dojoDetails = {
+        twitter: 'http://twitter.com/twitter',
+      };
+
+      // ACT & ASSERT
+      expect(vm.buildTwitterLink).to.equal('http://twitter.com/twitter');
+    });
+  });
+
+  describe('computed.buildFacebookLink', () => {
+    let vm;
+
+    beforeEach(() => {
+      vm = vueUnitHelper(dojoDetails());
+    });
+
+    it('should return a formatted url from a facebook username', () => {
+      // ARRANGE
+      vm.dojoDetails = {
+        facebook: 'CoderDojo',
+      };
+
+      // ACT & ASSERT
+      expect(vm.buildFacebookLink).to.equal('https://facebook.com/CoderDojo');
+
+      // ARRANGE
+      vm.dojoDetails = {
+        facebook: '.',
+      };
+
+      // ACT & ASSERT
+      expect(vm.buildFacebookLink).to.equal('https://facebook.com/.');
+    });
+    it('should return a url if one is supplied', () => {
+      // ARRANGE
+      vm.dojoDetails = {
+        facebook: 'http://facebook.com/DCU',
+      };
+
+      // ACT & ASSERT
+      expect(vm.buildFacebookLink).to.equal('http://facebook.com/DCU');
+    });
+  });
 });
