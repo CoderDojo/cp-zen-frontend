@@ -20,10 +20,6 @@
         <div class="cd-event-list-item__times-timestamp">
           {{ event.dates[0].startTime | cdTimeFormatter }} - {{ event.dates[0].endTime | cdTimeFormatter }}
         </div>
-        <div v-if="isRecurring" class="cd-event-list-item__recurring-info">
-          <span class="fa fa-info-circle cd-event-list-item__recurring-info-icon"></span>
-          <span class="cd-event-list-item__recurring-info-text">{{ `${recurringFrequencyInfo} ${$t('at')}` }} {{ event.dates[0].startTime | cdTimeFormatter }} - {{ event.dates[0].endTime | cdTimeFormatter }}</span>
-        </div>
       </div>
     </div>
     <div v-if="canBook && !isPastEvent" class="cd-event-list-item__view-wrapper">
@@ -36,11 +32,20 @@
         {{ isFull ? $t('Full') : $t('See Details and Book') }}
       </router-link>
     </div>
+    <div v-if="isRecurring" class="cd-event-list-item__recurring-info">
+      <span class="fa fa-info-circle cd-event-list-item__recurring-info-icon"></span>
+      <span class="cd-event-list-item__recurring-info-header">{{ $t('This is a recurring event') }}</span>
+      <div class="cd-event-list-item__recurring-info-text">
+        {{ $t('{recurringFrequencyInfo} at {formattedStartTime} - {formattedEndTime}, from {formattedFirstDate} to {formattedLastDate}',
+        {recurringFrequencyInfo, formattedStartTime, formattedEndTime, formattedFirstDate, formattedLastDate}) }}
+      </div>
+    </div>
   </div>
 </template>
 <script>
   import Vue from 'vue';
   import moment from 'moment';
+  import { sortBy } from 'lodash';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import cdUrlFormatter from '@/common/filters/cd-url-formatter';
@@ -96,6 +101,20 @@
           return `/dojo/${this.dojo.id}/event/${this.event.id}`;
         }
         return { name: 'EventDobVerification', params: { eventId: this.event.id } };
+      },
+      formattedStartTime() {
+        return this.$options.filters.cdTimeFormatter(this.event.dates[0].startTime);
+      },
+      formattedEndTime() {
+        return this.$options.filters.cdTimeFormatter(this.event.dates[0].endTime);
+      },
+      formattedFirstDate() {
+        const sortedDates = sortBy(this.event.dates, date => date.startTime);
+        return this.$options.filters.cdDateFormatter(sortedDates[0].startTime);
+      },
+      formattedLastDate() {
+        const sortedDates = sortBy(this.event.dates, date => date.startTime);
+        return this.$options.filters.cdDateFormatter(sortedDates[sortedDates.length - 1].startTime);
       },
     },
     filters: {
@@ -153,10 +172,16 @@
     }
 
     &__recurring-info {
+      background-color: #f4f5f6;
       color: #7b8082;
-      margin-top: 16px;
+      margin: 32px -16px -16px -16px;
+      padding: 16px;
       &-icon {
         font-size: 16px;
+        margin-right: 4px;
+      }
+      &-header {
+        font-weight: bold;
       }
       &-text {
         font-size: 14px;
@@ -197,7 +222,6 @@
         text-align: center;
       }
       &__recurring-info {
-        padding: 0 24px;
         width: auto;
       }
       &__datetime {

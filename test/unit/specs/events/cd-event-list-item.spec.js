@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import vueUnitHelper from 'vue-unit-helper';
 import EventListItem from '@/events/cd-event-list-item';
+import cdDateFormatter from '@/common/filters/cd-date-formatter';
 import TimeShift from 'timeshift-js';
 import moment from 'moment';
 
@@ -375,6 +376,76 @@ describe('Event list item component', () => {
 
         // ASSERT
         expect(vm.bookLink).to.equal('/dojo/foo/event/bar');
+      });
+    });
+
+    describe('formattedFirstDate', () => {
+      it('should return the correct first date despite dates not being ordered chronologically in the event data', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListItem);
+        vm.$options = {
+          filters: {
+            cdDateFormatter,
+          },
+        };
+        vm.event = {
+          dates: [
+            {
+              startTime: '2018-06-10T10:00:00.000Z',
+              endTime: '2018-06-10T11:00:00.000Z',
+            },
+            {
+              startTime: '2018-06-03T10:00:00.000Z',
+              endTime: '2018-06-03T11:00:00.000Z',
+            },
+            {
+              startTime: '2018-07-29T10:00:00.000Z',
+              endTime: '2018-07-29T11:00:00.000Z',
+            },
+            {
+              startTime: '2018-06-17T10:00:00.000Z',
+              endTime: '2018-06-17T11:00:00.000Z',
+            },
+          ],
+        };
+
+        // ACT & ASSERT
+        expect(vm.formattedFirstDate).to.equal('June 3, 2018');
+      });
+    });
+
+    describe('formattedLastDate', () => {
+      it('should return the correct last date despite dates not being ordered chronologically in the event data', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListItem);
+        vm.$options = {
+          filters: {
+            cdDateFormatter,
+          },
+        };
+        vm.event = {
+          dates: [
+            {
+              startTime: '2018-06-10T10:00:00.000Z',
+              endTime: '2018-06-10T11:00:00.000Z',
+            },
+            {
+              startTime: '2018-06-03T10:00:00.000Z',
+              endTime: '2018-06-03T11:00:00.000Z',
+            },
+            {
+              startTime: '2018-07-29T10:00:00.000Z',
+              endTime: '2018-07-29T11:00:00.000Z',
+            },
+            {
+              startTime: '2018-06-17T10:00:00.000Z',
+              endTime: '2018-06-17T11:00:00.000Z',
+            },
+          ],
+        };
+
+        // ACT & ASSERT
+        expect(vm.formattedLastDate).to.equal('July 29, 2018');
       });
     });
   });
