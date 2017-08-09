@@ -290,6 +290,14 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.privateNotice.isVisible()).to.equal(false);
   });
 
+  it('should link to social media when given a username/handle', () => {
+    DojoPage.openDojoWithLatLong(10, 89, 0);
+
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.facebook).to.equal('https://facebook.com/DCU');
+    expect(DojoDetailsPage.twitter).to.equal('https://twitter.com/CoderDojo');
+  });
+
   describe('Mobile specific tests', () => {
     beforeEach(() => {
       DojoPage.openDojoWithLatLong(10, 89);
