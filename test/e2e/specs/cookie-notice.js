@@ -10,7 +10,7 @@ describe('Cookie Notice', () => {
   it('should disappear after navigating from first page, and persist', () => {
     FindDojoPage.openWithLatLong(10, 89, false);
     expect(Footer.cookieNotice.isVisible()).to.equal(true);
-    FindDojoPage.dojoListItems[0].click();
+    FindDojoPage.dojoListItemNames[0].click();
     DojoDetailsPage.name.waitForVisible();
     expect(Footer.cookieNotice.isVisible()).to.equal(false);
     browser.refresh();
