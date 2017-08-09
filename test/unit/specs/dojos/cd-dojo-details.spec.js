@@ -187,6 +187,14 @@ describe('Dojo details component', () => {
 
       // ACT & ASSERT
       expect(vm.buildFacebookLink).to.equal('https://facebook.com/CoderDojo');
+
+      // ARRANGE
+      vm.dojoDetails = {
+        facebook: '.',
+      };
+
+      // ACT & ASSERT
+      expect(vm.buildFacebookLink).to.equal('https://facebook.com/.');
     });
     it('should return a url if one is supplied', () => {
       // ARRANGE
