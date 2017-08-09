@@ -77,7 +77,8 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.eventDate(1).getText()).to.equal('June 3, 2018');
     expect(DojoDetailsPage.eventTimes(1).getText()).to.equal('10am - 12pm');
     expect(DojoDetailsPage.eventRecurringInfoIcon[0].isVisible()).to.equal(true);
-    expect(DojoDetailsPage.eventRecurringInfoText[0].getText()).to.equal('Every two weeks on Sunday at 10am - 12pm');
+    expect(DojoDetailsPage.eventRecurringInfoHeader[0].getText()).to.equal('This is a recurring event');
+    expect(DojoDetailsPage.eventRecurringInfoText[0].getText()).to.equal('Every two weeks on Sunday at 10am - 12pm, from June 3, 2018 to July 29, 2018');
   });
 
   it('should show message if no events are scheduled', () => {

@@ -20,10 +20,6 @@
         <div class="cd-event-list-item__times-timestamp">
           {{ event.dates[0].startTime | cdTimeFormatter }} - {{ event.dates[0].endTime | cdTimeFormatter }}
         </div>
-        <div v-if="isRecurring" class="cd-event-list-item__recurring-info">
-          <span class="fa fa-info-circle cd-event-list-item__recurring-info-icon"></span>
-          <span class="cd-event-list-item__recurring-info-text">{{ `${recurringFrequencyInfo} ${$t('at')}` }} {{ event.dates[0].startTime | cdTimeFormatter }} - {{ event.dates[0].endTime | cdTimeFormatter }}</span>
-        </div>
       </div>
     </div>
     <div v-if="canBook && !isPastEvent" class="cd-event-list-item__view-wrapper">
@@ -35,6 +31,14 @@
                    tag="button" class="btn btn-lg btn-primary cd-event-list-item__view">
         {{ isFull ? $t('Full') : $t('See Details and Book') }}
       </router-link>
+    </div>
+    <div v-if="isRecurring" class="cd-event-list-item__recurring-info">
+      <span class="fa fa-info-circle cd-event-list-item__recurring-info-icon"></span>
+      <span class="cd-event-list-item__recurring-info-header">{{ $t('This is a recurring event') }}</span>
+      <div class="cd-event-list-item__recurring-info-text">
+        {{ `${recurringFrequencyInfo} ${$t('at')}` }} {{ event.dates[0].startTime | cdTimeFormatter }} - {{ event.dates[0].endTime | cdTimeFormatter }},
+        {{ $t('from') }} {{ event.dates[0].startTime | cdDateFormatter }} {{ $t('to') }} {{ event.dates[event.dates.length - 1].startTime | cdDateFormatter }}
+      </div>
     </div>
   </div>
 </template>
@@ -153,10 +157,16 @@
     }
 
     &__recurring-info {
+      background-color: #f4f5f6;
       color: #7b8082;
-      margin-top: 16px;
+      margin: 32px -16px -16px -16px;
+      padding: 16px;
       &-icon {
         font-size: 16px;
+        margin-right: 4px;
+      }
+      &-header {
+        font-weight: bold;
       }
       &-text {
         font-size: 14px;
@@ -197,7 +207,6 @@
         text-align: center;
       }
       &__recurring-info {
-        padding: 0 24px;
         width: auto;
       }
       &__datetime {
