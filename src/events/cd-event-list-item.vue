@@ -36,7 +36,8 @@
       <span class="fa fa-info-circle cd-event-list-item__recurring-info-icon"></span>
       <span class="cd-event-list-item__recurring-info-header">{{ $t('This is a recurring event') }}</span>
       <div class="cd-event-list-item__recurring-info-text">
-        {{ $t(`${recurringFrequencyInfo} at ${formattedStartTime} - ${formattedEndTime}, from ${formattedFirstDate} to ${formattedLastDate}`) }}
+        {{ $t('{recurringFrequencyInfo} at {formattedStartTime} - {formattedEndTime}, from {formattedFirstDate} to {formattedLastDate}',
+        {recurringFrequencyInfo, formattedStartTime, formattedEndTime, formattedFirstDate, formattedLastDate}) }}
       </div>
     </div>
   </div>
