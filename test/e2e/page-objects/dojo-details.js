@@ -146,6 +146,11 @@ const DojoDetailsPage = Object.create(InfoColumn, {
       return $$('.cd-event-list-item__recurring-info-icon');
     },
   },
+  eventRecurringInfoHeader: {
+    get() {
+      return $$('.cd-event-list-item__recurring-info-header');
+    },
+  },
   eventRecurringInfoText: {
     get() {
       return $$('.cd-event-list-item__recurring-info-text');
