@@ -106,11 +106,10 @@
     },
     computed: {
       address() {
-        return !this.dojoDetails.address1 ? undefined : [
-          this.dojoDetails.address1,
-          this.dojoDetails.placeName,
-          this.dojoDetails.countryName,
-        ].join(', ');
+        if (!this.dojoDetails.address1) {
+          return this.dojoDetails.placeName ? this.dojoDetails.placeName : undefined;
+        }
+        return this.dojoDetails.address1;
       },
       urlSlug() {
         return `${this.country}/${this.path}`;
