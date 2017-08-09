@@ -36,8 +36,7 @@
       <span class="fa fa-info-circle cd-event-list-item__recurring-info-icon"></span>
       <span class="cd-event-list-item__recurring-info-header">{{ $t('This is a recurring event') }}</span>
       <div class="cd-event-list-item__recurring-info-text">
-        {{ `${recurringFrequencyInfo} ${$t('at')}` }} {{ event.dates[0].startTime | cdTimeFormatter }} - {{ event.dates[0].endTime | cdTimeFormatter }},
-        {{ $t('from') }} {{ event.dates[0].startTime | cdDateFormatter }} {{ $t('to') }} {{ event.dates[event.dates.length - 1].startTime | cdDateFormatter }}
+        {{ $t(`${recurringFrequencyInfo} at ${formattedStartTime} - ${formattedEndTime}, from ${formattedFirstDate} to ${formattedLastDate}`) }}
       </div>
     </div>
   </div>
@@ -45,6 +44,7 @@
 <script>
   import Vue from 'vue';
   import moment from 'moment';
+  import { sortBy } from 'lodash';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import cdUrlFormatter from '@/common/filters/cd-url-formatter';
@@ -100,6 +100,20 @@
           return `/dojo/${this.dojo.id}/event/${this.event.id}`;
         }
         return { name: 'EventDobVerification', params: { eventId: this.event.id } };
+      },
+      formattedStartTime() {
+        return this.$options.filters.cdTimeFormatter(this.event.dates[0].startTime);
+      },
+      formattedEndTime() {
+        return this.$options.filters.cdTimeFormatter(this.event.dates[0].endTime);
+      },
+      formattedFirstDate() {
+        const sortedDates = sortBy(this.event.dates, date => date.startTime);
+        return this.$options.filters.cdDateFormatter(sortedDates[0].startTime);
+      },
+      formattedLastDate() {
+        const sortedDates = sortBy(this.event.dates, date => date.startTime);
+        return this.$options.filters.cdDateFormatter(sortedDates[sortedDates.length - 1].startTime);
       },
     },
     filters: {
