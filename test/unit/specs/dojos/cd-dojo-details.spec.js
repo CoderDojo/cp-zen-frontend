@@ -62,20 +62,33 @@ describe('Dojo details component', () => {
   });
 
   describe('computed.address()', () => {
-    it('should return undefined when address1 is falsey', () => {
-      const vm = vueUnitHelper(DojoDetailsWithMocks);
+    let vm;
+
+    beforeEach(() => {
+      vm = vueUnitHelper(dojoDetails());
+    });
+
+    it('should return undefined when address1 and placeName are falsey', () => {
       vm.dojoDetails = {};
       expect(vm.address).to.be.undefined;
     });
 
-    it('should return computed address when address1 is truthy', () => {
-      const vm = vueUnitHelper(DojoDetailsWithMocks);
+    it('should return address1 when address1 is truthy', () => {
       vm.dojoDetails = {
-        address1: 'CHQ',
+        address1: 'CHQ, Dublin, Ireland',
         placeName: 'Dublin',
         countryName: 'Ireland',
       };
       expect(vm.address).to.equal('CHQ, Dublin, Ireland');
+    });
+
+    it('should return placeName when address1 is falsey and placeName is truthy', () => {
+      vm.dojoDetails = {
+        address1: null,
+        placeName: 'Dublin',
+        countryName: 'Ireland',
+      };
+      expect(vm.address).to.equal('Dublin');
     });
   });
 
