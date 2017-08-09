@@ -36,10 +36,16 @@ const DojoPage = Object.create(BasePage, {
       return $('input[value="Search for Dojos"]');
     },
   },
-  dojoListItems: {
+  dojoListItemNames: {
     get() {
       $('.cd-dojo-list-item__name').waitForVisible();
       return $$('.cd-dojo-list-item__name');
+    },
+  },
+  dojoListItemMetas: {
+    get() {
+      $('.cd-dojo-list-item__meta').waitForVisible();
+      return $$('.cd-dojo-list-item__meta');
     },
   },
   dojoListItemImages: {
@@ -90,7 +96,7 @@ const DojoPage = Object.create(BasePage, {
   openDojoWithLatLong: {
     value(lat, long, index = 2, clearCookie = true) {
       this.openWithLatLong(lat, long, clearCookie);
-      this.dojoListItems[index].click();
+      this.dojoListItemNames[index].click();
     },
   },
 });

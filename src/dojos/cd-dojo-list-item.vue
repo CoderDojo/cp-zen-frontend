@@ -12,7 +12,7 @@
         </router-link>
       </h4>
       <p class="cd-dojo-list-item__meta">{{dojo.address1}}</p>
-      <p class="cd-dojo-list-item__meta">{{dojo.time}}</p>
+      <p class="cd-dojo-list-item__meta">{{buildDojoFrequency(dojo)}}</p>
     </div>
   </div>
 </template>
@@ -29,6 +29,7 @@
     },
     methods: {
       getDojoUrl: DojosUtil.getDojoUrl,
+      buildDojoFrequency: DojosUtil.buildDojoFrequency,
     },
     computed: {
       imageUrl() {
