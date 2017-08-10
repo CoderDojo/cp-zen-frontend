@@ -44,6 +44,10 @@
         <div class="cd-dojo-details__heading">{{ $t('Upcoming Events') }}</div>
         <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
         <div class="cd-dojo-details__heading">{{ $t('Details') }}</div>
+        <a v-if="dojoDetails.geoPoint" :href="googleMapsLink" target="_blank">
+          <static-map google-api-key="AIzaSyC3xF9XV91bS2R14Gjmx3UQaKbGgAfHbE4" :zoom="15" :markers="googleMapsMarker" :paths="googleMapsPath" scale="2"
+          :center="`${dojoDetails.geoPoint.lat},${dojoDetails.geoPoint.lon}`" :size="[800, 225]" class="cd-dojo-details__static-map"></static-map>
+        </a>
         <div class="cd-dojo-details__details" v-html="dojoDetails.notes"></div>
         <div class="visible-xs">
           <div class="cd-dojo-details__heading">{{ $t('Contact Dojo') }}</div>
@@ -72,6 +76,7 @@
   </div>
 </template>
 <script>
+  import StaticMap from 'vue-static-map';
   import ImgFallback from '@/common/directives/cd-img-fallback';
   import InfoColumn from '@/common/cd-info-column';
   import Dropdown from '@/common/cd-dropdown';
@@ -96,6 +101,7 @@
       InfoColumn,
       InfoColumnSection,
       Dropdown,
+      StaticMap,
     },
     props: ['country', 'path'],
     data() {
@@ -122,6 +128,28 @@
       },
       googleMapsLink() {
         return `https://www.google.com/maps/search/?api=1&query=${this.dojoDetails.geoPoint.lat},${this.dojoDetails.geoPoint.lon}`;
+      },
+      googleMapsMarker() {
+        const lat = this.dojoDetails.geoPoint.lat;
+        const lng = this.dojoDetails.geoPoint.lon;
+        return [
+          {
+            lat,
+            lng,
+            size: 'normal',
+          },
+        ];
+      },
+      googleMapsPath() {
+        const startLat = this.dojoDetails.geoPoint.lat;
+        const endLng = this.dojoDetails.geoPoint.lon;
+        return [
+          {
+            locations: [
+                { startLat, endLng },
+            ],
+          },
+        ];
       },
       canAdmin() {
         return !!(this.user && this.user.roles && this.user.roles.indexOf('cdf-admin') > -1);
@@ -272,6 +300,12 @@
       > p {
         color: #686d6f;
       }
+    }
+
+    &__static-map {
+      max-width: 100%;
+      min-width: 100%;
+      margin-bottom: 16px;
     }
   }
 
