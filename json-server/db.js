@@ -475,8 +475,8 @@ module.exports = {
       recurringType: 'weekly',
       dates: [
         {
-          startTime: '2017-08-10T16:30:00.000Z',
-          endTime: '2017-08-10T18:00:00.000Z'
+          startTime: moment.utc().add(2, 'hour').toISOString(),
+          endTime: moment.utc().add(3, 'hour').toISOString()
         }
       ],
       ticketApproval: true,

@@ -76,6 +76,7 @@
   </div>
 </template>
 <script>
+  import Vue from 'vue';
   import StaticMap from 'vue-static-map';
   import ImgFallback from '@/common/directives/cd-img-fallback';
   import InfoColumn from '@/common/cd-info-column';
@@ -129,6 +130,7 @@
       googleMapsLink() {
         return `https://www.google.com/maps/search/?api=1&query=${this.dojoDetails.geoPoint.lat},${this.dojoDetails.geoPoint.lon}`;
       },
+      // Custom marker will not display on localhost since GAPI needs a public link to the image
       googleMapsMarker() {
         const lat = this.dojoDetails.geoPoint.lat;
         const lng = this.dojoDetails.geoPoint.lon;
@@ -137,9 +139,11 @@
             lat,
             lng,
             size: 'normal',
+            icon: `${Vue.config.apiServer}${require('../assets/map/cd-dojo-pin_file.png')}`,
           },
         ];
       },
+      // Path containing marker coordinates is needed for map marker to show on static map
       googleMapsPath() {
         const startLat = this.dojoDetails.geoPoint.lat;
         const endLng = this.dojoDetails.geoPoint.lon;
