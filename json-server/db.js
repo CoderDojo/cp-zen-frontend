@@ -124,6 +124,78 @@ module.exports = {
       alternativeFrequency: 'Saturdays from 4pm to 6pm',
       website: null,
       supporterImage: ''
+    },
+    {
+      entity$: '-/cd/dojos',
+      name: 'ASU Dojo',
+      geoPoint: {
+        lat: 33.608632,
+        lon: -112.160143
+      },
+      stage: 0,
+      urlSlug: 'az/phoenix/asu-dojo',
+      private: 0,
+      id: 'kr5hk4a9-78gf-9b44-63h2-6gtgfbqy0lkm',
+      address1: '4701 W. Thunderbird Road, Glendale, AZ 85306, USA',
+      countryName: 'USA',
+      email: 'asudojo@example.com',
+      facebook: null,
+      googleGroup: null,
+      twitter: null,
+      notes: '<p>Our Dojo takes place on the Arizona State University West Campus!</p>\n',
+      placeName: 'Phoenix',
+      frequency: 'other',
+      alternativeFrequency: 'Sundays from 11am to 12pm',
+      website: null,
+      supporterImage: 'https://askabiologist.asu.edu/sites/all/themes/askabiologist/images/asu-logo.png'
+    },
+    {
+      entity$: '-/cd/dojos',
+      name: 'Baker Street Dojo',
+      geoPoint: {
+        lat: 51.523767,
+        lon: -0.158563
+      },
+      stage: 0,
+      urlSlug: 'uk/london/baker-street-dojo',
+      private: 1,
+      id: '70ge6fa9-221b-ju4r-m2gx-sher777y8utf',
+      address1: '221B Baker Street, London',
+      countryName: 'United Kingdom',
+      email: 'bakerstreetdojo@example.com',
+      facebook: null,
+      googleGroup: null,
+      twitter: null,
+      notes: '<p>We host a private dojo in the Sherlock Holmes Museum on Baker Street</p>\n',
+      placeName: 'London',
+      frequency: 'other',
+      alternativeFrequency: 'Every once in a while',
+      website: null,
+      supporterImage: ''
+    },
+    {
+      entity$: '-/cd/dojos',
+      name: 'Louvre Paris Dojo',
+      geoPoint: {
+        lat: 48.860606,
+        lon: 2.337647
+      },
+      stage: 0,
+      urlSlug: 'fr/paris/louvre-dojo',
+      private: 0,
+      id: 'lgblk4a9-88v4-p2b4-fyta-56fd799p0mjv',
+      address1: 'Rue de Rivoli, 75001 Paris, France',
+      countryName: 'France',
+      email: 'louvredojo@example.com',
+      facebook: null,
+      googleGroup: null,
+      twitter: null,
+      notes: '<p>We wrote our dojo details in English even though we speak French!</p>\n',
+      placeName: 'Paris',
+      frequency: 'other',
+      alternativeFrequency: 'Fridays from 2pm to 3:30pm',
+      website: null,
+      supporterImage: ''
     }
   ],
   events: [
