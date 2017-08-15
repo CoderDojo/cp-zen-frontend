@@ -316,7 +316,7 @@ describe('The Find dojo vue ', () => {
       DojoServiceMock.getDojos.withArgs({
         verified: 1,
         deleted: 0,
-        fields$: ['name', 'geo_point', 'stage', 'url_slug', 'private'],
+        fields$: ['name', 'geo_point', 'stage', 'url_slug', 'private', 'startTime', 'endTime', 'frequency', 'alternativeFrequency', 'day'],
       }).returns(Promise.resolve({ body: expectedDojosForAddress }));
       const FindDojoWithMocks = cdFindDojo({
         './service': DojoServiceMock,
