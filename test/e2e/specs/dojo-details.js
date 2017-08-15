@@ -51,6 +51,8 @@ describe('Dojo details page', () => {
     const detailsLabel = DojoDetailsPage.detailsLabel.getText();
     expect(detailsLabel).to.equal('Details');
 
+    DojoDetailsPage.staticMap.waitForVisible();
+
     const details = DojoDetailsPage.details.getHTML(false);
     expect(details).to.equal('<p>This is the Dojo details section</p>\n');
 
