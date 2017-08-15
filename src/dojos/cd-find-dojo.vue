@@ -111,7 +111,7 @@
         const query = {
           verified: 1,
           deleted: 0,
-          fields$: ['name', 'geo_point', 'stage', 'url_slug', 'private', 'startTime', 'endTime', 'frequency', 'alternativeFrequency', 'day'],
+          fields$: ['name', 'geo_point', 'stage', 'url_slug', 'private', 'start_time', 'end_time', 'frequency', 'alternative_frequency', 'day'],
         };
         DojosService.getDojos(query).then((response) => {
           this.allDojos = response.body;
