@@ -24,7 +24,6 @@ describe('Dojos Service', () => {
   const expectedResult = { name: 'Cool Dojo' };
 
   const expectedDojos = [{
-    entity$: '-/cd/dojos',
     name: 'CD ROM',
     geoPoint: {
       lat: 53.349351,
@@ -35,7 +34,6 @@ describe('Dojos Service', () => {
     private: 1,
     id: 'b850b40e-1e10-4e3a-8a46-d076c94946c6',
   }, {
-    entity$: '-/cd/dojos',
     name: 'Smithfield Awesome Dojo',
     geoPoint: {
       lat: 53.34899189999999,
@@ -46,7 +44,6 @@ describe('Dojos Service', () => {
     private: 0,
     id: '4e591bbe-667b-4782-bc9c-180c6d321883',
   }, {
-    entity$: '-/cd/dojos',
     name: 'Dublin Ninja Kids',
     geoPoint: {
       lat: 53.348315,
@@ -54,6 +51,38 @@ describe('Dojos Service', () => {
     },
     stage: 0,
     urlSlug: 'ie/dublin/dublin-ninja-kids',
+    private: 1,
+    id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+  }];
+
+  const expectedDojosSnakeCase = [{
+    name: 'CD ROM',
+    geo_point: {
+      lat: 53.349351,
+      lon: -6.247585999999956,
+    },
+    stage: 0,
+    url_slug: 'ie/dublin/cd-rom',
+    private: 1,
+    id: 'b850b40e-1e10-4e3a-8a46-d076c94946c6',
+  }, {
+    name: 'Smithfield Awesome Dojo',
+    geo_point: {
+      lat: 53.34899189999999,
+      lon: -6.278343100000029,
+    },
+    stage: 0,
+    url_slug: 'ie/smithfield/smithfield-awesome-dojo',
+    private: 0,
+    id: '4e591bbe-667b-4782-bc9c-180c6d321883',
+  }, {
+    name: 'Dublin Ninja Kids',
+    geo_point: {
+      lat: 53.348315,
+      lon: -6.248111999999992,
+    },
+    stage: 0,
+    url_slug: 'ie/dublin/dublin-ninja-kids',
     private: 1,
     id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
   }];
@@ -87,7 +116,8 @@ describe('Dojos Service', () => {
   });
 
   describe('getDojosByLatLong', () => {
-    it('should get dojos by latitude and longitude', (done) => {
+    it.only('should get dojos by latitude and longitude', async () => {
+      // ARRANGE
       const expectedQuery = {
         query: {
           lat: 10,
@@ -96,11 +126,13 @@ describe('Dojos Service', () => {
         },
       };
       const postMock = sandbox.stub(Vue.http, 'post');
-      postMock.withArgs(`${Vue.config.apiServer}/api/2.0/dojos/search-bounding-box`, expectedQuery).returns(Promise.resolve({ body: expectedDojos }));
-      DojosServiceWithMocks.getDojosByLatLong(10, 89).then((res) => {
-        expect(res.body).to.deep.equal(expectedDojos);
-        done();
-      });
+      postMock.withArgs(`${Vue.config.apiServer}/api/2.0/dojos/search-bounding-box`, expectedQuery).returns(Promise.resolve({ body: expectedDojosSnakeCase }));
+
+      // ACT
+      const response = await DojosServiceWithMocks.getDojosByLatLong(10, 89);
+
+      // ASSERT
+      expect(response.body).to.deep.equal(expectedDojos);
     });
   });
 
