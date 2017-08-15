@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { mapKeys, camelCase } from 'lodash';
 import GeolocationService from '@/geolocation/service';
 
 const radius = 50000;
@@ -24,13 +25,20 @@ const DojosService = {
       },
     );
   },
-  getDojosByLatLong: (lat, lon) => Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/search-bounding-box`, {
-    query: {
-      lat,
-      lon,
-      radius,
-    },
-  }),
+  async getDojosByLatLong(lat, lon) {
+    const dojos = { body: [] };
+    const response = await Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/search-bounding-box`, {
+      query: {
+        lat,
+        lon,
+        radius,
+      },
+    });
+    response.body.forEach((snakeCaseDojo) => {
+      dojos.body.push(mapKeys(snakeCaseDojo, (value, key) => camelCase(key)));
+    });
+    return dojos;
+  },
   getDojosByAddress(address) {
     return GeolocationService.getIpCountryDetails()
       .then(response => GeolocationService.geocode({
