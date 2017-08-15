@@ -45,7 +45,7 @@
         <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
         <div class="cd-dojo-details__heading">{{ $t('Details') }}</div>
         <a v-if="dojoDetails.geoPoint" :href="googleMapsLink" target="_blank">
-          <static-map google-api-key="AIzaSyC3xF9XV91bS2R14Gjmx3UQaKbGgAfHbE4" :zoom="15" :markers="googleMapsMarker" :paths="googleMapsPath" scale="2"
+          <static-map :google-api-key="googleMapsApiKey" :zoom="15" :markers="googleMapsMarker" :paths="googleMapsPath" scale="2"
           :center="`${dojoDetails.geoPoint.lat},${dojoDetails.geoPoint.lon}`" :size="[800, 225]" class="cd-dojo-details__static-map"></static-map>
         </a>
         <div class="cd-dojo-details__details" v-html="dojoDetails.notes"></div>
@@ -109,6 +109,7 @@
       return {
         dojoDetails: {},
         user: {},
+        googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
       };
     },
     computed: {

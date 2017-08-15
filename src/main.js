@@ -20,7 +20,7 @@ Vue.use(VueResource);
 Vue.use(VeeValidate);
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyC3xF9XV91bS2R14Gjmx3UQaKbGgAfHbE4',
+    key: process.env.GOOGLE_MAPS_API_KEY,
   },
 });
 Vue.use(VueAnalytics, {
