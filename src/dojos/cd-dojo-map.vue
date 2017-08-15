@@ -10,7 +10,7 @@
 </template>
 <script>
   import { Map, Marker, InfoWindow } from 'vue2-google-maps';
-  import pinIcon from '@/assets/cd-dojo-pin.svg';
+  import pinIcon from '@/assets/map/cd-dojo-pin.svg';
   import DojoMapInfoWindow from './cd-dojo-map-info-window';
 
   export default {

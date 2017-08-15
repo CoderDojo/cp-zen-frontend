@@ -66,6 +66,11 @@ const DojoDetailsPage = Object.create(InfoColumn, {
       return $$('.cd-dojo-details__heading')[1];
     },
   },
+  staticMap: {
+    get() {
+      return $('.cd-dojo-details__static-map');
+    },
+  },
   details: {
     get() {
       return $('.cd-dojo-details__details');
