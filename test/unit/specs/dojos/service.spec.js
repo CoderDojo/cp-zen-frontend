@@ -116,7 +116,7 @@ describe('Dojos Service', () => {
   });
 
   describe('getDojosByLatLong', () => {
-    it.only('should get dojos by latitude and longitude', async () => {
+    it('should get dojos by latitude and longitude', async () => {
       // ARRANGE
       const expectedQuery = {
         query: {

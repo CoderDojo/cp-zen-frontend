@@ -26,7 +26,7 @@ const DojosService = {
     );
   },
   async getDojosByLatLong(lat, lon) {
-    const dojos = { body: [] };
+    const dojos = [];
     const response = await Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/search-bounding-box`, {
       query: {
         lat,
@@ -35,9 +35,10 @@ const DojosService = {
       },
     });
     response.body.forEach((snakeCaseDojo) => {
-      dojos.body.push(mapKeys(snakeCaseDojo, (value, key) => camelCase(key)));
+      dojos.push(mapKeys(snakeCaseDojo, (value, key) => camelCase(key)));
     });
-    return dojos;
+    response.body = dojos;
+    return response;
   },
   getDojosByAddress(address) {
     return GeolocationService.getIpCountryDetails()
