@@ -109,7 +109,7 @@
       return {
         dojoDetails: {},
         user: {},
-        googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
+        googleMapsApiKey: Vue.config.googleMapsApiKey,
       };
     },
     computed: {
