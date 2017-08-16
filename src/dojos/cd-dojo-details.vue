@@ -140,7 +140,7 @@
             lat,
             lng,
             size: 'normal',
-            icon: `${Vue.config.apiServer}${require('../assets/map/cd-dojo-pin_file.png')}`,
+            icon: `${document.location.origin}${require('../assets/map/cd-dojo-pin_file.png')}`,
           },
         ];
       },
