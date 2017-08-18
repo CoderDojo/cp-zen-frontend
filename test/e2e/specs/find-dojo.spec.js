@@ -13,7 +13,7 @@ describe('Find Dojo page', () => {
     DojoPage.addressSearchInput.setValue('CHQ');
     DojoPage.addressSearchButton.click();
     DojoPage.showDojoListCount.waitForVisible();
-    expect(DojoPage.showDojoListCount.getText()).to.have.string('Showing 5 Dojos');
+    expect(DojoPage.showDojoListCount.getText()).to.have.string('Showing 1 to 6 of 8 Dojos');
     const dojosListNames = DojoPage.dojoListItemNames;
     const dojosListMetas = DojoPage.dojoListItemMetas;
     expect(dojosListNames.length).to.equal(5);
@@ -50,7 +50,7 @@ describe('Find Dojo page', () => {
     browser.back();
 
     DojoPage.addressSearchInput.waitForVisible();
-    expect(DojoPage.dojoListItemNames.length).to.equal(5);
+    expect(DojoPage.dojoListItemNames.length).to.equal(6);
   });
 
   it('should populate search results based on current location', () => {
@@ -63,7 +63,7 @@ describe('Find Dojo page', () => {
     browser.back();
 
     DojoPage.detectLocationButton.waitForVisible();
-    expect(DojoPage.dojoListItemNames.length).to.equal(5);
+    expect(DojoPage.dojoListItemNames.length).to.equal(6);
   });
 
   it('should link to start a Dojo process', () => {
@@ -93,7 +93,7 @@ describe('Find Dojo page', () => {
       DojoPage.addressSearchInput.setValue('CHQ');
       DojoPage.addressSearchButton.click();
       DojoPage.showDojoListCountMobile.waitForVisible();
-      expect(DojoPage.showDojoListCountMobile.getText()).to.have.string('Showing 5 Dojos');
+      expect(DojoPage.showDojoListCountMobile.getText()).to.have.string('Showing 1 to 6 of 8 Dojos');
     });
 
     it('should show/hide the map when clicking the toggle button', () => {
