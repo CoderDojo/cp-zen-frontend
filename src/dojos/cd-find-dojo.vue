@@ -1,7 +1,7 @@
 <template>
   <div class="cd-find-dojo">
     <div class="cd-find-dojo__panel">
-      <form class="cd-find-dojo__panel-form" @submit.prevent="$router.push({ query: { q: searchCriteria } });">
+      <form class="cd-find-dojo__panel-form" @submit.prevent="$router.push({ query: { q: searchCriteria, p: 1 } });">
         <h1 class="cd-find-dojo__panel-form-header">{{ $t('Find a Dojo to attend') }}</h1>
         <p class="cd-find-dojo__panel-form-info">{{ $t('Learn technology in an informal, creative and social environment. Find a dojo near you.') }}</p>
         <div class="cd-find-dojo__panel-form-search">
@@ -12,7 +12,7 @@
             <input type="submit" class="btn btn-lg" :value="$t('Search for Dojos')"/>
           </div>
         </div>
-        <router-link tag="button" :to="{ query: { currentLocation: true } }" class="cd-find-dojo__panel-form-detect-location">
+        <router-link tag="button" :to="{ query: { currentLocation: true, p: 1 } }" class="cd-find-dojo__panel-form-detect-location">
           <i class="fa fa-location-arrow" aria-hidden="true" v-show="!detectingLocation"></i>
           <i class="fa fa-spinner fa-spin" aria-hidden="true" v-show="detectingLocation"></i>
           {{ $t('Detect my location') }}
@@ -23,13 +23,13 @@
       </div>
     </div>
     <div v-if="searchExecuted" class="cd-find-dojo__results-header cd-find-dojo__results-header--mobile">
-      <span>{{ $t('Showing {total} Dojos', { total: dojos.length }) }}</span>
+      <span>{{ $t('Showing {firstOnPage} to {lastOnPage} of {total} Dojos', { firstOnPage: firstOnPage, lastOnPage: lastOnPage, total: dojos.length }) }}</span>
       <button class="cd-find-dojo__results-header-map-toggle btn btn-link" @click="toggleMap"><i class="fa fa-map-o" aria-hidden="true"></i> {{ showMap ? $t('Hide Map') : $t('Show Map') }}</button>
     </div>
     <div v-if="searchExecuted" class="cd-find-dojo__results">
       <div class="cd-find-dojo__results-list">
         <div class="cd-find-dojo__results-header hidden-xs">
-          <span>{{ $t('Showing {total} Dojos', { total: dojos.length }) }}</span>
+          <span>{{ $t('Showing {firstOnPage} to {lastOnPage} of {total} Dojos', { firstOnPage: firstOnPage, lastOnPage: lastOnPage, total: dojos.length }) }}</span>
         </div>
         <dojo-list :dojos="dojos"></dojo-list>
         <h4 v-if="dojos.length === 0" class="cd-find-dojo__no-results-message">
@@ -48,6 +48,7 @@
   import GeolocationService from '@/geolocation/service';
   import translationComponentGenerator from '@/common/cd-translation-component-generator';
   import DojosService from './service';
+  import dojoPaginationStore from './dojo-pagination-store';
 
   const noResultsString = 'Try modifying your search location, or zoom out on the {openLink}map{closeLink} to find the nearest Dojos.';
   const NoResultsDesktop = translationComponentGenerator(noResultsString, {
@@ -79,6 +80,16 @@
     computed: {
       allActiveDojos() {
         return this.allDojos.filter(dojo => dojo.stage !== 4);
+      },
+      firstOnPage() {
+        const page = dojoPaginationStore.state.page;
+        const dojosPerPage = dojoPaginationStore.state.dojosPerPage;
+        const firstOnPage = ((page - 1) * dojosPerPage) + 1;
+        return firstOnPage <= this.dojos.length && firstOnPage > 0 ? firstOnPage : 0;
+      },
+      lastOnPage() {
+        const lastOnPage = this.firstOnPage + (dojoPaginationStore.state.count - 1);
+        return lastOnPage > 0 ? lastOnPage : 0;
       },
     },
     methods: {
