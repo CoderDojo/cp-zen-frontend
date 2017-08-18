@@ -13,6 +13,7 @@ describe('Find Dojo page', () => {
     DojoPage.addressSearchInput.setValue('CHQ');
     DojoPage.addressSearchButton.click();
     DojoPage.showDojoListCount.waitForVisible();
+    expect(DojoPage.headerReduced.getText()).to.equal('5 Dojos found near ‘CHQ’');
     expect(DojoPage.showDojoListCount.getText()).to.have.string('Showing 5 Dojos');
     const dojosListNames = DojoPage.dojoListItemNames;
     const dojosListMetas = DojoPage.dojoListItemMetas;
@@ -58,6 +59,7 @@ describe('Find Dojo page', () => {
     DojoPage.detectLocationButton.waitForVisible();
     DojoPage.detectLocationButton.click();
     DojoPage.showDojoListCount.waitForVisible();
+    expect(DojoPage.headerReduced.getText()).to.equal('5 Dojos found near you');
 
     DojoPage.dojoListItemNames[0].click();
     browser.back();
@@ -78,15 +80,16 @@ describe('Find Dojo page', () => {
     it('should still show the dojo list count', () => {
       DojoPage.addressSearchInput.waitForVisible();
       DojoPage.addressSearchInput.setValue('CHQ');
-      DojoPage.addressSearchButton.click();
+      DojoPage.addressSearchButtonMobile.click();
       DojoPage.showDojoListCountMobile.waitForVisible();
+      expect(DojoPage.headerReducedMobile.getText()).to.equal('5 Dojos found');
       expect(DojoPage.showDojoListCountMobile.getText()).to.have.string('Showing 5 Dojos');
     });
 
     it('should show/hide the map when clicking the toggle button', () => {
       DojoPage.addressSearchInput.waitForVisible();
       DojoPage.addressSearchInput.setValue('CHQ');
-      DojoPage.addressSearchButton.click();
+      DojoPage.addressSearchButtonMobile.click();
       DojoPage.toggleMap.waitForVisible();
       expect(DojoPage.map.isVisible()).to.equal(false);
       expect(DojoPage.toggleMap.getText()).to.have.string('Show Map');
@@ -101,7 +104,7 @@ describe('Find Dojo page', () => {
     it('should show/hide the map when clicking the inline message toggle', () => {
       DojoPage.addressSearchInput.waitForVisible();
       DojoPage.addressSearchInput.setValue('Galway');
-      DojoPage.addressSearchButton.click();
+      DojoPage.addressSearchButtonMobile.click();
       DojoPage.noResultsMessageMapLink.waitForVisible();
       expect(DojoPage.map.isVisible()).to.equal(false);
       DojoPage.noResultsMessageMapLink.click();
