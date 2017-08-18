@@ -1,4 +1,3 @@
 import moment from 'moment';
 
-export default date => moment(date).utc().format('h:mma').replace(':00', '');
-
+export default date => moment.utc(date).format('h:mma').replace(':00', '');
