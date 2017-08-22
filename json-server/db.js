@@ -475,8 +475,8 @@ module.exports = {
       recurringType: 'weekly',
       dates: [
         {
-          startTime: '2017-08-10T16:30:00.000Z',
-          endTime: '2017-08-10T18:00:00.000Z'
+          startTime: moment().add(10, 'h').toISOString(),
+          endTime: moment().add(12, 'h').toISOString()
         }
       ],
       ticketApproval: true,
@@ -627,8 +627,8 @@ module.exports = {
       recurringType: 'weekly',
       dates: [
         {
-          startTime: '2017-08-06T16:30:00.000Z',
-          endTime: '2017-08-06T18:00:00.000Z'
+          startTime: moment().add(7, 'd').add(5, 'h').toISOString(),
+          endTime: moment().add(7, 'd').add(7, 'h').toISOString()
         }
       ],
       ticketApproval: true,
@@ -709,8 +709,8 @@ module.exports = {
       recurringType: 'weekly',
       dates: [
         {
-          startTime: '2017-09-06T16:30:00.000Z',
-          endTime: '2017-09-06T18:00:00.000Z'
+          startTime: moment().add(14, 'd').add(5, 'h').toISOString(),
+          endTime: moment().add(14, 'd').add(7, 'h').toISOString()
         }
       ],
       ticketApproval: true,
@@ -791,8 +791,8 @@ module.exports = {
       recurringType: 'weekly',
       dates: [
         {
-          startTime: '2017-08-06T16:30:00.000Z',
-          endTime: '2017-08-06T18:00:00.000Z'
+          startTime: moment().add(3, 'd').add(1, 'h').toISOString(),
+          endTime: moment().add(3, 'd').add(2, 'h').toISOString()
         }
       ],
       ticketApproval: true,
