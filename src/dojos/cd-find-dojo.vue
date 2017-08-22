@@ -125,8 +125,7 @@
         return lastOnPage > 0 ? lastOnPage : 0;
       },
       queryString() {
-        // translations issue?
-        return this.$route.query.q ? `‘${this.$route.query.q}’` : 'you';
+        return this.$route.query.q ? `‘${this.$route.query.q}’` : this.$t('you');
       },
     },
     methods: {
