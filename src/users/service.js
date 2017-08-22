@@ -4,19 +4,19 @@ import { clone } from 'lodash';
 import UserUtils from '@/users/util';
 
 const UserService = {
-  login: (email, password) => Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/login`, {
+  login: async (email, password) => Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/login`, {
     email,
     password,
   }),
 
-  register: (user, profile) => Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/register`, {
+  register: async (user, profile) => Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/register`, {
     profile,
     user,
   }).then(() => UserService.login(user.email, user.password)),
 
-  getCurrentUser: () => Vue.http.get(`${Vue.config.apiServer}/api/2.0/users/instance`),
+  getCurrentUser: async () => Vue.http.get(`${Vue.config.apiServer}/api/2.0/users/instance`),
 
-  addChild(profile) {
+  async addChild(profile) {
     const payload = {
       profile: clone(profile),
     };

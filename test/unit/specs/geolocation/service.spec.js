@@ -77,32 +77,32 @@ describe('Geolocation Service', () => {
   });
 
   describe('getIpCountryDetails()', () => {
-    it('should get country data from users IP', (done) => {
+    it('should get country data from users IP', async () => {
+      // ARRANGE
       const httpStub = sandbox.stub(Vue.http, 'get');
       httpStub.withArgs(`${Vue.config.apiServer}/api/2.0/ip-country-details`)
         .returns(Promise.resolve({ body: expectedIpCountryDetails }));
 
-      GeolocationServiceWithMocks.getIpCountryDetails().then((response) => {
-        expect(response.body).to.deep.equal(expectedIpCountryDetails);
-        done();
-      });
+      // ACT
+      const response = await GeolocationServiceWithMocks.getIpCountryDetails();
+
+      // ASSERT
+      expect(response.body).to.deep.equal(expectedIpCountryDetails);
     });
   });
 
   describe('getLatitudeLongitudeByAddress()', () => {
-    it('should return coordinates for given address', (done) => {
+    it('should return coordinates for given address', async () => {
       // ARRANGE
       sandbox.stub(GeolocationServiceWithMocks, 'getIpCountryDetails').returns(Promise.resolve({ body: expectedIpCountryDetails }));
       sandbox.stub(GeolocationServiceWithMocks, 'geocode').returns(Promise.resolve(mockGeocoderResults));
 
       // ACT
-      GeolocationServiceWithMocks.getLatitudeLongitudeByAddress()
-        .then((coords) => {
-          // ASSERT
-          expect(coords.latitude).to.equal(10);
-          expect(coords.longitude).to.equal(89);
-          done();
-        });
+      const coords = await GeolocationServiceWithMocks.getLatitudeLongitudeByAddress();
+
+      // ASSERT
+      expect(coords.latitude).to.equal(10);
+      expect(coords.longitude).to.equal(89);
     });
   });
 

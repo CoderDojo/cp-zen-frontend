@@ -37,11 +37,9 @@
       };
     },
     methods: {
-      loadEvent() {
-        EventService.loadEvent(this.eventId)
-          .then((response) => {
-            this.eventDetails = response.body;
-          });
+      async loadEvent() {
+        const response = await EventService.loadEvent(this.eventId);
+        this.eventDetails = response.body;
       },
       next() {
         this.isDobUnderage = UsersUtil.isUnderAge(this.date);

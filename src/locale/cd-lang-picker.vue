@@ -116,20 +116,18 @@
       },
     },
     watch: {
-      lang(val) {
+      async lang(val) {
         Cookie.set('NG_TRANSLATE_LANG_KEY', `"${val}"`);
-        LocaleService.getStrings(val)
-          .then((response) => {
-            const strings = response.body;
-            Object.keys(strings).forEach((key) => {
-              if (strings[key] === '') {
-                strings[key] = key;
-              }
-            });
-            this.setMomentLocale(val);
-            this.$i18n.setLocaleMessage(val, strings);
-            this.$i18n.locale = val;
-          });
+        const response = await LocaleService.getStrings(val);
+        const strings = response.body;
+        Object.keys(strings).forEach((key) => {
+          if (strings[key] === '') {
+            strings[key] = key;
+          }
+        });
+        this.setMomentLocale(val);
+        this.$i18n.setLocaleMessage(val, strings);
+        this.$i18n.locale = val;
       },
     },
     created() {

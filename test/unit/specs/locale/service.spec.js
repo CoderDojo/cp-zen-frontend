@@ -13,17 +13,17 @@ describe('Locale Service', () => {
   });
 
   describe('getStrings()', () => {
-    it('should get the strings for the given language', (done) => {
+    it('should get the strings for the given language', async () => {
       // ARRANGE
       sandbox.stub(Vue.http, 'get')
         .withArgs(`${Vue.config.apiServer}/locale/data?format=mf&lang=es_ES`)
         .returns(Promise.resolve('foo'));
 
       // ACT
-      LocaleService.getStrings('es_ES').then((resp) => {
-        expect(resp).to.equal('foo');
-        done();
-      });
+      const resp = await LocaleService.getStrings('es_ES');
+
+      // ASSERT
+      expect(resp).to.equal('foo');
     });
   });
 });

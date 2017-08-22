@@ -32,24 +32,20 @@
       EventListItem,
     },
     methods: {
-      loadCurrentUser() {
-        UserService.getCurrentUser()
-          .then((response) => {
-            this.currentUser = response.body.user;
-          });
+      async loadCurrentUser() {
+        const response = await UserService.getCurrentUser();
+        this.currentUser = response.body.user;
       },
-      loadEvents() {
-        service.loadEvents(this.dojo.id).then((response) => {
-          this.events = response.body;
-        });
+      async loadEvents() {
+        const response = await service.loadEvents(this.dojo.id);
+        this.events = response.body;
       },
     },
     watch: {
-      currentUser(newUser) {
+      async currentUser(newUser) {
         if (newUser) {
-          DojosService.getUsersDojos(newUser.id, this.dojo.id).then((response) => {
-            this.usersDojos = response.body;
-          });
+          const response = await DojosService.getUsersDojos(newUser.id, this.dojo.id);
+          this.usersDojos = response.body;
         }
       },
     },

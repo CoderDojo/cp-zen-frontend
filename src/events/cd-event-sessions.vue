@@ -31,12 +31,11 @@
       };
     },
     methods: {
-      loadSessions() {
-        service.loadSessions(this.eventId).then((response) => {
-          this.sessions = response.body;
-          this.event.sessions = this.sessions;
-          StoreService.save('selected-event', this.event);
-        });
+      async loadSessions() {
+        const response = await service.loadSessions(this.eventId);
+        this.sessions = response.body;
+        this.event.sessions = this.sessions;
+        StoreService.save('selected-event', this.event);
       },
       loadEvent() {
         StoreService.save(`booking-${this.eventId}-sessions`, {});

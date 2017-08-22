@@ -175,10 +175,9 @@
       },
     },
     methods: {
-      loadDojoDetails() {
-        service.getByUrlSlug(this.urlSlug).then((response) => {
-          this.dojoDetails = response.body;
-        });
+      async loadDojoDetails() {
+        const response = await service.getByUrlSlug(this.urlSlug);
+        this.dojoDetails = response.body;
       },
       async loadCurrentUser() {
         const response = await UserService.getCurrentUser();

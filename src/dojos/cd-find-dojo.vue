@@ -92,30 +92,26 @@
           this.detectingLocation = false;
         });
       },
-      getDojosByLatLong() {
+      async getDojosByLatLong() {
         this.searchExecuted = true;
-        DojosService.getDojosByLatLong(this.coordinates.latitude, this.coordinates.longitude)
-          .then((response) => {
-            this.detectingLocation = false;
-            this.dojos = response.body;
-          });
+        const response =
+          await DojosService.getDojosByLatLong(this.coordinates.latitude, this.coordinates.longitude);
+        this.detectingLocation = false;
+        this.dojos = response.body;
       },
-      searchDojosByAddress() {
-        GeolocationService.getLatitudeLongitudeByAddress(this.searchCriteria)
-          .then((coords) => {
-            this.coordinates = coords;
-            this.getDojosByLatLong();
-          });
+      async searchDojosByAddress() {
+        this.coordinates =
+          await GeolocationService.getLatitudeLongitudeByAddress(this.searchCriteria);
+        this.getDojosByLatLong();
       },
-      getAllDojos() {
+      async getAllDojos() {
         const query = {
           verified: 1,
           deleted: 0,
           fields$: ['name', 'geo_point', 'stage', 'url_slug', 'private', 'start_time', 'end_time', 'frequency', 'alternative_frequency', 'day'],
         };
-        DojosService.getDojos(query).then((response) => {
-          this.allDojos = response.body;
-        });
+        const response = await DojosService.getDojos(query);
+        this.allDojos = response.body;
       },
       toggleMap() {
         this.showMap = !this.showMap;

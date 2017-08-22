@@ -1,21 +1,20 @@
 import Vue from 'vue';
 
 const EventsService = {
-
-  loadEvents(dojoId) {
+  async loadEvents(dojoId) {
     return Vue.http.post(`${Vue.config.apiServer}/api/2.0/events/search`,
       {
         query: { dojoId, filterPastEvents: true, status: 'published' },
       },
     );
   },
-  loadEvent(eventId) {
+  async loadEvent(eventId) {
     return Vue.http.get(`${Vue.config.apiServer}/api/2.0/events/${eventId}`);
   },
-  loadSessions(eventId) {
+  async loadSessions(eventId) {
     return Vue.http.get(`${Vue.config.apiServer}/api/2.0/events/${eventId}/sessions`);
   },
-  bookTickets(applications) {
+  async bookTickets(applications) {
     applications.forEach((application) => {
       /* eslint-disable no-param-reassign */
       application.emailSubject = {

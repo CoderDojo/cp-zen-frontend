@@ -31,7 +31,8 @@ describe('Events Service', () => {
     },
   ];
 
-  it('should get dojo events', (done) => {
+  it('should get dojo events', async () => {
+    // ARRANGE
     const postMock = sandbox.stub(Vue.http, 'post');
     postMock.withArgs(
       `${Vue.config.apiServer}/api/2.0/events/search`,
@@ -43,12 +44,13 @@ describe('Events Service', () => {
         },
       }).returns(Promise.resolve({ body: expectedEvents }));
 
-    EventsService.loadEvents('3ed47c6d-a689-46a0-883b-1f3fd46e9c77').then((events) => {
-      expect(events.body).to.deep.equal(expectedEvents);
-      const mockCall = postMock.getCall(0).args[0];
-      expect(mockCall).to.equal(`${Vue.config.apiServer}/api/2.0/events/search`);
-      done();
-    });
+    // ACT
+    const events = await EventsService.loadEvents('3ed47c6d-a689-46a0-883b-1f3fd46e9c77');
+
+    // ASSERT
+    expect(events.body).to.deep.equal(expectedEvents);
+    const mockCall = postMock.getCall(0).args[0];
+    expect(mockCall).to.equal(`${Vue.config.apiServer}/api/2.0/events/search`);
   });
 
   it('should get specific event details by id', (done) => {
@@ -63,7 +65,8 @@ describe('Events Service', () => {
     });
   });
 
-  it('should get specific event sessions by id', (done) => {
+  it('should get specific event sessions by id', async () => {
+    // ARRANGE
     const eventId = 1;
     const mockSessions = [
       {
@@ -77,13 +80,14 @@ describe('Events Service', () => {
     getMock.withArgs(`${Vue.config.apiServer}/api/2.0/events/${eventId}/sessions`)
       .returns(Promise.resolve({ body: mockSessions }));
 
-    EventsService.loadSessions(eventId).then((sessions) => {
-      expect(sessions.body).to.deep.equal(mockSessions);
-      done();
-    });
+    // ACT
+    const sessions = await EventsService.loadSessions(eventId);
+
+    // ASSERT
+    expect(sessions.body).to.deep.equal(mockSessions);
   });
 
-  it('should bookTickets ', (done) => {
+  it('should bookTickets ', async () => {
     // ARRANGE
     const applications = [
       {
@@ -101,29 +105,28 @@ describe('Events Service', () => {
     sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
 
     // ACT
-    EventsService.bookTickets(applications)
-      .then(() => {
-        expect(Vue.http.post).to.have.been.calledOnce;
-        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/events/bulk-apply-applications`, {
-          applications: [
-            {
-              dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
-              eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
-              sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
-              ticketName: 'Parent',
-              ticketType: 'parent-guardian',
-              ticketId: '7c6d2cb7-0344-4cfd-8808-c0cfebbbe5af',
-              userId: '74afa4b8-8449-46e4-a553-8febda8614ad',
-              notes: 'N/A',
-              emailSubject: {
-                received: 'Your ticket request for %1$s has been received',
-                approved: 'Your ticket request for %1$s has been approved',
-                cancelled: 'Your ticket request for %1$s has been cancelled',
-              },
-            },
-          ],
-        });
-        done();
-      });
+    await EventsService.bookTickets(applications);
+
+    // ASSERT
+    expect(Vue.http.post).to.have.been.calledOnce;
+    expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/events/bulk-apply-applications`, {
+      applications: [
+        {
+          dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+          eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+          sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
+          ticketName: 'Parent',
+          ticketType: 'parent-guardian',
+          ticketId: '7c6d2cb7-0344-4cfd-8808-c0cfebbbe5af',
+          userId: '74afa4b8-8449-46e4-a553-8febda8614ad',
+          notes: 'N/A',
+          emailSubject: {
+            received: 'Your ticket request for %1$s has been received',
+            approved: 'Your ticket request for %1$s has been approved',
+            cancelled: 'Your ticket request for %1$s has been cancelled',
+          },
+        },
+      ],
+    });
   });
 });

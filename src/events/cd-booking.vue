@@ -45,13 +45,11 @@
       loadSessionData() {
         this.tickets = StoreService.load(`booking-${this.eventId}-sessions`);
       },
-      onSubmit() {
+      async onSubmit() {
         if (this.isValidChildForm()) {
           this.$refs.bookingParentFormRef.submitBooking();
-          this.$refs.bookingCreateAccountRef.submitAccount()
-            .then(() => {
-              this.$router.push({ name: 'EventBookingConfirmation', params: { eventId: this.eventId } });
-            });
+          await this.$refs.bookingCreateAccountRef.submitAccount();
+          this.$router.push({ name: 'EventBookingConfirmation', params: { eventId: this.eventId } });
         }
       },
       isValidChildForm() {

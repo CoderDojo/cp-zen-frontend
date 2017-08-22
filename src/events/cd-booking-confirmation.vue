@@ -145,10 +145,9 @@
       getSessionName(ticketId) {
         return this.bookingData[ticketId].session.name;
       },
-      getDojo() {
-        DojosService.getDojoById(this.selectedEvent.dojoId).then((res) => {
-          this.dojo = res.body;
-        });
+      async getDojo() {
+        const res = await DojosService.getDojoById(this.selectedEvent.dojoId);
+        this.dojo = res.body;
       },
       buildRecurringFrequencyInfo: EventsUtil.buildRecurringFrequencyInfo,
     },

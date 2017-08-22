@@ -62,10 +62,9 @@
       InfoColumnSection,
     },
     methods: {
-      loadEvent() {
-        service.loadEvent(this.eventId).then((response) => {
-          this.eventDetails = response.body;
-        });
+      async loadEvent() {
+        const response = await service.loadEvent(this.eventId);
+        this.eventDetails = response.body;
       },
       getFullAddress() {
         return `${this.eventDetails.address}, ${this.eventDetails.city.nameWithHierarchy}, ${this.eventDetails.country.countryName}`;
