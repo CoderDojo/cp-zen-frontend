@@ -9,6 +9,7 @@ describe('Dojo details component', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     DojoServiceMock = {
+      getDojoById: sandbox.stub(),
       getByUrlSlug: sandbox.stub(),
     };
     DojoDetailsWithMocks = dojoDetails({
@@ -26,39 +27,112 @@ describe('Dojo details component', () => {
       countryName: 'Ireland',
     };
 
-  it('should show dojo details', (done) => {
-    DojoServiceMock.getByUrlSlug.returns(Promise.resolve({ body: dojoDetailsWithAddress }));
-    const vm = vueUnitHelper(DojoDetailsWithMocks);
+  describe('methods.loadDojoDetails', () => {
+    it('should show dojo details from urlSlug', async () => {
+      DojoServiceMock.getByUrlSlug.withArgs('za/gauteng/johannesburg-rock-stars').returns(Promise.resolve({ body: dojoDetailsWithAddress }));
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm.id = undefined;
+      vm.urlSlug = 'za/gauteng/johannesburg-rock-stars';
+      sandbox.stub(vm, 'redirectToSlug');
 
-    vm.loadDojoDetails();
-    requestAnimationFrame(() => {
+      await vm.loadDojoDetails();
+
+      expect(DojoServiceMock.getByUrlSlug).to.have.been.calledOnce;
+      expect(DojoServiceMock.getDojoById).to.have.not.been.called;
+      expect(vm.redirectToSlug).to.have.not.been.called;
       expect(vm.dojoDetails).to.deep.equal(dojoDetailsWithAddress);
-      done();
+    });
+
+    it('should show dojo details from id', async () => {
+      DojoServiceMock.getDojoById.withArgs('foo').returns(Promise.resolve({ body: dojoDetailsWithAddress }));
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm.id = 'foo';
+      sandbox.stub(vm, 'redirectToSlug');
+
+      await vm.loadDojoDetails();
+
+      expect(DojoServiceMock.getByUrlSlug).to.have.not.been.called;
+      expect(DojoServiceMock.getDojoById).to.have.been.calledOnce;
+      expect(vm.redirectToSlug).to.have.been.calledOnce;
+      expect(vm.dojoDetails).to.deep.equal(dojoDetailsWithAddress);
     });
   });
 
-  it('should build the urlSlug from path parameters', () => {
-    // ARRANGE
-    DojoServiceMock.getByUrlSlug.returns(Promise.resolve({ body: dojoDetailsWithAddress }));
-    const vm = vueUnitHelper(DojoDetailsWithMocks);
-    vm.country = 'za';
-    vm.path = 'gauteng/johannesburg-rock-stars';
+  describe('methods.redirectToSlug', () => {
+    it('should replace the current router state with the urlSlug', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm.$router = {
+        replace: sandbox.stub(),
+      };
+      vm._country = 'ie';
+      vm._path = 'dublin/docklands';
 
-    // ASSERT
-    expect(vm.urlSlug).to.equal('za/gauteng/johannesburg-rock-stars');
+      // ACT
+      vm.redirectToSlug();
+
+      // ASSERT
+      expect(vm.$router.replace).to.have.been.calledOnce;
+      expect(vm.$router.replace).to.have.been.calledWith({
+        name: 'DojoDetails',
+        params: {
+          country: 'ie',
+          path: ['dublin', 'docklands'],
+        },
+      });
+    });
   });
 
-  it('should compute an image url for given dojo id', (done) => {
+  describe('computed.urlSlug', () => {
+    it('should build the urlSlug from path parameters', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm._country = 'za';
+      vm._path = 'gauteng/johannesburg-rock-stars';
+
+      // ASSERT
+      expect(vm.urlSlug).to.equal('za/gauteng/johannesburg-rock-stars');
+    });
+
+    it('should update _country and _path from given value', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm._country = 'za';
+      vm._path = 'gauteng/johannesburg-rock-stars';
+
+      // ACT
+      vm.urlSlug = 'ie/dublin/docklands';
+
+      // ASSERT
+      expect(vm._country).to.equal('ie');
+      expect(vm._path).to.equal('dublin/docklands');
+    });
+
+    it('should update _country and _path from given value', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm._country = 'za';
+      vm._path = 'gauteng/johannesburg-rock-stars';
+
+      // ACT
+      vm.urlSlug = null;
+
+      // ASSERT
+      expect(vm._country).to.equal(null);
+      expect(vm._path).to.equal(null);
+    });
+  });
+
+  it('should compute an image url for given dojo id', async () => {
     // ARRANGE
     DojoServiceMock.getByUrlSlug.returns(Promise.resolve({ body: dojoDetailsWithAddress }));
     const vm = vueUnitHelper(DojoDetailsWithMocks);
 
+    // ACT
+    await vm.loadDojoDetails();
+
     // ASSERT
-    vm.loadDojoDetails();
-    requestAnimationFrame(() => {
-      expect(vm.imageUrl).to.equal(`https://s3-eu-west-1.amazonaws.com/zen-dojo-images/${dojoDetailsWithAddress.id}`);
-      done();
-    });
+    expect(vm.imageUrl).to.equal(`https://s3-eu-west-1.amazonaws.com/zen-dojo-images/${dojoDetailsWithAddress.id}`);
   });
 
   describe('computed.address()', () => {

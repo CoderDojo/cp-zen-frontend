@@ -35,6 +35,16 @@ exports.register = function (server, options, next) {
 
   server.route({
     method: 'GET',
+    path: '/dojos/{id}',
+    handler: {
+      file: {
+        path: __dirname + '/dist/index.html'
+      }
+    }
+  });
+
+  server.route({
+    method: 'GET',
     path: '/dojos/{id}/{alpha2*}',
     handler: function (request, reply) {
       reply(openGraphTemplate({
