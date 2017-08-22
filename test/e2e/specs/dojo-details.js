@@ -301,6 +301,13 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.twitter).to.equal('https://twitter.com/CoderDojo');
   });
 
+  it('should load Dojo details from a /dojos/:id URL', () => {
+    DojoDetailsPage.open('3ed47c6d-a689-46a0-883b-1f3fd46e9c77');
+
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.name.getText()).to.equal('Dublin Ninja Kids');
+  });
+
   describe('Mobile specific tests', () => {
     beforeEach(() => {
       DojoPage.openDojoWithLatLong(10, 89);

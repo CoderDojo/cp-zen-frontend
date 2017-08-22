@@ -104,12 +104,14 @@
       Dropdown,
       StaticMap,
     },
-    props: ['country', 'path'],
+    props: ['id', 'country', 'path'],
     data() {
       return {
         dojoDetails: {},
         user: {},
         googleMapsApiKey: Vue.config.googleMapsApiKey,
+        _country: null,
+        _path: null,
       };
     },
     computed: {
@@ -119,8 +121,19 @@
         }
         return this.dojoDetails.address1;
       },
-      urlSlug() {
-        return `${this.country}/${this.path}`;
+      urlSlug: {
+        get() {
+          return `${this._country}/${this._path}`;
+        },
+        set(val) {
+          if (val) {
+            this._country = val.substring(0, 2);
+            this._path = val.substring(3, val.length);
+          } else {
+            this._country = null;
+            this._path = null;
+          }
+        },
       },
       imageUrl() {
         return `https://s3-eu-west-1.amazonaws.com/zen-dojo-images/${this.dojoDetails.id}`;
@@ -175,18 +188,35 @@
       },
     },
     methods: {
-      loadDojoDetails() {
-        service.getByUrlSlug(this.urlSlug).then((response) => {
+      async loadDojoDetails() {
+        if (this.id) {
+          const response = await service.getDojoById(this.id);
           this.dojoDetails = response.body;
-        });
+          this.urlSlug = this.dojoDetails.urlSlug;
+          this.redirectToSlug();
+        } else {
+          const response = await service.getByUrlSlug(this.urlSlug);
+          this.dojoDetails = response.body;
+        }
       },
       async loadCurrentUser() {
         const response = await UserService.getCurrentUser();
         this.user = response.body.user;
       },
+      redirectToSlug() {
+        this.$router.replace({
+          name: 'DojoDetails',
+          params: {
+            country: this._country,
+            path: this._path.split('/'),
+          },
+        });
+      },
       buildDojoFrequency: DojoUtil.buildDojoFrequency,
     },
     created() {
+      this._country = this.country;
+      this._path = this.path;
       this.loadDojoDetails();
       this.loadCurrentUser();
     },

@@ -26,6 +26,12 @@ export default new Router({
       props: true,
     },
     {
+      path: '/dojos/:id',
+      name: 'DojoDetailsId',
+      component: DojoDetails,
+      props: true,
+    },
+    {
       path: '/v2',
       component: {
         template: '<router-view></router-view>',

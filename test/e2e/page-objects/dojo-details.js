@@ -229,7 +229,7 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   open: {
     value(urlSlug) {
-      return BasePage.open.call(this, path.join('/dojos', urlSlug));
+      return InfoColumn.open.call(this, path.join('/dojos', urlSlug));
     },
   },
 
