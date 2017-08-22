@@ -37,7 +37,25 @@
           <no-results-mobile @toggleMap="toggleMap" class="cd-find-dojo__no-results-message--mobile visible-xs"></no-results-mobile>
         </h4>
       </div>
-      <dojo-map :center="coordinates" :class="{ 'cd-find-dojo__results-map': true, 'cd-find-dojo__results-map--hidden': !showMap }" :dojos="allActiveDojos"></dojo-map>
+      <div class="cd-find-dojo__right-column">
+        <dojo-map :center="coordinates" :class="{ 'cd-find-dojo__results-map': true, 'cd-find-dojo__results-map--hidden': !showMap }" :dojos="allActiveDojos"></dojo-map>
+        <div class="cd-find-dojo__start-a-dojo-box hidden-xs">
+          <div class="cd-find-dojo__start-a-dojo-message">
+            {{ $t('Don\'t see a Dojo in your area?') }}
+          </div>
+          <a class="cd-find-dojo__start-a-dojo-button" href="https://zen.coderdojo.com/dashboard/start-dojo">
+            {{ $t('Start a Dojo') }}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="cd-find-dojo__start-a-dojo-box visible-xs">
+      <div class="cd-find-dojo__start-a-dojo-message">
+        {{ $t('Don\'t see a Dojo in your area?') }}
+      </div>
+      <a class="cd-find-dojo__start-a-dojo-button" href="https://zen.coderdojo.com/dashboard/start-dojo">
+        {{ $t('Start a Dojo') }}
+      </a>
     </div>
   </div>
 </template>
@@ -233,6 +251,31 @@
         }
       }
     }
+    &__start-a-dojo {
+      &-box {
+        margin-top: 32px;
+        padding: 24px 80px;
+        border: solid 1px @cd-orange;
+        text-align: center;
+        border-bottom: solid 3px @cd-orange;
+      }
+      &-message {
+        font-size: 18px;
+        margin-bottom: 16px;
+      }
+      &-button {
+        margin-top: 16px;
+        padding: 12px 50px;
+        text-decoration: none;
+        color: @cd-orange;
+        font-size: 16px;
+        border: solid 1px @cd-orange;
+        &:hover {
+          background-color: @cd-orange;
+          color: white;
+        }
+      }
+    }
     &__results {
      display: flex;
      padding: 0 16px 32px 16px;
@@ -257,13 +300,18 @@
       }
 
       &-list {
-        flex: 7
+        flex: 7;
+        margin-right: 16px;
+      }
+
+      &-right-column {
+        flex: 5;
       }
 
       &-map {
-        flex: 5;
-        padding-left: 16px;
         margin-top: 32px;
+        min-width: 400px;
+        min-height: 400px;
       }
     }
 
@@ -314,6 +362,17 @@
             width: 100%;
             margin-top: 16px;
           }
+        }
+      }
+
+      &__start-a-dojo {
+        &-box {
+          padding: 28px 32px;
+          margin-bottom: 16px;
+        }
+        &-message {
+          font-size: 16px;
+          margin-bottom: 24px;
         }
       }
 
