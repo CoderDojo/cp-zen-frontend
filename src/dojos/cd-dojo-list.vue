@@ -11,10 +11,6 @@
   import DojoListItem from './cd-dojo-list-item';
   import dojoPaginationStore from './dojo-pagination-store';
 
-  // TODO: fix bug with p query where values above numOfPages can be entered
-  // TODO: unit and e2e tests :D
-  // TODO: styling
-
   export default {
     name: 'dojoList',
     props: ['dojos'],
@@ -38,6 +34,17 @@
         dojoPaginationStore.commit('setCount', this.dojos.slice(begin, end).length);
         return this.dojos.slice(begin, end);
       },
+      // the number of valid pages to display data on
+      numOfPages() {
+        return Math.ceil(this.dojos.length / this.dojosPerPage);
+      },
+    },
+    methods: {
+      goToPage(page) {
+        const newQuery = clone(this.$route.query);
+        newQuery.p = page;
+        this.$router.push({ query: newQuery });
+      },
     },
     created() {
       // if theres a valid page number in the url, set the page
@@ -46,17 +53,24 @@
       }
       // on pagination buttons being interacted with
       PaginationEvent.$on('vue-pagination::dojo-pagination', (page) => {
-        const newQuery = clone(this.$route.query);
-        newQuery.p = page;
-        this.$router.push({ query: newQuery });
+        this.goToPage(page);
       });
     },
     watch: {
+      dojos() {
+        // if the page number in the route exceeds the number of valid pages
+        if (this.$route.query.p > this.numOfPages) {
+          this.goToPage(this.numOfPages);
+        // if the page number in the route is less than one
+        } else if (this.$route.query.p < 1) {
+          this.goToPage(1);
+        }
+      },
       paginatedDojos() {
         Vue.nextTick(() => this.$refs.pagination.setPage(this.currentPage));
       },
       $route(newRoute) {
-        // if theres a valid page number in the new url, set the page
+        // if theres a page number in the new url, set the page
         if (newRoute.query.p) {
           dojoPaginationStore.commit('setPage', newRoute.query.p);
         }

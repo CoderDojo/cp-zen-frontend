@@ -16,7 +16,7 @@ describe('Find Dojo page', () => {
     expect(DojoPage.showDojoListCount.getText()).to.have.string('Showing 1 to 6 of 8 Dojos');
     const dojosListNames = DojoPage.dojoListItemNames;
     const dojosListMetas = DojoPage.dojoListItemMetas;
-    expect(dojosListNames.length).to.equal(5);
+    expect(dojosListNames.length).to.equal(6);
     expect(dojosListNames[0].getText()).to.have.string('CD ROM');
     expect(dojosListMetas[1].getText()).to.have.string('Sunday 10am');
     expect(dojosListNames[1].getText()).to.have.string('Smithfield Awesome Dojo');
@@ -27,6 +27,8 @@ describe('Find Dojo page', () => {
     expect(dojosListMetas[7].getText()).to.have.string('For us to know, and you to find out.');
     expect(dojosListNames[4].getText()).to.have.string('Eventbrite Dojo');
     expect(dojosListMetas[9].getText()).to.have.string('Saturdays from 4pm to 6pm');
+    expect(dojosListNames[5].getText()).to.have.string('ASU Dojo');
+    expect(dojosListMetas[11].getText()).to.have.string('Sundays from 11am to 12pm');
     expect(DojoPage.map.isVisible()).to.equal(true);
   });
 
@@ -76,7 +78,18 @@ describe('Find Dojo page', () => {
     expect(DojoPage.startADojoMessage.getText()).to.equal('Don\'t see a Dojo in your area?');
     expect(DojoPage.startADojoButton.getText()).to.equal('Start a Dojo');
     expect(DojoPage.startADojoButton.getAttribute('href')).to.equal(`${browser.options.baseUrl}/dashboard/start-dojo`);
+  });
 
+  it('should paginate search results', () => {
+    DojoPage.openWithQuery('dublin');
+    DojoPage.showDojoListCount.waitForVisible();
+    expect(DojoPage.showDojoListCount.getText()).to.equal('Showing 1 to 6 of 8 Dojos');
+    expect(DojoPage.dojoListItemNames.length).to.equal(6);
+
+    DojoPage.paginationButtonPageTwo.click();
+    DojoPage.showDojoListCount.waitForVisible();
+    expect(DojoPage.showDojoListCount.getText()).to.equal('Showing 7 to 8 of 8 Dojos');
+    expect(DojoPage.dojoListItemNames.length).to.equal(2);
   });
 
   describe('Mobile specific tests', () => {

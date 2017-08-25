@@ -2,7 +2,7 @@ const DojoPage = require('../page-objects/find-dojo-page');
 
 describe('The dojo list', () => {
   it('should list all the dojos', () => {
-    DojoPage.openWithLatLong(10, 89);
+    DojoPage.openWithQuery('dublin');
     const dojosList = DojoPage.dojoListItemNames;
     const dojoListImages = DojoPage.dojoListItemImages;
     expect(dojosList.length).to.equal(6);
