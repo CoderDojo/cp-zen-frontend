@@ -1,7 +1,9 @@
 #! /usr/bin/env sh
-cd /usr/src/cp-translations || exit
-yarn link
+set -e
 cd /usr/src/app || exit
-yarn && \
-yarn link cp-translations && \
+if [ ! -d "node_modules" ]; then
+  yarn
+  rm -rf node_modules/cp-translations
+  ln -s /usr/src/cp-translations node_modules/cp-translations
+fi
 yarn dev
