@@ -1,6 +1,6 @@
 FROM node:boron-alpine
 MAINTAINER butlerx <butlerx@notthe.cloud>
-
+WORKDIR /usr/src/app
 RUN apk add --update git build-base python && \
     mkdir -p /usr/src/app /usr/src/cp-translations
 COPY docker-entrypoint.sh /usr/src

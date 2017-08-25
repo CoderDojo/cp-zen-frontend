@@ -65,5 +65,8 @@ dist/
 allure-results/
 errorShots/
 
-#idea
+# idea
 .idea/
+
+# Yarn checksum
+.yarn.sha1
