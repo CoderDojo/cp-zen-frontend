@@ -31,12 +31,9 @@
       paginatedDojos() {
         const begin = (this.currentPage - 1) * this.dojosPerPage;
         const end = begin + this.dojosPerPage;
-        dojoPaginationStore.commit('setCount', this.dojos.slice(begin, end).length);
-        return this.dojos.slice(begin, end);
-      },
-      // the number of valid pages to display data on
-      numOfPages() {
-        return Math.ceil(this.dojos.length / this.dojosPerPage);
+        const dojoSlice = this.dojos.slice(begin, end);
+        dojoPaginationStore.commit('setCount', dojoSlice.length);
+        return dojoSlice;
       },
     },
     methods: {
@@ -59,8 +56,8 @@
     watch: {
       dojos() {
         // if the page number in the route exceeds the number of valid pages
-        if (this.$route.query.p > this.numOfPages) {
-          this.goToPage(this.numOfPages);
+        if (this.$route.query.p > this.$refs.pagination.totalPages) {
+          this.goToPage(this.$refs.pagination.totalPages);
         // if the page number in the route is less than one
         } else if (this.$route.query.p < 1) {
           this.goToPage(1);

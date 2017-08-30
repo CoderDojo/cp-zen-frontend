@@ -96,16 +96,6 @@ describe('The Dojo List vue ', () => {
         expect((vm.paginatedDojos).length).to.equal(2);
       });
     });
-
-    describe('numOfPages', () => {
-      it('should return the valid pages based on the number of Dojos', () => {
-        // ARRANGE
-        vm.dojos = mockDojos;
-
-        // ACT & ASSERT
-        expect(vm.numOfPages).to.equal(2);
-      });
-    });
   });
 
   describe('method', () => {
@@ -170,7 +160,11 @@ describe('The Dojo List vue ', () => {
             p: 1,
           },
         };
-        vm.numOfPages = 2;
+        vm.$refs = {
+          pagination: {
+            totalPages: 2,
+          },
+        };
         sandbox.stub(vm, 'goToPage');
 
         // ACT
@@ -190,7 +184,7 @@ describe('The Dojo List vue ', () => {
         vm.$watchers.dojos();
 
         // ASSERT
-        expect(vm.goToPage).to.have.been.calledWith(vm.numOfPages);
+        expect(vm.goToPage).to.have.been.calledWith(vm.$refs.pagination.totalPages);
 
         // ARRANGE
         vm.$route = {

@@ -1,4 +1,5 @@
 const DojoPage = require('../page-objects/find-dojo-page');
+const db = require('../../../json-server/db.js');
 
 describe('Find Dojo page', () => {
   it('should have a Get current location button', () => {
@@ -13,7 +14,7 @@ describe('Find Dojo page', () => {
     DojoPage.addressSearchInput.setValue('CHQ');
     DojoPage.addressSearchButton.click();
     DojoPage.showDojoListCount.waitForVisible();
-    expect(DojoPage.showDojoListCount.getText()).to.have.string('Showing 1 to 6 of 8 Dojos');
+    expect(DojoPage.showDojoListCount.getText()).to.have.string(`Showing 1 to 6 of ${db.dojos.length} Dojos`);
     const dojosListNames = DojoPage.dojoListItemNames;
     const dojosListMetas = DojoPage.dojoListItemMetas;
     expect(dojosListNames.length).to.equal(6);
