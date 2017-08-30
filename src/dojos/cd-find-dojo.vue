@@ -1,13 +1,13 @@
 <template>
   <div class="cd-find-dojo">
-    <div v-bind:class="{ 'cd-find-dojo__panel': !searchExecuted, 'cd-find-dojo__panel--reduced': searchExecuted }">
-      <form v-bind:class="{ 'cd-find-dojo__panel-form': !searchExecuted, 'cd-find-dojo__panel-form--reduced': searchExecuted }" @submit.prevent="$router.push({ query: { q: searchCriteria, p: 1 } });">
+    <div v-bind:class="searchExecuted ? 'cd-find-dojo__panel--reduced' : 'cd-find-dojo__panel'">
+      <form v-bind:class="searchExecuted ? 'cd-find-dojo__panel-form--reduced' : 'cd-find-dojo__panel-form'" @submit.prevent="$router.push({ query: { q: searchCriteria, p: 1 } });">
         <h1 v-if="!searchExecuted" class="cd-find-dojo__panel-form-header">{{ $t('Find a Dojo to attend') }}</h1>
         <p v-if="!searchExecuted" class="cd-find-dojo__panel-form-info">{{ $t('Learn technology in an informal, creative and social environment. Find a dojo near you.') }}</p>
         <div v-if="searchExecuted" class="cd-find-dojo__panel-form-header--reduced hidden-xs">{{ $t('{total} Dojos found near {query}', {total: dojos.length, query: queryString}) }}</div>
         <div v-if="searchExecuted" class="cd-find-dojo__panel-form-header--reduced visible-xs">{{ $t('{total} Dojos found', {total: dojos.length}) }}</div>
         <div class="cd-find-dojo__panel-form-search">
-          <div v-bind:class="{ 'cd-find-dojo__panel-form-search-input': !searchExecuted, 'cd-find-dojo__panel-form-search-input--reduced': searchExecuted }">
+          <div v-bind:class="searchExecuted ? 'cd-find-dojo__panel-form-search-input--reduced' : 'cd-find-dojo__panel-form-search-input'">
             <input type="text" name="addressSearch" class="form-control input-lg" :placeholder="$t('Enter your city or locality')" v-model="searchCriteria" autofocus>
           </div>
           <div class="cd-find-dojo__panel-form-search-submit hidden-xs">
@@ -16,7 +16,7 @@
           <div v-if="!searchExecuted" class="cd-find-dojo__panel-form-search-submit visible-xs">
             <input type="submit" class="btn btn-lg" :value="$t('Search for Dojos')"/>
           </div>
-          <span v-if="searchExecuted" class="cd-find-dojo__panel-form-search-submit--reduced visible-xs">
+          <span v-else class="cd-find-dojo__panel-form-search-submit--reduced visible-xs">
             <button type="submit" class="btn btn-lg fa fa-arrow-right"/>
           </span>
         </div>
@@ -26,7 +26,7 @@
           {{ $t('Detect my location') }}
         </router-link>
         <router-link tag="button" :to="{ query: { currentLocation: true } }"
-          v-bind:class="{'cd-find-dojo__panel-form-detect-location': !searchExecuted, 'cd-find-dojo__panel-form-detect-location--reduced': searchExecuted}"
+          v-bind:class="searchExecuted ? 'cd-find-dojo__panel-form-detect-location--reduced' : 'cd-find-dojo__panel-form-detect-location'"
           class="visible-xs">
           <i class="fa fa-location-arrow" aria-hidden="true" v-show="!detectingLocation"></i>
           <i class="fa fa-spinner fa-spin" aria-hidden="true" v-show="detectingLocation"></i>
@@ -416,9 +416,10 @@
               min-width: auto;
 
               &--reduced {
-                min-width: 70%;
+                width: 100%;
+                min-width: auto;
+                max-width: 80%;
                 flex: none;
-                margin-right: 4px;
               }
             }
             &-submit {
@@ -431,7 +432,7 @@
                 flex: 1;
                 > .btn {
                   background: #2a8244;
-                  min-width: 60px;
+                  width: 100%;
                   &:hover {
                     background: #154c25;
                     color: @cd-white;
