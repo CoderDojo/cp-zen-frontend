@@ -66,6 +66,19 @@ describe('Find Dojo page', () => {
     expect(DojoPage.dojoListItemNames.length).to.equal(5);
   });
 
+  it('should link to start a Dojo process', () => {
+    DojoPage.open();
+    DojoPage.addressSearchInput.waitForVisible();
+    DojoPage.addressSearchInput.setValue('CHQ');
+    DojoPage.addressSearchButton.click();
+    DojoPage.startADojoMessage.waitForVisible();
+
+    expect(DojoPage.startADojoMessage.getText()).to.equal('Don\'t see a Dojo in your area?');
+    expect(DojoPage.startADojoButton.getText()).to.equal('Start a Dojo');
+    expect(DojoPage.startADojoButton.getAttribute('href')).to.equal(`${browser.options.baseUrl}/dashboard/start-dojo`);
+
+  });
+
   describe('Mobile specific tests', () => {
     beforeEach(() => {
       DojoPage.open();
@@ -108,6 +121,19 @@ describe('Find Dojo page', () => {
       expect(DojoPage.map.isVisible()).to.equal(true);
       DojoPage.noResultsMessageMapLink.click();
       expect(DojoPage.map.isVisible()).to.equal(false);
+    });
+
+    it('should link to start a Dojo process', () => {
+      DojoPage.open();
+      DojoPage.addressSearchInput.waitForVisible();
+      DojoPage.addressSearchInput.setValue('CHQ');
+      DojoPage.addressSearchButton.click();
+      DojoPage.startADojoMessage.waitForVisible();
+
+      expect(DojoPage.startADojoMessageMobile.getText()).to.equal('Don\'t see a Dojo in your area?');
+      expect(DojoPage.startADojoButtonMobile.getText()).to.equal('Start a Dojo');
+      expect(DojoPage.startADojoButtonMobile.getAttribute('href')).to.equal(`${browser.options.baseUrl}/dashboard/start-dojo`);
+
     });
   });
 });
