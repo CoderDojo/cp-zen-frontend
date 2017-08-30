@@ -63,6 +63,16 @@ exports.register = function (server, options, next) {
 
   server.route({
     method: 'GET',
+    path: '/dashboard/tickets',
+    handler :{
+      file: {
+        path: __dirname + '/dist/index.html'
+      }
+    }
+  });
+
+  server.route({
+    method: 'GET',
     path: '/',
     handler: {
       file: {
