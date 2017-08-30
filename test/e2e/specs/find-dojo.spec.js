@@ -84,12 +84,12 @@ describe('Find Dojo page', () => {
   it('should paginate search results', () => {
     DojoPage.openWithQuery('dublin');
     DojoPage.showDojoListCount.waitForVisible();
-    expect(DojoPage.showDojoListCount.getText()).to.equal('Showing 1 to 6 of 8 Dojos');
+    expect(DojoPage.showDojoListCount.getText()).to.equal(`Showing 1 to 6 of ${db.dojos.length} Dojos`);
     expect(DojoPage.dojoListItemNames.length).to.equal(6);
 
     DojoPage.paginationButtonPageTwo.click();
     DojoPage.showDojoListCount.waitForVisible();
-    expect(DojoPage.showDojoListCount.getText()).to.equal('Showing 7 to 8 of 8 Dojos');
+    expect(DojoPage.showDojoListCount.getText()).to.equal(`Showing 7 to 8 of ${db.dojos.length} Dojos`);
     expect(DojoPage.dojoListItemNames.length).to.equal(2);
   });
 
@@ -107,7 +107,7 @@ describe('Find Dojo page', () => {
       DojoPage.addressSearchInput.setValue('CHQ');
       DojoPage.addressSearchButton.click();
       DojoPage.showDojoListCountMobile.waitForVisible();
-      expect(DojoPage.showDojoListCountMobile.getText()).to.have.string('Showing 1 to 6 of 8 Dojos');
+      expect(DojoPage.showDojoListCountMobile.getText()).to.have.string(`Showing 1 to 6 of ${db.dojos.length} Dojos`);
     });
 
     it('should show/hide the map when clicking the toggle button', () => {
