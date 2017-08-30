@@ -38,12 +38,12 @@
         </h4>
       </div>
       <div class="cd-find-dojo__right-column">
-        <dojo-map :center="coordinates" :class="{ 'cd-find-dojo__results-map': true, 'cd-find-dojo__results-map--hidden': !showMap }" :dojos="allActiveDojos"></dojo-map>
+        <dojo-map :center="coordinates" class="cd-find-dojo__results-map" :class="{'cd-find-dojo__results-map--hidden': !showMap }" :dojos="allActiveDojos"></dojo-map>
         <div class="cd-find-dojo__start-a-dojo-box hidden-xs">
           <div class="cd-find-dojo__start-a-dojo-message">
             {{ $t('Don\'t see a Dojo in your area?') }}
           </div>
-          <a class="cd-find-dojo__start-a-dojo-button" href="https://zen.coderdojo.com/dashboard/start-dojo">
+          <a class="cd-find-dojo__start-a-dojo-button" href="/dashboard/start-dojo">
             {{ $t('Start a Dojo') }}
           </a>
         </div>
@@ -53,7 +53,7 @@
       <div class="cd-find-dojo__start-a-dojo-message">
         {{ $t('Don\'t see a Dojo in your area?') }}
       </div>
-      <a class="cd-find-dojo__start-a-dojo-button" href="https://zen.coderdojo.com/dashboard/start-dojo">
+      <a class="cd-find-dojo__start-a-dojo-button" href="/dashboard/start-dojo">
         {{ $t('Start a Dojo') }}
       </a>
     </div>
@@ -310,8 +310,8 @@
 
       &-map {
         margin-top: 32px;
-        min-width: 400px;
-        min-height: 400px;
+        min-width: auto;
+        min-height: auto;
       }
     }
 

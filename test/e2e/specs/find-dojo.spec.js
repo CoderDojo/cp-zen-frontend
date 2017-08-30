@@ -75,7 +75,7 @@ describe('Find Dojo page', () => {
 
     expect(DojoPage.startADojoMessage.getText()).to.equal('Don\'t see a Dojo in your area?');
     expect(DojoPage.startADojoButton.getText()).to.equal('Start a Dojo');
-    expect(DojoPage.startADojoButton.getAttribute('href')).to.equal('https://zen.coderdojo.com/dashboard/start-dojo');
+    expect(DojoPage.startADojoButton.getAttribute('href')).to.equal(`${browser.options.baseUrl}/dashboard/start-dojo`);
 
   });
 
@@ -132,7 +132,7 @@ describe('Find Dojo page', () => {
 
       expect(DojoPage.startADojoMessageMobile.getText()).to.equal('Don\'t see a Dojo in your area?');
       expect(DojoPage.startADojoButtonMobile.getText()).to.equal('Start a Dojo');
-      expect(DojoPage.startADojoButtonMobile.getAttribute('href')).to.equal('https://zen.coderdojo.com/dashboard/start-dojo');
+      expect(DojoPage.startADojoButtonMobile.getAttribute('href')).to.equal(`${browser.options.baseUrl}/dashboard/start-dojo`);
 
     });
   });
