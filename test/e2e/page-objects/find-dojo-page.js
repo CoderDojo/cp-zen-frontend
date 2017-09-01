@@ -36,10 +36,16 @@ const DojoPage = Object.create(BasePage, {
       return $('input[value="Search for Dojos"]');
     },
   },
-  dojoListItems: {
+  dojoListItemNames: {
     get() {
       $('.cd-dojo-list-item__name').waitForVisible();
       return $$('.cd-dojo-list-item__name');
+    },
+  },
+  dojoListItemMetas: {
+    get() {
+      $('.cd-dojo-list-item__meta').waitForVisible();
+      return $$('.cd-dojo-list-item__meta');
     },
   },
   dojoListItemImages: {
@@ -67,6 +73,26 @@ const DojoPage = Object.create(BasePage, {
       return $('.cd-find-dojo__results-map');
     },
   },
+  startADojoMessage: {
+    get() {
+      return $('.cd-find-dojo__start-a-dojo-message');
+    },
+  },
+  startADojoMessageMobile: {
+    get() {
+      return $$('.cd-find-dojo__start-a-dojo-message')[1];
+    },
+  },
+  startADojoButton: {
+    get() {
+      return $('.cd-find-dojo__start-a-dojo-button');
+    },
+  },
+  startADojoButtonMobile: {
+    get() {
+      return $$('.cd-find-dojo__start-a-dojo-button')[1];
+    },
+  },
   noResultsMessage: {
     get() {
       return $('.cd-find-dojo__no-results-message');
@@ -90,7 +116,7 @@ const DojoPage = Object.create(BasePage, {
   openDojoWithLatLong: {
     value(lat, long, index = 2, clearCookie = true) {
       this.openWithLatLong(lat, long, clearCookie);
-      this.dojoListItems[index].click();
+      this.dojoListItemNames[index].click();
     },
   },
 });

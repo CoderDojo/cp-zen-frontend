@@ -25,7 +25,7 @@ describe('Dojo details page', () => {
     expect(addressLabel).to.equal('LOCATION');
 
     const address = DojoDetailsPage.address.getText();
-    expect(address).to.contain('CHQ Building,1 Custom House Quay, North Dock, Dublin, Ireland');
+    expect(address).to.contain('CHQ Building,1 Custom House Quay, North Dock');
 
     const emailLabel = DojoDetailsPage.emailLabel.getText();
     expect(emailLabel).to.equal('EMAIL');
@@ -50,6 +50,8 @@ describe('Dojo details page', () => {
 
     const detailsLabel = DojoDetailsPage.detailsLabel.getText();
     expect(detailsLabel).to.equal('Details');
+
+    DojoDetailsPage.staticMap.waitForVisible();
 
     const details = DojoDetailsPage.details.getHTML(false);
     expect(details).to.equal('<p>This is the Dojo details section</p>\n');
@@ -77,7 +79,8 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.eventDate(1).getText()).to.equal('June 3, 2018');
     expect(DojoDetailsPage.eventTimes(1).getText()).to.equal('10am - 12pm');
     expect(DojoDetailsPage.eventRecurringInfoIcon[0].isVisible()).to.equal(true);
-    expect(DojoDetailsPage.eventRecurringInfoText[0].getText()).to.equal('Every two weeks on Sunday at 10am - 12pm');
+    expect(DojoDetailsPage.eventRecurringInfoHeader[0].getText()).to.equal('This is a recurring event');
+    expect(DojoDetailsPage.eventRecurringInfoText[0].getText()).to.equal('Every two weeks on Sunday at 10am - 12pm, from June 3, 2018 to July 29, 2018');
   });
 
   it('should show message if no events are scheduled', () => {
@@ -290,6 +293,21 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.privateNotice.isVisible()).to.equal(false);
   });
 
+  it('should link to social media when given a username/handle', () => {
+    DojoPage.openDojoWithLatLong(10, 89, 0);
+
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.facebook).to.equal('https://facebook.com/DCU');
+    expect(DojoDetailsPage.twitter).to.equal('https://twitter.com/CoderDojo');
+  });
+
+  it('should load Dojo details from a /dojos/:id URL', () => {
+    DojoDetailsPage.open('3ed47c6d-a689-46a0-883b-1f3fd46e9c77');
+
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.name.getText()).to.equal('Dublin Ninja Kids');
+  });
+
   describe('Mobile specific tests', () => {
     beforeEach(() => {
       DojoPage.openDojoWithLatLong(10, 89);
@@ -316,7 +334,7 @@ describe('Dojo details page', () => {
       expect(addressLabel).to.equal('LOCATION');
 
       const address = DojoDetailsPage.address.getText();
-      expect(address).to.contain('CHQ Building,1 Custom House Quay, North Dock, Dublin, Ireland');
+      expect(address).to.contain('CHQ Building,1 Custom House Quay, North Dock');
 
       const emailLabel = DojoDetailsPage.emailLabelMobile.getText();
       expect(emailLabel).to.equal('EMAIL');

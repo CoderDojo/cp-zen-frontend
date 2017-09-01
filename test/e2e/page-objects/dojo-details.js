@@ -66,6 +66,11 @@ const DojoDetailsPage = Object.create(InfoColumn, {
       return $$('.cd-dojo-details__heading')[1];
     },
   },
+  staticMap: {
+    get() {
+      return $('.cd-dojo-details__static-map');
+    },
+  },
   details: {
     get() {
       return $('.cd-dojo-details__details');
@@ -146,6 +151,11 @@ const DojoDetailsPage = Object.create(InfoColumn, {
       return $$('.cd-event-list-item__recurring-info-icon');
     },
   },
+  eventRecurringInfoHeader: {
+    get() {
+      return $$('.cd-event-list-item__recurring-info-header');
+    },
+  },
   eventRecurringInfoText: {
     get() {
       return $$('.cd-event-list-item__recurring-info-text');
@@ -219,7 +229,7 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   open: {
     value(urlSlug) {
-      return BasePage.open.call(this, path.join('/dojos', urlSlug));
+      return InfoColumn.open.call(this, path.join('/dojos', urlSlug));
     },
   },
 

@@ -22,11 +22,11 @@
           <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
         </info-column-section>
         <info-column-section v-if="dojoDetails.website" class="hidden-xs" icon="globe" :header="$t('Website')">
-          <a :href="dojoDetails.website | cdUrlFormatter" target="_blank">{{ dojoDetails.website }}</a>
+          <a :href="dojoDetails.website | cdUrlFormatter" target="_blank" class="cd-dojo-details__website">{{ dojoDetails.website }}</a>
         </info-column-section>
         <info-column-section class="cd-dojo-details__social-media hidden-xs">
-          <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
-          <a v-if="dojoDetails.twitter" class="cd-dojo-details__social-media-icon fa fa-2x fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="dojoDetails.twitter"></a>
+          <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="buildFacebookLink | cdUrlFormatter"></a>
+          <a v-if="dojoDetails.twitter" class="cd-dojo-details__social-media-icon fa fa-2x fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="buildTwitterLink | cdUrlFormatter"></a>
           <a v-if="dojoDetails.googleGroup" class="cd-dojo-details__social-media-icon fa fa-2x fa-google cd-dojo-details__google-group sm-icon" aria-hidden="true" :href="dojoDetails.googleGroup"></a>
         </info-column-section>
       </info-column>
@@ -44,6 +44,10 @@
         <div class="cd-dojo-details__heading">{{ $t('Upcoming Events') }}</div>
         <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
         <div class="cd-dojo-details__heading">{{ $t('Details') }}</div>
+        <a v-if="dojoDetails.geoPoint" :href="googleMapsLink" target="_blank">
+          <static-map :google-api-key="googleMapsApiKey" :zoom="15" :markers="googleMapsMarker" :paths="googleMapsPath" scale="2"
+          :center="`${dojoDetails.geoPoint.lat},${dojoDetails.geoPoint.lon}`" :size="[800, 225]" class="cd-dojo-details__static-map"></static-map>
+        </a>
         <div class="cd-dojo-details__details" v-html="dojoDetails.notes"></div>
         <div class="visible-xs">
           <div class="cd-dojo-details__heading">{{ $t('Contact Dojo') }}</div>
@@ -52,11 +56,11 @@
               <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
             </info-column-section>
             <info-column-section v-if="dojoDetails.website" icon="globe" :header="$t('Website')">
-              <a :href="dojoDetails.website | cdUrlFormatter" target="_blank">{{ dojoDetails.website }}</a>
+              <a :href="dojoDetails.website | cdUrlFormatter" target="_blank" class="cd-dojo-details__website">{{ dojoDetails.website }}</a>
             </info-column-section>
             <info-column-section class="cd-dojo-details__social-media">
-              <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="dojoDetails.facebook"></a>
-              <a v-if="dojoDetails.twitter" class="cd-dojo-details__social-media-icon fa fa-2x fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="dojoDetails.twitter"></a>
+              <a v-if="dojoDetails.facebook" class="cd-dojo-details__social-media-icon fa fa-2x fa-facebook-square cd-dojo-details__facebook" :href="buildFacebookLink | cdUrlFormatter"></a>
+              <a v-if="dojoDetails.twitter" class="cd-dojo-details__social-media-icon fa fa-2x fa-twitter-square cd-dojo-details__twitter sm-icon" aria-hidden="true" :href="buildTwitterLink | cdUrlFormatter"></a>
               <a v-if="dojoDetails.googleGroup" class="cd-dojo-details__social-media-icon fa fa-2x fa-google cd-dojo-details__google-group sm-icon" aria-hidden="true" :href="dojoDetails.googleGroup"></a>
             </info-column-section>
           </div>
@@ -72,6 +76,8 @@
   </div>
 </template>
 <script>
+  import Vue from 'vue';
+  import StaticMap from 'vue-static-map';
   import ImgFallback from '@/common/directives/cd-img-fallback';
   import InfoColumn from '@/common/cd-info-column';
   import Dropdown from '@/common/cd-dropdown';
@@ -96,24 +102,38 @@
       InfoColumn,
       InfoColumnSection,
       Dropdown,
+      StaticMap,
     },
-    props: ['country', 'path'],
+    props: ['id', 'country', 'path'],
     data() {
       return {
         dojoDetails: {},
         user: {},
+        googleMapsApiKey: Vue.config.googleMapsApiKey,
+        _country: null,
+        _path: null,
       };
     },
     computed: {
       address() {
-        return !this.dojoDetails.address1 ? undefined : [
-          this.dojoDetails.address1,
-          this.dojoDetails.placeName,
-          this.dojoDetails.countryName,
-        ].join(', ');
+        if (!this.dojoDetails.address1) {
+          return this.dojoDetails.placeName ? this.dojoDetails.placeName : undefined;
+        }
+        return this.dojoDetails.address1;
       },
-      urlSlug() {
-        return `${this.country}/${this.path}`;
+      urlSlug: {
+        get() {
+          return `${this._country}/${this._path}`;
+        },
+        set(val) {
+          if (val) {
+            this._country = val.substring(0, 2);
+            this._path = val.substring(3, val.length);
+          } else {
+            this._country = null;
+            this._path = null;
+          }
+        },
       },
       imageUrl() {
         return `https://s3-eu-west-1.amazonaws.com/zen-dojo-images/${this.dojoDetails.id}`;
@@ -124,23 +144,79 @@
       googleMapsLink() {
         return `https://www.google.com/maps/search/?api=1&query=${this.dojoDetails.geoPoint.lat},${this.dojoDetails.geoPoint.lon}`;
       },
+      // Custom marker will not display on localhost since GAPI needs a public link to the image
+      googleMapsMarker() {
+        const lat = this.dojoDetails.geoPoint.lat;
+        const lng = this.dojoDetails.geoPoint.lon;
+        return [
+          {
+            lat,
+            lng,
+            size: 'normal',
+            icon: `${document.location.origin}${require('../assets/map/cd-dojo-pin_file.png')}`,
+          },
+        ];
+      },
+      // Path containing marker coordinates is needed for map marker to show on static map
+      googleMapsPath() {
+        const startLat = this.dojoDetails.geoPoint.lat;
+        const endLng = this.dojoDetails.geoPoint.lon;
+        return [
+          {
+            locations: [
+                { startLat, endLng },
+            ],
+          },
+        ];
+      },
       canAdmin() {
         return !!(this.user && this.user.roles && this.user.roles.indexOf('cdf-admin') > -1);
       },
+      buildTwitterLink() {
+        const twitterData = this.dojoDetails.twitter;
+        if (/^[a-zA-Z0-9_@]{1,15}$/.test(twitterData)) {
+          return `https://twitter.com/${twitterData}`;
+        }
+        return twitterData;
+      },
+      buildFacebookLink() {
+        const facebookData = this.dojoDetails.facebook;
+        if (/^[a-zA-Z0-9.]{1,}$/.test(facebookData)) {
+          return `https://facebook.com/${facebookData}`;
+        }
+        return facebookData;
+      },
     },
     methods: {
-      loadDojoDetails() {
-        service.getByUrlSlug(this.urlSlug).then((response) => {
+      async loadDojoDetails() {
+        if (this.id) {
+          const response = await service.getDojoById(this.id);
           this.dojoDetails = response.body;
-        });
+          this.urlSlug = this.dojoDetails.urlSlug;
+          this.redirectToSlug();
+        } else {
+          const response = await service.getByUrlSlug(this.urlSlug);
+          this.dojoDetails = response.body;
+        }
       },
       async loadCurrentUser() {
         const response = await UserService.getCurrentUser();
         this.user = response.body.user;
       },
+      redirectToSlug() {
+        this.$router.replace({
+          name: 'DojoDetails',
+          params: {
+            country: this._country,
+            path: this._path.split('/'),
+          },
+        });
+      },
       buildDojoFrequency: DojoUtil.buildDojoFrequency,
     },
     created() {
+      this._country = this.country;
+      this._path = this.path;
       this.loadDojoDetails();
       this.loadCurrentUser();
     },
@@ -186,6 +262,10 @@
       position: relative;
       flex: 8;
       padding: 45px 32px 32px 16px;
+    }
+
+    &__website {
+      word-wrap: break-word;
     }
 
     &__social-media {
@@ -255,6 +335,12 @@
       > p {
         color: #686d6f;
       }
+    }
+
+    &__static-map {
+      max-width: 100%;
+      min-width: 100%;
+      margin-bottom: 16px;
     }
   }
 
