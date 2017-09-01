@@ -1,13 +1,13 @@
 <template>
   <div class="cd-find-dojo">
-    <div v-bind:class="searchExecuted ? 'cd-find-dojo__panel--reduced' : 'cd-find-dojo__panel'">
-      <form v-bind:class="searchExecuted ? 'cd-find-dojo__panel-form--reduced' : 'cd-find-dojo__panel-form'" @submit.prevent="$router.push({ query: { q: searchCriteria, p: 1 } });">
+    <div class="cd-find-dojo__panel" :class="{ 'cd-find-dojo__panel--reduced': searchExecuted }">
+      <form class="cd-find-dojo__panel-form" :class="{ 'cd-find-dojo__panel-form--reduced': searchExecuted }" @submit.prevent="$router.push({ query: { q: searchCriteria, p: 1 } });">
         <h1 v-if="!searchExecuted" class="cd-find-dojo__panel-form-header">{{ $t('Find a Dojo to attend') }}</h1>
         <p v-if="!searchExecuted" class="cd-find-dojo__panel-form-info">{{ $t('Learn technology in an informal, creative and social environment. Find a dojo near you.') }}</p>
         <div v-if="searchExecuted" class="cd-find-dojo__panel-form-header--reduced hidden-xs">{{ $t('{total} Dojos found near {query}', {total: dojos.length, query: queryString}) }}</div>
         <div v-if="searchExecuted" class="cd-find-dojo__panel-form-header--reduced visible-xs">{{ $t('{total} Dojos found', {total: dojos.length}) }}</div>
         <div class="cd-find-dojo__panel-form-search">
-          <div v-bind:class="searchExecuted ? 'cd-find-dojo__panel-form-search-input--reduced' : 'cd-find-dojo__panel-form-search-input'">
+          <div class="cd-find-dojo__panel-form-search-input" :class="{ 'cd-find-dojo__panel-form-search-input--reduced': searchExecuted }">
             <input type="text" name="addressSearch" class="form-control input-lg" :placeholder="$t('Enter your city or locality')" v-model="searchCriteria" autofocus>
           </div>
           <div class="cd-find-dojo__panel-form-search-submit hidden-xs">
@@ -26,8 +26,8 @@
           {{ $t('Detect my location') }}
         </router-link>
         <router-link tag="button" :to="{ query: { currentLocation: true } }"
-          v-bind:class="searchExecuted ? 'cd-find-dojo__panel-form-detect-location--reduced' : 'cd-find-dojo__panel-form-detect-location'"
-          class="visible-xs">
+          :class="{ 'cd-find-dojo__panel-form-detect-location--reduced': searchExecuted }"
+          class="cd-find-dojo__panel-form-detect-location visible-xs">
           <i class="fa fa-location-arrow" aria-hidden="true" v-show="!detectingLocation"></i>
           <i class="fa fa-spinner fa-spin" aria-hidden="true" v-show="detectingLocation"></i>
           {{ $t('Detect my location') }}
@@ -217,10 +217,6 @@
       margin: 0 -16px;
 
       &--reduced {
-        display: flex;
-        background: @cd-green;
-        color: @cd-white;
-        margin: 0 -16px;
         max-height: 200px;
       }
 
@@ -261,7 +257,7 @@
 
             &--reduced {
               min-width: 310px;
-              margin-right: 8px;
+              max-width: 310px;
             }
           }
 
@@ -416,10 +412,8 @@
               min-width: auto;
 
               &--reduced {
-                width: 100%;
-                min-width: auto;
                 max-width: 80%;
-                flex: none;
+                margin-right: 4px;
               }
             }
             &-submit {
@@ -444,19 +438,9 @@
 
           &-detect-location {
             width: 100%;
-            margin-top: 16px;
             &--reduced {
-              display: inline-block;
-              color: @cd-white;
-              margin-top: 16px;
-              cursor: pointer;
-              background: none;
-              border: none;
-
-              &:hover {
-                color: @cd-white;
-                text-decoration: underline;
-              }
+              width: auto;
+              margin: 16px 0 0 0;
             }
           }
         }
