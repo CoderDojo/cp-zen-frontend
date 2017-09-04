@@ -1,13 +1,12 @@
-const DojoPage = require('../page-objects/find-dojo-page');
+const FindDojoPage = require('../page-objects/find-dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
 const EventDobVerificationPage = require('../page-objects/event-dob-verification');
 const EventSessionsPage = require('../page-objects/event-sessions');
 const LoginPage = require('../page-objects/login');
-const FindDojoPage = require('../page-objects/find-dojo-page');
 
 describe('Dojo details page', () => {
   it('should show dojo details', () => {
-    DojoPage.openDojoWithQuery('dublin');
+    FindDojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
 
     DojoDetailsPage.dojoImage.waitForVisible();
@@ -63,7 +62,7 @@ describe('Dojo details page', () => {
   });
 
   it('should show dojo\'s events', () => {
-    DojoPage.openDojoWithQuery('dublin');
+    FindDojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
 
     const firstEventName = DojoDetailsPage.eventNames[0].getText();
@@ -84,7 +83,7 @@ describe('Dojo details page', () => {
   });
 
   it('should show message if no events are scheduled', () => {
-    DojoPage.openDojoWithQuery('dublin', 0);
+    FindDojoPage.openDojoWithQuery('dublin', 0);
     DojoDetailsPage.name.waitForVisible();
 
     expect(DojoDetailsPage.noEventsHeader.getText()).to.equal('No Upcoming Events');
@@ -92,7 +91,7 @@ describe('Dojo details page', () => {
   });
 
   it('should show event details after clicking on an event', () => {
-    DojoPage.openDojoWithQuery('dublin');
+    FindDojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
 
@@ -134,7 +133,7 @@ describe('Dojo details page', () => {
   });
 
   it('should not allow an underage person to proceed in the flow', () => {
-    DojoPage.openDojoWithQuery('dublin');
+    FindDojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
 
@@ -147,7 +146,7 @@ describe('Dojo details page', () => {
   });
 
   it('should hide book button on private dojos when not logged in', () => {
-    DojoPage.openDojoWithQuery('dublin', 3);
+    FindDojoPage.openDojoWithQuery('dublin', 3);
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(0);
 
@@ -173,7 +172,7 @@ describe('Dojo details page', () => {
     LoginPage.password.setValue('testparent2');
     LoginPage.login.click();
 
-    DojoPage.openDojoWithQuery('dublin', 3);
+    FindDojoPage.openDojoWithQuery('dublin', 3);
     DojoDetailsPage.detailsLabel.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(0);
     browser.deleteCookie();
@@ -186,7 +185,7 @@ describe('Dojo details page', () => {
     LoginPage.password.setValue('testparent1');
     LoginPage.login.click();
 
-    DojoPage.openDojoWithQuery('dublin', 3);
+    FindDojoPage.openDojoWithQuery('dublin', 3);
     DojoDetailsPage.detailsLabel.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(2);
@@ -194,28 +193,28 @@ describe('Dojo details page', () => {
   });
 
   it('should hide book button if an event is a past event', () => {
-    DojoPage.openDojoWithQuery('dublin', 1);
+    FindDojoPage.openDojoWithQuery('dublin', 1);
     DojoDetailsPage.name.waitForVisible();
 
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(1);
   });
 
   it('should link to the dojo website', () => {
-    DojoPage.openDojoWithQuery('dublin');
+    FindDojoPage.openDojoWithQuery('dublin');
 
     DojoDetailsPage.website.waitForVisible();
     expect(DojoDetailsPage.website.getAttribute('href')).to.equal('http://www.dublinninjakids.com/');
   });
 
   it('should not show website label if dojo has no website', () => {
-    DojoPage.openDojoWithQuery('dublin', 0);
+    FindDojoPage.openDojoWithQuery('dublin', 0);
 
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.websiteLabel.isVisible()).to.equal(false);
   });
 
   it('should link to eventbrite for eventbrite events', () => {
-    DojoPage.openDojoWithQuery('dublin', 4);
+    FindDojoPage.openDojoWithQuery('dublin', 4);
 
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     expect((DojoDetailsPage.eventViewButtons[0]).getAttribute('href')).to.equal('http://www.eventbrite.com/');
@@ -228,7 +227,7 @@ describe('Dojo details page', () => {
     LoginPage.password.setValue('testparent1');
     LoginPage.login.click();
 
-    DojoPage.openDojoWithQuery('dublin', 3);
+    FindDojoPage.openDojoWithQuery('dublin', 3);
 
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.eventNames.length).to.equal(2);
@@ -236,7 +235,7 @@ describe('Dojo details page', () => {
   });
 
   it('should show only public events when not logged in', () => {
-    DojoPage.openDojoWithQuery('dublin', 3);
+    FindDojoPage.openDojoWithQuery('dublin', 3);
 
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.eventNames.length).to.equal(1);
@@ -249,7 +248,7 @@ describe('Dojo details page', () => {
     LoginPage.password.setValue('testparent2');
     LoginPage.login.click();
 
-    DojoPage.openDojoWithQuery('dublin', 3);
+    FindDojoPage.openDojoWithQuery('dublin', 3);
 
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.eventNames.length).to.equal(1);
@@ -257,7 +256,7 @@ describe('Dojo details page', () => {
   });
 
   it('should have a dropdown with manage functions for cdf-admin accounts', () => {
-    DojoPage.openDojoWithQuery('dublin');
+    FindDojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.settingsDropdown.isVisible()).to.equal(false);
     const url = browser.getUrl();
@@ -279,22 +278,23 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.manageUsers.getAttribute('href')).to.contain('/dashboard/my-dojos/3ed47c6d-a689-46a0-883b-1f3fd46e9c77/users');
     expect(DojoDetailsPage.manageEvents.isVisible()).to.equal(true);
     expect(DojoDetailsPage.manageEvents.getAttribute('href')).to.contain('/dashboard/my-dojos/3ed47c6d-a689-46a0-883b-1f3fd46e9c77/events');
+    browser.deleteCookie();
   });
 
   it('should show private notice on private Dojos', () => {
-    DojoPage.openDojoWithQuery('dublin', 0);
+    FindDojoPage.openDojoWithQuery('dublin', 0);
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.privateNotice.isVisible()).to.equal(true);
   });
 
   it('should show not private notice on public Dojos', () => {
-    DojoPage.openDojoWithQuery('dublin', 2);
+    FindDojoPage.openDojoWithQuery('dublin', 2);
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.privateNotice.isVisible()).to.equal(false);
   });
 
   it('should link to social media when given a username/handle', () => {
-    DojoPage.openDojoWithQuery('dublin', 0);
+    FindDojoPage.openDojoWithQuery('dublin', 0);
 
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.facebook).to.equal('https://facebook.com/DCU');
@@ -308,9 +308,47 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.name.getText()).to.equal('Dublin Ninja Kids');
   });
 
+  it('should not show volunteering section to non logged in user', () => {
+    FindDojoPage.openDojoWithLatLong(10, 89, 2);
+    DojoDetailsPage.sponsorImage.waitForVisible();
+
+    expect(DojoDetailsPage.mentorVolunteerButton).to.equal(undefined);
+  });
+
+  it('should allow a logged in user to volunteer at a public dojo', () => {
+    LoginPage.open();
+    LoginPage.email.waitForVisible();
+    LoginPage.email.setValue('parent1@example.com');
+    LoginPage.password.setValue('password');
+    LoginPage.login.click();
+    FindDojoPage.header.waitForVisible();
+
+    FindDojoPage.openDojoWithLatLong(10, 89, 2);
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.mentorVolunteerButton.isVisible()).to.equal(true);
+
+    browser.deleteCookie();
+  });
+
+  it('should not allow a logged in user to volunteer at a private dojo', () => {
+    LoginPage.open();
+    LoginPage.email.waitForVisible();
+    LoginPage.email.setValue('parent1@example.com');
+    LoginPage.password.setValue('password');
+    LoginPage.login.click();
+    FindDojoPage.header.waitForVisible();
+
+    FindDojoPage.openDojoWithLatLong(10, 89, 0);
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.mentorVolunteerButton).to.equal(undefined);
+
+    browser.deleteCookie();
+  });
+
+
   describe('Mobile specific tests', () => {
     beforeEach(() => {
-      DojoPage.openDojoWithQuery('dublin');
+      FindDojoPage.openDojoWithQuery('dublin');
       DojoDetailsPage.name.waitForVisible();
       browser.setViewportSize({
         width: 320,
@@ -370,7 +408,7 @@ describe('Dojo details page', () => {
     });
 
     it('should link to the dojo website', () => {
-      DojoPage.openDojoWithQuery('dublin');
+      FindDojoPage.openDojoWithQuery('dublin');
 
       DojoDetailsPage.websiteMobile.waitForVisible();
       expect(DojoDetailsPage.websiteMobile.getAttribute('href')).to.equal('http://www.dublinninjakids.com/');

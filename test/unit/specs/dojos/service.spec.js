@@ -179,4 +179,32 @@ describe('Dojos Service', () => {
         });
     });
   });
+
+  describe('requestUserInvite', () => {
+    it('should request a user be joined to a dojo, given user, dojoId and userType', (done) => {
+      // ARRANGE
+      const user = {
+        id: '74afa4b8-8449-46e4-a553-8febda8614ad',
+      };
+      const dojoId = '4e591bbe-667b-4782-bc9c-180c6d321883';
+      const userType = 'mentor';
+      const expectedPayload = {
+        data: {
+          user,
+          dojoId,
+          userType,
+          emailSubject: 'New Request to join your Dojo',
+        },
+      };
+
+      const postMock = sandbox.stub(Vue.http, 'post');
+      postMock.withArgs(`${Vue.config.apiServer}/api/2.0/dojos/request-user-invite`, expectedPayload).returns(Promise.resolve());
+
+      // ACT
+      DojosServiceWithMocks.requestUserInvite(user, dojoId, userType)
+        .then(() => {
+          done();
+        });
+    });
+  });
 });

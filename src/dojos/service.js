@@ -62,6 +62,16 @@ const DojosService = {
       },
     });
   },
+  requestUserInvite(user, dojoId, userType) {
+    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/request-user-invite`, {
+      data: {
+        user,
+        dojoId,
+        userType,
+        emailSubject: 'New Request to join your Dojo',
+      },
+    });
+  },
 };
 
 export default DojosService;

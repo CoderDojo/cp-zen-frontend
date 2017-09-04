@@ -41,15 +41,28 @@
           <p>{{ $t('Private Dojos are by invite only or for specific people who are members of an organisation or school. The general public should not contact to attend this Dojo.') }}</p>
           <p v-html="$t('To learn more please email {email}', { email: '<a href=\'mailto:' + dojoDetails.email + '\'>' + dojoDetails.email + '</a>' })"></p>
         </div>
-        <div class="cd-dojo-details__heading">{{ $t('Upcoming Events') }}</div>
-        <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
-        <div class="cd-dojo-details__heading">{{ $t('Details') }}</div>
-        <a v-if="dojoDetails.geoPoint" :href="googleMapsLink" target="_blank">
-          <static-map :google-api-key="googleMapsApiKey" :zoom="15" :markers="googleMapsMarker" :paths="googleMapsPath" scale="2"
-          :center="`${dojoDetails.geoPoint.lat},${dojoDetails.geoPoint.lon}`" :size="[800, 225]" class="cd-dojo-details__static-map"></static-map>
-        </a>
-        <div class="cd-dojo-details__details" v-html="dojoDetails.notes"></div>
-        <div class="visible-xs">
+        <section class="cd-dojo-details__section">
+          <div class="cd-dojo-details__heading">{{ $t('Upcoming Events') }}</div>
+          <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
+        </section>
+        <section class="cd-dojo-details__section">
+          <div class="cd-dojo-details__heading">{{ $t('Details') }}</div>
+          <a v-if="dojoDetails.geoPoint" :href="googleMapsLink" target="_blank">
+            <static-map :google-api-key="googleMapsApiKey" :zoom="15" :markers="googleMapsMarker" :paths="googleMapsPath" scale="2"
+            :center="`${dojoDetails.geoPoint.lat},${dojoDetails.geoPoint.lon}`" :size="[800, 225]" class="cd-dojo-details__static-map"></static-map>
+          </a>
+          <div class="cd-dojo-details__details" v-html="dojoDetails.notes"></div>
+        </section>
+        <section v-if="user && !dojoDetails.private" class="cd-dojo-details__section">
+          <div class="cd-dojo-details__heading">{{ $t('Volunteer at this Dojo') }}</div>
+          <div class="cd-dojo-details__sub-heading">{{ $t('Mentor') }} <span v-if="dojoDetails.needMentors === 1" class="cd-dojo-details__heading-label">{{ $t('This Dojo needs Mentors!') }}</span></div>
+          <div class="cd-dojo-details__section-text">{{ $t('Mentors help the ninjas with programming, while also helping the Champion run the dojo efficiently') }}</div>
+          <button @click="volunteer('mentor')" class="cd-dojo-details__volunteer-button">{{ $t('Volunteer as Mentor') }}</button>
+          <div class="cd-dojo-details__sub-heading">{{ $t('Champion') }}</div>
+          <div class="cd-dojo-details__section-text">{{ $t('The champion handles every aspect of running the dojo - from handing logistics to ticketing, to awarding badges to the ninjas') }}</div>
+          <button @click="volunteer('champion')" class="cd-dojo-details__volunteer-button">{{ $t('Volunteer as Champion') }}</button>
+        </section>
+        <section class="cd-dojo-details__section visible-xs">
           <div class="cd-dojo-details__heading">{{ $t('Contact Dojo') }}</div>
           <div class="cd-dojo-details__contact">
             <info-column-section icon="envelope-o" :header="$t('Email')">
@@ -64,13 +77,15 @@
               <a v-if="dojoDetails.googleGroup" class="cd-dojo-details__social-media-icon fa fa-2x fa-google cd-dojo-details__google-group sm-icon" aria-hidden="true" :href="dojoDetails.googleGroup"></a>
             </info-column-section>
           </div>
-        </div>
-        <div v-if="dojoDetails.supporterImage" class="cd-dojo-details__heading">
-          {{ $t('Dojo supported by') }}
-        </div>
-        <div class="cd-dojo-details__sponsor-image">
-          <img v-if="dojoDetails.supporterImage" :src="dojoDetails.supporterImage"/>
-        </div>
+        </section>
+        <section class="cd-dojo-details__section">
+          <div v-if="dojoDetails.supporterImage" class="cd-dojo-details__heading">
+            {{ $t('Dojo supported by') }}
+          </div>
+          <div class="cd-dojo-details__sponsor-image">
+            <img v-if="dojoDetails.supporterImage" :src="dojoDetails.supporterImage"/>
+          </div>
+        </section>
       </div>
     </div>
   </div>
@@ -212,6 +227,12 @@
           },
         });
       },
+      volunteer(userType) {
+        service.requestUserInvite(this.user, this.id, userType);
+        /* eslint-disable no-alert */
+        alert('The Champion of this Dojo has been notified that you want to volunteer.');
+        /* eslint-enable no-alert */
+      },
       buildDojoFrequency: DojoUtil.buildDojoFrequency,
     },
     created() {
@@ -264,6 +285,12 @@
       padding: 45px 32px 32px 16px;
     }
 
+    &__section {
+      ~ .cd-dojo-details__section {
+        margin-top: 64px;
+      }
+    }
+
     &__website {
       word-wrap: break-word;
     }
@@ -305,8 +332,45 @@
       border-bottom: 1px solid #bebebe;
       padding-bottom: 8px;
 
-      ~ .cd-dojo-details__heading {
-        margin-top: 64px;
+      &-label {
+        float: right;
+        font-size: 12px;
+        font-weight: 900;
+        color: white;
+        background-color: @cd-purple;
+        padding: 4px 8px;
+      }
+    }
+
+    &__sub-heading {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    &__section-text {
+      font-size: 16px;
+    }
+
+    &__volunteer-button {
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 16px;
+      margin-bottom: 32px;
+      padding: 16px;
+      color: @cd-blue;
+      background-color: white;
+      text-decoration: none;
+      border: solid 1px @cd-blue;
+      border-radius: 4px;
+
+      &:hover {
+        color: white;
+        background-color: @cd-blue;
+      }
+
+      ~ .cd-dojo-details__volunteer-button {
+        margin-bottom: 0;
       }
     }
 
