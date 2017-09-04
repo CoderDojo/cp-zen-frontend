@@ -326,7 +326,7 @@
 
     &__heading {
       color: #000;
-      font-size: 18px;
+      font-size: @font-size-large;
       margin: 0 0 16px 0;
       font-weight: bold;
       border-bottom: 1px solid #bebebe;
@@ -334,7 +334,7 @@
 
       &-label {
         float: right;
-        font-size: 12px;
+        font-size: @font-size-small;
         font-weight: 900;
         color: white;
         background-color: @cd-purple;
@@ -391,7 +391,7 @@
 
       &-header {
         text-align: center;
-        font-size: 18px;
+        font-size: @font-size-large;
         font-weight: bold;
         margin-bottom: 8px;
       }

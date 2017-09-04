@@ -345,7 +345,6 @@ describe('Dojo details page', () => {
     browser.deleteCookie();
   });
 
-
   describe('Mobile specific tests', () => {
     beforeEach(() => {
       FindDojoPage.openDojoWithQuery('dublin');
