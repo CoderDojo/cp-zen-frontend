@@ -309,7 +309,7 @@ describe('Dojo details page', () => {
   });
 
   it('should not show volunteering section to non logged in user', () => {
-    FindDojoPage.openDojoWithLatLong(10, 89, 2);
+    FindDojoPage.openDojoWithQuery('dublin', 2);
     DojoDetailsPage.sponsorImage.waitForVisible();
 
     expect(DojoDetailsPage.mentorVolunteerButton).to.equal(undefined);
@@ -323,7 +323,7 @@ describe('Dojo details page', () => {
     LoginPage.login.click();
     FindDojoPage.header.waitForVisible();
 
-    FindDojoPage.openDojoWithLatLong(10, 89, 2);
+    FindDojoPage.openDojoWithQuery('dublin', 2);
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.mentorVolunteerButton.isVisible()).to.equal(true);
 
@@ -338,7 +338,7 @@ describe('Dojo details page', () => {
     LoginPage.login.click();
     FindDojoPage.header.waitForVisible();
 
-    FindDojoPage.openDojoWithLatLong(10, 89, 0);
+    FindDojoPage.openDojoWithQuery('dublin', 0);
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.mentorVolunteerButton).to.equal(undefined);
 
