@@ -73,12 +73,6 @@ export default new Router({
           name: 'Login',
           component: Login,
         },
-        {
-          path: ':lat/:long',
-          name: 'FindDojoWithLatAndLong',
-          component: FindDojo,
-          props: true,
-        },
       ],
     },
     {

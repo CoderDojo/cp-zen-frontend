@@ -32,7 +32,7 @@ function checkRecurringEventDetails(page) {
 }
 
 function startBooking() {
-  DojoPage.openDojoWithLatLong(10, 89);
+  DojoPage.openDojoWithQuery('dublin');
   DojoDetailsPage.name.waitForVisible();
   DojoDetailsPage.firstEventViewButton.waitForVisible();
   DojoDetailsPage.eventViewButtons[0].click();
@@ -140,7 +140,7 @@ describe('Book event page', () => {
   });
 
   it('should show youth email input field when youth is booking', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
@@ -161,7 +161,7 @@ describe('Book event page', () => {
   });
 
   it('should not show youth email input field when parent is booking', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
@@ -267,7 +267,7 @@ describe('Book event page', () => {
   });
 
   it('should show the proper event details for recurring event', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[1].click();
@@ -291,7 +291,7 @@ describe('Book event page', () => {
   });
 
   it('should show the proper event details for non recurring event', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
@@ -316,7 +316,7 @@ describe('Book event page', () => {
   });
 
   it('should show the event name in the header', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
@@ -339,7 +339,7 @@ describe('Book event page', () => {
   });
 
   it('should not show parent tickets for a youth over 13', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
@@ -359,7 +359,7 @@ describe('Book event page', () => {
   });
 
   it('should show parent tickets for someone over 18', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
@@ -385,7 +385,7 @@ describe('Book event page', () => {
   });
 
   it('should not allow the user to continue in the booking flow when the event is full', () => {
-    DojoPage.openDojoWithLatLong(10, 89, 1);
+    DojoPage.openDojoWithQuery('dublin', 1);
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons[0].getText()).equals('FULL');
@@ -393,7 +393,7 @@ describe('Book event page', () => {
   });
 
   it('should show recurring frequency on confirmation page for recurring event', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[1].click();

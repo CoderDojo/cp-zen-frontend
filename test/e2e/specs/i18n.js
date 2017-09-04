@@ -25,7 +25,7 @@ describe('i18n', () => {
   });
 
   it('should change date strings when the language is changed', () => {
-    FindDojoPage.openDojoWithLatLong(10, 89);
+    FindDojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     Footer.languagePicker.selectByValue('pt_PT');
     browser.waitUntil(() => {
