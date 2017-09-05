@@ -181,7 +181,7 @@ describe('Dojos Service', () => {
   });
 
   describe('requestUserInvite', () => {
-    it('should request a user be joined to a dojo, given user, dojoId and userType', (done) => {
+    it('should request a user be joined to a dojo, given user, dojoId and userType', async () => {
       // ARRANGE
       const user = {
         id: '74afa4b8-8449-46e4-a553-8febda8614ad',
@@ -201,10 +201,7 @@ describe('Dojos Service', () => {
       postMock.withArgs(`${Vue.config.apiServer}/api/2.0/dojos/request-user-invite`, expectedPayload).returns(Promise.resolve());
 
       // ACT
-      DojosServiceWithMocks.requestUserInvite(user, dojoId, userType)
-        .then(() => {
-          done();
-        });
+      await DojosServiceWithMocks.requestUserInvite(user, dojoId, userType);
     });
   });
 });
