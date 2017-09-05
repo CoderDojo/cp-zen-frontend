@@ -268,7 +268,7 @@
     }
 
     &__name {
-      font-size: 30px;
+      font-size: @font-size-h2;
       color: @cd-white;
       margin-left: 16px;
       padding: 16px 0;
@@ -344,16 +344,16 @@
 
     &__sub-heading {
       font-weight: bold;
-      font-size: 16px;
+      font-size: @font-size-medium;
       margin-bottom: 8px;
     }
 
     &__section-text {
-      font-size: 16px;
+      font-size: @font-size-medium;
     }
 
     &__volunteer-button {
-      font-size: 16px;
+      font-size: @font-size-medium;
       font-weight: bold;
       margin-top: 16px;
       margin-bottom: 32px;
@@ -423,7 +423,7 @@
         padding: 0 16px;
       }
       &__name {
-        font-size: 21px;
+        font-size: @font-size-mobile-page-title;
       }
       &__container {
         flex-direction: column;
