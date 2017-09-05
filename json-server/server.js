@@ -120,6 +120,10 @@ server.post('/api/2.0/dojos/users', (req, res) => {
   }
 });
 
+server.post('/api/2.0/dojos/request-user-invite', (req, res) => {
+  res.send();
+});
+
 server.use('/api/2.0', router);
 server.get('/locale/data', (req, res) => {
   const lang = req.query.lang || 'en_US';

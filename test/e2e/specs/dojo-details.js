@@ -324,8 +324,10 @@ describe('Dojo details page', () => {
     FindDojoPage.header.waitForVisible();
 
     FindDojoPage.openDojoWithQuery('dublin', 2);
-    DojoDetailsPage.name.waitForVisible();
-    expect(DojoDetailsPage.mentorVolunteerButton.isVisible()).to.equal(true);
+    DojoDetailsPage.mentorVolunteerButton.waitForVisible();
+    DojoDetailsPage.mentorVolunteerButton.click();
+    expect(browser.alertText()).to.equal('The Champion of this Dojo has been notified that you want to volunteer.');
+    browser.alertAccept();
 
     browser.deleteCookie();
   });

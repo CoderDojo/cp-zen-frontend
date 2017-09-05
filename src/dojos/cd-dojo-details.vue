@@ -227,8 +227,8 @@
           },
         });
       },
-      volunteer(userType) {
-        service.requestUserInvite(this.user, this.id, userType);
+      async volunteer(userType) {
+        await service.requestUserInvite(this.user, this.id, userType);
         /* eslint-disable no-alert */
         alert('The Champion of this Dojo has been notified that you want to volunteer.');
         /* eslint-enable no-alert */
