@@ -25,7 +25,7 @@ describe('Cookie Notice', () => {
     Footer.cookieNoticeDismissButton.click();
     expect(Footer.cookieNotice.isVisible()).to.equal(false);
     browser.refresh();
-    FindDojoPage.headerReduced.waitForVisible();
+    FindDojoPage.header.waitForVisible();
     expect(Footer.cookieNotice.isVisible()).to.equal(false);
   });
 });

@@ -16,7 +16,7 @@ describe('Find Dojo page', () => {
     DojoPage.showDojoListCount.waitForVisible();
 
     expect(DojoPage.showDojoListCount.getText()).to.have.string(`Showing 1 to 6 of ${db.dojos.length} Dojos`);
-    expect(DojoPage.headerReduced.getText()).to.equal('5 Dojos found near ‘CHQ’');
+    expect(DojoPage.headerReduced.getText()).to.equal(`${db.dojos.length} Dojos found near ‘CHQ’`);
     const dojosListNames = DojoPage.dojoListItemNames;
     const dojosListMetas = DojoPage.dojoListItemMetas;
     expect(dojosListNames.length).to.equal(6);
@@ -63,7 +63,7 @@ describe('Find Dojo page', () => {
     DojoPage.detectLocationButton.waitForVisible();
     DojoPage.detectLocationButton.click();
     DojoPage.showDojoListCount.waitForVisible();
-    expect(DojoPage.headerReduced.getText()).to.equal('5 Dojos found near you');
+    expect(DojoPage.headerReduced.getText()).to.equal(`${db.dojos.length} Dojos found near you`);
 
     DojoPage.dojoListItemNames[0].click();
     browser.back();
@@ -110,9 +110,9 @@ describe('Find Dojo page', () => {
       DojoPage.addressSearchInput.setValue('CHQ');
       DojoPage.addressSearchButtonMobile.click();
       DojoPage.showDojoListCountMobile.waitForVisible();
-      
+
       expect(DojoPage.showDojoListCountMobile.getText()).to.have.string(`Showing 1 to 6 of ${db.dojos.length} Dojos`);
-      expect(DojoPage.headerReducedMobile.getText()).to.equal('5 Dojos found');
+      expect(DojoPage.headerReducedMobile.getText()).to.equal(`${db.dojos.length} Dojos found`);
     });
 
     it('should show/hide the map when clicking the toggle button', () => {
@@ -146,7 +146,7 @@ describe('Find Dojo page', () => {
       DojoPage.open();
       DojoPage.addressSearchInput.waitForVisible();
       DojoPage.addressSearchInput.setValue('CHQ');
-      DojoPage.addressSearchButton.click();
+      DojoPage.addressSearchButtonMobile.click();
       DojoPage.startADojoMessage.waitForVisible();
 
       expect(DojoPage.startADojoMessageMobile.getText()).to.equal('Don\'t see a Dojo in your area?');
