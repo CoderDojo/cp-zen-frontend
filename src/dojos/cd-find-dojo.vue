@@ -251,13 +251,11 @@
           flex-wrap: wrap;
 
           &-input {
-            flex: 1;
             margin-right: 8px;
             min-width: 460px;
 
             &--reduced {
               min-width: 310px;
-              max-width: 310px;
             }
           }
 
