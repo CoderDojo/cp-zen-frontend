@@ -22,6 +22,7 @@ const pathsToReturnSingular = [
 ];
 const nonResourcePostUrls = [
   '/api/2.0/dojos/save-usersdojos',
+  '/api/2.0/dojos/request-user-invite',
 ]
 const rewriteRules = {
   '/api/2.0/dojos/find': '/api/2.0/dojos',

@@ -11,6 +11,7 @@ describe('Dojo details component', () => {
     DojoServiceMock = {
       getDojoById: sandbox.stub(),
       getByUrlSlug: sandbox.stub(),
+      requestUserInvite: sandbox.stub(),
     };
     DojoDetailsWithMocks = dojoDetails({
       './service': DojoServiceMock,
@@ -80,6 +81,24 @@ describe('Dojo details component', () => {
           path: ['dublin', 'docklands'],
         },
       });
+    });
+  });
+
+  describe('methods.volunteer', () => {
+    it('should volunteer logged in user as given user type at current Dojo', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      const userType = 'mentor';
+      vm.user = {
+        id: '74afa4b8-8449-46e4-a553-8febda8614ad',
+      };
+      vm.id = '3ed47c6d-a689-46a0-883b-1f3fd46e9c77';
+
+      // ACT
+      vm.volunteer(userType);
+
+      // ASSERT
+      expect(DojoServiceMock.requestUserInvite).to.have.been.calledWith(vm.user, vm.id, userType);
     });
   });
 

@@ -76,6 +76,16 @@ const DojoDetailsPage = Object.create(InfoColumn, {
       return $('.cd-dojo-details__details');
     },
   },
+  mentorVolunteerButton: {
+    get() {
+      return $$('.cd-dojo-details__volunteer-button')[0];
+    },
+  },
+  championVolunteerButton: {
+    get() {
+      return $$('.cd-dojo-details__volunteer-button')[1];
+    },
+  },
   sponsorHeading: {
     get() {
       return $$('.cd-dojo-details__heading')[3];
