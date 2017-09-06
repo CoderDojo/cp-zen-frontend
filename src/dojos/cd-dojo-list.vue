@@ -55,6 +55,7 @@
     },
     watch: {
       dojos() {
+        // nextTick is needed here so that totalPages will work as expected
         Vue.nextTick(() => {
           // if the page number in the route exceeds the number of valid pages
           if (this.$route.query.p > this.$refs.pagination.totalPages) {
@@ -66,6 +67,7 @@
         });
       },
       paginatedDojos() {
+        // nextTick is needed here to set the pagination buttons to show the correct page
         Vue.nextTick(() => this.$refs.pagination.setPage(this.currentPage));
       },
       $route(newRoute) {
