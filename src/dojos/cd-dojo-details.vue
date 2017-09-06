@@ -56,10 +56,10 @@
         <section v-if="user && !dojoDetails.private" class="cd-dojo-details__section">
           <div class="cd-dojo-details__heading">{{ $t('Volunteer at this Dojo') }}</div>
           <div class="cd-dojo-details__sub-heading">{{ $t('Mentor') }} <span v-if="dojoDetails.needMentors" class="cd-dojo-details__heading-label">{{ $t('This Dojo needs Mentors!') }}</span></div>
-          <div class="cd-dojo-details__section-text">{{ $t('Mentors help the ninjas with programming, while also helping the Champion run the dojo efficiently') }}</div>
+          <div class="cd-dojo-details__section-text">{{ $t('Mentors help the Ninjas with programming, while also helping the Champion run the Dojo efficiently') }}</div>
           <button @click="volunteer('mentor')" class="cd-dojo-details__volunteer-button">{{ $t('Volunteer as Mentor') }}</button>
           <div class="cd-dojo-details__sub-heading">{{ $t('Champion') }}</div>
-          <div class="cd-dojo-details__section-text">{{ $t('The champion handles every aspect of running the dojo - from handing logistics to ticketing, to awarding badges to the ninjas') }}</div>
+          <div class="cd-dojo-details__section-text">{{ $t('The Champion handles every aspect of running the Dojo - from handing logistics to ticketing, to awarding badges to the Ninjas') }}</div>
           <button @click="volunteer('champion')" class="cd-dojo-details__volunteer-button">{{ $t('Volunteer as Champion') }}</button>
         </section>
         <section class="cd-dojo-details__section visible-xs">
