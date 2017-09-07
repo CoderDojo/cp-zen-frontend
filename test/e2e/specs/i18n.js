@@ -29,18 +29,18 @@ describe('i18n', () => {
     DojoDetailsPage.name.waitForVisible();
     Footer.languagePicker.selectByValue('pt_PT');
     browser.waitUntil(() => {
-      return DojoDetailsPage.eventDate(0).getText() === 'Setembro 6, 2017';
+      return DojoDetailsPage.eventDate(0).getText() === 'Dezembro 6, 2017';
     });
-    expect(DojoDetailsPage.eventDate(0).getText()).to.equal('Setembro 6, 2017');
+    expect(DojoDetailsPage.eventDate(0).getText()).to.equal('Dezembro 6, 2017');
     Footer.languagePicker.selectByValue('es_ES');
     browser.waitUntil(() => {
-      return DojoDetailsPage.eventDate(0).getText() === 'septiembre 6, 2017';
+      return DojoDetailsPage.eventDate(0).getText() === 'diciembre 6, 2017';
     });
-    expect(DojoDetailsPage.eventDate(0).getText()).to.equal('septiembre 6, 2017');
+    expect(DojoDetailsPage.eventDate(0).getText()).to.equal('diciembre 6, 2017');
     Footer.languagePicker.selectByValue('en_US');
     browser.waitUntil(() => {
-      return DojoDetailsPage.eventDate(0).getText() === 'September 6, 2017';
+      return DojoDetailsPage.eventDate(0).getText() === 'December 6, 2017';
     });
-    expect(DojoDetailsPage.eventDate(0).getText()).to.equal('September 6, 2017');
+    expect(DojoDetailsPage.eventDate(0).getText()).to.equal('December 6, 2017');
   });
 });

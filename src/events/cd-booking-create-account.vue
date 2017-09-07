@@ -145,6 +145,7 @@
         return UserService.getCurrentUser().then((response) => {
           const user = response.body.user;
           const selectedEvent = StoreService.load('selected-event');
+          // TODO: swap initUserType with user type based off dob
           return DojoService.joinDojo(user.id, selectedEvent.dojoId, [this.user.initUserType.name]);
         });
       },

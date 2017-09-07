@@ -17,6 +17,15 @@ module.exports = {
     initUserType: JSON.stringify({name: 'parent-guardian', title: 'Parent/Guardian'}),
     roles: ['basic-user'],
   },
+  'child1o13@example.com':{
+    id: 'child1o13',
+    firstName: 'child',
+    lastName: '1o13',
+    name: 'child 1o13',
+    email: 'child1o13@example.com',
+    initUserType: JSON.stringify({name: 'attendee-o13', title: 'Youth Over 13'}),
+    roles: ['basic-user'],
+  },
   'admin@coderdojo.org': {
     id: 'cdfadmin',
     firstName: 'CDF',
