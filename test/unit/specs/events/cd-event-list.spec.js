@@ -100,7 +100,7 @@ describe('Event list component', () => {
         const mockUserProfile = {
           dob: '2000-10-26T00:00:00.000Z',
         };
-        MockUsersService.userProfileData.returns(Promise.resolve({ body: mockUserProfile }))
+        MockUsersService.userProfileData.returns(Promise.resolve({ body: mockUserProfile }));
         const vm = vueUnitHelper(EventListWithMocks);
 
         // ACT
@@ -138,7 +138,10 @@ describe('Event list component', () => {
         // ASSERT
         requestAnimationFrame(() => {
           expect(MockUsersUtil.isYouthOverThirteen).to.have.been.calledWith(mockDobDate);
-          expect(MockDojosService.joinDojo).to.have.been.calledWith(vm.currentUser.id, vm.dojo.id, [mockUserType]);
+          expect(MockDojosService.joinDojo).to.have.been.calledWith(
+            vm.currentUser.id,
+            vm.dojo.id,
+            [mockUserType]);
           done();
         });
       });
