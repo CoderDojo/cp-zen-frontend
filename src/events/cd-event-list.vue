@@ -5,10 +5,10 @@
         <div class="cd-event-list__no-events-header">
           {{ $t('No Upcoming Events') }}
         </div>
-        <p v-if="dojo.private" class="cd-event-list__no-events-content" v-html="$t('There are no upcoming events planned for this Dojo. Please email {email} if you have any questions.', { email: '<a href=\'mailto:' + dojo.email + '\'>' + dojo.email + '</a>' })"></p>
-        <div v-else>
-          <p class="cd-event-list__no-events-content" v-html="$t('There are no upcoming events planned for this Dojo. Please join this Dojo for updates or email {email}', { email: '<a href=\'mailto:' + dojo.email + '\'>' + dojo.email + '</a>' })"></p>
-          <button @click="joinTheDojo()" v-if="currentUser" class="cd-event-list__no-events-join-button">{{ $t('Join Dojo') }}</button>
+        <div>
+          <span class="cd-event-list__no-events-content" v-html="$t('There are no upcoming events planned for this Dojo.')"></span>
+          <span class="cd-event-list__no-events-content" v-html="$t(`${dojo.private ? 'Please email {email} if you have any questions.' : 'Please join this Dojo for updates or email {email}' }`, { email: '<a href=\'mailto:' + dojo.email + '\'>' + dojo.email + '</a>' })"></span>
+          <button @click="joinTheDojo()" v-if="currentUser && !dojo.private" class="cd-event-list__no-events-join-button">{{ $t('Join Dojo') }}</button>
         </div>
       </div>
     </div>
@@ -44,7 +44,7 @@
           });
       },
       loadUsersProfile() {
-        UserService.userProfileData()
+        UserService.userProfileData(this.currentUser.id)
           .then((response) => {
             this.usersProfile = response.body;
           });
@@ -113,6 +113,7 @@
         text-decoration: none;
         border: solid 1px @cd-blue;
         border-radius: 4px;
+        display: block;
 
         &:hover {
           color: white;

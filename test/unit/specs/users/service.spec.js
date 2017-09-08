@@ -59,14 +59,15 @@ describe('UserService', () => {
   describe('userProfileData', () => {
     it('should return a promise that resolves with the current user\'s profile', (done) => {
       // ARRANGE
-      sandbox.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/profiles/user-profile-data`, {}).returns(Promise.resolve({
+      const responseMock = {
         dob: '2000-10-26T00:00:00.000Z',
-      }));
+      };
+      sandbox.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/profiles/user-profile-data`, { query: { userId: 'parent1' } }).returns(Promise.resolve(responseMock));
 
       // ACT
-      UserService.userProfileData().then((resp) => {
+      UserService.userProfileData('parent1').then((resp) => {
         // ASSERT
-        expect(resp).to.deep.equal({ dob: '2000-10-26T00:00:00.000Z' });
+        expect(resp).to.deep.equal(responseMock);
         done();
       });
     });
