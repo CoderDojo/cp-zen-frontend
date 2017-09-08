@@ -168,6 +168,7 @@ describe('Dojo details page', () => {
 
     DojoDetailsPage.detailsLabel.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(2);
+    browser.deleteCookie();
   });
 
   it('should hide book button on private dojos when logged in and not a member of the dojo', () => {
