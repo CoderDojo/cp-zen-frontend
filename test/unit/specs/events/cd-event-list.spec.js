@@ -156,15 +156,15 @@ describe('Event list component', () => {
       });
     });
     describe('joinTheDojo', () => {
-      it('should join the current user to the dojo with their correct user type', (done) => {
+      it('should join the current user to the dojo as an o13', (done) => {
         // ARRANGE
         const vm = vueUnitHelper(EventListWithMocks);
         const mockUserType = 'attendee-o13';
-        const mockDobDate = new Date('2000-10-26T00:00:00.000Z');
+        const mockDobDate = new Date((new Date().getFullYear() - 15).toString()).toISOString();
         MockUsersUtil.isYouthOverThirteen.returns(true);
         MockDojosService.joinDojo.returns(Promise.resolve());
         vm.usersProfile = {
-          dob: '2000-10-26T00:00:00.000Z',
+          dob: mockDobDate,
         };
         vm.currentUser = {
           id: '34174952-8ca4-4189-b8cb-d383e3fde992',
@@ -178,7 +178,38 @@ describe('Event list component', () => {
 
         // ASSERT
         requestAnimationFrame(() => {
-          expect(MockUsersUtil.isYouthOverThirteen).to.have.been.calledWith(mockDobDate);
+          expect(MockUsersUtil.isYouthOverThirteen).to.have.been.calledWith(new Date(mockDobDate));
+          expect(MockDojosService.joinDojo).to.have.been.calledWith(
+            vm.currentUser.id,
+            vm.dojo.id,
+            [mockUserType]);
+          expect(MockDojosService.getUsersDojos).to.have.been.calledWith(vm.currentUser.id);
+          done();
+        });
+      });
+      it('should join the current user to the dojo as a parent', (done) => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListWithMocks);
+        const mockUserType = 'parent-guardian';
+        const mockDobDate = new Date((new Date().getFullYear() - 20).toString()).toISOString();
+        MockUsersUtil.isYouthOverThirteen.returns(false);
+        MockDojosService.joinDojo.returns(Promise.resolve());
+        vm.usersProfile = {
+          dob: mockDobDate,
+        };
+        vm.currentUser = {
+          id: '34174952-8ca4-4189-b8cb-d383e3fde992',
+        };
+        vm.dojo = {
+          id: 'p4j8h55b-v3fw-gb4f-00gq-847bw5ctlme2',
+        };
+
+        // ACT
+        vm.joinTheDojo();
+
+        // ASSERT
+        requestAnimationFrame(() => {
+          expect(MockUsersUtil.isYouthOverThirteen).to.have.been.calledWith(new Date(mockDobDate));
           expect(MockDojosService.joinDojo).to.have.been.calledWith(
             vm.currentUser.id,
             vm.dojo.id,

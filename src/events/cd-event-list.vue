@@ -37,28 +37,21 @@
       EventListItem,
     },
     methods: {
-      loadCurrentUser() {
-        UserService.getCurrentUser()
-          .then((response) => {
-            this.currentUser = response.body.user;
-          });
+      async loadCurrentUser() {
+        const res = await UserService.getCurrentUser();
+        this.currentUser = res.body.user;
       },
-      loadUsersProfile() {
-        return UserService.userProfileData(this.currentUser.id)
-          .then((response) => {
-            this.usersProfile = response.body;
-          });
+      async loadUsersProfile() {
+        const res = await UserService.userProfileData(this.currentUser.id);
+        this.usersProfile = res.body;
       },
-      loadUserDojoRole() {
-        return DojosService.getUsersDojos(this.currentUser.id, this.dojo.id)
-        .then((response) => {
-          this.usersDojos = response.body;
-        });
+      async loadUserDojoRole() {
+        const res = await DojosService.getUsersDojos(this.currentUser.id, this.dojo.id);
+        this.usersDojos = res.body;
       },
-      loadEvents() {
-        service.loadEvents(this.dojo.id).then((response) => {
-          this.events = response.body;
-        });
+      async loadEvents() {
+        const res = await service.loadEvents(this.dojo.id);
+        this.events = res.body;
       },
       async joinTheDojo() {
         const userType = UsersUtil.isYouthOverThirteen(new Date(this.usersProfile.dob)) ? 'attendee-o13' : 'parent-guardian';
@@ -72,9 +65,8 @@
     watch: {
       currentUser(newUser) {
         if (newUser) {
-          const userDojoPromise = this.loadUserDojoRole();
-          const userProfilePromise = this.loadUsersProfile();
-          Promise.all([userDojoPromise, userProfilePromise]);
+          this.loadUserDojoRole();
+          this.loadUsersProfile();
         }
       },
     },

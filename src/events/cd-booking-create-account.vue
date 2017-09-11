@@ -66,6 +66,7 @@
   import { extend, omit, cloneDeep } from 'lodash';
   import VueRecaptcha from 'vue-recaptcha';
   import UserService from '@/users/service';
+  import UserUtils from '@/users/util';
   import EventsService from '@/events/service';
   import DojoService from '@/dojos/service';
   import StoreService from '@/store/store-service';
@@ -145,8 +146,9 @@
         return UserService.getCurrentUser().then((response) => {
           const user = response.body.user;
           const selectedEvent = StoreService.load('selected-event');
-          // TODO: swap initUserType with user type based off dob
-          return DojoService.joinDojo(user.id, selectedEvent.dojoId, [this.user.initUserType.name]);
+          // NOTE : u13 are not supposed to have an user account and hence cannot join
+          const userType = UserUtils.isYouthOverThirteen(new Date(user.dob)) ? 'attendee-o13' : 'parent-guardian';
+          return DojoService.joinDojo(user.id, selectedEvent.dojoId, [userType]);
         });
       },
       bookTickets() {
