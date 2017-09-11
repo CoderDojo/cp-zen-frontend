@@ -23,19 +23,21 @@
       <div v-if="event.eventbriteId">
         <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-event-list-item__view">{{ $t('See Details and Book') }}</a>
       </div>
-      <div v-if="applications" class="cd-event-list-item__view-applications">
+      <div v-if="hasApplications" class="cd-event-list-item__view-applications">
         <h4 class="cd-event-list-item__view-application-title"><i class="fa fa-ticket"></i>{{ $t('Tickets') }}</h4>
         <div v-for="application in applications">
           <cd-attendee :application="application" :session="sessions[application.sessionId]" :ticket="tickets[application.ticketId]" :user="users[application.userId]"></cd-attendee>
         </div>
         <router-link
-          :to="{ name: 'book', params: {eventId: event.id, applications: applications} }"
+          :to="bookLink"
           tag="button" class="btn btn-lg btn-primary cd-event-list-item__view">
           {{ $t('Modify booking') }}</router-link>
       </div>
+      <!-- NOTE : What about awaiting approval tickets ?-->
       <div v-else>
+        {{ $t('No ticket booked') }}
         <router-link
-          :to="{ name: 'book', params: {eventId: event.id} }"
+          :to="bookLink"
           tag="button" class="btn btn-lg btn-primary cd-event-list-item__view">
           {{ $t('Book') }}</router-link>
       </div>
@@ -78,6 +80,9 @@
         }
         return true;
       },
+      hasApplications() {
+        return Object.keys(this.applications) > 0;
+      },
       isFull() {
         let totalEventCapacity = 0;
         let totalTicketsBooked = 0;
@@ -111,7 +116,7 @@
         if (Vue.config.buildBranch === 'master') {
           return `/dojo/${this.dojo.id}/event/${this.event.id}`;
         }
-        return { name: 'EventDobVerification', params: { eventId: this.event.id } };
+        return { name: 'EventApplications', params: { eventId: this.event.id, applications: this.applications } };
       },
       formattedStartTime() {
         return this.$options.filters.cdTimeFormatter(this.event.dates[0].startTime);
