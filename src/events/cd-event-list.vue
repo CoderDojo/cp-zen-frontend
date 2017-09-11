@@ -8,7 +8,7 @@
         <div>
           <span class="cd-event-list__no-events-content" v-html="$t('There are no upcoming events planned for this Dojo.')"></span>
           <span class="cd-event-list__no-events-content" v-html="$t(`${dojo.private ? 'Please email {email} if you have any questions.' : 'Please join this Dojo for updates or email {email}' }`, { email: '<a href=\'mailto:' + dojo.email + '\'>' + dojo.email + '</a>' })"></span>
-          <button @click="joinTheDojo()" v-if="currentUser && !dojo.private" class="cd-event-list__no-events-join-button">{{ $t('Join Dojo') }}</button>
+          <button @click="joinTheDojo()" v-if="currentUser && !dojo.private && usersDojos.length === 0" class="cd-event-list__no-events-join-button">{{ $t('Join Dojo') }}</button>
         </div>
       </div>
     </div>
@@ -44,10 +44,16 @@
           });
       },
       loadUsersProfile() {
-        UserService.userProfileData(this.currentUser.id)
+        return UserService.userProfileData(this.currentUser.id)
           .then((response) => {
             this.usersProfile = response.body;
           });
+      },
+      loadUserDojoRole() {
+        return DojosService.getUsersDojos(this.currentUser.id, this.dojo.id)
+        .then((response) => {
+          this.usersDojos = response.body;
+        });
       },
       loadEvents() {
         service.loadEvents(this.dojo.id).then((response) => {
@@ -60,21 +66,21 @@
         /* eslint-disable no-alert */
         alert('Congratulations, you have now joined the Dojo.');
         /* eslint-enable no-alert */
+        this.loadUserDojoRole();
       },
     },
     watch: {
       currentUser(newUser) {
         if (newUser) {
-          DojosService.getUsersDojos(newUser.id, this.dojo.id).then((response) => {
-            this.usersDojos = response.body;
-          });
+          const userDojoPromise = this.loadUserDojoRole();
+          const userProfilePromise = this.loadUsersProfile();
+          Promise.all([userDojoPromise, userProfilePromise]);
         }
       },
     },
     created() {
       this.loadEvents();
       this.loadCurrentUser();
-      this.loadUsersProfile();
     },
   };
 </script>
