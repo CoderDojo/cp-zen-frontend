@@ -8,6 +8,7 @@ import VueAnalytics from 'vue-analytics';
 import PasswordValidator from '@/common/directives/cd-password-validator';
 import 'font-awesome/css/font-awesome.min.css';
 import 'vue-dob-picker/dist/static/vue-dob-picker.css';
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 import App from './App';
 import router from './router';
 import i18n from './i18n';
