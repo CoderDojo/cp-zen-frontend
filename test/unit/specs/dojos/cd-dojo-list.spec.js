@@ -184,7 +184,8 @@ describe('The Dojo List vue ', () => {
         vm.$watchers.dojos();
 
         // ASSERT
-        expect(vm.goToPage).to.have.been.calledWith(vm.$refs.pagination.totalPages);
+        Vue.nextTick(() =>
+          expect(vm.goToPage).to.have.ben.calledWith(vm.$refs.pagination.totalPages));
 
         // ARRANGE
         vm.$route = {
@@ -197,7 +198,8 @@ describe('The Dojo List vue ', () => {
         vm.$watchers.dojos();
 
         // ASSERT
-        expect(vm.goToPage).to.have.been.calledWith(1);
+        Vue.nextTick(() =>
+          expect(vm.goToPage).to.have.ben.calledWith(1));
       });
     });
     describe('paginatedDojos', () => {
