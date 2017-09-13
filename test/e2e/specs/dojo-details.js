@@ -3,6 +3,7 @@ const DojoDetailsPage = require('../page-objects/dojo-details');
 const EventDobVerificationPage = require('../page-objects/event-dob-verification');
 const EventSessionsPage = require('../page-objects/event-sessions');
 const LoginPage = require('../page-objects/login');
+const currentYear = (new Date()).getFullYear();
 
 describe('Dojo details page', () => {
   it('should show dojo details', () => {
@@ -68,7 +69,7 @@ describe('Dojo details page', () => {
     const firstEventName = DojoDetailsPage.eventNames[0].getText();
     expect(firstEventName).to.equal('My First Amazing Event');
     expect(DojoDetailsPage.eventSessions[0].getText()).to.equal('Sessions: Scratch, Arduino');
-    expect(DojoDetailsPage.eventDate(0).getText()).to.equal('September 6, 2017');
+    expect(DojoDetailsPage.eventDate(0).getText()).to.equal(`September 6, ${currentYear + 1}`);
     expect(DojoDetailsPage.eventTimes(0).getText()).to.equal('4:30pm - 6pm');
 
     const secondEventName = DojoDetailsPage.eventNames[1].getText();
@@ -202,7 +203,7 @@ describe('Dojo details page', () => {
   it('should link to the dojo website', () => {
     FindDojoPage.openDojoWithQuery('dublin');
 
-    DojoDetailsPage.website.waitForVisible();
+    DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.website.getAttribute('href')).to.equal('http://www.dublinninjakids.com/');
   });
 
@@ -326,6 +327,7 @@ describe('Dojo details page', () => {
     FindDojoPage.openDojoWithQuery('dublin', 2);
     DojoDetailsPage.mentorVolunteerButton.waitForVisible();
     DojoDetailsPage.mentorVolunteerButton.click();
+    browser.pause(300); // Wait for alert to be displayed
     expect(browser.alertText()).to.equal('The Champion of this Dojo has been notified that you want to volunteer.');
     browser.alertAccept();
 

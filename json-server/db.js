@@ -1,4 +1,5 @@
 const moment = require('moment');
+const currentYear = (new Date()).getFullYear();
 
 module.exports = {
   dojos: [
@@ -232,8 +233,8 @@ module.exports = {
       recurringType: 'weekly',
       dates: [
         {
-          startTime: moment.utc([2017, 8, 6, 16, 30, 0]).toISOString(),
-          endTime: moment.utc([2017, 8, 6, 18, 0, 0]).toISOString()
+          startTime: moment.utc([currentYear + 1, 8, 6, 16, 30, 0]).toISOString(),
+          endTime: moment.utc([currentYear + 1, 8, 6, 18, 0, 0]).toISOString()
         }
       ],
       ticketApproval: true,
