@@ -3,6 +3,7 @@ const jsonServer = require('json-server');
 const path = require('path');
 const uuidv1 = require('uuid/v1');
 const users = require('./users');
+const usersProfile = require('./users-profile');
 const usersDojos = require('./users-dojos');
 
 const server = jsonServer.create();
@@ -104,6 +105,14 @@ server.get('/api/2.0/users/instance', (req, res) => {
       login: {},
       ok: false,
     });
+  }
+});
+
+server.post('/api/2.0/profiles/user-profile-data', (req, res) => {
+  if (req.cookies.loggedIn) {
+    res.send(usersProfile[req.cookies.loggedIn]);
+  } else {
+    res.send();
   }
 });
 

@@ -10,6 +10,25 @@ describe('UserService', () => {
     sandbox.restore();
   });
 
+  describe('login()', () => {
+    it('should login with the given email address and password', (done) => {
+      // ARRANGE
+      const email = 'email';
+      const password = 'password';
+      sandbox.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/users/login`, {
+        email,
+        password,
+      }).returns(Promise.resolve('foo'));
+
+      // ACT
+      UserService.login(email, password).then((resp) => {
+        // ASSERT
+        expect(resp).to.equal('foo');
+        done();
+      });
+    });
+  });
+
   describe('register()', () => {
     it('should register an account', (done) => {
       // ARRANGE
@@ -37,20 +56,18 @@ describe('UserService', () => {
     });
   });
 
-  describe('login()', () => {
-    it('should login with the given email address and password', (done) => {
+  describe('userProfileData', () => {
+    it('should return a promise that resolves with the current user\'s profile', (done) => {
       // ARRANGE
-      const email = 'email';
-      const password = 'password';
-      sandbox.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/users/login`, {
-        email,
-        password,
-      }).returns(Promise.resolve('foo'));
+      const responseMock = {
+        dob: '2000-10-26T00:00:00.000Z',
+      };
+      sandbox.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/profiles/user-profile-data`, { query: { userId: 'parent1' } }).returns(Promise.resolve(responseMock));
 
       // ACT
-      UserService.login(email, password).then((resp) => {
+      UserService.userProfileData('parent1').then((resp) => {
         // ASSERT
-        expect(resp).to.equal('foo');
+        expect(resp).to.deep.equal(responseMock);
         done();
       });
     });

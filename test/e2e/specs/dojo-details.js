@@ -88,7 +88,14 @@ describe('Dojo details page', () => {
     DojoDetailsPage.name.waitForVisible();
 
     expect(DojoDetailsPage.noEventsHeader.getText()).to.equal('No Upcoming Events');
-    expect(DojoDetailsPage.noEventsContent.getText()).to.equal('There are no upcoming events planned for this Dojo. Please email cdrom@example.com if you have any questions.');
+    expect(DojoDetailsPage.noEventsContent[0].getText()).to.equal('There are no upcoming events planned for this Dojo.');
+    expect(DojoDetailsPage.noEventsContent[1].getText()).to.equal('Please email cdrom@example.com if you have any questions.');
+
+    FindDojoPage.openDojoWithQuery('dublin', 5);
+    DojoDetailsPage.name.waitForVisible();
+
+    expect(DojoDetailsPage.noEventsContent[0].getText()).to.equal('There are no upcoming events planned for this Dojo.');
+    expect(DojoDetailsPage.noEventsContent[1].getText()).to.equal('Please join this Dojo for updates or email asudojo@example.com');
   });
 
   it('should show event details after clicking on an event', () => {
@@ -164,6 +171,7 @@ describe('Dojo details page', () => {
 
     DojoDetailsPage.detailsLabel.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(2);
+    browser.deleteCookie();
   });
 
   it('should hide book button on private dojos when logged in and not a member of the dojo', () => {
@@ -345,6 +353,40 @@ describe('Dojo details page', () => {
     FindDojoPage.openDojoWithQuery('dublin', 0);
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.mentorVolunteerButton).to.equal(undefined);
+
+    browser.deleteCookie();
+  });
+
+  it('should allow a logged in user to join a public dojo', () => {
+    FindDojoPage.openDojoWithQuery('dublin', 5);
+    expect(DojoDetailsPage.joinButton.isVisible()).to.equal(false);
+
+    LoginPage.open();
+    LoginPage.email.waitForVisible();
+    LoginPage.email.setValue('parent1@example.com');
+    LoginPage.password.setValue('password');
+    LoginPage.login.click();
+    FindDojoPage.header.waitForVisible();
+
+    FindDojoPage.openDojoWithQuery('dublin', 5);
+    DojoDetailsPage.joinButton.waitForVisible();
+    DojoDetailsPage.joinButton.click();
+    expect(browser.alertText()).to.equal('Congratulations, you have now joined the Dojo.');
+    browser.alertAccept();
+
+    browser.deleteCookie();
+  });
+
+  it('should not allow someone to join a private dojo', () => {
+    LoginPage.open();
+    LoginPage.email.waitForVisible();
+    LoginPage.email.setValue('parent1@example.com');
+    LoginPage.password.setValue('password');
+    LoginPage.login.click();
+    FindDojoPage.header.waitForVisible();
+
+    FindDojoPage.openDojoWithQuery('dublin', 0);
+    expect(DojoDetailsPage.joinButton.isVisible()).to.equal(false);
 
     browser.deleteCookie();
   });

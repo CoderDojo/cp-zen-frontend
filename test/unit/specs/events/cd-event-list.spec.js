@@ -7,6 +7,7 @@ describe('Event list component', () => {
   let MockEventsService;
   let MockDojosService;
   let MockUsersService;
+  let MockUsersUtil;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
@@ -15,12 +16,18 @@ describe('Event list component', () => {
     };
     MockDojosService = {
       getUsersDojos: sandbox.stub(),
+      joinDojo: sandbox.stub(),
     };
     MockUsersService = {
       getCurrentUser: sandbox.stub(),
+      userProfileData: sandbox.stub(),
+    };
+    MockUsersUtil = {
+      isYouthOverThirteen: sandbox.stub(),
     };
     EventListWithMocks = eventList({
       '@/users/service': MockUsersService,
+      '@/users/util': MockUsersUtil,
       '@/dojos/service': MockDojosService,
       './service': MockEventsService,
     });
@@ -86,6 +93,132 @@ describe('Event list component', () => {
         });
       });
     });
+    describe('loadUsersProfile', () => {
+      it('should load the current user\'s profile', (done) => {
+        // ARRANGE
+        const mockUserProfile = {
+          dob: '2000-10-26T00:00:00.000Z',
+        };
+        MockUsersService.userProfileData.returns(Promise.resolve({ body: mockUserProfile }));
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.currentUser = {
+          id: '34174952-8ca4-4189-b8cb-d383e3fde992',
+        };
+        // ACT
+        vm.loadUsersProfile();
+
+        // ASSERT
+        requestAnimationFrame(() => {
+          expect(vm.usersProfile).to.equal(mockUserProfile);
+          done();
+        });
+      });
+    });
+    describe('loadUserDojoRole', () => {
+      it('should return the current user\'s dojo', (done) => {
+        const vm = vueUnitHelper(EventListWithMocks);
+        const mockDojoData = [{ userId: 1, dojoId: 1 }];
+        vm.currentUser = {
+          id: '34174952-8ca4-4189-b8cb-d383e3fde992',
+        };
+        vm.dojo = {
+          id: 'p4j8h55b-v3fw-gb4f-00gq-847bw5ctlme2',
+        };
+        MockDojosService.getUsersDojos.returns(Promise.resolve({ body: mockDojoData }));
+
+        // ACT
+        vm.loadUserDojoRole();
+
+        // ASSERT
+        requestAnimationFrame(() => {
+          expect(vm.usersDojos).to.deep.equal(mockDojoData);
+          done();
+        });
+      });
+    });
+    describe('loadEvents', () => {
+      it('should load the dojo events', (done) => {
+        // ARRANGE
+        const mockEvents = [{ id: '1', name: 'Event' }];
+        MockEventsService.loadEvents.returns(Promise.resolve({ body: mockEvents }));
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.dojo = {
+          id: 'p4j8h55b-v3fw-gb4f-00gq-847bw5ctlme2',
+        };
+        // ACT
+        vm.loadEvents();
+
+        // ASSERT
+        requestAnimationFrame(() => {
+          expect(vm.events).to.deep.equal(mockEvents);
+          done();
+        });
+      });
+    });
+    describe('joinTheDojo', () => {
+      it('should join the current user to the dojo as an o13', (done) => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListWithMocks);
+        const mockUserType = 'attendee-o13';
+        const mockDobDate = new Date((new Date().getFullYear() - 15).toString()).toISOString();
+        MockUsersUtil.isYouthOverThirteen.returns(true);
+        MockDojosService.joinDojo.returns(Promise.resolve());
+        vm.usersProfile = {
+          dob: mockDobDate,
+        };
+        vm.currentUser = {
+          id: '34174952-8ca4-4189-b8cb-d383e3fde992',
+        };
+        vm.dojo = {
+          id: 'p4j8h55b-v3fw-gb4f-00gq-847bw5ctlme2',
+        };
+
+        // ACT
+        vm.joinTheDojo();
+
+        // ASSERT
+        requestAnimationFrame(() => {
+          expect(MockUsersUtil.isYouthOverThirteen).to.have.been.calledWith(new Date(mockDobDate));
+          expect(MockDojosService.joinDojo).to.have.been.calledWith(
+            vm.currentUser.id,
+            vm.dojo.id,
+            [mockUserType]);
+          expect(MockDojosService.getUsersDojos).to.have.been.calledWith(vm.currentUser.id);
+          done();
+        });
+      });
+      it('should join the current user to the dojo as a parent', (done) => {
+        // ARRANGE
+        const vm = vueUnitHelper(EventListWithMocks);
+        const mockUserType = 'parent-guardian';
+        const mockDobDate = new Date((new Date().getFullYear() - 20).toString()).toISOString();
+        MockUsersUtil.isYouthOverThirteen.returns(false);
+        MockDojosService.joinDojo.returns(Promise.resolve());
+        vm.usersProfile = {
+          dob: mockDobDate,
+        };
+        vm.currentUser = {
+          id: '34174952-8ca4-4189-b8cb-d383e3fde992',
+        };
+        vm.dojo = {
+          id: 'p4j8h55b-v3fw-gb4f-00gq-847bw5ctlme2',
+        };
+
+        // ACT
+        vm.joinTheDojo();
+
+        // ASSERT
+        requestAnimationFrame(() => {
+          expect(MockUsersUtil.isYouthOverThirteen).to.have.been.calledWith(new Date(mockDobDate));
+          expect(MockDojosService.joinDojo).to.have.been.calledWith(
+            vm.currentUser.id,
+            vm.dojo.id,
+            [mockUserType]);
+          expect(MockDojosService.getUsersDojos).to.have.been.calledWith(vm.currentUser.id);
+          done();
+        });
+      });
+    });
   });
 
   describe('watch', () => {
@@ -97,20 +230,41 @@ describe('Event list component', () => {
         vm.dojo = {
           id: 'dojo',
         };
+        vm.currentUser = {
+          id: '34174952-8ca4-4189-b8cb-d383e3fde992',
+        };
       });
-
-      it('should update usersDojos if the new currentUser is a member of the dojo', (done) => {
+      it('should update userProfile and DojoRole if there is a currentUser', (done) => {
         // ARRANGE
-        MockDojosService.getUsersDojos.returns(Promise.resolve({ body: ['foo'] }));
-
+        sandbox.stub(vm, 'loadUserDojoRole').returns(Promise.resolve());
+        sandbox.stub(vm, 'loadUsersProfile').returns(Promise.resolve());
         // ACT
         vm.$watchers.currentUser('foo');
 
         // ASSERT
         requestAnimationFrame(() => {
-          expect(vm.usersDojos).to.deep.equal(['foo']);
+          expect(vm.loadUserDojoRole).to.have.been.calledOnce;
+          expect(vm.loadUsersProfile).to.have.been.calledOnce;
           done();
         });
+      });
+    });
+  });
+
+  describe('lifecycle functions', () => {
+    describe('created', () => {
+      it('should load user and event data', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(eventList());
+        sandbox.stub(vm, 'loadEvents');
+        sandbox.stub(vm, 'loadCurrentUser');
+        MockUsersService.getCurrentUser.returns({ body: { user: { id: '34174952-8ca4-4189-b8cb-d383e3fde992' } } });
+        // ACT
+        vm.$lifecycleMethods.created();
+
+        // ASSERT
+        expect(vm.loadEvents).to.have.been.calledOnce;
+        expect(vm.loadCurrentUser).to.have.been.calledOnce;
       });
     });
   });

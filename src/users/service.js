@@ -14,6 +14,8 @@ const UserService = {
     user,
   }).then(() => UserService.login(user.email, user.password)),
 
+  userProfileData: userId => Vue.http.post(`${Vue.config.apiServer}/api/2.0/profiles/user-profile-data`, { query: { userId } }),
+
   getCurrentUser: () => Vue.http.get(`${Vue.config.apiServer}/api/2.0/users/instance`),
 
   addChild(profile) {
