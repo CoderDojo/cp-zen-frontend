@@ -4,6 +4,7 @@ const DojoPage = require('../page-objects/find-dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
 const EventDobVerificationPage = require('../page-objects/event-dob-verification');
 const EventSessionsPage = require('../page-objects/event-sessions');
+const currentYear = (new Date()).getFullYear();
 
 function checkHeaderContent(page) {
   expect(page.bookEventTitle.getText()).to.equal('Book Event');
@@ -13,7 +14,7 @@ function checkHeaderContent(page) {
 function checkEventDetails(page) {
   page.sectionIcons[0].waitForVisible();
   expect(page.sectionHeaders[0].getText()).to.equal('TIME');
-  expect(page.sectionContents[0].getText()).to.have.string('September 6, 2017');
+  expect(page.sectionContents[0].getText()).to.have.string(`September 6, ${currentYear + 1}`);
   expect(page.sectionContents[0].getText()).to.have.string('4:30pm - 6pm');
   page.sectionIcons[1].waitForVisible();
   expect(page.sectionHeaders[1].getText()).to.equal('LOCATION');
@@ -32,7 +33,7 @@ function checkRecurringEventDetails(page) {
 }
 
 function startBooking() {
-  DojoPage.openDojoWithLatLong(10, 89);
+  DojoPage.openDojoWithQuery('dublin');
   DojoDetailsPage.name.waitForVisible();
   DojoDetailsPage.firstEventViewButton.waitForVisible();
   DojoDetailsPage.eventViewButtons[0].click();
@@ -110,7 +111,7 @@ describe('Book event page', () => {
     expect(BookingConfirmation.hostedByMessage.getText()).to.equal('Event hosted by Dublin Ninja Kids');
 
     expect(BookingConfirmation.detailsBoxTitle(0).getText()).to.equal('TIME');
-    expect(BookingConfirmation.eventDate.getText()).to.equal('September 6, 2017');
+    expect(BookingConfirmation.eventDate.getText()).to.equal(`September 6, ${currentYear + 1}`);
     expect(BookingConfirmation.eventTimes.getText()).to.equal('4:30pm - 6pm');
     expect(BookingConfirmation.recurringFrequencyInfo.isVisible()).to.equal(false);
 
@@ -140,7 +141,7 @@ describe('Book event page', () => {
   });
 
   it('should show youth email input field when youth is booking', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
@@ -161,7 +162,7 @@ describe('Book event page', () => {
   });
 
   it('should not show youth email input field when parent is booking', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
@@ -267,7 +268,7 @@ describe('Book event page', () => {
   });
 
   it('should show the proper event details for recurring event', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[1].click();
@@ -291,7 +292,7 @@ describe('Book event page', () => {
   });
 
   it('should show the proper event details for non recurring event', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
@@ -316,7 +317,7 @@ describe('Book event page', () => {
   });
 
   it('should show the event name in the header', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
@@ -339,7 +340,7 @@ describe('Book event page', () => {
   });
 
   it('should not show parent tickets for a youth over 13', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
@@ -359,7 +360,7 @@ describe('Book event page', () => {
   });
 
   it('should show parent tickets for someone over 18', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
@@ -385,7 +386,7 @@ describe('Book event page', () => {
   });
 
   it('should not allow the user to continue in the booking flow when the event is full', () => {
-    DojoPage.openDojoWithLatLong(10, 89, 1);
+    DojoPage.openDojoWithQuery('dublin', 1);
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons[0].getText()).equals('FULL');
@@ -393,7 +394,7 @@ describe('Book event page', () => {
   });
 
   it('should show recurring frequency on confirmation page for recurring event', () => {
-    DojoPage.openDojoWithLatLong(10, 89);
+    DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[1].click();

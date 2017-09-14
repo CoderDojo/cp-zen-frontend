@@ -103,19 +103,25 @@ const DojoPage = Object.create(BasePage, {
       return $('.cd-find-dojo__no-results-message--mobile a');
     },
   },
+  paginationButtonPageTwo: {
+    get() {
+      const vuePagination = $('.VuePagination');
+      return vuePagination.$$('.page-link')[3];
+    },
+  },
   open: {
-    value() {
-      return BasePage.open.call(this, '/');
+    value(clearCookie) {
+      return BasePage.open.call(this, '/', clearCookie);
     },
   },
-  openWithLatLong: {
-    value(lat, long, clearCookie) {
-      return BasePage.open.call(this, `/v2/${lat}/${long}`, clearCookie);
+  openWithQuery: {
+    value(query, clearCookie) {
+      return BasePage.open.call(this, `?q=${query}`, clearCookie);
     },
   },
-  openDojoWithLatLong: {
-    value(lat, long, index = 2, clearCookie = true) {
-      this.openWithLatLong(lat, long, clearCookie);
+  openDojoWithQuery: {
+    value(query, index = 2, clearCookie = true) {
+      this.openWithQuery(query, clearCookie);
       this.dojoListItemNames[index].click();
     },
   },

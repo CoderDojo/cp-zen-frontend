@@ -84,6 +84,39 @@ const expectedDojosForLatLong = [{
   id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
 }];
 
+const mockDojosForPagination = [{
+  id: 'b850b40e-1e10-4e3a-8a46-d076c94946c6',
+},
+{
+  id: 'b850b40e-68fj-4e3a-8a46-d076c94946c6',
+},
+{
+  id: 'b850b40e-hm4f-4e3a-imh3-d076c94946c6',
+},
+{
+  id: 'b850b40e-dc34-4e3a-8a46-d076c94946c6',
+},
+{
+  id: 'b850b40e-jn56-4e3a-8a46-d076c94946c6',
+},
+{
+  id: 'b850b40e-4b6c-4e3a-8a46-d076c94946c6',
+},
+{
+  id: 'b850b40e-99mj-4e3a-8a46-d076c94946c6',
+},
+{
+  id: 'b850b40e-j213-4e3a-8a46-d076c94946c6',
+}];
+
+const dojoPaginationStoreMock = {
+  state: {
+    page: 1,
+    count: 6,
+    dojosPerPage: 6,
+  },
+};
+
 const geoLocationServiceMock = {
   getLatitudeLongitudeByAddress: sinon.stub(),
 };
@@ -95,6 +128,7 @@ const dojoServiceMock = {
 function setUpFindDojoComponent() {
   const cdFindDojoWithMocks = cdFindDojo({
     './service': dojoServiceMock,
+    './dojo-pagination-store': dojoPaginationStoreMock,
     '@/geolocation/service': geoLocationServiceMock,
   });
   return cdFindDojoWithMocks;
@@ -389,6 +423,44 @@ describe('The Find dojo vue ', () => {
         { name: 'Dojo3', stage: 2 },
         { name: 'Dojo4', stage: 0 },
       ]);
+    });
+  });
+
+  describe('computed.firstOnPage', () => {
+    it('should return the number of the first dojo on the page', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(setUpFindDojoComponent());
+      dojoPaginationStoreMock.state.page = 1;
+      dojoPaginationStoreMock.state.dojosPerPage = 6;
+      vm.dojos = mockDojosForPagination;
+
+      // ACT & ASSERT
+      expect(vm.firstOnPage).to.equal(1);
+
+      // ARRANGE
+      dojoPaginationStoreMock.state.page = 2;
+
+      // ACT & ASSERT
+      expect(vm.firstOnPage).to.equal(7);
+    });
+  });
+
+  describe('computed.lastOnPage', () => {
+    it('should return the number of the last dojo on the page', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(setUpFindDojoComponent());
+      dojoPaginationStoreMock.state.count = 6;
+      vm.firstOnPage = 1;
+
+      // ACT & ASSERT
+      expect(vm.lastOnPage).to.equal(6);
+
+      // ARRANGE
+      dojoPaginationStoreMock.state.count = 2;
+      vm.firstOnPage = 7;
+
+      // ACT & ASSERT
+      expect(vm.lastOnPage).to.equal(8);
     });
   });
 

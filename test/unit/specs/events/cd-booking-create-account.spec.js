@@ -9,6 +9,7 @@ describe('Booking Create Account Form', () => {
   let MockUsersService;
   let MockDojoService;
   let MockEventsService;
+  let MockUserUtils;
   let BookingCreateAccountComponentWithMocks;
 
   beforeEach(() => {
@@ -28,11 +29,15 @@ describe('Booking Create Account Form', () => {
     MockEventsService = {
       bookTickets: sandbox.stub(),
     };
+    MockUserUtils = {
+      isYouthOverThirteen: sandbox.stub(),
+    };
 
     BookingCreateAccountComponentWithMocks = BookingCreateAccountComponent({
       '@/store/store-service': MockStoreService,
       '@/users/service': MockUsersService,
       '@/dojos/service': MockDojoService,
+      '@/users/util': MockUserUtils,
       '@/events/service': MockEventsService,
     });
   });
@@ -309,7 +314,7 @@ describe('Booking Create Account Form', () => {
   });
 
   describe('joinDojo', () => {
-    it('should join the logged in user to the dojo', (done) => {
+    it('should join the logged in user to the dojo as a parent', (done) => {
       // ARRANGE
       const userId = '74afa4b8-8449-46e4-a553-8febda8614ad';
       const dojoId = '4e591bbe-667b-4782-bc9c-180c6d321883';
@@ -331,6 +336,40 @@ describe('Booking Create Account Form', () => {
 
       // tell storeservice what to return for dojoId
       MockStoreService.load.withArgs('selected-event').returns({ dojoId });
+
+      MockUserUtils.isYouthOverThirteen.returns(false);
+
+      // ACT
+      vm.joinDojo().then(() => {
+        // ASSERT
+        expect(MockDojoService.joinDojo).to.have.been.calledWith(userId, dojoId, userTypes);
+        done();
+      });
+    });
+    it('should join the logged in user to the dojo as an o13', (done) => {
+      // ARRANGE
+      const userId = '74afa4b8-8449-46e4-a553-8febda8614ad';
+      const dojoId = '4e591bbe-667b-4782-bc9c-180c6d321883';
+      const eventId = '1c4a3f87-7a8e-4101-b332-b02b021a42f7';
+      const userTypes = ['attendee-o13'];
+      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+      vm.eventId = eventId;
+
+      const currentUserResponseMock = {
+        login: {},
+        user: {
+          id: userId,
+        },
+        ok: true,
+      };
+
+      // tell getcurrentuser what to return
+      MockUsersService.getCurrentUser.returns(Promise.resolve({ body: currentUserResponseMock }));
+
+      // tell storeservice what to return for dojoId
+      MockStoreService.load.withArgs('selected-event').returns({ dojoId });
+
+      MockUserUtils.isYouthOverThirteen.returns(true);
 
       // ACT
       vm.joinDojo().then(() => {

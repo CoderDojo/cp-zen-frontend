@@ -2,10 +2,10 @@ const DojoPage = require('../page-objects/find-dojo-page');
 
 describe('The dojo list', () => {
   it('should list all the dojos', () => {
-    DojoPage.openWithLatLong(10, 89);
+    DojoPage.openWithQuery('dublin');
     const dojosList = DojoPage.dojoListItemNames;
     const dojoListImages = DojoPage.dojoListItemImages;
-    expect(dojosList.length).to.equal(5);
+    expect(dojosList.length).to.equal(6);
     expect(dojosList[0].getText()).to.have.string('CD ROM');
     expect(dojosList[0].getText()).to.have.string('Private');
     expect(dojoListImages[0].getAttribute('src')).not.to.have.string('dojo-default-logo.');

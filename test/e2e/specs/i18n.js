@@ -1,6 +1,7 @@
 const FindDojoPage = require('../page-objects/find-dojo-page');
 const Footer = require('../page-objects/footer');
 const DojoDetailsPage = require('../page-objects/dojo-details');
+const currentYear = (new Date()).getFullYear();
 
 describe('i18n', () => {
   it('should change title when language is changed', () => {
@@ -25,22 +26,22 @@ describe('i18n', () => {
   });
 
   it('should change date strings when the language is changed', () => {
-    FindDojoPage.openDojoWithLatLong(10, 89);
+    FindDojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     Footer.languagePicker.selectByValue('pt_PT');
     browser.waitUntil(() => {
-      return DojoDetailsPage.eventDate(0).getText() === 'Setembro 6, 2017';
+      return DojoDetailsPage.eventDate(0).getText() === `Setembro 6, ${currentYear + 1}`;
     });
-    expect(DojoDetailsPage.eventDate(0).getText()).to.equal('Setembro 6, 2017');
+    expect(DojoDetailsPage.eventDate(0).getText()).to.equal(`Setembro 6, ${currentYear + 1}`);
     Footer.languagePicker.selectByValue('es_ES');
     browser.waitUntil(() => {
-      return DojoDetailsPage.eventDate(0).getText() === 'septiembre 6, 2017';
+      return DojoDetailsPage.eventDate(0).getText() === `septiembre 6, ${currentYear + 1}`;
     });
-    expect(DojoDetailsPage.eventDate(0).getText()).to.equal('septiembre 6, 2017');
+    expect(DojoDetailsPage.eventDate(0).getText()).to.equal(`septiembre 6, ${currentYear + 1}`);
     Footer.languagePicker.selectByValue('en_US');
     browser.waitUntil(() => {
-      return DojoDetailsPage.eventDate(0).getText() === 'September 6, 2017';
+      return DojoDetailsPage.eventDate(0).getText() === `September 6, ${currentYear + 1}`;
     });
-    expect(DojoDetailsPage.eventDate(0).getText()).to.equal('September 6, 2017');
+    expect(DojoDetailsPage.eventDate(0).getText()).to.equal(`September 6, ${currentYear + 1}`);
   });
 });

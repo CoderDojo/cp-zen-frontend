@@ -1,4 +1,5 @@
 const moment = require('moment');
+const currentYear = (new Date()).getFullYear();
 
 module.exports = {
   dojos: [
@@ -20,6 +21,7 @@ module.exports = {
       googleGroup: null,
       twitter: 'CoderDojo',
       notes: '<h2>Suggested Notes:<br />\n<br />\nPlease bring:</h2>\n\n<ul>\n\t<li>\n\t<h2>A laptop. Borrow one from somebody if needs be.</h2>\n\t</li>\n\t<li>\n\t<h2><strong>A parent! (Very important). If you are 12 or under, your parent must stay with you during the session.</strong></h2>\n\t</li>\n</ul>\n\n<h2>&nbsp;</h2>\n',
+      needMentors: 0,
       placeName: 'Dublin',
       frequency: 'other',
       alternativeFrequency: 'Sunday 10am',
@@ -44,6 +46,7 @@ module.exports = {
       googleGroup: null,
       twitter: null,
       notes: '<p>Suggested Notes:<br />\n<br />\nPlease bring:</p>\n\n<ul>\n\t<li>\n\t<p>A laptop. Borrow one from somebody if needs be.</p>\n\t</li>\n\t<li>\n\t<p><strong>A parent! (Very important). If you are 12 or under, your parent must stay with you during the session.</strong></p>\n\t</li>\n</ul>\n\n<p>&nbsp;</p>\n',
+      needMentors: 1,
       placeName: 'Smithfield',
       frequency: 'other',
       alternativeFrequency: 'Saturdays, 5-7pm',
@@ -68,6 +71,7 @@ module.exports = {
       googleGroup: 'https://google.group.com/dublinninjakids',
       twitter: 'https://twitter.com/CoderDojo',
       notes: '<p>This is the Dojo details section</p>\n',
+      needMentors: 1,
       placeName: 'Dublin',
       frequency: '1/m',
       alternativeFrequency: '3rd',
@@ -95,6 +99,7 @@ module.exports = {
       googleGroup: null,
       twitter: null,
       notes: '<p>What\'s the password?</p>\n',
+      needMentors: 0,
       placeName: 'Longford',
       frequency: 'other',
       alternativeFrequency: 'For us to know, and you to find out.',
@@ -119,9 +124,82 @@ module.exports = {
       googleGroup: null,
       twitter: null,
       notes: '<p>We use Eventbrite!</p>\n',
+      needMentors: 1,
       placeName: 'Ganewalpola',
       frequency: 'other',
       alternativeFrequency: 'Saturdays from 4pm to 6pm',
+      website: null,
+      supporterImage: ''
+    },
+    {
+      entity$: '-/cd/dojos',
+      name: 'ASU Dojo',
+      geoPoint: {
+        lat: 33.608632,
+        lon: -112.160143
+      },
+      stage: 0,
+      urlSlug: 'az/phoenix/asu-dojo',
+      private: 0,
+      id: 'kr5hk4a9-78gf-9b44-63h2-6gtgfbqy0lkm',
+      address1: '4701 W. Thunderbird Road, Glendale, AZ 85306, USA',
+      countryName: 'USA',
+      email: 'asudojo@example.com',
+      facebook: null,
+      googleGroup: null,
+      twitter: null,
+      notes: '<p>Our Dojo takes place on the Arizona State University West Campus!</p>\n',
+      placeName: 'Phoenix',
+      frequency: 'other',
+      alternativeFrequency: 'Sundays from 11am to 12pm',
+      website: null,
+      supporterImage: 'https://askabiologist.asu.edu/sites/all/themes/askabiologist/images/asu-logo.png'
+    },
+    {
+      entity$: '-/cd/dojos',
+      name: 'Baker Street Dojo',
+      geoPoint: {
+        lat: 51.523767,
+        lon: -0.158563
+      },
+      stage: 0,
+      urlSlug: 'uk/london/baker-street-dojo',
+      private: 1,
+      id: '70ge6fa9-221b-ju4r-m2gx-sher777y8utf',
+      address1: '221B Baker Street, London',
+      countryName: 'United Kingdom',
+      email: 'bakerstreetdojo@example.com',
+      facebook: null,
+      googleGroup: null,
+      twitter: null,
+      notes: '<p>We host a private dojo in the Sherlock Holmes Museum on Baker Street</p>\n',
+      placeName: 'London',
+      frequency: 'other',
+      alternativeFrequency: 'Every once in a while',
+      website: null,
+      supporterImage: ''
+    },
+    {
+      entity$: '-/cd/dojos',
+      name: 'Louvre Paris Dojo',
+      geoPoint: {
+        lat: 48.860606,
+        lon: 2.337647
+      },
+      stage: 0,
+      urlSlug: 'fr/paris/louvre-dojo',
+      private: 0,
+      id: 'lgblk4a9-88v4-p2b4-fyta-56fd799p0mjv',
+      address1: 'Rue de Rivoli, 75001 Paris, France',
+      countryName: 'France',
+      email: 'louvredojo@example.com',
+      facebook: null,
+      googleGroup: null,
+      twitter: null,
+      notes: '<p>We wrote our dojo details in English even though we speak French!</p>\n',
+      placeName: 'Paris',
+      frequency: 'other',
+      alternativeFrequency: 'Fridays from 2pm to 3:30pm',
       website: null,
       supporterImage: ''
     }
@@ -155,8 +233,8 @@ module.exports = {
       recurringType: 'weekly',
       dates: [
         {
-          startTime: moment.utc([2017, 8, 6, 16, 30, 0]).toISOString(),
-          endTime: moment.utc([2017, 8, 6, 18, 0, 0]).toISOString()
+          startTime: moment.utc([currentYear + 1, 8, 6, 16, 30, 0]).toISOString(),
+          endTime: moment.utc([currentYear + 1, 8, 6, 18, 0, 0]).toISOString()
         }
       ],
       ticketApproval: true,
