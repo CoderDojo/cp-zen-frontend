@@ -83,7 +83,7 @@ describe('Events Service', () => {
     });
   });
 
-  it('should bookTickets ', (done) => {
+  it('should bookTickets through manageTickets', (done) => {
     // ARRANGE
     const applications = [
       {
@@ -101,7 +101,7 @@ describe('Events Service', () => {
     sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
 
     // ACT
-    EventsService.bookTickets(applications)
+    EventsService.manageTickets(applications)
       .then(() => {
         expect(Vue.http.post).to.have.been.calledOnce;
         expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/events/bulk-apply-applications`, {

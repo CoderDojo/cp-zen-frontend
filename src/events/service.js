@@ -15,7 +15,11 @@ const EventsService = {
   loadSessions(eventId) {
     return Vue.http.get(`${Vue.config.apiServer}/api/2.0/events/${eventId}/sessions`);
   },
-  bookTickets(applications) {
+  // TODO : new REST endpoint /event/:id/applications or /user/tickets or /user/event/:id/tickets
+  loadApplications(eventId) {
+    return Vue.http.get(`${Vue.config.apiServer}/api/2.0/user/event/${eventId}/applications`);
+  },
+  manageTickets(applications) {
     applications.forEach((application) => {
       /* eslint-disable no-param-reassign */
       application.emailSubject = {
