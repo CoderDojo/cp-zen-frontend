@@ -1,5 +1,5 @@
 <template>
-  <div class="cd-user-ticket-list-item" v-if="isVisible">
+  <div class="cd-user-ticket-list-item">
     <div class="cd-user-ticket-list-item__details">
       <header class="cd-user-ticket-list-item__header">
         <h3 class="cd-user-ticket-list-item__name">
@@ -30,7 +30,7 @@
         </div>
         <button tag="button"
           @click="cancel()"
-          class="btn btn-lg btn-secondary cd-user-ticket-list-item__view">
+          class="btn btn-lg cd-user-ticket-list-item__view-cancel-button">
           {{ $t(applications.length > 1 ? 'Cancel tickets' : 'Cancel ticket') }}</button>
       </div>
       <!-- NOTE : What about awaiting approval tickets ?-->
@@ -53,9 +53,8 @@
   </div>
 </template>
 <script>
-  import Vue from 'vue';
   import moment from 'moment';
-  import { sortBy } from 'lodash';
+  import { sortBy, pick } from 'lodash';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import cdUrlFormatter from '@/common/filters/cd-url-formatter';
@@ -74,12 +73,6 @@
       };
     },
     computed: {
-      isVisible() {
-        if (!this.isMember) {
-          return this.event.public;
-        }
-        return true;
-      },
       hasApplications() {
         return this.applications.length > 0;
       },
@@ -93,9 +86,6 @@
           });
         });
         return totalEventCapacity === totalTicketsBooked;
-      },
-      getSessionListForEvent() {
-        return this.event.sessions.map(session => session.name).join(', ');
       },
       nextStartTime() {
         return EventsUtil.getNextStartTime(this.event);
@@ -113,10 +103,7 @@
         return now.isAfter(eventStartTime);
       },
       bookLink() {
-        if (Vue.config.buildBranch === 'master') {
-          return `/dojo/${this.dojo.id}/event/${this.event.id}`;
-        }
-        return { name: 'EventApplications', params: { eventId: this.event.id, applications: this.applications } };
+        return `/dojo/${this.dojo.id}/event/${this.event.id}`;
       },
       formattedStartTime() {
         return this.$options.filters.cdTimeFormatter(this.event.dates[0].startTime);
@@ -147,23 +134,16 @@
         });
       },
       async cancel() {
-        var payload = [];
+        const payload = [];
+        const commonFields = ['dojoId', 'eventId', 'sessionId', 'ticketName',
+          'ticketType', 'ticketId', 'userId', 'notes', 'deleted'];
         this.applications.forEach((application) => {
-          payload.push({
-            dojoId: application.dojoId,
-            eventId: application.eventId,
-            sessionId: application.sessionId,
-            ticketName: application.ticketName,
-            ticketType: application.ticketType,
-            ticketId: application.ticketId,
-            userId: application.userId,
-            notes: application.notes,
-            deleted: true,
-          });
+          application.deleted = true;
+          payload.push(pick(application, commonFields));
         });
         await EventService.manageTickets(payload);
         this.applications = [];
-        alert('Applications cancelled');
+        alert(this.$t('Applications cancelled'));
       },
       async loadUsersApplications() {
         const res = await EventService.loadApplications(this.event.id);
@@ -263,6 +243,23 @@
          text-transform: uppercase;
          border-color: transparent;
       }
+      &-cancel-button {
+        font-size: @font-size-medium;
+        font-weight: bold;
+        margin-top: 16px;
+        padding: 8px;
+        color: @cd-blue;
+        background-color: white;
+        text-decoration: none;
+        border: solid 1px @cd-blue;
+        border-radius: 4px;
+        display: block;
+        &:hover {
+          color: white;
+          background-color: @cd-blue;
+        }
+      }
+
     }
 
     &__datetime {
@@ -270,7 +267,6 @@
       flex: 1;
     }
   }
-
   @media (max-width: @screen-xs-max) {
     .cd-user-ticket-list-item {
       &__details {

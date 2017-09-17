@@ -1,16 +1,16 @@
 <template>
-  <div class="cd-event-list">
-    <h3>{{ $t('Upcoming events') }}</h3>
-    <div v-if="events.length === 0" class="cd-event-list__event">
-      <div class="cd-event-list__no-events">
-        <div class="cd-event-list__no-events-header">
+  <div class="cd-event-ticket-list">
+    <h2 class="cd-event-ticket-list__header">{{ $t('Upcoming events') }}</h2>
+    <div v-if="events.length === 0" class="cd-event-ticket-list__event">
+      <div class="cd-event-ticket-list__no-events">
+        <div class="cd-event-ticket-list__no-events-header">
           {{ $t('No Upcoming Events') }}
         </div>
-        <p class="cd-event-list__no-events-content" v-html="$t('There are no upcoming events planned for your Dojos')">
+        <p class="cd-event-ticket-list__no-events-content" v-html="$t('There are no upcoming events planned for your Dojos')">
         </p>
       </div>
     </div>
-    <user-tickets v-for="event in events" :key="event.id" :event="event" :dojo="event.dojo" :users-dojos="usersDojos" :users="users" class="cd-event-list__event"></user-tickets>
+    <user-tickets v-for="event in events" :key="event.id" :event="event" :dojo="event.dojo" :users-dojos="usersDojos" :users="users" class="cd-event-ticket-list__event"></user-tickets>
   </div>
 </template>
 <script>
@@ -20,7 +20,7 @@
   import UserTickets from '@/events/cd-user-ticket-list-item';
 
   export default {
-    name: 'event-list',
+    name: 'event-ticket-list',
     props: [],
     data() {
       return {
@@ -54,8 +54,8 @@
         const res = await UserService.getChildren(this.currentUser.id);
         this.users[this.currentUser.id] = this.currentUser;
         if (res.body && res.body.length > 0) {
-          res.body.forEach((user) => {
-            this.users[user.userId] = user;
+          res.body.forEach((profile) => {
+            this.users[profile.userId] = profile.user;
           });
         }
       },
@@ -71,7 +71,12 @@
 <style scoped lang="less">
   @import "../common/variables";
 
-  .cd-event-list {
+  .cd-event-ticket-list {
+    &__header {
+      margin-top: 0px;
+      padding-top: 20px;
+    }
+
     &__event {
       border-style: solid;
       border-color: @cd-orange;

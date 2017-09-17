@@ -1,15 +1,23 @@
-import Vue from 'vue';
 import vueUnitHelper from 'vue-unit-helper';
-import TicketListItem from '@/events/cd-user-ticket-list-item';
+import TicketListItemComponent from '!!vue-loader?inject!@/events/cd-user-ticket-list-item';
 import cdDateFormatter from '@/common/filters/cd-date-formatter';
 import TimeShift from 'timeshift-js';
 import moment from 'moment';
 
 describe('Ticket list item component', () => {
   let sandbox;
+  let MockEventsService;
+  let TicketListItemComponentWithMocks;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
+    MockEventsService = {
+      manageTickets: sandbox.stub(),
+    };
+    // window.alert = sandbox.stub();
+    TicketListItemComponentWithMocks = TicketListItemComponent({
+      './service': MockEventsService,
+    });
   });
 
   afterEach(() => {
@@ -17,51 +25,9 @@ describe('Ticket list item component', () => {
   });
 
   describe('computed', () => {
-    describe('isVisible', () => {
-      let vm;
-
-      beforeEach(() => {
-        vm = vueUnitHelper(TicketListItem);
-        vm.event = {
-          public: null,
-        };
-      });
-
-      it('should return true if the user is a member of the dojo', () => {
-        // ARRANGE
-        vm.isMember = true;
-        vm.event.public = false;
-
-        // ACT & ASSERT
-        expect(vm.isVisible).to.equal(true);
-        vm.event.public = true;
-        expect(vm.isVisible).to.equal(true);
-      });
-
-      it('should return true if the user is not a member of the dojo and the event is public', () => {
-        // ARRANGE
-        vm.isMember = false;
-        vm.event.public = true;
-        vm.usersDojos = [];
-
-        // ACT & ASSERT
-        expect(vm.isVisible).to.equal(true);
-      });
-
-      it('should return false if the user is not a member of the dojo and the event is private', () => {
-        // ARRANGE
-        vm.isMember = false;
-        vm.event.public = false;
-        vm.usersDojos = [];
-
-        // ACT & ASSERT
-        expect(vm.isVisible).to.equal(false);
-      });
-    });
-
     describe('isFull', () => {
       it('should return true for an event which is full and false for one which is not full', () => {
-        const vm = vueUnitHelper(TicketListItem);
+        const vm = vueUnitHelper(TicketListItemComponentWithMocks);
         vm.event = {
           id: 1,
           sessions: [
@@ -131,15 +97,13 @@ describe('Ticket list item component', () => {
       let vm;
 
       beforeEach(() => {
-        vm = vueUnitHelper(TicketListItem);
+        vm = vueUnitHelper(TicketListItemComponentWithMocks);
         vm.applications = {};
       });
 
       it('should return true if the user has any application for the current event', () => {
         // ARRANGE
-        vm.applications = {
-          1: {},
-        };
+        vm.applications = [{}];
 
         // ACT & ASSERT
         expect(vm.hasApplications).to.equal(true);
@@ -147,31 +111,16 @@ describe('Ticket list item component', () => {
 
       it('should return false if the user has no application for the current event', () => {
         // ARRANGE
-        vm.applications = {};
+        vm.applications = [];
 
         // ACT & ASSERT
         expect(vm.hasApplications).to.equal(false);
       });
     });
-
-    describe('getSessionListForEvent', () => {
-      it('should return a list of session names for given event', () => {
-        const vm = vueUnitHelper(TicketListItem);
-        vm.event = {
-          sessions: [
-            { name: 'Scratch' },
-            { name: 'Arduino' },
-            { name: 'HTML' },
-          ],
-        };
-
-        expect(vm.getSessionListForEvent).to.equal('Scratch, Arduino, HTML');
-      });
-    });
     describe('isPastEvent', () => {
       it('should return true for a one-off event whose date is before now', () => {
         // ARRANGE
-        const vm = vueUnitHelper(TicketListItem);
+        const vm = vueUnitHelper(TicketListItemComponentWithMocks);
         vm.event = {
           dates: [
             {
@@ -185,7 +134,7 @@ describe('Ticket list item component', () => {
       });
       it('should return true for a recurring event whose last date is before now', () => {
         // ARRANGE
-        const vm = vueUnitHelper(TicketListItem);
+        const vm = vueUnitHelper(TicketListItemComponentWithMocks);
         vm.event = {
           type: 'recurring',
           dates: [
@@ -206,7 +155,7 @@ describe('Ticket list item component', () => {
       });
       it('should return false for a one-off event whose date is after now', () => {
         // ARRANGE
-        const vm = vueUnitHelper(TicketListItem);
+        const vm = vueUnitHelper(TicketListItemComponentWithMocks);
         const now = moment();
         const startTime = now.add(1, 'day');
         vm.event = {
@@ -222,7 +171,7 @@ describe('Ticket list item component', () => {
       });
       it('should return false for a recurring event whose last date is after now', () => {
         // ARRANGE
-        const vm = vueUnitHelper(TicketListItem);
+        const vm = vueUnitHelper(TicketListItemComponentWithMocks);
         const now = moment();
         const startTime = now.add(1, 'day');
 
@@ -251,7 +200,7 @@ describe('Ticket list item component', () => {
           Date = TimeShift.Date; // eslint-disable-line no-global-assign
           TimeShift.setTimezoneOffset(-120); // UTC+2 (Italy, summer time)
           TimeShift.setTime(1501079400000); // 2017-07-26 16:30:00 GMT+02:00
-          const vm = vueUnitHelper(TicketListItem);
+          const vm = vueUnitHelper(TicketListItemComponentWithMocks);
           vm.event = {
             type: 'one-off',
             dates: [
@@ -270,7 +219,7 @@ describe('Ticket list item component', () => {
           Date = TimeShift.Date; // eslint-disable-line no-global-assign
           TimeShift.setTimezoneOffset(240); // UTC-4 (New York, summer time)
           TimeShift.setTime(1501079400000); // 2017-07-26 10:30:00 GMT-04:00
-          const vm = vueUnitHelper(TicketListItem);
+          const vm = vueUnitHelper(TicketListItemComponentWithMocks);
           vm.event = {
             type: 'one-off',
             dates: [
@@ -289,7 +238,7 @@ describe('Ticket list item component', () => {
           Date = TimeShift.Date; // eslint-disable-line no-global-assign
           TimeShift.setTimezoneOffset(-120); // UTC+2 (Italy, for example)
           TimeShift.setTime(1501079400000); // 2017-07-26 16:30:00 GMT+02:00
-          const vm = vueUnitHelper(TicketListItem);
+          const vm = vueUnitHelper(TicketListItemComponentWithMocks);
           vm.event = {
             type: 'one-off',
             dates: [
@@ -309,21 +258,9 @@ describe('Ticket list item component', () => {
     });
 
     describe('bookLink', () => {
-      it('should return path to Vue booking page when GIT_BRANCH is not master', () => {
+      it('should return path to Angular booking page', () => {
         // ARRANGE
-        Vue.config.buildBranch = 'staging';
-        const vm = vueUnitHelper(TicketListItem);
-        vm.dojo = { id: 'foo' };
-        vm.event = { id: 'bar' };
-
-        // ASSERT
-        expect(vm.bookLink).to.deep.equal({ name: 'EventDobVerification', params: { eventId: 'bar' } });
-      });
-
-      it('should return path to Angular booking page when GIT_BRANCH is master', () => {
-        // ARRANGE
-        Vue.config.buildBranch = 'master';
-        const vm = vueUnitHelper(TicketListItem);
+        const vm = vueUnitHelper(TicketListItemComponentWithMocks);
         vm.dojo = { id: 'foo' };
         vm.event = { id: 'bar' };
 
@@ -335,7 +272,7 @@ describe('Ticket list item component', () => {
     describe('formattedFirstDate', () => {
       it('should return the correct first date despite dates not being ordered chronologically in the event data', () => {
         // ARRANGE
-        const vm = vueUnitHelper(TicketListItem);
+        const vm = vueUnitHelper(TicketListItemComponentWithMocks);
         vm.$options = {
           filters: {
             cdDateFormatter,
@@ -370,7 +307,7 @@ describe('Ticket list item component', () => {
     describe('formattedLastDate', () => {
       it('should return the correct last date despite dates not being ordered chronologically in the event data', () => {
         // ARRANGE
-        const vm = vueUnitHelper(TicketListItem);
+        const vm = vueUnitHelper(TicketListItemComponentWithMocks);
         vm.$options = {
           filters: {
             cdDateFormatter,
@@ -399,6 +336,33 @@ describe('Ticket list item component', () => {
 
         // ACT & ASSERT
         expect(vm.formattedLastDate).to.equal('July 29, 2018');
+      });
+    });
+
+    describe('cancel', () => {
+      it('should call manageTickets with the right args', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(TicketListItemComponentWithMocks);
+        vm.applications = [{
+          dojoId: 1,
+          eventId: 2,
+          sessionId: 3,
+          ticketName: 'ticket',
+          ticketType: 'parent-guardian',
+          ticketId: 4,
+          userId: 5,
+          notes: 'empty'
+        }];
+        MockEventsService.manageTickets.returns(Promise.resolve());
+        const expectedPayload = vm.applications.map((app) => { app.deleted = true; return app; });
+        // ACT
+        vm.cancel();
+        // ASSERT
+        requestAnimationFrame(() => {
+          expect(MockEventsService.manageTickets).to.have.been.deep.calledWith(expectedPayload);
+          expect(vm.applications).to.be.empty();
+          expect(window.alert).to.have.been.calledOnce();
+        });
       });
     });
   });
