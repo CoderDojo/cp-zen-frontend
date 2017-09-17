@@ -31,7 +31,7 @@
         <button tag="button"
           @click="cancel()"
           class="btn btn-lg cd-user-ticket-list-item__view-cancel-button">
-          {{ $t(applications.length > 1 ? 'Cancel tickets' : 'Cancel ticket') }}</button>
+          {{ $t('Cancel ticket', applications.length) }}</button>
       </div>
       <!-- NOTE : What about awaiting approval tickets ?-->
       <div v-else>
@@ -138,12 +138,12 @@
         const commonFields = ['dojoId', 'eventId', 'sessionId', 'ticketName',
           'ticketType', 'ticketId', 'userId', 'notes', 'deleted'];
         this.applications.forEach((application) => {
-          application.deleted = true;
+          application.deleted = true; // eslint-disable-line no-param-reassign
           payload.push(pick(application, commonFields));
         });
         await EventService.manageTickets(payload);
         this.applications = [];
-        alert(this.$t('Applications cancelled'));
+        alert(this.$t('Applications cancelled')); // eslint-disable-line no-alert
       },
       async loadUsersApplications() {
         const res = await EventService.loadApplications(this.event.id);
