@@ -1,5 +1,6 @@
 <template>
   <div class="cd-event-list">
+    <h3>{{ $t('Upcoming events') }}</h3>
     <div v-if="events.length === 0" class="cd-event-list__event">
       <div class="cd-event-list__no-events">
         <div class="cd-event-list__no-events-header">
@@ -9,14 +10,14 @@
         </p>
       </div>
     </div>
-    <event-list-item v-for="event in events" :key="event.id" :event="event" :dojo="event.dojo" :users-dojos="usersDojos" :users="users" class="cd-event-list__event"></event-list-item>
+    <user-tickets v-for="event in events" :key="event.id" :event="event" :dojo="event.dojo" :users-dojos="usersDojos" :users="users" class="cd-event-list__event"></user-tickets>
   </div>
 </template>
 <script>
   import UserService from '@/users/service';
   import DojosService from '@/dojos/service';
   import EventService from '@/events/service';
-  import EventListItem from '@/events/cd-user-ticket-list-item';
+  import UserTickets from '@/events/cd-user-ticket-list-item';
 
   export default {
     name: 'event-list',
@@ -30,7 +31,7 @@
       };
     },
     components: {
-      EventListItem,
+      UserTickets,
     },
     methods: {
       async loadCurrentUser() {

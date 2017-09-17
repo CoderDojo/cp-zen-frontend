@@ -27,7 +27,7 @@ describe('Booking Create Account Form', () => {
       joinDojo: sandbox.stub(),
     };
     MockEventsService = {
-      bookTickets: sandbox.stub(),
+      manageTickets: sandbox.stub(),
     };
     MockUserUtils = {
       isYouthOverThirteen: sandbox.stub(),

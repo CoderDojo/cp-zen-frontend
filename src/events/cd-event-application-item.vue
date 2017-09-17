@@ -1,15 +1,15 @@
 <template>
   <div>
     <div v-for="(ticket, index) in session.tickets" class="cd-event-tickets__ticket">
-      <span class="cd-event-tickets__name">{{ ticket.name }} - {{ ticket.sId }}</span>
+      <span class="cd-event-tickets__name">{{ ticket.name }}</span>
       <multiselect
-        v-model="selected[index]"
+        v-bind:value="selected[ticket.id]"
+        v-on:input="setSelected($event, ticket)"
         :options="users"
         :custom-label="userFirstName"
         :multiple="true"
         v-on:change="notify(ticket, $event)">
       </multiselect>
-      <pre>{{ selected[ticket.sId] }}</pre>
     </div>
     <pre>{{ selected }}</pre>
   </div>
@@ -34,22 +34,16 @@
       userFirstName(option) {
         return `${option.firstName}`;
       },
-      getSid(ticket) {
-        return ticket.sId;
-      },
       prepareSelected() {
         // TODO : load applications
-        this.session.tickets.forEach((t, i) => {
-          this.session.tickets[i].sId = t.id.replace(/-/ig, '');
-          this.selected[t.sId] = [];
+        this.session.tickets.forEach((t) => {
+          this.selected[t.id] = [];
         });
       },
-      notify(ticket, event) {
-        console.log('notify', ticket, event);
+      setSelected(event, ticket) {
+        this.selected[ticket.id] = event;
+        this.$emit('ticket-applications', this.session, ticket, this.selected[ticket.id]);
       },
-      // getSelected(ticketId) {
-      //   return this.selected[ticketId];
-      // },
     },
     created() {
       this.prepareSelected();
