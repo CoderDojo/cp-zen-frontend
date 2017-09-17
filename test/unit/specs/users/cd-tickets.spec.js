@@ -118,19 +118,20 @@ describe('Events/Tickets list component', () => {
     describe('loadUsersChildren', () => {
       it('should load the user\'s children', (done) => {
         // ARRANGE
-        const mockUserChildrenData = [{userId: '1'}, {userId: '2'}];
-        MockUsersService.getChildren.returns(Promise.resolve({ body: mockUserChildrenData }));
+        const mockProfileChildrenData = [{userId: '1', user: {id: '1'}}, {userId: '2', user: {id: '2'}}];
+        MockUsersService.getChildren.returns(Promise.resolve({ body: mockProfileChildrenData }));
         const vm = vueUnitHelper(TicketListWithMocks);
         vm.currentUser = {
           id: 'foo',
         };
-        const mockUserChildrenTransformed = {foo: {id: 'foo'}, 1:{userId: '1'}, 2: {userId: '2'}};
+        const mockUserChildrenTransformed = {foo: {id: 'foo'}, 1:{id: '1'}, 2: {id: '2'}};
 
         // ACT
         vm.loadUsersChildren();
 
         // ASSERT
         requestAnimationFrame(() => {
+          console.log(vm.users);
           expect(vm.users).to.deep.equal(mockUserChildrenTransformed);
           done();
         });
