@@ -85,7 +85,6 @@ describe('Events/Tickets list component', () => {
         };
         vm.usersDojos = [{dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77'}];
         const mockEventDataTransformed = _.map(mockEventDataResponse, (event, index) => {event.dojo = vm.usersDojos[0]; return event;});
-        console.log('transformed', mockEventDataTransformed);
         // ACT
         vm.loadEvents();
 

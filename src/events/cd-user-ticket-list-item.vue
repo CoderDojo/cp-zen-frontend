@@ -1,51 +1,51 @@
 <template>
-  <div class="cd-event-list-item" v-if="isVisible">
-    <div class="cd-event-list-item__details">
-      <header class="cd-event-list-item__header">
-        <h3 class="cd-event-list-item__name">
+  <div class="cd-user-ticket-list-item" v-if="isVisible">
+    <div class="cd-user-ticket-list-item__details">
+      <header class="cd-user-ticket-list-item__header">
+        <h3 class="cd-user-ticket-list-item__name">
           {{ event.name }}
         </h3>
       </header>
-      <div class="cd-event-list-item__datetime">
-        <div v-if="!isRecurring" class="cd-event-list-item__date-timestamp">
+      <div class="cd-user-ticket-list-item__datetime">
+        <div v-if="!isRecurring" class="cd-user-ticket-list-item__date-timestamp">
           {{ event.dates[0].startTime | cdDateFormatter }}
         </div>
         <div v-else>
-          <div class="cd-event-list-item__date-series">{{ $t('Next in series:') }}</div>
-          <span class="cd-event-list-item__date-timestamp">{{ nextStartTime |  cdDateFormatter }}</span>
+          <div class="cd-user-ticket-list-item__date-series">{{ $t('Next in series:') }}</div>
+          <span class="cd-user-ticket-list-item__date-timestamp">{{ nextStartTime |  cdDateFormatter }}</span>
         </div>
-        <div class="cd-event-list-item__times-timestamp">
+        <div class="cd-user-ticket-list-item__times-timestamp">
           {{ event.dates[0].startTime | cdTimeFormatter }} - {{ event.dates[0].endTime | cdTimeFormatter }}
         </div>
       </div>
     </div>
-    <div v-if="!isPastEvent" class="cd-event-list-item__view-wrapper">
+    <div v-if="!isPastEvent" class="cd-user-ticket-list-item__view-wrapper">
       <div v-if="event.eventbriteId">
-        <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-event-list-item__view">{{ $t('See Details and Book') }}</a>
+        <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-user-ticket-list-item__view">{{ $t('See Details and Book') }}</a>
       </div>
-      <div v-if="hasApplications" class="cd-event-list-item__view-applications">
-        <h4 class="cd-event-list-item__view-application-title"><i class="fa fa-ticket"></i>{{ $t('Tickets') }}</h4>
+      <div v-if="hasApplications" class="cd-user-ticket-list-item__view-applications">
+        <h4 class="cd-user-ticket-list-item__view-application-title"><i class="fa fa-ticket"></i>{{ $t('Tickets') }}</h4>
         <div v-for="application in applications">
           <cd-attendee :application="application" :session="sessions[application.sessionId]" :ticket="tickets[application.ticketId]" :user="users[application.userId]"></cd-attendee>
         </div>
-        <router-link
-          :to="bookLink"
-          tag="button" class="btn btn-lg btn-primary cd-event-list-item__view">
-          {{ $t('Modify booking') }}</router-link>
+        <button tag="button"
+          @click="cancel()"
+          class="btn btn-lg btn-secondary cd-user-ticket-list-item__view">
+          {{ $t(applications.length > 1 ? 'Cancel tickets' : 'Cancel ticket') }}</button>
       </div>
       <!-- NOTE : What about awaiting approval tickets ?-->
       <div v-else>
-        {{ $t('No ticket booked') }}
+        <p>{{ $t('No ticket booked') }}</p>
         <router-link
           :to="bookLink"
-          tag="button" class="btn btn-lg btn-primary cd-event-list-item__view">
+          tag="button" class="btn btn-lg btn-primary cd-user-ticket-list-item__view">
           {{ $t('Book') }}</router-link>
       </div>
     </div>
-    <div v-if="isRecurring" class="cd-event-list-item__recurring-info">
-      <span class="fa fa-info-circle cd-event-list-item__recurring-info-icon"></span>
-      <span class="cd-event-list-item__recurring-info-header">{{ $t('This is a recurring event') }}</span>
-      <div class="cd-event-list-item__recurring-info-text">
+    <div v-if="isRecurring" class="cd-user-ticket-list-item__recurring-info">
+      <span class="fa fa-info-circle cd-user-ticket-list-item__recurring-info-icon"></span>
+      <span class="cd-user-ticket-list-item__recurring-info-header">{{ $t('This is a recurring event') }}</span>
+      <div class="cd-user-ticket-list-item__recurring-info-text">
         {{ $t('{recurringFrequencyInfo} at {formattedStartTime} - {formattedEndTime}, from {formattedFirstDate} to {formattedLastDate}',
         {recurringFrequencyInfo, formattedStartTime, formattedEndTime, formattedFirstDate, formattedLastDate}) }}
       </div>
@@ -81,7 +81,7 @@
         return true;
       },
       hasApplications() {
-        return Object.keys(this.applications) > 0;
+        return this.applications.length > 0;
       },
       isFull() {
         let totalEventCapacity = 0;
@@ -146,10 +146,27 @@
           }, this);
         });
       },
+      async cancel() {
+        var payload = [];
+        this.applications.forEach((application) => {
+          payload.push({
+            dojoId: application.dojoId,
+            eventId: application.eventId,
+            sessionId: application.sessionId,
+            ticketName: application.ticketName,
+            ticketType: application.ticketType,
+            ticketId: application.ticketId,
+            userId: application.userId,
+            notes: application.notes,
+            deleted: true,
+          });
+        });
+        await EventService.manageTickets(payload);
+        this.applications = [];
+        alert('Applications cancelled');
+      },
       async loadUsersApplications() {
-        const res = await EventService.loadApplications(
-          this.event.id,
-          { in$: Object.keys(this.users) });
+        const res = await EventService.loadApplications(this.event.id);
         if (res.body && res.body.length > 0) {
           this.applications = res.body;
         }
@@ -173,7 +190,7 @@
 <style scoped lang="less">
     @import "../common/variables";
 
-  .cd-event-list-item {
+  .cd-user-ticket-list-item {
     &__details {
       display: flex;
     }
@@ -255,7 +272,7 @@
   }
 
   @media (max-width: @screen-xs-max) {
-    .cd-event-list-item {
+    .cd-user-ticket-list-item {
       &__details {
         flex-direction: column;
       }

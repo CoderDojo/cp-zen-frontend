@@ -4,13 +4,12 @@
     <div class="cd-event-sessions__session" v-for="session in sessions">
       <h3 class="cd-event-sessions__name">{{ session.name }}</h3>
       <p class="cd-event-sessions__description">{{ session.description }}</p>
-      <event-application-item :session="session" :event-id="eventId" :users="users"></event-application-item>
+      <event-application-item v-on:ticket-applications="setApplications" :session="session" :event-id="eventId" :users="users"></event-application-item>
     </div>
 
-    <router-link :to="{name: 'EventBookingForm', params: {eventId}}"
-                 class="cd-event-sessions__next btn btn-primary"
-                 tag="button">{{ $t('Proceed') }}
-    </router-link>
+    <button class="cd-event-sessions__next btn btn-primary"
+      @click="book()" tag="button">{{ $t('Proceed') }}
+    </button>
   </div>
 </template>
 <script>
@@ -46,9 +45,7 @@
         this.event = res.body;
       },
       async loadUsersApplications() {
-        const res = await EventService.loadApplications(
-          this.event.id,
-          { in$: this.users.map(o => o.userId) });
+        const res = await EventService.loadApplications(this.event.id);
         if (res.body && res.body.length > 0) {
           this.applications = res.body;
         }
@@ -67,6 +64,27 @@
         const res = await UserService.getCurrentUser();
         this.currentUser = res.body.user;
       },
+      setApplications(session, ticket, users) {
+        users.forEach((user) => {
+          this.applications.push({
+            dojoId: this.event.dojoId,
+            eventId: this.event.id,
+            sessionId: session.id,
+            ticketName: ticket.name,
+            ticketType: ticket.type,
+            ticketId: ticket.id,
+            userId: user.userId,
+            notes: 'N/A',
+          });
+        });
+      },
+      async book() {
+        // TODO : cancel modified ticket so we can modify prev booked
+        await EventService.manageTickets(this.applications);
+        /* eslint-disable no-alert */
+        alert('Booking done!');
+        /* eslint-enable no-alert */
+      },
     },
     async created() {
       this.loadEvent();
@@ -84,7 +102,6 @@
           let tickets = this.sessions[sessionIndex][ticketIndex];
           if (!isArray()) tickets = [];
           tickets.push(application);
-          console.log('pushed', application);
         });
       },
     },

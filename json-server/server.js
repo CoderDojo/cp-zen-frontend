@@ -79,6 +79,11 @@ server.post('/api/2.0/profiles/youth/create', (req, res) => {
   res.send(child);
 });
 
+server.get('/api/2.0/profiles/children-for-user/parent1', (req, res) => {
+  const children = users[req.cookies.loggedIn].children;
+  res.send(children);
+});
+
 server.post('/api/2.0/users/register', (req, res) => {
   users[req.body.user.email] = req.body.user;
   users[req.body.user.email].id = uuidv1();
