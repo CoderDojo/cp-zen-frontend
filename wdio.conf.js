@@ -11,6 +11,7 @@ exports.config = {
     //
     specs: [
         './test/e2e/specs/**/*.js'
+        // './test/e2e/specs/my-tickets.js'
     ],
     // Patterns to exclude.
     exclude: [
@@ -72,7 +73,7 @@ exports.config = {
     //
     // Set a base URL in order to shorten url command calls. If your url parameter starts
     // with "/", then the base url gets prepended.
-    baseUrl: process.env.TARGET_URL_BASE || "http://localhost:8000/v2",
+    baseUrl: process.env.TARGET_URL_BASE || "http://localhost:8080/v2",
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 10000,

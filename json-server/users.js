@@ -8,8 +8,9 @@ module.exports = {
     initUserType: JSON.stringify({name: 'parent-guardian', title: 'Parent/Guardian'}),
     roles: ['basic-user'],
     children: {'child1': {
-      id: 'child1',
-      userId: 'uchild1',
+      id: 'pchild1',
+      userId: 'child1',
+      name: 'child1 one',
       firstName: 'child',
       lastName: 'one',
     }}
