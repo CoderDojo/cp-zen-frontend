@@ -357,10 +357,19 @@ describe('Dojo details page', () => {
     browser.deleteCookie();
   });
 
-  it('should allow a logged in user to join a public dojo', () => {
-    FindDojoPage.openDojoWithQuery('dublin', 5);
-    expect(DojoDetailsPage.joinButton.isVisible()).to.equal(false);
+  it('should allow to join a public dojo when there are events', () => {
+    FindDojoPage.openDojoWithQuery('dublin', 2);
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.joinButtonWEvents.isVisible()).to.equal(true);
+  });
 
+  it('should allow a logged-out user to join a public dojo', () => {
+    FindDojoPage.openDojoWithQuery('dublin', 5);
+    expect(DojoDetailsPage.joinButtonNoEvents.isVisible()).to.equal(true);
+    // TODO : test redirection to login when login is implemented in vue
+  });
+
+  it('should allow a logged in user to join a public dojo', () => {
     LoginPage.open();
     LoginPage.email.waitForVisible();
     LoginPage.email.setValue('parent1@example.com');
@@ -369,8 +378,8 @@ describe('Dojo details page', () => {
     FindDojoPage.header.waitForVisible();
 
     FindDojoPage.openDojoWithQuery('dublin', 5);
-    DojoDetailsPage.joinButton.waitForVisible();
-    DojoDetailsPage.joinButton.click();
+    DojoDetailsPage.joinButtonNoEvents.waitForVisible();
+    DojoDetailsPage.joinButtonNoEvents.click();
     expect(browser.alertText()).to.equal('Congratulations, you have now joined the Dojo.');
     browser.alertAccept();
 
@@ -386,7 +395,7 @@ describe('Dojo details page', () => {
     FindDojoPage.header.waitForVisible();
 
     FindDojoPage.openDojoWithQuery('dublin', 0);
-    expect(DojoDetailsPage.joinButton.isVisible()).to.equal(false);
+    expect(DojoDetailsPage.joinButtonNoEvents.isVisible()).to.equal(false);
 
     browser.deleteCookie();
   });
