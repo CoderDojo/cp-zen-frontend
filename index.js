@@ -1,26 +1,20 @@
-/* eslint-disable */
+const fs = require('fs');
+const Handlebars = require('handlebars');
+const pkg = require('./package.json');
 
-'use strict';
+const openGraphTemplate = Handlebars.compile(
+  fs.readFileSync(`${__dirname}/dist/opengraph.hbs`, { encoding: 'UTF-8' }),
+);
 
-var fs = require('fs');
-var _ = require('lodash');
-var Handlebars = require('handlebars');
+const handler = { file: { path: 'index.html' } };
 
-var openGraphTemplateString = fs.readFileSync(__dirname + '/dist/opengraph.hbs', { encoding: 'UTF-8' });
-var openGraphTemplate = Handlebars.compile(openGraphTemplateString);
-
-exports.register = function (server, options, next) {
-
+exports.register = (server, options, next) => {
   server.path(`${__dirname}/dist/`);
   if (process.env.NODE_ENV !== 'production') {
     server.route({
       method: 'GET',
       path: '/v2/{param*}',
-      handler: {
-        file: {
-          path: 'index.html'
-        }
-      }
+      handler,
     });
   }
 
@@ -29,71 +23,57 @@ exports.register = function (server, options, next) {
     path: '/v2/static/{param*}',
     handler: {
       directory: {
-        path: 'static'
-      }
-    }
+        path: 'static',
+      },
+    },
   });
 
   server.route({
     method: 'GET',
     path: '/dojos/{id}',
-    handler: {
-      file: {
-        path: 'index.html'
-      }
-    }
+    handler,
   });
 
   server.route({
     method: 'GET',
     path: '/dojos/{id}/{alpha2*}',
-    handler: function (request, reply) {
-      reply(openGraphTemplate({
-        openGraphProperties: request.app.context.preload
-      }));
+    handler(request, reply) {
+      reply(
+        openGraphTemplate({
+          openGraphProperties: request.app.context.preload,
+        }),
+      );
     },
     config: {
       plugins: {
         senecaPreloader: {
-          handler: 'seneca-dojo-preloader'
-        }
-      }
-    }
+          handler: 'seneca-dojo-preloader',
+        },
+      },
+    },
   });
 
   server.route({
     method: 'GET',
     path: '/dashboard/tickets',
-    handler :{
-      file: {
-        path: 'index.html'
-      }
-    }
+    handler,
   });
 
   server.route({
     method: 'GET',
     path: '/dashboard/dojos/events/user-events',
-    handler :{
-      file: {
-        path: 'index.html'
-      }
-    }
+    handler,
   });
 
   server.route({
     method: 'GET',
     path: '/',
-    handler: {
-      file: {
-        path: 'index.html'
-      }
-    }
+    handler,
   });
 
   next();
 };
 
 exports.register.attributes = {
-  pkg: require('./package.json')
+  pkg,
 };
