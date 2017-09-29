@@ -66,11 +66,9 @@ describe('Event Details', () => {
   it('should display Event details', (done) => {
     // ARRANGE
     vm.eventId = 1;
-    MockEventService.loadEvent.withArgs(1).returns(Promise.resolve(
-      {
-        body: mockEventData,
-      },
-    ));
+    MockEventService.loadEvent.withArgs(1).returns(Promise.resolve({
+      body: mockEventData,
+    }));
 
     // ACT
     vm.loadEvent();
@@ -85,11 +83,9 @@ describe('Event Details', () => {
   it('should display recurring Event details', (done) => {
     // ARRANGE
     vm.eventId = 2;
-    MockEventService.loadEvent.withArgs(2).returns(Promise.resolve(
-      {
-        body: mockRecurringEventData,
-      },
-    ));
+    MockEventService.loadEvent.withArgs(2).returns(Promise.resolve({
+      body: mockRecurringEventData,
+    }));
 
     // ACT
     vm.loadEvent();

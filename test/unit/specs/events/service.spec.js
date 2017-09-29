@@ -41,7 +41,8 @@ describe('Events Service', () => {
           filterPastEvents: true,
           status: 'published',
         },
-      }).returns(Promise.resolve({ body: expectedEvents }));
+      },
+    ).returns(Promise.resolve({ body: expectedEvents }));
 
     EventsService.loadEvents('3ed47c6d-a689-46a0-883b-1f3fd46e9c77').then((events) => {
       expect(events.body).to.deep.equal(expectedEvents);

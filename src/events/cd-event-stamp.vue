@@ -40,7 +40,8 @@
               utcOffset: moment().utcOffset(),
             },
           },
-        });
+        },
+      );
       if (events.body.results && events.body.results.length > 0) {
         this.event = events.body.results[0];
       }

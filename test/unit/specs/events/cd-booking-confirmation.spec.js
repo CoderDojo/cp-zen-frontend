@@ -33,13 +33,9 @@ describe('Booking Confirmation Component', () => {
       vm.dojo = '';
       const expectedDojo = { name: 'foo' };
 
-      MockDojoService.getDojoById.withArgs('1').returns(
-        Promise.resolve(
-          {
-            body: expectedDojo,
-          },
-        ),
-      );
+      MockDojoService.getDojoById.withArgs('1').returns(Promise.resolve({
+        body: expectedDojo,
+      }));
 
       // ACT
       vm.getDojo();

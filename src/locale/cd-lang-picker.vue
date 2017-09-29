@@ -58,8 +58,10 @@
     async created() {
       this.availableLanguages = (await this.getAvailableLanguages()).body;
       const browserLocale = navigator.language.replace('-', '_');
-      const matchingLocale = find(this.availableLanguages,
-        language => language.code === browserLocale);
+      const matchingLocale = find(
+        this.availableLanguages,
+        language => language.code === browserLocale,
+      );
       const langCookie = Cookie.get('NG_TRANSLATE_LANG_KEY');
       if (langCookie) {
         this.lang = langCookie.substring(1, langCookie.length - 1);
