@@ -23,6 +23,13 @@ module.exports = {
     email: 'parent2@example.com',
     initUserType: JSON.stringify({name: 'parent-guardian', title: 'Parent/Guardian'}),
     roles: ['basic-user'],
+    children: {'child1': {
+      id: 'pchild2',
+      userId: 'child2',
+      name: 'child two',
+      firstName: 'child',
+      lastName: 'two',
+    }}
   },
   'child1o13@example.com':{
     id: 'child1o13',

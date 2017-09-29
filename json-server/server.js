@@ -5,7 +5,6 @@ const uuidv1 = require('uuid/v1');
 const users = require('./users');
 const usersProfile = require('./users-profile');
 const usersDojos = require('./users-dojos');
-const events = require('./events');
 const applications = require('./applications');
 
 const server = jsonServer.create();
@@ -29,6 +28,7 @@ const nonResourcePostUrls = [
 ]
 const rewriteRules = {
   '/api/2.0/dojos/find': '/api/2.0/dojos',
+  '/api/2.0/events/search': '/api/2.0/events',
   '/api/2.0/dojos/search-bounding-box': '/api/2.0/dojos',
   '/api/2.0/events/bulk-apply-applications': '/api/2.0/bulk-apply-applications'
 };
@@ -80,7 +80,7 @@ server.post('/api/2.0/profiles/youth/create', (req, res) => {
   res.send(child);
 });
 
-server.get('/api/2.0/profiles/children-for-user/parent1', (req, res) => {
+server.get('/api/2.0/profiles/children-for-user/:parentId', (req, res) => {
   const children = users[req.cookies.loggedIn].children;
   children.child1.user = Object.assign({}, children.child1);
   children.child1.user.id = children.child1.userId;
@@ -102,24 +102,10 @@ server.post('/api/2.0/users/login', (req, res) => {
   res.send();
 });
 
-server.get('/api/2.0/events/search', (req, res) => {
-  const _userDojos = [];
-  const _dojoId = req.body.query.dojoId;
-  if (req.cookies.loggedIn) {
-    if (_dojoId) {
-      res.send(events[_dojoId]);
-    } else {
-      res.send([]);
-    }
-  } else {
-    res.send();
-  }
-});
-
-server.get('/api/2.0/user/event/event1/applications', (req, res) => {
+server.get('/api/2.0/user/event/:id/applications', (req, res) => {
   if (req.cookies.loggedIn) {
     console.log(req.cookies.loggedIn, applications);
-    res.send(applications[req.cookies.loggedIn]['event1']);
+    res.send(applications[req.cookies.loggedIn][req.params.id]);
   } else {
     res.send();
   }

@@ -1,35 +1,37 @@
+const moment = require('moment');
 const TicketPage = require('../page-objects/my-tickets');
 const LoginPage = require('../page-objects/login');
+const currentYear = (new Date()).getFullYear();
 
 describe('My tickets page', () => {
   beforeEach(() => {
     LoginPage.open();
     LoginPage.email.waitForVisible();
-    LoginPage.email.setValue('parent1@example.com');
-    LoginPage.password.setValue('testparent1');
+    LoginPage.email.setValue('parent2@example.com');
+    LoginPage.password.setValue('testparent2');
     LoginPage.login.click();
     TicketPage.open();
   });
   it('should show a list of events', () => {
     expect(TicketPage.events.length).to.equal(2);
-    expect(TicketPage.eventName(0).getText()).to.equal('Docklands Dojo Autumn Term');
-    expect(TicketPage.eventDate(0).getText()).to.equal('September 25, 2017');
-    expect(TicketPage.eventTime(0).getText()).to.equal('6pm - 7:30pm');
+    expect(TicketPage.eventName(0).getText()).to.equal('My First Amazing Event');
+    expect(TicketPage.eventDate(0).getText()).to.equal(`September 6, ${currentYear + 1}`);
+    expect(TicketPage.eventTime(0).getText()).to.equal('4:30pm - 6pm');
     // TODO : event2 not booked
-    expect(TicketPage.eventName(1).getText()).to.equal('Docklands Dojo Winter Term');
-    expect(TicketPage.eventDate(1).getText()).to.equal('December 25, 2017');
-    expect(TicketPage.eventTime(1).getText()).to.equal('6pm - 7:30pm');
+    expect(TicketPage.eventName(1).getText()).to.equal('My Second Amazing Event');
+    expect(TicketPage.eventDate(1).getText()).to.equal('June 3, 2018');
+    expect(TicketPage.eventTime(1).getText()).to.equal('10am - 12pm');
   });
 
   it('should be booked with 2 tickets and allow cancellation', () => {
     expect(TicketPage.tickets.length).to.equal(2);
-    expect(TicketPage.ticketUsername(0).getText()).to.equal('child1 one');
-    expect(TicketPage.ticketName(0).getText()).to.equal('ninja');
-    expect(TicketPage.ticketSession(0).getText()).to.equal('Tickets');
+    expect(TicketPage.ticketUsername(0).getText()).to.equal('child two');
+    expect(TicketPage.ticketName(0).getText()).to.equal('Laptop Required');
+    expect(TicketPage.ticketSession(0).getText()).to.equal('Scratch');
 
-    expect(TicketPage.ticketUsername(1).getText()).to.equal('parent one');
-    expect(TicketPage.ticketName(1).getText()).to.equal('ninja');
-    expect(TicketPage.ticketSession(1).getText()).to.equal('Tickets');
+    expect(TicketPage.ticketUsername(1).getText()).to.equal('parent two');
+    expect(TicketPage.ticketName(1).getText()).to.equal('Parent');
+    expect(TicketPage.ticketSession(1).getText()).to.equal('Scratch');
 
     expect(TicketPage.cancel(0).isVisible()).to.be.true;
     // TODO : fix test once translation supports plurals

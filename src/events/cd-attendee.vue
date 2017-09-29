@@ -1,7 +1,7 @@
 <template>
   <div class="cd-attendee">
     <span class="cd-attendee__username">{{ user.name }}</span>
-    <span class="cd-attendee__ticket">{{ ticket.type }}</span>
+    <span class="cd-attendee__ticket">{{ ticket.name }}</span>
     <span class="cd-attendee__session">{{ session.name }}</span>
   </div>
 </template>
