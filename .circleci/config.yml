@@ -1,27 +1,19 @@
 ---
 version: 2
 jobs:
-  build-test:
+  build:
     working_directory: ~/cp-zen-frontend
     docker:
       - image: node:8.4
         environment:
           LANG: en_US.utf8
-          WDIO_MAX_INSTANCES: 1
     steps:
       - checkout
       - run:
-          name: install chrome
+          name: Install jq
           command: |
-            set -eo pipefail
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-            google-chrome --version
-            wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-            sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-            sudo apt-get update
-            sudo apt-get --only-upgrade install google-chrome-stable
-            google-chrome --version
-      - run: sudo apt-get install jq
+            apt-get update
+            apt-get install jq
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
       - run:
@@ -33,17 +25,78 @@ jobs:
             - node_modules
       - run:
           name: install testing dependencies
-          command: BUILD_BRANCH=$CIRCLE_BRANCH GITHUB_USERNAME=$CIRCLE_PR_USERNAME ./build/get_cd_deps.sh
+          command: BUILD_BRANCH=$CIRCLE_BRANCH GITHUB_USERNAME=$CIRCLE_PR_USERNAME .circleci/get_cd_deps.sh
       - run:
           name: Build
           command: GIT_BRANCH=$CIRCLE_BRANCH yarn build
-      - run:
-          name: Tests
-          command: yarn test
       - save_cache:
           key: build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - dist
+  test-e2e:
+    working_directory: ~/cp-zen-frontend
+    docker:
+      - image: node:8.4
+        environment:
+          LANG: en_US.utf8
+          NODE_ENV: e2e
+          WDIO_MAX_INSTANCES: 1
+      - image: selenium/standalone-chrome:latest
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "yarn.lock" }}
+            - dependency-cache
+      - restore_cache:
+          keys:
+            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - build-cache-{{ .Branch }}
+            - build-cache
+      - run:
+          name: Tests
+          command: yarn e2e-with-mocks
+  test-unit:
+    working_directory: ~/cp-zen-frontend
+    docker:
+      - image: node:8.4
+        environment:
+          LANG: en_US.utf8
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "yarn.lock" }}
+            - dependency-cache
+      - restore_cache:
+          keys:
+            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - build-cache-{{ .Branch }}
+            - build-cache
+      - run:
+          name: install chrome
+          command: bash .circleci/install_chrome.sh
+      - run:
+          name: Tests
+          command: yarn unit
+  test-lint:
+    working_directory: ~/cp-zen-frontend
+    docker:
+      - image: node:8.4
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "yarn.lock" }}
+            - dependency-cache
+      - restore_cache:
+          keys:
+            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - build-cache-{{ .Branch }}
+            - build-cache
+      - run:
+          name: Tests
+          command: yarn lint
   publish:
     working_directory: ~/cp-zen-frontend
     docker:
@@ -51,13 +104,17 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          keys:
+            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - build-cache-{{ .Branch }}
+            - build-cache
       - run:
           name: setup git
           command: |
             set -eo pipefail
             git config --global user.email "webteam@coderdojo.com"
             git config --global user.name "CoderDojo Foundation"
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run:
           name: publish to git and npm
           command: |
@@ -71,10 +128,14 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          keys:
+            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - build-cache-{{ .Branch }}
+            - build-cache
       - run:
           name: publish
           command: |
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
             npm --no-git-tag-version version `node build/get-version.js`-`git rev-parse --short HEAD`
             npm publish --tag=staging
   deploy:
@@ -83,56 +144,45 @@ jobs:
       - image: node:8.4
     steps:
       - run:
-          name: checout repo
-          command: |
-            git clone git@github.com:CoderDojo/cp-zen-platform.git
-            cd cp-zen-platform
-            git config --global user.email "webteam@coderdojo.com"
-            git config --global user.name "CoderDojo Foundation"
-      - run:
           name: Update frontend
-          command: |
-            set -eo pipefail
-            yarn add cp-zen-frontend cp-translations
-            git add .
-            git commit -m "[ci] Update frontend"
-            git push
+          command: BRANCH=CIRCLE_BRANCH ./circleci/update_frontend.sh
   stage:
     working_directory: ~
     docker:
       - image: node:8.4
     steps:
       - run:
-          name: checout repo
-          command: |
-            git clone git@github.com:CoderDojo/cp-zen-platform.git
-            cd cp-zen-platform
-            git config --global user.email "webteam@coderdojo.com"
-            git config --global user.name "CoderDojo Foundation"
-      - run:
           name: Update frontend
-          command: |
-            set -eo pipefail
-            yarn add cp-zen-frontend@staging cp-translations@staging
-            git add .
-            git commit -m "[ci] Update frontend"
-            git push
+          command: BRANCH=CIRCLE_BRANCH ./circleci/update_frontend.sh
 
 workflows:
   version: 2
   build-test-and-deploy:
     jobs:
-      - build-test
+      - build
+      - test-unit:
+          requires:
+            - build
+      - test-e2e:
+          requires:
+            - build
+      - test-lint:
+          requires:
+            - build
       - publish:
           requires:
-            - build-test
+            - test-unit
+            - test-e2e
+            - test-lint
           filters:
             branches:
               only:
                 - master
       - nightly:
           requires:
-            - build-test
+            - test-unit
+            - test-e2e
+            - test-lint
           filters:
             branches:
               only:
