@@ -94,7 +94,7 @@
 </script>
 <style scoped lang="less">
   @import "../common/variables";
-  .join-button {
+  .join-button() {
     font-size: @font-size-medium;
     font-weight: bold;
     color: @cd-blue;
