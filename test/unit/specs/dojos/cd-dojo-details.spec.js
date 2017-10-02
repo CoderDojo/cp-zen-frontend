@@ -92,13 +92,15 @@ describe('Dojo details component', () => {
       vm.user = {
         id: '74afa4b8-8449-46e4-a553-8febda8614ad',
       };
-      vm.id = '3ed47c6d-a689-46a0-883b-1f3fd46e9c77';
+      vm.dojoDetails = {
+        id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77'
+      };
 
       // ACT
       vm.volunteer(userType);
 
       // ASSERT
-      expect(DojoServiceMock.requestUserInvite).to.have.been.calledWith(vm.user, vm.id, userType);
+      expect(DojoServiceMock.requestUserInvite).to.have.been.calledWith(vm.user, vm.dojoDetails.id, userType);
     });
   });
 
