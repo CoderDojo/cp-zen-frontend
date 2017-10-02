@@ -1,24 +1,39 @@
 <template>
   <div class="cd-find-dojo">
-    <div class="cd-find-dojo__panel">
-      <form class="cd-find-dojo__panel-form" @submit.prevent="$router.push({ query: { q: searchCriteria, p: 1 } });">
-        <h1 class="cd-find-dojo__panel-form-header">{{ $t('Find a Dojo to attend') }}</h1>
-        <p class="cd-find-dojo__panel-form-info">{{ $t('Learn technology in an informal, creative and social environment. Find a dojo near you.') }}</p>
+    <div class="cd-find-dojo__panel" :class="{ 'cd-find-dojo__panel--reduced': searchExecuted }">
+      <form class="cd-find-dojo__panel-form" :class="{ 'cd-find-dojo__panel-form--reduced': searchExecuted }" @submit.prevent="$router.push({ query: { q: searchCriteria, p: 1 } });">
+        <h1 v-if="!searchExecuted" class="cd-find-dojo__panel-form-header">{{ $t('Find a Dojo to attend') }}</h1>
+        <p v-if="!searchExecuted" class="cd-find-dojo__panel-form-info">{{ $t('Learn technology in an informal, creative and social environment. Find a dojo near you.') }}</p>
+        <div v-if="searchExecuted" class="cd-find-dojo__panel-form-header--reduced hidden-xs">{{ $t('{total} Dojos found near {query}', {total: dojos.length, query: queryString}) }}</div>
+        <div v-if="searchExecuted" class="cd-find-dojo__panel-form-header--reduced visible-xs">{{ $t('{total} Dojos found', {total: dojos.length}) }}</div>
         <div class="cd-find-dojo__panel-form-search">
-          <div class="cd-find-dojo__panel-form-search-input">
+          <div class="cd-find-dojo__panel-form-search-input" :class="{ 'cd-find-dojo__panel-form-search-input--reduced': searchExecuted }">
             <input type="text" name="addressSearch" class="form-control input-lg" :placeholder="$t('Enter your city or locality')" v-model="searchCriteria" autofocus>
           </div>
-          <div class="cd-find-dojo__panel-form-search-submit">
+          <div class="cd-find-dojo__panel-form-search-submit hidden-xs">
             <input type="submit" class="btn btn-lg" :value="$t('Search for Dojos')"/>
           </div>
+          <div v-if="!searchExecuted" class="cd-find-dojo__panel-form-search-submit visible-xs">
+            <input type="submit" class="btn btn-lg" :value="$t('Search for Dojos')"/>
+          </div>
+          <span v-else class="cd-find-dojo__panel-form-search-submit--reduced visible-xs">
+            <button type="submit" class="btn btn-lg fa fa-arrow-right"/>
+          </span>
         </div>
-        <router-link tag="button" :to="{ query: { currentLocation: true, p: 1 } }" class="cd-find-dojo__panel-form-detect-location">
+        <router-link tag="button" :to="{ query: { currentLocation: true, p: 1 } }" class="cd-find-dojo__panel-form-detect-location hidden-xs">
+          <i class="fa fa-location-arrow" aria-hidden="true" v-show="!detectingLocation"></i>
+          <i class="fa fa-spinner fa-spin" aria-hidden="true" v-show="detectingLocation"></i>
+          {{ $t('Detect my location') }}
+        </router-link>
+        <router-link tag="button" :to="{ query: { currentLocation: true } }"
+          :class="{ 'cd-find-dojo__panel-form-detect-location--reduced': searchExecuted }"
+          class="cd-find-dojo__panel-form-detect-location visible-xs">
           <i class="fa fa-location-arrow" aria-hidden="true" v-show="!detectingLocation"></i>
           <i class="fa fa-spinner fa-spin" aria-hidden="true" v-show="detectingLocation"></i>
           {{ $t('Detect my location') }}
         </router-link>
       </form>
-      <div class="cd-find-dojo__panel-illustration">
+      <div v-if="!searchExecuted" class="cd-find-dojo__panel-illustration">
         <img src="../assets/characters/ninjas/ninja-female-2-laptop-sitting.svg" />
       </div>
     </div>
@@ -109,6 +124,9 @@
         const lastOnPage = this.firstOnPage + (dojoPaginationStore.state.count - 1);
         return lastOnPage > 0 ? lastOnPage : 0;
       },
+      queryString() {
+        return this.$route.query.q ? `‘${this.$route.query.q}’` : this.$t('you');
+      },
     },
     methods: {
       getCurrentLocation() {
@@ -198,14 +216,28 @@
       color: @cd-white;
       margin: 0 -16px;
 
+      &--reduced {
+        max-height: 200px;
+      }
+
       &-form {
         flex: 3;
         padding: 48px 32px 96px;
+
+        &--reduced {
+          padding: 24px 24px 40px;
+        }
 
         &-header {
           font-size: 40px;
           font-weight: 300;
           margin-bottom: 4px;
+
+          &--reduced {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 16px;
+          }
         }
 
         &-info {
@@ -219,9 +251,12 @@
           flex-wrap: wrap;
 
           &-input {
-            flex: 1;
             margin-right: 8px;
             min-width: 460px;
+
+            &--reduced {
+              min-width: 310px;
+            }
           }
 
           &-submit {
@@ -240,7 +275,7 @@
         &-detect-location {
           display: inline-block;
           color: @cd-white;
-          margin: 8px 0;
+          margin: 16px 0;
           cursor: pointer;
           background: none;
           border: none;
@@ -340,14 +375,27 @@
   @media (max-width: @screen-xs-max) {
     .cd-find-dojo {
       &__panel {
+        &--reduced {
+          justify-content: center;
+        }
         &-illustration {
           display: none;
         }
         &-form {
           padding: 64px 16px 64px;
 
+          &--reduced {
+            padding: 16px 8px;
+            width: 100%
+          }
+
           &-header {
             font-size: 30px;
+
+            &--reduced {
+              text-align: center;
+              font-size: 18px;
+            }
           }
 
           &-info {
@@ -360,18 +408,38 @@
               flex: none;
               margin-right: 0;
               min-width: auto;
+
+              &--reduced {
+                max-width: 80%;
+                margin-right: 4px;
+              }
             }
             &-submit {
               margin-top: 8px;
               > .btn {
                 width: 100%;
               }
+              &--reduced {
+                margin-top: none;
+                flex: 1;
+                > .btn {
+                  background: #2a8244;
+                  width: 100%;
+                  &:hover {
+                    background: #154c25;
+                    color: @cd-white;
+                  }
+                }
+              }
             }
           }
 
           &-detect-location {
             width: 100%;
-            margin-top: 16px;
+            &--reduced {
+              width: auto;
+              margin: 16px 0 0 0;
+            }
           }
         }
       }

@@ -6,6 +6,16 @@ const DojoPage = Object.create(BasePage, {
       return $('.cd-find-dojo__panel-form-header');
     },
   },
+  headerReduced: {
+    get() {
+      return $('.cd-find-dojo__panel-form-header--reduced');
+    },
+  },
+  headerReducedMobile: {
+    get() {
+      return $$('.cd-find-dojo__panel-form-header--reduced')[1];
+    },
+  },
   detectLocationButton: {
     get() {
       return $('.cd-find-dojo__panel-form-detect-location');
@@ -34,6 +44,11 @@ const DojoPage = Object.create(BasePage, {
   addressSearchButton: {
     get() {
       return $('input[value="Search for Dojos"]');
+    },
+  },
+  addressSearchButtonMobile: {
+    get() {
+      return $$('input[value="Search for Dojos"]')[1];
     },
   },
   dojoListItemNames: {
