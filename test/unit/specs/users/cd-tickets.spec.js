@@ -33,7 +33,7 @@ describe('Events/Tickets list component', () => {
 
   describe('methods', () => {
     describe('loadCurrentUser', () => {
-      it('should load the current user', (done) => {
+      it('should load the current user', async () => {
         // ARRANGE
         const mockUser = {
           id: 'foo',
@@ -42,17 +42,15 @@ describe('Events/Tickets list component', () => {
         const vm = vueUnitHelper(TicketListWithMocks);
 
         // ACT
-        vm.loadCurrentUser();
+        await vm.loadCurrentUser();
 
         // ASSERT
-        requestAnimationFrame(() => {
-          expect(vm.currentUser).to.deep.equal(mockUser);
-          done();
-        });
+        expect(vm.currentUser).to.deep.equal(mockUser);
+        return Promise.resolve();
       });
     });
     describe('loadEvents', () => {
-      it('should load the user\'s events', (done) => {
+      it('should load the user\'s events', async () => {
         // ARRANGE
         const mockEventDataResponse = [
           {
@@ -83,22 +81,22 @@ describe('Events/Tickets list component', () => {
         vm.currentUser = {
           id: 'foo',
         };
-        vm.usersDojos = [{dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77'}];
-        const mockEventDataTransformed = _.map(mockEventDataResponse, (event, index) => {event.dojo = vm.usersDojos[0]; return event;});
+        vm.usersDojos = [{ dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77' }];
+        const mockEventDataTransformed = mockEventDataResponse.map(
+          // eslint-disable-next-line no-param-reassign
+          (event) => { event.dojo = vm.usersDojos[0]; return event; });
         // ACT
-        vm.loadEvents();
+        await vm.loadEvents();
 
         // ASSERT
-        requestAnimationFrame(() => {
-          expect(vm.events).to.deep.equal(mockEventDataTransformed);
-          done();
-        });
+        expect(vm.events).to.deep.equal(mockEventDataTransformed);
+        return Promise.resolve();
       });
     });
     describe('loadUserDojos', () => {
-      it('should load the user\'s dojos relationship', (done) => {
+      it('should load the user\'s dojos relationship', async () => {
         // ARRANGE
-        const mockUserDojoData = [{id: 'foobar', dojoId: 'bar', userId: 'foo'}];
+        const mockUserDojoData = [{ id: 'foobar', dojoId: 'bar', userId: 'foo' }];
         MockDojosService.getUsersDojos.returns(Promise.resolve({ body: mockUserDojoData }));
         const vm = vueUnitHelper(TicketListWithMocks);
         vm.currentUser = {
@@ -106,35 +104,30 @@ describe('Events/Tickets list component', () => {
         };
 
         // ACT
-        vm.loadUserDojos();
+        await vm.loadUserDojos();
 
         // ASSERT
-        requestAnimationFrame(() => {
-          expect(vm.usersDojos).to.deep.equal(mockUserDojoData);
-          done();
-        });
+        expect(vm.usersDojos).to.deep.equal(mockUserDojoData);
+        return Promise.resolve();
       });
     });
     describe('loadUsersChildren', () => {
-      it('should load the user\'s children', (done) => {
+      it('should load the user\'s children', async () => {
         // ARRANGE
-        const mockProfileChildrenData = [{userId: '1', user: {id: '1'}}, {userId: '2', user: {id: '2'}}];
+        const mockProfileChildrenData = [{ userId: '1', user: { id: '1' } }, { userId: '2', user: { id: '2' } }];
         MockUsersService.getChildren.returns(Promise.resolve({ body: mockProfileChildrenData }));
         const vm = vueUnitHelper(TicketListWithMocks);
         vm.currentUser = {
           id: 'foo',
         };
-        const mockUserChildrenTransformed = {foo: {id: 'foo'}, 1:{id: '1'}, 2: {id: '2'}};
+        const mockUserChildrenTransformed = { foo: { id: 'foo' }, 1: { id: '1' }, 2: { id: '2' } };
 
         // ACT
-        vm.loadUsersChildren();
+        await vm.loadUsersChildren();
 
         // ASSERT
-        requestAnimationFrame(() => {
-          console.log(vm.users);
-          expect(vm.users).to.deep.equal(mockUserChildrenTransformed);
-          done();
-        });
+        expect(vm.users).to.deep.equal(mockUserChildrenTransformed);
+        return Promise.resolve();
       });
     });
   });

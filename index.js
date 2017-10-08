@@ -66,7 +66,7 @@ exports.register = function (server, options, next) {
     path: '/dashboard/tickets',
     handler :{
       file: {
-        path: __dirname + '/dist/index.html'
+        path: 'index.html'
       }
     }
   });
