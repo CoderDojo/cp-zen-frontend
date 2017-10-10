@@ -18,14 +18,13 @@ jobs:
           key: dependency-cache-{{ checksum "yarn.lock" }}
       - run:
           name: Install Dependencies
-          command: yarn
+          command: |
+            yarn
+            BUILD_BRANCH=$CIRCLE_BRANCH GITHUB_USERNAME=$CIRCLE_PR_USERNAME .circleci/get_cd_deps.sh
       - save_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
-      - run:
-          name: install testing dependencies
-          command: BUILD_BRANCH=$CIRCLE_BRANCH GITHUB_USERNAME=$CIRCLE_PR_USERNAME .circleci/get_cd_deps.sh
       - run:
           name: Build
           command: GIT_BRANCH=$CIRCLE_BRANCH yarn build
@@ -40,7 +39,7 @@ jobs:
         environment:
           LANG: en_US.utf8
           NODE_ENV: e2e
-          WDIO_MAX_INSTANCES: 1
+          WDIO_MAX_INSTANCES: 6
       - image: selenium/standalone-chrome:latest
     steps:
       - checkout
