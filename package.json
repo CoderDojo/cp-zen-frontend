@@ -16,7 +16,7 @@
     "mock-server": "node ./json-server/server.js"
   },
   "dependencies": {
-    "@coderdojo/cd-common": "^1.1.6-8db71c0",
+    "@coderdojo/cd-common": "1.1.7",
     "bootstrap": "^3.3.7",
     "font-awesome": "^4.7.0",
     "handlebars": "^4.0.10",
@@ -121,9 +121,5 @@
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
 }

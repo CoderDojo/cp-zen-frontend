@@ -58,7 +58,7 @@ jobs:
   test-unit:
     working_directory: ~/cp-zen-frontend
     docker:
-      - image: node:8.4
+      - image: circleci/node:8-browsers
         environment:
           LANG: en_US.utf8
     steps:
@@ -72,9 +72,6 @@ jobs:
             - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
             - build-cache-{{ .Branch }}
             - build-cache
-      - run:
-          name: install chrome
-          command: bash .circleci/install_chrome.sh
       - run:
           name: Tests
           command: yarn unit
@@ -108,7 +105,7 @@ jobs:
             - build-cache-{{ .Branch }}
             - build-cache
       - run:
-          name: setup git
+          name: setup git and npm
           command: |
             set -eo pipefail
             git config --global user.email "webteam@coderdojo.com"
@@ -120,7 +117,7 @@ jobs:
             npm version patch -m "[skip ci] Update to %s"
             git push
             npm publish
-  nightly:
+  publish_staging:
     working_directory: ~/cp-zen-frontend
     docker:
       - image: node:8.4
@@ -144,15 +141,15 @@ jobs:
     steps:
       - run:
           name: Update frontend
-          command: BRANCH=CIRCLE_BRANCH ./circleci/update_frontend.sh
-  stage:
+          command: ./circleci/update_frontend.sh master latest
+  deploy_staging:
     working_directory: ~
     docker:
       - image: node:8.4
     steps:
       - run:
           name: Update frontend
-          command: BRANCH=CIRCLE_BRANCH ./circleci/update_frontend.sh
+          command: ./circleci/update_frontend.sh staging staging
 
 workflows:
   version: 2
@@ -177,7 +174,7 @@ workflows:
             branches:
               only:
                 - master
-      - nightly:
+      - publish_staging:
           requires:
             - test-unit
             - test-e2e
@@ -189,6 +186,14 @@ workflows:
       - deploy:
           requires:
             - publish
-      - stage:
+          filters:
+            branches:
+              only:
+                - master
+      - deploy_staging:
           requires:
             - nightly
+          filters:
+            branches:
+              only:
+                - staging
