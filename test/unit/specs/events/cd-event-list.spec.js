@@ -296,11 +296,26 @@ describe('Event list component', () => {
         sandbox.stub(vm, 'loadEvents');
         sandbox.stub(vm, 'loadCurrentUser');
         MockUsersService.getCurrentUser.returns({ body: { user: { id: '34174952-8ca4-4189-b8cb-d383e3fde992' } } });
+        vm.dojo = { verified: 1 };
         // ACT
         vm.$lifecycleMethods.created();
 
         // ASSERT
         expect(vm.loadEvents).to.have.been.calledOnce;
+        expect(vm.loadCurrentUser).to.have.been.calledOnce;
+      });
+      it('shouldnt load event data', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(eventList());
+        sandbox.stub(vm, 'loadEvents');
+        sandbox.stub(vm, 'loadCurrentUser');
+        vm.dojo = { verified: 0 };
+        MockUsersService.getCurrentUser.returns({ body: { user: { id: '34174952-8ca4-4189-b8cb-d383e3fde992' } } });
+        // ACT
+        vm.$lifecycleMethods.created();
+
+        // ASSERT
+        expect(vm.loadEvents).not.to.have.been.calledOnce;
         expect(vm.loadCurrentUser).to.have.been.calledOnce;
       });
     });
