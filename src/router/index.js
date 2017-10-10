@@ -43,6 +43,11 @@ export default new Router({
       props: true,
     },
     {
+      path: '/dashboard/dojos/events/user-events',
+      redirect: '/dashboard/tickets',
+      name: 'NgMyTickets',
+    },
+    {
       path: '/dashboard/tickets',
       name: 'MyTickets',
       component: UserTickets,
