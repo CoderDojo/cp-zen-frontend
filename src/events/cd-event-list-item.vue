@@ -83,7 +83,7 @@
     },
   };
 </script>
-<style scope lang="less">
+<style scoped lang="less">
   @import "../common/styles/cd-event-tile";
 
   .cd-event-list-item {

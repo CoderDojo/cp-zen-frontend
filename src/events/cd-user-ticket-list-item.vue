@@ -57,6 +57,9 @@
   import cdAttendee from './cd-attendee';
   import EventTile from './cd-event-tile';
   import EventService from './service';
+  
+  const cancelFields = ['dojoId', 'eventId', 'sessionId', 'ticketName',
+    'ticketType', 'ticketId', 'userId', 'notes', 'deleted'];
 
   export default {
     name: 'user-ticket-list-item',
@@ -67,8 +70,6 @@
         applications: [],
         sessions: {},
         tickets: {},
-        cancelFields: ['dojoId', 'eventId', 'sessionId', 'ticketName',
-          'ticketType', 'ticketId', 'userId', 'notes', 'deleted'],
       };
     },
     computed: {
@@ -96,7 +97,7 @@
         const payload = [];
         this.applications.forEach((application) => {
           application.deleted = true; // eslint-disable-line no-param-reassign
-          payload.push(pick(application, this.cancelFields));
+          payload.push(pick(application, cancelFields));
         });
         await EventService.manageTickets(payload);
         this.applications = [];

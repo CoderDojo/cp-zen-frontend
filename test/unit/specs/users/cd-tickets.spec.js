@@ -46,7 +46,6 @@ describe('Events/Tickets list component', () => {
 
         // ASSERT
         expect(vm.currentUser).to.deep.equal(mockUser);
-        return Promise.resolve();
       });
     });
     describe('loadEvents', () => {
@@ -90,7 +89,6 @@ describe('Events/Tickets list component', () => {
 
         // ASSERT
         expect(vm.events).to.deep.equal(mockEventDataTransformed);
-        return Promise.resolve();
       });
     });
     describe('loadUserDojos', () => {
@@ -108,7 +106,6 @@ describe('Events/Tickets list component', () => {
 
         // ASSERT
         expect(vm.usersDojos).to.deep.equal(mockUserDojoData);
-        return Promise.resolve();
       });
     });
     describe('loadUsersChildren', () => {
@@ -127,7 +124,6 @@ describe('Events/Tickets list component', () => {
 
         // ASSERT
         expect(vm.users).to.deep.equal(mockUserChildrenTransformed);
-        return Promise.resolve();
       });
     });
   });

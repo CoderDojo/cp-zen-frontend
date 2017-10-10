@@ -72,6 +72,9 @@
   @import "../common/variables";
 
   .cd-event-ticket-list {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 32px;
     &__header {
       margin-top: 0px;
       padding-top: 20px;

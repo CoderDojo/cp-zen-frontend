@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import vueUnitHelper from 'vue-unit-helper';
 import EventListItem from '@/events/cd-event-tile';
 import cdDateFormatter from '@/common/filters/cd-date-formatter';
