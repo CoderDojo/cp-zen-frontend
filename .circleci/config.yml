@@ -4,7 +4,7 @@ jobs:
   build:
     working_directory: ~/cp-zen-frontend
     docker:
-      - image: node:8.4
+      - image: circleci/node:8-browsers
         environment:
           LANG: en_US.utf8
     steps:
@@ -12,8 +12,8 @@ jobs:
       - run:
           name: Install jq
           command: |
-            apt-get update
-            apt-get install jq
+            sudo apt-get update
+            sudo apt-get install jq
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
       - run:
@@ -35,12 +35,10 @@ jobs:
   test-e2e:
     working_directory: ~/cp-zen-frontend
     docker:
-      - image: node:8.4
+      - image: circleci/node:8
         environment:
-          LANG: en_US.utf8
-          NODE_ENV: e2e
-          WDIO_MAX_INSTANCES: 6
-      - image: selenium/standalone-chrome:latest
+          EXTERNAL_SELENIUM: 1
+      - image: selenium/standalone-chrome:3
     steps:
       - checkout
       - restore_cache:
@@ -78,7 +76,7 @@ jobs:
   test-lint:
     working_directory: ~/cp-zen-frontend
     docker:
-      - image: node:8.4
+      - image: circleci/node:8-browsers
     steps:
       - checkout
       - restore_cache:
@@ -96,7 +94,7 @@ jobs:
   publish:
     working_directory: ~/cp-zen-frontend
     docker:
-      - image: node:8.4
+      - image: circleci/node:8-browsers
     steps:
       - checkout
       - restore_cache:
@@ -120,7 +118,7 @@ jobs:
   publish_staging:
     working_directory: ~/cp-zen-frontend
     docker:
-      - image: node:8.4
+      - image: circleci/node:8-browsers
     steps:
       - checkout
       - restore_cache:
@@ -192,7 +190,7 @@ workflows:
                 - master
       - deploy_staging:
           requires:
-            - nightly
+            - publish_staging
           filters:
             branches:
               only:

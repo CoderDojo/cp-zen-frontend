@@ -9,7 +9,7 @@
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "wdio wdio.conf.js",
-    "e2e-with-mocks": "concurrently --kill-others --success first \"yarn mock-server > /dev/null\" \"TARGET_URL_BASE=http://localhost:8080 wdio wdio.conf.js\" \"NODE_ENV=e2e yarn start\" ",
+    "e2e-with-mocks": "concurrently --kill-others --success first \"yarn mock-server > /dev/null\" \"TARGET_URL_BASE=http://localhost:8080 wdio wdio.conf.js\" \"yarn start\" ",
     "start-with-mocks": "concurrently --kill-others --success first \"yarn mock-server\" \"yarn start\" ",
     "test": "yarn unit && yarn e2e-with-mocks",
     "lint": "eslint --ext .js,.vue src test/unit/specs",
