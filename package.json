@@ -9,9 +9,9 @@
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "wdio wdio.conf.js",
-    "e2e-with-mocks": "concurrently --kill-others --success first \"npm run mock-server > /dev/null\" \"TARGET_URL_BASE=http://localhost:8080 wdio wdio.conf.js\" \"NODE_ENV=e2e npm start\" ",
-    "start-with-mocks": "concurrently --kill-others --success first \"npm run mock-server\" \"npm start\" ",
-    "test": "npm run unit && npm run e2e-with-mocks",
+    "e2e-with-mocks": "concurrently --kill-others --success first \"yarn mock-server > /dev/null\" \"TARGET_URL_BASE=http://localhost:8080 wdio wdio.conf.js\" \"yarn start\" ",
+    "start-with-mocks": "concurrently --kill-others --success first \"yarn mock-server\" \"yarn start\" ",
+    "test": "yarn unit && yarn e2e-with-mocks",
     "lint": "eslint --ext .js,.vue src test/unit/specs",
     "mock-server": "node ./json-server/server.js"
   },
@@ -121,9 +121,5 @@
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
 }

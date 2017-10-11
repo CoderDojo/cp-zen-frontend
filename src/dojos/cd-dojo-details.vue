@@ -179,7 +179,7 @@
         return [
           {
             locations: [
-                { startLat, endLng },
+              { startLat, endLng },
             ],
           },
         ];

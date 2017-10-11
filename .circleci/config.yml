@@ -1,0 +1,197 @@
+---
+version: 2
+jobs:
+  build:
+    working_directory: ~/cp-zen-frontend
+    docker:
+      - image: circleci/node:8-browsers
+        environment:
+          LANG: en_US.utf8
+    steps:
+      - checkout
+      - run:
+          name: Install jq
+          command: |
+            sudo apt-get update
+            sudo apt-get install jq
+      - restore_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: |
+            yarn
+            BUILD_BRANCH=$CIRCLE_BRANCH GITHUB_USERNAME=$CIRCLE_PR_USERNAME .circleci/get_cd_deps.sh
+      - save_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+      - run:
+          name: Build
+          command: GIT_BRANCH=$CIRCLE_BRANCH yarn build
+      - save_cache:
+          key: build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - dist
+  test-e2e:
+    working_directory: ~/cp-zen-frontend
+    docker:
+      - image: circleci/node:8
+        environment:
+          EXTERNAL_SELENIUM: 1
+      - image: selenium/standalone-chrome:3
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "yarn.lock" }}
+            - dependency-cache
+      - restore_cache:
+          keys:
+            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - build-cache-{{ .Branch }}
+            - build-cache
+      - run:
+          name: Tests
+          command: yarn e2e-with-mocks
+  test-unit:
+    working_directory: ~/cp-zen-frontend
+    docker:
+      - image: circleci/node:8-browsers
+        environment:
+          LANG: en_US.utf8
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "yarn.lock" }}
+            - dependency-cache
+      - restore_cache:
+          keys:
+            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - build-cache-{{ .Branch }}
+            - build-cache
+      - run:
+          name: Tests
+          command: yarn unit
+  test-lint:
+    working_directory: ~/cp-zen-frontend
+    docker:
+      - image: circleci/node:8-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "yarn.lock" }}
+            - dependency-cache
+      - restore_cache:
+          keys:
+            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - build-cache-{{ .Branch }}
+            - build-cache
+      - run:
+          name: Tests
+          command: yarn lint
+  publish:
+    working_directory: ~/cp-zen-frontend
+    docker:
+      - image: circleci/node:8-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - build-cache-{{ .Branch }}
+            - build-cache
+      - run:
+          name: setup git and npm
+          command: |
+            set -eo pipefail
+            git config --global user.email "webteam@coderdojo.com"
+            git config --global user.name "CoderDojo Foundation"
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+      - run:
+          name: publish to git and npm
+          command: |
+            npm version patch -m "[skip ci] Update to %s"
+            git push
+            npm publish
+  publish_staging:
+    working_directory: ~/cp-zen-frontend
+    docker:
+      - image: circleci/node:8-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - build-cache-{{ .Branch }}
+            - build-cache
+      - run:
+          name: publish
+          command: |
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+            npm --no-git-tag-version version `node build/get-version.js`-`git rev-parse --short HEAD`
+            npm publish --tag=staging
+  deploy:
+    working_directory: ~
+    docker:
+      - image: node:8.4
+    steps:
+      - run:
+          name: Update frontend
+          command: ./circleci/update_frontend.sh master latest
+  deploy_staging:
+    working_directory: ~
+    docker:
+      - image: node:8.4
+    steps:
+      - run:
+          name: Update frontend
+          command: ./circleci/update_frontend.sh staging staging
+
+workflows:
+  version: 2
+  build-test-and-deploy:
+    jobs:
+      - build
+      - test-unit:
+          requires:
+            - build
+      - test-e2e:
+          requires:
+            - build
+      - test-lint:
+          requires:
+            - build
+      - publish:
+          requires:
+            - test-unit
+            - test-e2e
+            - test-lint
+          filters:
+            branches:
+              only:
+                - master
+      - publish_staging:
+          requires:
+            - test-unit
+            - test-e2e
+            - test-lint
+          filters:
+            branches:
+              only:
+                - staging
+      - deploy:
+          requires:
+            - publish
+          filters:
+            branches:
+              only:
+                - master
+      - deploy_staging:
+          requires:
+            - publish_staging
+          filters:
+            branches:
+              only:
+                - staging
