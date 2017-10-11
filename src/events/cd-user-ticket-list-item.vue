@@ -8,7 +8,7 @@
       </header>
       <div class="cd-user-ticket-list-item__datetime">
         <div v-if="!isRecurring" class="cd-user-ticket-list-item__date-timestamp">
-          {{ formattedStartDate }}
+          {{ event.dates[0].startTime | cdDateFormatter }}
         </div>
         <div v-else>
           <div class="cd-user-ticket-list-item__date-series">{{ $t('Next in series:') }}</div>
@@ -57,7 +57,7 @@
   import cdAttendee from './cd-attendee';
   import EventTile from './cd-event-tile';
   import EventService from './service';
-  
+
   const cancelFields = ['dojoId', 'eventId', 'sessionId', 'ticketName',
     'ticketType', 'ticketId', 'userId', 'notes', 'deleted'];
 

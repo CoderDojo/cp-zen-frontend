@@ -104,7 +104,7 @@ server.post('/api/2.0/users/login', (req, res) => {
   res.send();
 });
 
-server.get('/api/2.0/user/event/:id/applications', (req, res) => {
+server.get('/api/2.0/user/events/:id/applications', (req, res) => {
   if (req.cookies.loggedIn) {
     res.send(applications[req.cookies.loggedIn][req.params.id]);
   } else {

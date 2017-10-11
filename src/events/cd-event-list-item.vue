@@ -11,7 +11,7 @@
       </header>
       <div class="cd-event-list-item__datetime">
         <div v-if="!isRecurring" class="cd-event-list-item__date-timestamp">
-          {{ formattedStartDate }}
+          {{ event.dates[0].startTime | cdDateFormatter }}
         </div>
         <div v-else>
           <div class="cd-event-list-item__date-series">{{ $t('Next in series:') }}</div>

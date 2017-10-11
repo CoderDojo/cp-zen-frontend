@@ -15,9 +15,8 @@ const EventsService = {
   loadSessions(eventId) {
     return Vue.http.get(`${Vue.config.apiServer}/api/2.0/events/${eventId}/sessions`);
   },
-  // TODO : new REST endpoint /event/:id/applications or /user/tickets or /user/event/:id/tickets
   loadApplications(eventId) {
-    return Vue.http.get(`${Vue.config.apiServer}/api/2.0/user/event/${eventId}/applications`);
+    return Vue.http.get(`${Vue.config.apiServer}/api/2.0/user/events/${eventId}/applications`);
   },
   manageTickets(applications) {
     applications.forEach((application) => {

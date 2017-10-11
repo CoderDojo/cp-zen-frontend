@@ -42,12 +42,6 @@
       formattedEndTime() {
         return this.$options.filters.cdTimeFormatter(this.event.dates[0].endTime);
       },
-      formattedStartDate() {
-        return this.$options.filters.cdDateFormatter(this.event.dates[0].endTime);
-      },
-      formattedEndDate() {
-        return this.$options.filters.cdDateFormatter(this.event.dates[0].endTime);
-      },
       formattedFirstDate() {
         const sortedDates = sortBy(this.event.dates, date => date.startTime);
         return this.$options.filters.cdDateFormatter(sortedDates[0].startTime);
