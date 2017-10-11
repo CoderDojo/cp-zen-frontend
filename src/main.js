@@ -6,6 +6,7 @@ import VeeValidate from 'vee-validate';
 import * as VueGoogleMaps from 'vue2-google-maps';
 import VueAnalytics from 'vue-analytics';
 import PasswordValidator from '@/common/directives/cd-password-validator';
+import titleDirective from '@/common/directives/title';
 import 'font-awesome/css/font-awesome.min.css';
 import 'vue-dob-picker/dist/static/vue-dob-picker.css';
 import App from './App';
@@ -28,6 +29,7 @@ Vue.use(VueAnalytics, {
   id: process.env.GOOGLE_ANALYTICS_PROPERTY_ID,
   router,
 });
+Vue.directive('title', titleDirective);
 
 /* eslint-disable no-new */
 new Vue({

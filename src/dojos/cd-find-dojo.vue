@@ -1,5 +1,5 @@
 <template>
-  <div class="cd-find-dojo">
+  <div v-title="title" class="cd-find-dojo">
     <div class="cd-find-dojo__panel" :class="{ 'cd-find-dojo__panel--reduced': searchExecuted }">
       <form class="cd-find-dojo__panel-form" :class="{ 'cd-find-dojo__panel-form--reduced': searchExecuted }" @submit.prevent="$router.push({ query: { q: searchCriteria, p: 1 } });">
         <h1 v-if="!searchExecuted" class="cd-find-dojo__panel-form-header">{{ $t('Find a Dojo to attend') }}</h1>
@@ -111,6 +111,14 @@
       };
     },
     computed: {
+      title() {
+        if (this.searchCriteria) {
+          return this.$i18n.t('Dojos near {place}', { place: this.searchCriteria });
+        } else if (this.coordinates.latitude) {
+          return this.$i18n.t('Dojos near you');
+        }
+        return this.$i18n.t('Find a Dojo');
+      },
       allActiveDojos() {
         return this.allDojos.filter(dojo => dojo.stage !== 4);
       },
