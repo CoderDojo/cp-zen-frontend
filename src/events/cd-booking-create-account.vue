@@ -169,7 +169,7 @@
               notes: 'N/A',
             });
           });
-          return EventsService.bookTickets(applications);
+          return EventsService.manageTickets(applications);
         });
       },
       getRecaptchaResponse() {

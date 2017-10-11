@@ -335,7 +335,7 @@ describe('Dojo details page', () => {
     FindDojoPage.openDojoWithQuery('dublin', 2);
     DojoDetailsPage.mentorVolunteerButton.waitForVisible();
     DojoDetailsPage.mentorVolunteerButton.click();
-    browser.pause(300); // Wait for alert to be displayed
+    browser.pause(500); // Wait for alert to be displayed
     expect(browser.alertText()).to.equal('The Champion of this Dojo has been notified that you want to volunteer.');
     browser.alertAccept();
 
