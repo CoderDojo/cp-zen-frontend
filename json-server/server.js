@@ -5,6 +5,7 @@ const uuidv1 = require('uuid/v1');
 const users = require('./users');
 const usersProfile = require('./users-profile');
 const usersDojos = require('./users-dojos');
+const applications = require('./applications');
 
 const server = jsonServer.create();
 const router = jsonServer.router(require('./db'));
@@ -27,8 +28,8 @@ const nonResourcePostUrls = [
 ]
 const rewriteRules = {
   '/api/2.0/dojos/find': '/api/2.0/dojos',
-  '/api/2.0/dojos/search-bounding-box': '/api/2.0/dojos',
   '/api/2.0/events/search': '/api/2.0/events',
+  '/api/2.0/dojos/search-bounding-box': '/api/2.0/dojos',
   '/api/2.0/events/bulk-apply-applications': '/api/2.0/bulk-apply-applications'
 };
 
@@ -79,6 +80,16 @@ server.post('/api/2.0/profiles/youth/create', (req, res) => {
   res.send(child);
 });
 
+server.get('/api/2.0/profiles/children-for-user/:parentId', (req, res) => {
+  const children = users[req.cookies.loggedIn].children;
+  Object.keys(children).forEach((key) => {
+    children[key].user = Object.assign({}, children[key]);
+    children[key].user.id = children[key].userId;
+    delete children[key].user.userId;
+  })
+  res.send(Object.values(children));
+});
+
 server.post('/api/2.0/users/register', (req, res) => {
   users[req.body.user.email] = req.body.user;
   users[req.body.user.email].id = uuidv1();
@@ -91,6 +102,14 @@ server.post('/api/2.0/users/register', (req, res) => {
 server.post('/api/2.0/users/login', (req, res) => {
   res.cookie('loggedIn', req.body.email, { maxAge: 900000, httpOnly: true });
   res.send();
+});
+
+server.get('/api/2.0/user/events/:id/applications', (req, res) => {
+  if (req.cookies.loggedIn) {
+    res.send(applications[req.cookies.loggedIn][req.params.id]);
+  } else {
+    res.send();
+  }
 });
 
 server.get('/api/2.0/users/instance', (req, res) => {
@@ -120,10 +139,14 @@ server.post('/api/2.0/dojos/users', (req, res) => {
   let dojos;
   if (usersDojos[req.body.query.userId]) {
     dojos = usersDojos[req.body.query.userId];
-    if (dojos[req.body.query.dojoId]) {
-      res.send(dojos[req.body.query.dojoId]);
+    if (req.body.query.dojoId) {
+      if (dojos[req.body.query.dojoId]) {
+        res.send(dojos[req.body.query.dojoId]);
+      } else {
+        res.send([]);
+      }
     } else {
-      res.send([]);
+      res.send(Object.values(dojos)[0]);
     }
   } else {
     res.send([]);

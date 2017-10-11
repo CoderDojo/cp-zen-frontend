@@ -26,5 +26,24 @@ module.exports = {
       "deletedBy": null,
       "deletedAt": null
     }]
+  },
+  "parent2": {
+    "3ed47c6d-a689-46a0-883b-1f3fd46e9c77": [{
+      "entity$": "-/cd/usersdojos",
+      "id": "3ed47c6d-a689-46a0-883b-169e7540a9c9",
+      "mysqlUserId": null,
+      "mysqlDojoId": null,
+      "owner": 0,
+      "userId": "parent1",
+      "dojoId": "3ed47c6d-a689-46a0-883b-1f3fd46e9c77",
+      "userTypes": [
+        "parent-guardian"
+      ],
+      "userPermissions": [],
+      "backgroundChecked": true,
+      "deleted": 0,
+      "deletedBy": null,
+      "deletedAt": null
+    }]
   }
 };

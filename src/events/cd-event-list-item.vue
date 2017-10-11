@@ -18,7 +18,7 @@
           <span class="cd-event-list-item__date-timestamp">{{ nextStartTime |  cdDateFormatter }}</span>
         </div>
         <div class="cd-event-list-item__times-timestamp">
-          {{ event.dates[0].startTime | cdTimeFormatter }} - {{ event.dates[0].endTime | cdTimeFormatter }}
+          {{ formattedStartTime }} - {{ formattedEndTime }}
         </div>
       </div>
     </div>
@@ -44,15 +44,14 @@
 </template>
 <script>
   import Vue from 'vue';
-  import moment from 'moment';
-  import { sortBy } from 'lodash';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import cdUrlFormatter from '@/common/filters/cd-url-formatter';
-  import EventsUtil from './util';
+  import EventTile from './cd-event-tile';
 
   export default {
     name: 'event-list-item',
+    mixins: [EventTile],
     props: ['event', 'dojo', 'usersDojos', 'user'],
     computed: {
       isMember() {
@@ -67,54 +66,14 @@
         }
         return true;
       },
-      isFull() {
-        let totalEventCapacity = 0;
-        let totalTicketsBooked = 0;
-        this.event.sessions.forEach((session) => {
-          session.tickets.forEach((ticket) => {
-            totalEventCapacity += ticket.quantity;
-            totalTicketsBooked += ticket.approvedApplications;
-          });
-        });
-        return totalEventCapacity === totalTicketsBooked;
-      },
       getSessionListForEvent() {
         return this.event.sessions.map(session => session.name).join(', ');
-      },
-      nextStartTime() {
-        return EventsUtil.getNextStartTime(this.event);
-      },
-      isRecurring() {
-        return EventsUtil.isRecurring(this.event);
-      },
-      recurringFrequencyInfo() {
-        return EventsUtil.buildRecurringFrequencyInfo(this.event);
-      },
-      isPastEvent() {
-        const now = moment();
-        const eventStartTime = moment(this.event.dates[this.event.dates.length - 1].startTime);
-        eventStartTime.subtract(eventStartTime.utcOffset(), 'minutes');
-        return now.isAfter(eventStartTime);
       },
       bookLink() {
         if (Vue.config.buildBranch === 'master') {
           return `/dojo/${this.dojo.id}/event/${this.event.id}`;
         }
         return { name: 'EventDobVerification', params: { eventId: this.event.id } };
-      },
-      formattedStartTime() {
-        return this.$options.filters.cdTimeFormatter(this.event.dates[0].startTime);
-      },
-      formattedEndTime() {
-        return this.$options.filters.cdTimeFormatter(this.event.dates[0].endTime);
-      },
-      formattedFirstDate() {
-        const sortedDates = sortBy(this.event.dates, date => date.startTime);
-        return this.$options.filters.cdDateFormatter(sortedDates[0].startTime);
-      },
-      formattedLastDate() {
-        const sortedDates = sortBy(this.event.dates, date => date.startTime);
-        return this.$options.filters.cdDateFormatter(sortedDates[sortedDates.length - 1].startTime);
       },
     },
     filters: {
@@ -125,110 +84,9 @@
   };
 </script>
 <style scoped lang="less">
-    @import "../common/variables";
+  @import "../common/styles/cd-event-tile";
 
   .cd-event-list-item {
-    &__details {
-      display: flex;
-    }
-
-    &__header {
-      flex: 4;
-    }
-
-    &__name {
-      font-size: 24px;
-      margin: 0;
-    }
-
-    &__sessions {
-      font-size: 16px;
-      color: #7b8082;
-      margin: 8px 0;
-    }
-
-    &__date, &__times {
-      flex: 1;
-      &-timestamp {
-        list-style-type: none;
-        padding: 0;
-        font-size: 18px;
-      }
-    }
-
-    &__date {
-      &-timestamp {
-        font-size: 18px;
-      }
-
-      &-series {
-        font-size: 14px;
-        color: #7b8082;
-      }
-    }
-
-    &__times-timestamp {
-      font-size: 16px;
-    }
-
-    &__recurring-info {
-      background-color: #f4f5f6;
-      color: #7b8082;
-      margin: 32px -16px -16px -16px;
-      padding: 16px;
-      &-icon {
-        font-size: 16px;
-        margin-right: 4px;
-      }
-      &-header {
-        font-weight: bold;
-      }
-      &-text {
-        font-size: 14px;
-      }
-    }
-
-    &__view {
-      margin-top: 32px;
-      &:disabled {
-         background-color: #bdc3c6;
-         color: white;
-         font-weight: bold;
-         width: 220px;
-         text-transform: uppercase;
-         border-color: transparent;
-      }
-    }
-
-    &__datetime {
-      margin-right: 27px;
-      flex: 1;
-    }
-  }
-
-  @media (max-width: @screen-xs-max) {
-    .cd-event-list-item {
-      &__details {
-        flex-direction: column;
-      }
-      &__name {
-        font-size: 18px;
-        font-weight: bold;
-      }
-      &__sessions {
-        font-size: 14px;
-      }
-      &__view-wrapper {
-        text-align: center;
-      }
-      &__recurring-info {
-        width: auto;
-      }
-      &__datetime {
-        margin-right: 0;
-        margin-top: 16px;
-        text-align: center;
-      }
-    }
+    .cd-event-tile;
   }
 </style>

@@ -1,6 +1,6 @@
 machine:
   node:
-    version: v6.10.3
+    version: v8.6.0
   environment:
     LANG: en_US.utf8
     WDIO_MAX_INSTANCES: 1
