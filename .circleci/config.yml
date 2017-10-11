@@ -133,21 +133,23 @@ jobs:
             npm --no-git-tag-version version `node build/get-version.js`-`git rev-parse --short HEAD`
             npm publish --tag=staging
   deploy:
-    working_directory: ~
+    working_directory: ~/cp-zen-frontend
     docker:
       - image: node:8.4
     steps:
+      - checkout
       - run:
           name: Update frontend
-          command: ./circleci/update_frontend.sh master latest
+          command: ./.circleci/update_frontend.sh master latest
   deploy_staging:
-    working_directory: ~
+    working_directory: ~/cp-zen-frontend
     docker:
       - image: node:8.4
     steps:
+      - checkout
       - run:
           name: Update frontend
-          command: ./circleci/update_frontend.sh staging staging
+          command: ./.circleci/update_frontend.sh staging staging
 
 workflows:
   version: 2
