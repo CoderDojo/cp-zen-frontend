@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-title="dojoDetails.name">
     <div class="row">
       <div class="cd-dojo-details__banner col-sm-12">
           <div>
