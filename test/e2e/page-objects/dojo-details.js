@@ -234,17 +234,17 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   editDojo: {
     get() {
-      return $('.cd-dojo-details__settings-dropdown li:nth-child(1) a');
+      return $('.cd-dojo-details__settings-dropdown a[href*=edit-dojo]');
     },
   },
   manageUsers: {
     get() {
-      return $('.cd-dojo-details__settings-dropdown li:nth-child(2) a');
+      return $('.cd-dojo-details__settings-dropdown a[href*=users]');
     },
   },
   manageEvents: {
     get() {
-      return $('.cd-dojo-details__settings-dropdown li:nth-child(3) a');
+      return $('.cd-dojo-details__settings-dropdown a[href*=events]');
     },
   },
   privateNotice: {
