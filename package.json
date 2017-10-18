@@ -106,9 +106,9 @@
     "vue-template-compiler": "^2.2.6",
     "vue-unit-helper": "^1.0.7",
     "wdio-allure-reporter": "^0.1.2",
-    "wdio-jasmine-framework": "^0.3.1",
+    "wdio-mocha-framework": "^0.5.11",
     "wdio-phantomjs-service": "^0.2.2",
-    "wdio-selenium-standalone-service": "0.0.8",
+    "wdio-selenium-standalone-service": "^0.0.9",
     "wdio-spec-reporter": "^0.1.0",
     "webdriverio": "^4.8.0",
     "webpack": "^2.3.3",
@@ -121,5 +121,9 @@
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }

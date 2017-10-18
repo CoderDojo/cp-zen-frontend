@@ -117,7 +117,7 @@ exports.config = {
   //
   // Make sure you have the wdio adapter package for the specific framework installed
   // before running any tests.
-  framework: 'jasmine',
+  framework: 'mocha',
   //
   // Test reporter for stdout.
   // The only one supported by default is 'dot'
@@ -125,18 +125,11 @@ exports.config = {
   reporters: ['spec', 'allure'],
 
   //
-  // Options to be passed to Jasmine.
-  jasmineNodeOpts: {
-    //
-    // Jasmine default timeout
-    defaultTimeoutInterval: 120000,
-    //
-    // The Jasmine framework allows interception of each assertion in order to log the state of the application
-    // or website depending on the result. For example, it is pretty handy to take a screenshot every time
-    // an assertion fails.
-    expectationResultHandler(passed, assertion) {
-      // do something
-    }
+  // Options to be passed to Mocha.
+  // See the full list at http://mochajs.org/
+  mochaOpts: {
+    ui: 'bdd',
+    timeout: 120000,
   },
 
   //

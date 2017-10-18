@@ -5,6 +5,12 @@ module.exports = {
   'parent2@example.com': {
     dob: '1969-11-26T00:00:00.000Z',
   },
+  'mentor1@example.com': {
+    dob: '1969-11-26T00:00:00.000Z',
+  },
+  'champion1@example.com': {
+    dob: '1969-11-26T00:00:00.000Z',
+  },
   'child1o13@example.com':{
     dob: new Date((new Date().getFullYear() - 15).toString()),
   },
