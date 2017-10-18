@@ -31,6 +31,24 @@ module.exports = {
       lastName: 'two',
     }}
   },
+  'mentor1@example.com': {
+    id: 'mentor1',
+    firstName: 'mentor',
+    lastName: 'one',
+    name: 'mentor one',
+    email: 'mentor1@example.com',
+    initUserType: JSON.stringify({name: 'parent-guardian', title: 'Parent/Guardian'}),
+    roles: ['basic-user']
+  },
+  'champion1@example.com': {
+    id: 'champion1',
+    firstName: 'champion',
+    lastName: 'one',
+    name: 'champion one',
+    email: 'champion1@example.com',
+    initUserType: JSON.stringify({name: 'parent-guardian', title: 'Parent/Guardian'}),
+    roles: ['basic-user']
+  },
   'child1o13@example.com':{
     id: 'child1o13',
     firstName: 'child',

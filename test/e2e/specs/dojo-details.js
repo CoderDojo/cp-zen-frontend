@@ -143,6 +143,7 @@ describe('Dojo details page', () => {
   it('should not allow an underage person to proceed in the flow', () => {
     FindDojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
 
     EventDobVerificationPage.dateOfBirthDayInput.selectByValue('25');
@@ -211,7 +212,7 @@ describe('Dojo details page', () => {
   it('should link to the dojo website', () => {
     FindDojoPage.openDojoWithQuery('dublin');
 
-    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.website.waitForVisible();
     expect(DojoDetailsPage.website.getAttribute('href')).to.equal('http://www.dublinninjakids.com/');
   });
 
@@ -261,32 +262,6 @@ describe('Dojo details page', () => {
 
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.eventNames.length).to.equal(1);
-    browser.deleteCookie();
-  });
-
-  it('should have a dropdown with manage functions for cdf-admin accounts', () => {
-    FindDojoPage.openDojoWithQuery('dublin');
-    DojoDetailsPage.name.waitForVisible();
-    expect(DojoDetailsPage.settingsDropdown.isVisible()).to.equal(false);
-    const url = browser.getUrl();
-
-    LoginPage.open();
-    LoginPage.email.waitForVisible();
-    LoginPage.email.setValue('admin@coderdojo.org');
-    LoginPage.password.setValue('cdfadmin');
-    LoginPage.login.click();
-    FindDojoPage.header.waitForVisible();
-    browser.url(url);
-
-    DojoDetailsPage.name.waitForVisible();
-    expect(DojoDetailsPage.settingsDropdown.isVisible()).to.equal(true);
-    DojoDetailsPage.settingsDropdown.click();
-    expect(DojoDetailsPage.editDojo.isVisible()).to.equal(true);
-    expect(DojoDetailsPage.editDojo.getAttribute('href')).to.contain('/dashboard/edit-dojo/3ed47c6d-a689-46a0-883b-1f3fd46e9c77');
-    expect(DojoDetailsPage.manageUsers.isVisible()).to.equal(true);
-    expect(DojoDetailsPage.manageUsers.getAttribute('href')).to.contain('/dashboard/my-dojos/3ed47c6d-a689-46a0-883b-1f3fd46e9c77/users');
-    expect(DojoDetailsPage.manageEvents.isVisible()).to.equal(true);
-    expect(DojoDetailsPage.manageEvents.getAttribute('href')).to.contain('/dashboard/my-dojos/3ed47c6d-a689-46a0-883b-1f3fd46e9c77/events');
     browser.deleteCookie();
   });
 
@@ -389,6 +364,109 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.joinButton.isVisible()).to.equal(false);
 
     browser.deleteCookie();
+  });
+
+  describe('Dojo admin actions', () => {
+    it('should have a dropdown with manage functions for cdf-admin accounts', () => {
+      FindDojoPage.openDojoWithQuery('dublin', 3);
+      DojoDetailsPage.name.waitForVisible();
+      expect(DojoDetailsPage.settingsDropdown.isVisible()).to.equal(false);
+      const url = browser.getUrl();
+
+      LoginPage.open();
+      LoginPage.email.waitForVisible();
+      LoginPage.email.setValue('admin@coderdojo.org');
+      LoginPage.password.setValue('cdfadmin');
+      LoginPage.login.click();
+      FindDojoPage.header.waitForVisible();
+      browser.url(url);
+
+      DojoDetailsPage.name.waitForVisible();
+      DojoDetailsPage.settingsDropdown.waitForVisible();
+      DojoDetailsPage.settingsDropdown.click();
+      expect(DojoDetailsPage.editDojo.isVisible()).to.equal(true);
+      expect(DojoDetailsPage.editDojo.getAttribute('href')).to.contain('/dashboard/edit-dojo/70e868a9-f2b2-4b73-8f83-7e3a79dfa150');
+      expect(DojoDetailsPage.manageUsers.isVisible()).to.equal(true);
+      expect(DojoDetailsPage.manageUsers.getAttribute('href')).to.contain('/dashboard/my-dojos/70e868a9-f2b2-4b73-8f83-7e3a79dfa150/users');
+      expect(DojoDetailsPage.manageEvents.isVisible()).to.equal(true);
+      expect(DojoDetailsPage.manageEvents.getAttribute('href')).to.contain('/dashboard/my-dojos/70e868a9-f2b2-4b73-8f83-7e3a79dfa150/events');
+      browser.deleteCookie();
+    });
+
+    it('should have a dropdown with manage functions for members with dojo-admin and ticketing-admin', () => {
+      FindDojoPage.openDojoWithQuery('dublin', 3);
+      DojoDetailsPage.name.waitForVisible();
+      expect(DojoDetailsPage.settingsDropdown.isVisible()).to.equal(false);
+      const url = browser.getUrl();
+
+      LoginPage.open();
+      LoginPage.email.waitForVisible();
+      LoginPage.email.setValue('champion1@example.com');
+      LoginPage.password.setValue('testchampion1');
+      LoginPage.login.click();
+      FindDojoPage.header.waitForVisible();
+      browser.url(url);
+
+      DojoDetailsPage.name.waitForVisible();
+      DojoDetailsPage.settingsDropdown.waitForVisible();
+      DojoDetailsPage.settingsDropdown.click();
+      expect(DojoDetailsPage.editDojo.isVisible()).to.equal(true);
+      expect(DojoDetailsPage.editDojo.getAttribute('href')).to.contain('/dashboard/edit-dojo/70e868a9-f2b2-4b73-8f83-7e3a79dfa150');
+      expect(DojoDetailsPage.manageUsers.isVisible()).to.equal(true);
+      expect(DojoDetailsPage.manageUsers.getAttribute('href')).to.contain('/dashboard/my-dojos/70e868a9-f2b2-4b73-8f83-7e3a79dfa150/users');
+      expect(DojoDetailsPage.manageEvents.isVisible()).to.equal(true);
+      expect(DojoDetailsPage.manageEvents.getAttribute('href')).to.contain('/dashboard/my-dojos/70e868a9-f2b2-4b73-8f83-7e3a79dfa150/events');
+      browser.deleteCookie();
+    });
+
+    it('should have a dropdown with manage dojo functions for members with only dojo-admin', () => {
+      FindDojoPage.openDojoWithQuery('dublin', 3);
+      DojoDetailsPage.name.waitForVisible();
+      expect(DojoDetailsPage.settingsDropdown.isVisible()).to.equal(false);
+      const url = browser.getUrl();
+
+      LoginPage.open();
+      LoginPage.email.waitForVisible();
+      LoginPage.email.setValue('mentor1@example.com');
+      LoginPage.password.setValue('testmentor1');
+      LoginPage.login.click();
+      FindDojoPage.header.waitForVisible();
+      browser.url(url);
+
+      DojoDetailsPage.name.waitForVisible();
+      DojoDetailsPage.settingsDropdown.waitForVisible();
+      DojoDetailsPage.settingsDropdown.click();
+      expect(DojoDetailsPage.editDojo.isVisible()).to.equal(true);
+      expect(DojoDetailsPage.editDojo.getAttribute('href')).to.contain('/dashboard/edit-dojo/70e868a9-f2b2-4b73-8f83-7e3a79dfa150');
+      expect(DojoDetailsPage.manageUsers.isVisible()).to.equal(true);
+      expect(DojoDetailsPage.manageUsers.getAttribute('href')).to.contain('/dashboard/my-dojos/70e868a9-f2b2-4b73-8f83-7e3a79dfa150/users');
+      expect(DojoDetailsPage.manageEvents.isVisible()).to.equal(false);
+      browser.deleteCookie();
+    });
+
+    it('should have a dropdown with manage events function for members with only ticketing-admin', () => {
+      FindDojoPage.openDojoWithQuery('dublin', 3);
+      DojoDetailsPage.name.waitForVisible();
+      expect(DojoDetailsPage.settingsDropdown.isVisible()).to.equal(false);
+      const url = browser.getUrl();
+
+      LoginPage.open();
+      LoginPage.email.waitForVisible();
+      LoginPage.email.setValue('parent1@example.com');
+      LoginPage.password.setValue('testparent1');
+      LoginPage.login.click();
+      FindDojoPage.header.waitForVisible();
+      browser.url(url);
+
+      DojoDetailsPage.name.waitForVisible();
+      expect(DojoDetailsPage.settingsDropdown.isVisible()).to.equal(true);
+      DojoDetailsPage.settingsDropdown.click();
+      expect(DojoDetailsPage.editDojo.isVisible()).to.equal(false);
+      expect(DojoDetailsPage.manageUsers.isVisible()).to.equal(false);
+      expect(DojoDetailsPage.manageEvents.isVisible()).to.equal(true);
+      expect(DojoDetailsPage.manageEvents.getAttribute('href')).to.contain('/dashboard/my-dojos/70e868a9-f2b2-4b73-8f83-7e3a79dfa150/events');
+      browser.deleteCookie();
+    });
   });
 
   describe('Mobile specific tests', () => {
