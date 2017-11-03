@@ -315,8 +315,8 @@ describe('Event list component', () => {
         vm.$lifecycleMethods.created();
 
         // ASSERT
-        expect(vm.loadEvents).not.to.have.been.calledOnce;
-        expect(vm.loadCurrentUser).to.have.been.calledOnce;
+        expect(vm.loadEvents).not.to.have.been.called;
+        expect(vm.loadCurrentUser).to.have.been.called;
       });
     });
   });
