@@ -55,7 +55,7 @@
     "connect-history-api-fallback": "^1.3.0",
     "cookie-parser": "^1.4.3",
     "copy-webpack-plugin": "^4.0.1",
-    "cp-translations": "^1.0.64",
+    "cp-translations": "^1.0.81",
     "cross-env": "^4.0.0",
     "css-loader": "^0.28.0",
     "eslint": "^3.19.0",
