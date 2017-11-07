@@ -1,4 +1,4 @@
-FROM node:boron-alpine
+FROM node:8-alpine
 MAINTAINER butlerx <butlerx@notthe.cloud>
 WORKDIR /usr/src/app
 RUN apk add --update git build-base python && \

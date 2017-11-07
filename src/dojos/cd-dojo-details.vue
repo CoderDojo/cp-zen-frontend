@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-title="dojoDetails.name">
     <div class="row">
       <div class="cd-dojo-details__banner col-sm-12">
           <div>
@@ -31,10 +31,10 @@
         </info-column-section>
       </info-column>
       <div class="cd-dojo-details__main_content">
-        <dropdown v-if="canAdmin" class="cd-dojo-details__settings-dropdown" icon="gear" align="right">
-          <li><a :href="`/dashboard/edit-dojo/${dojoDetails.id}`"><i class="fa fa-pencil"></i>{{ $t('Edit Dojo') }}</a></li>
-          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/users`"><i class="fa fa-users"></i>{{ $t('Manage Users') }}</a></li>
-          <li><a :href="`/dashboard/my-dojos/${dojoDetails.id}/events`"><i class="fa fa-calendar"></i>{{ $t('Manage Events') }}</a></li>
+        <dropdown v-if="isDojoAdmin || isTicketingAdmin" class="cd-dojo-details__settings-dropdown" icon="gear" align="right">
+          <li v-if="isDojoAdmin"><a :href="`/dashboard/edit-dojo/${dojoDetails.id}`"><i class="fa fa-pencil"></i>{{ $t('Edit Dojo') }}</a></li>
+          <li v-if="isDojoAdmin"><a :href="`/dashboard/my-dojos/${dojoDetails.id}/users`"><i class="fa fa-users"></i>{{ $t('Manage Users') }}</a></li>
+          <li v-if="isTicketingAdmin"><a :href="`/dashboard/my-dojos/${dojoDetails.id}/events`"><i class="fa fa-calendar"></i>{{ $t('Manage Events') }}</a></li>
         </dropdown>
         <div v-if="dojoDetails.private === 1" class="cd-dojo-details__private-notice">
           <div class="cd-dojo-details__private-notice-header">{{ $t('This is a Private Dojo') }}</div>
@@ -99,6 +99,8 @@
   import InfoColumnSection from '@/common/cd-info-column-section';
   import cdUrlFormatter from '@/common/filters/cd-url-formatter';
   import UserService from '@/users/service';
+  import UsersDojosService from '@/usersDojos/service';
+  import UsersDojosUtil from '@/usersDojos/util';
   import service from './service';
   import eventsList from '../events/cd-event-list';
   import DojoUtil from './util';
@@ -124,6 +126,7 @@
       return {
         dojoDetails: {},
         user: {},
+        usersDojos: [],
         googleMapsApiKey: Vue.config.googleMapsApiKey,
         _country: null,
         _path: null,
@@ -179,13 +182,10 @@
         return [
           {
             locations: [
-                { startLat, endLng },
+              { startLat, endLng },
             ],
           },
         ];
-      },
-      canAdmin() {
-        return !!(this.user && this.user.roles && this.user.roles.indexOf('cdf-admin') > -1);
       },
       buildTwitterLink() {
         const twitterData = this.dojoDetails.twitter;
@@ -200,6 +200,15 @@
           return `https://facebook.com/${facebookData}`;
         }
         return facebookData;
+      },
+      isCDFAdmin() {
+        return !!(this.user && this.user.roles && this.user.roles.indexOf('cdf-admin') > -1);
+      },
+      isDojoAdmin() {
+        return this.isCDFAdmin || UsersDojosUtil.hasPermission(this.usersDojos, 'dojo-admin');
+      },
+      isTicketingAdmin() {
+        return this.isCDFAdmin || UsersDojosUtil.hasPermission(this.usersDojos, 'ticketing-admin');
       },
     },
     methods: {
@@ -218,6 +227,12 @@
         const response = await UserService.getCurrentUser();
         this.user = response.body.user;
       },
+      async loadUserDojoRelationship() {
+        if (this.user.id) {
+          const response = await UsersDojosService.getUsersDojos(this.user.id, this.dojoDetails.id);
+          this.usersDojos = response.body;
+        }
+      },
       redirectToSlug() {
         this.$router.replace({
           name: 'DojoDetails',
@@ -235,11 +250,14 @@
       },
       buildDojoFrequency: DojoUtil.buildDojoFrequency,
     },
-    created() {
+    async created() {
       this._country = this.country;
       this._path = this.path;
-      this.loadDojoDetails();
-      this.loadCurrentUser();
+      await Promise.all([
+        this.loadDojoDetails(),
+        this.loadCurrentUser(),
+      ]);
+      this.loadUserDojoRelationship();
     },
   };
 </script>

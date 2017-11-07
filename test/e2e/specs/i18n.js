@@ -30,18 +30,18 @@ describe('i18n', () => {
     DojoDetailsPage.name.waitForVisible();
     Footer.languagePicker.selectByValue('pt_PT');
     browser.waitUntil(() => {
-      return DojoDetailsPage.eventDate(0).getText() === `Setembro 6, ${currentYear + 1}`;
+      return  DojoDetailsPage.firstEventDate.getText() === `Setembro 6, ${currentYear + 1}`;
     });
-    expect(DojoDetailsPage.eventDate(0).getText()).to.equal(`Setembro 6, ${currentYear + 1}`);
+    expect(DojoDetailsPage.firstEventDate.getText()).to.equal(`Setembro 6, ${currentYear + 1}`);
     Footer.languagePicker.selectByValue('es_ES');
     browser.waitUntil(() => {
-      return DojoDetailsPage.eventDate(0).getText() === `septiembre 6, ${currentYear + 1}`;
+      return DojoDetailsPage.firstEventDate.getText() === `septiembre 6, ${currentYear + 1}`;
     });
-    expect(DojoDetailsPage.eventDate(0).getText()).to.equal(`septiembre 6, ${currentYear + 1}`);
+    expect(DojoDetailsPage.firstEventDate.getText()).to.equal(`septiembre 6, ${currentYear + 1}`);
     Footer.languagePicker.selectByValue('en_US');
     browser.waitUntil(() => {
-      return DojoDetailsPage.eventDate(0).getText() === `September 6, ${currentYear + 1}`;
+      return DojoDetailsPage.firstEventDate.getText() === `September 6, ${currentYear + 1}`;
     });
-    expect(DojoDetailsPage.eventDate(0).getText()).to.equal(`September 6, ${currentYear + 1}`);
+    expect(DojoDetailsPage.firstEventDate.getText()).to.equal(`September 6, ${currentYear + 1}`);
   });
 });

@@ -11,13 +11,14 @@ var openGraphTemplate = Handlebars.compile(openGraphTemplateString);
 
 exports.register = function (server, options, next) {
 
+  server.path(`${__dirname}/dist/`);
   if (process.env.NODE_ENV !== 'production') {
     server.route({
       method: 'GET',
       path: '/v2/{param*}',
       handler: {
         file: {
-          path: __dirname + '/dist/index.html'
+          path: 'index.html'
         }
       }
     });
@@ -28,7 +29,7 @@ exports.register = function (server, options, next) {
     path: '/v2/static/{param*}',
     handler: {
       directory: {
-        path: __dirname + '/dist/static'
+        path: 'static'
       }
     }
   });
@@ -38,7 +39,7 @@ exports.register = function (server, options, next) {
     path: '/dojos/{id}',
     handler: {
       file: {
-        path: __dirname + '/dist/index.html'
+        path: 'index.html'
       }
     }
   });
@@ -48,7 +49,7 @@ exports.register = function (server, options, next) {
     path: '/dojos/{id}/{alpha2*}',
     handler: function (request, reply) {
       reply(openGraphTemplate({
-        openGraphProperties: request.locals.context.preload
+        openGraphProperties: request.app.context.preload
       }));
     },
     config: {
@@ -62,10 +63,30 @@ exports.register = function (server, options, next) {
 
   server.route({
     method: 'GET',
+    path: '/dashboard/tickets',
+    handler :{
+      file: {
+        path: 'index.html'
+      }
+    }
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/dashboard/dojos/events/user-events',
+    handler :{
+      file: {
+        path: 'index.html'
+      }
+    }
+  });
+
+  server.route({
+    method: 'GET',
     path: '/',
     handler: {
       file: {
-        path: __dirname + '/dist/index.html'
+        path: 'index.html'
       }
     }
   });

@@ -15,7 +15,10 @@ const EventsService = {
   loadSessions(eventId) {
     return Vue.http.get(`${Vue.config.apiServer}/api/2.0/events/${eventId}/sessions`);
   },
-  bookTickets(applications) {
+  loadApplications(eventId) {
+    return Vue.http.get(`${Vue.config.apiServer}/api/2.0/user/events/${eventId}/applications`);
+  },
+  manageTickets(applications) {
     applications.forEach((application) => {
       /* eslint-disable no-param-reassign */
       application.emailSubject = {

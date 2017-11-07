@@ -156,6 +156,11 @@ const DojoDetailsPage = Object.create(InfoColumn, {
       return $$('.cd-event-list-item__date-timestamp')[index];
     }
   },
+  firstEventDate: {
+    get() {
+      return $('.cd-event-list-item__date-timestamp');
+    }
+  },
   eventTimes: {
     value(index) {
       return $$('.cd-event-list-item__times-timestamp')[index];
@@ -229,17 +234,17 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   editDojo: {
     get() {
-      return $('.cd-dojo-details__settings-dropdown li:nth-child(1) a');
+      return $('.cd-dojo-details__settings-dropdown a[href*=edit-dojo]');
     },
   },
   manageUsers: {
     get() {
-      return $('.cd-dojo-details__settings-dropdown li:nth-child(2) a');
+      return $('.cd-dojo-details__settings-dropdown a[href*=users]');
     },
   },
   manageEvents: {
     get() {
-      return $('.cd-dojo-details__settings-dropdown li:nth-child(3) a');
+      return $('.cd-dojo-details__settings-dropdown a[href*=events]');
     },
   },
   privateNotice: {

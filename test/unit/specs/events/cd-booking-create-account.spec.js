@@ -27,7 +27,7 @@ describe('Booking Create Account Form', () => {
       joinDojo: sandbox.stub(),
     };
     MockEventsService = {
-      bookTickets: sandbox.stub(),
+      manageTickets: sandbox.stub(),
     };
     MockUserUtils = {
       isYouthOverThirteen: sandbox.stub(),
@@ -445,8 +445,8 @@ describe('Booking Create Account Form', () => {
       // ACT
       vm.bookTickets().then(() => {
         // ASSERT
-        expect(MockEventsService.bookTickets).to.have.been.calledOnce;
-        expect(MockEventsService.bookTickets).to.have.been.calledWith([
+        expect(MockEventsService.manageTickets).to.have.been.calledOnce;
+        expect(MockEventsService.manageTickets).to.have.been.calledWith([
           {
             dojoId: mockSelectedEvent.dojoId,
             eventId: mockSelectedEvent.id,
