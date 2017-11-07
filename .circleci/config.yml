@@ -118,6 +118,10 @@ jobs:
             npm version patch -m "[skip ci] Update to %s"
             git push
             npm publish
+      - run: {
+        "name": "update_platform",
+        "command": "sh .circleci/update_platform.sh $(node build/get-version.js) master"
+      }
   publish_staging:
     working_directory: ~/cp-zen-frontend
     docker:
@@ -135,22 +139,6 @@ jobs:
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
             npm --no-git-tag-version version `node build/get-version.js`-`git rev-parse --short HEAD`
             npm publish --tag=staging
-  deploy:
-    working_directory: ~/cp-zen-frontend
-    docker:
-      - image: circleci/node:8-browsers
-    steps:
-      - checkout
-      - run: {
-        "name": "update_platform",
-        "command": "sh .circleci/update_platform.sh $(node build/get-version.js) master"
-      }
-  deploy_staging:
-    working_directory: ~/cp-zen-frontend
-    docker:
-      - image: circleci/node:8-browsers
-    steps:
-      - checkout
       - run: {
         "name": "update_platform",
         "command": "sh .circleci/update_platform.sh $(node build/get-version.js)-$(git rev-parse --short HEAD) staging"
@@ -182,20 +170,6 @@ workflows:
           requires:
             - test-unit
             - test-lint
-          filters:
-            branches:
-              only:
-                - staging
-      - deploy:
-          requires:
-            - publish
-          filters:
-            branches:
-              only:
-                - master
-      - deploy_staging:
-          requires:
-            - publish_staging
           filters:
             branches:
               only:
