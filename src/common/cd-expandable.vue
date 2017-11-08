@@ -19,7 +19,7 @@
     },
     computed: {
       linkName() {
-        return this.expanded ? 'Retract' : 'Read full event details';
+        return this.expanded ? 'Hide' : 'Read full event details';
       },
     },
   };

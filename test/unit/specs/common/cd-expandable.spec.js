@@ -11,19 +11,19 @@ describe('Expandable component', () => {
   });
 
   describe('computed.linkName', () => {
-    it('should return Retract if the component is closed', () => {
+    it('should return Read full event details if the component is closed', () => {
       // ARRANGE
       vm.expanded = false;
 
       // ASSERT
       expect(vm.linkName).to.equal('Read full event details');
     });
-    it('should return Read full details if the component is expanded', () => {
+    it('should return Hide if the component is expanded', () => {
       // ARRANGE
       vm.expanded = true;
 
       // ASSERT
-      expect(vm.linkName).to.equal('Retract');
+      expect(vm.linkName).to.equal('Hide');
     });
   });
 
