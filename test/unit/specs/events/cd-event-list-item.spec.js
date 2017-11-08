@@ -142,5 +142,30 @@ describe('Event list item component', () => {
         expect(vm.getSessionListForEvent).to.equal('Scratch, Arduino, HTML');
       });
     });
+    describe('bookLink', () => {
+      it('should return the ng url when you\'re already logged in', () => {
+        const vm = vueUnitHelper(EventListItem);
+        vm.user = {
+          id: 1,
+        };
+        vm.dojo = {
+          id: 123,
+        };
+        vm.event = {
+          id: 456,
+        };
+        expect(vm.bookLink).to.equal('/dojo/123/event/456');
+      });
+      it('should return the vue url when its your first rodeo', () => {
+        const vm = vueUnitHelper(EventListItem);
+        vm.dojo = {
+          id: 123,
+        };
+        vm.event = {
+          id: 456,
+        };
+        expect(vm.bookLink).to.eql({ name: 'EventDobVerification', params: { eventId: 456 } });
+      });
+    });
   });
 });

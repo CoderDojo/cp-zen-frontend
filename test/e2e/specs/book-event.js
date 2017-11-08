@@ -54,6 +54,9 @@ function startBooking() {
 }
 
 describe('Book event page', () => {
+  afterEach(() => {
+    browser.deleteCookie('loggedIn');
+  });
   it('should collect parent data', () => {
     startBooking();
 

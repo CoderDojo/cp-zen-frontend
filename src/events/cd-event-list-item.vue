@@ -43,7 +43,6 @@
   </div>
 </template>
 <script>
-  import Vue from 'vue';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import cdUrlFormatter from '@/common/filters/cd-url-formatter';
@@ -70,7 +69,7 @@
         return this.event.sessions.map(session => session.name).join(', ');
       },
       bookLink() {
-        if (Vue.config.buildBranch === 'master') {
+        if (this.user) {
           return `/dojo/${this.dojo.id}/event/${this.event.id}`;
         }
         return { name: 'EventDobVerification', params: { eventId: this.event.id } };
