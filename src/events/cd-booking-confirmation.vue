@@ -3,8 +3,8 @@
 
     <div class="cd-booking-confirmation__banner">
       <div class="cd-booking-confirmation__banner-left">
-        <div class="cd-booking-confirmation__banner-title">{{ $t('Booking Complete') }}</div>
-        <div class="cd-booking-confirmation__banner-subtitle" v-html="$t('A confirmation email has been sent to {email}', { email: `<strong>${createdUser.email}</strong>` })"></div>
+        <div class="cd-booking-confirmation__banner-title">{{ title }}</div>
+        <div class="cd-booking-confirmation__banner-subtitle" v-html="subtitle"></div>
       </div>
       <img class="cd-booking-confirmation__banner-illustration" src="../assets/characters/ninjas/ninja-female-2-ok-hand.svg"></img>
     </div>
@@ -71,11 +71,24 @@
       </div>
 
       <div class="cd-booking-confirmation__account-confirmation">
-      <div class="fa fa-check-circle-o cd-booking-confirmation__account-confirmation-icon"></div>
-      <div>
-        <span v-html="$t('You are now subscribed to {dojoName} dojo', {dojoName: `<strong>${dojo.name}</strong>`})"></span>
-          <div class="cd-booking-confirmation__account-confirmation-help-message">
-            {{ $t('You will be notified about future events hosted by this dojo') }}
+        <div class="fa fa-check-circle-o cd-booking-confirmation__account-confirmation-icon"></div>
+        <div>
+          <span v-html="$t('You are now subscribed to {dojoName} dojo', {dojoName: `<strong>${dojo.name}</strong>`})"></span>
+            <div class="cd-booking-confirmation__account-confirmation-help-message">
+              {{ $t('You will be notified about future events hosted by this dojo') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="cd-booking-confirmation__account-confirmation cd-booking-confirmation__account-confirmation-approval" v-show="selectedEvent.ticketApproval">
+        <div class="fa-stack fa-lg color-warning cd-booking-confirmation__account-confirmation-icon">
+          <i class="fa fa-circle-o fa-stack-2x"></i>
+          <i class="fa fa-hourglass-half fa-stack-1x"></i>
+        </div>
+        <div>
+          <span> {{ $t('Your tickets are now awaiting approval') }} </span>
+            <div class="cd-booking-confirmation__account-confirmation-help-message">
+              {{ $t('You will be notified when the organizer approves your request.') }}
           </div>
         </div>
       </div>
@@ -133,6 +146,16 @@
           bookings = bookings.concat(booking.selectedTickets);
         });
         return bookings;
+      },
+      subtitle() {
+        return this.selectedEvent.ticketApproval ?
+          this.$t('You will be notified when the organizer approves your request.') :
+          this.$t('A confirmation email has been sent to {email}', { email: `<strong>${this.createdUser.email}</strong>` });
+      },
+      title() {
+        return this.selectedEvent.ticketApproval ?
+          this.$t('Booking Request Sent') :
+          this.$t('Booking Complete');
       },
     },
     methods: {
@@ -298,6 +321,20 @@
         &-help-message {
           font-size: 16px;
           margin-top: 4px;
+        }
+        &-approval {
+
+          .fa-stack {
+            font-size: 0.8em;
+            color: @brand-warning;
+            .fa-stack-2x, .fa-stack-1x {
+              text-align: left;
+            }
+            .fa-hourglass-half {
+              font-size: 0.8em;
+              padding-left: 7px;
+            }
+          }
         }
       }
     }

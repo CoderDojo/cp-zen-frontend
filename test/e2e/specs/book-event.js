@@ -104,8 +104,9 @@ describe('Book event page', () => {
 
     BookingConfirmation.bookingConfirmationMessage.waitForVisible();
 
-    expect(BookingConfirmation.bookingConfirmationMessage.getText()).to.equal('Booking Complete');
-    expect(BookingConfirmation.emailMessage.getText()).to.equal('A confirmation email has been sent to john.doe@example.com');
+    // Requesting approval event
+    expect(BookingConfirmation.bookingConfirmationMessage.getText()).to.equal('Booking Request Sent');
+    expect(BookingConfirmation.emailMessage.getText()).to.equal('You will be notified when the organizer approves your request.');
 
     expect(BookingConfirmation.eventName.getText()).to.equal('My First Amazing Event');
     expect(BookingConfirmation.hostedByMessage.getText()).to.equal('Event hosted by Dublin Ninja Kids');
@@ -129,6 +130,7 @@ describe('Book event page', () => {
     expect(BookingConfirmation.accountCreationConfirmation.getText()).to.equal('CoderDojo Account has been created\nYou can log in and find events hosted by this dojo in My Dojos');
     expect(BookingConfirmation.accountCreationConfirmation.$('a').getAttribute('href')).to.match(/\/dashboard\/my-dojos$/);
     expect(BookingConfirmation.joinedDojoConfirmation.getText()).to.equal('You are now subscribed to Dublin Ninja Kids dojo\nYou will be notified about future events hosted by this dojo');
+    expect(BookingConfirmation.approvalRequiredMessage.getText()).to.equal('Your tickets are now awaiting approval\nYou will be notified when the organizer approves your request.');
 
     expect(BookingConfirmation.eventDetailsHeader.getText()).to.equal('Event Details');
     expect(BookingConfirmation.eventDescription.getText()).to.equal('LEARN ALL THE THINGS');
