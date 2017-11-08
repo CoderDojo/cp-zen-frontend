@@ -10,6 +10,30 @@ describe('Expandable component', () => {
     vm = vueUnitHelper(Expandable);
   });
 
+  describe('mounted', () => {
+    it('should set expandable truthy if it\'s over 10ch/80px', (done) => {
+      vm.isExpandable = true;
+      vm.$el = {
+        querySelector: sinon.stub().returns({ clientHeight: 81 }),
+      };
+      vm.$lifecycleMethods.mounted();
+      vm.$nextTick(() => {
+        expect(vm.isExpandable).to.be.true;
+        done();
+      });
+    });
+    it('should set expandable falsy if it\'s over 10ch/80px', (done) => {
+      vm.isExpandable = true;
+      vm.$el = {
+        querySelector: sinon.stub().returns({ clientHeight: 20 }),
+      };
+      vm.$lifecycleMethods.mounted();
+      vm.$nextTick(() => {
+        expect(vm.isExpandable).to.be.false;
+        done();
+      });
+    });
+  });
   describe('computed.linkName', () => {
     it('should return Read full event details if the component is closed', () => {
       // ARRANGE

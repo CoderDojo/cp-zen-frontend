@@ -32,7 +32,7 @@
         <info-column-section icon="list" :header="$t('Event details')">
           <div class="cd-event-details__left-column-section-value">
             <cd-expandable>
-              <p v-html="getDescription()"></p>
+              <div v-html="getDescription()"></div>
             </cd-expandable>
           </div>
         </info-column-section>
