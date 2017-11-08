@@ -29,6 +29,13 @@
             {{ getFullAddress() }}
           </div>
         </info-column-section>
+        <info-column-section icon="list" :header="$t('Event details')">
+          <div class="cd-event-details__left-column-section-value">
+            <cd-expandable>
+              <p v-html="getDescription()"></p>
+            </cd-expandable>
+          </div>
+        </info-column-section>
       </info-column>
       <div class="cd-event-details__main-content">
         <router-view></router-view>
@@ -40,6 +47,8 @@
 <script>
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
+  import cdHTMLFilter from '@/common/filters/cd-html-filter';
+  import cdExpandable from '@/common/cd-expandable';
   import InfoColumn from '@/common/cd-info-column';
   import InfoColumnSection from '@/common/cd-info-column-section';
   import EventsUtil from '@/events/util';
@@ -60,6 +69,7 @@
     components: {
       InfoColumn,
       InfoColumnSection,
+      cdExpandable,
     },
     methods: {
       loadEvent() {
@@ -69,6 +79,9 @@
       },
       getFullAddress() {
         return `${this.eventDetails.address}, ${this.eventDetails.city.nameWithHierarchy}, ${this.eventDetails.country.countryName}`;
+      },
+      getDescription() {
+        return cdHTMLFilter(this.eventDetails.description);
       },
       buildRecurringFrequencyInfo: EventsUtil.buildRecurringFrequencyInfo,
       getNextStartTime: EventsUtil.getNextStartTime,

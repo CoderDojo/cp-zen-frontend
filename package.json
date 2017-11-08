@@ -23,6 +23,7 @@
     "js-cookie": "^2.1.4",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
+    "sanitize-html": "^1.15.0",
     "vee-validate": "2.0.0-rc.5",
     "vue": "^2.2.6",
     "vue-analytics": "^4.1.3",
