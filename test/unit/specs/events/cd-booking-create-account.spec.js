@@ -31,6 +31,7 @@ describe('Booking Create Account Form', () => {
     };
     MockUserUtils = {
       isYouthOverThirteen: sandbox.stub(),
+      getAge: sandbox.stub(),
     };
 
     BookingCreateAccountComponentWithMocks = BookingCreateAccountComponent({
@@ -96,7 +97,11 @@ describe('Booking Create Account Form', () => {
 
     const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
     vm.eventId = 1;
+    vm.$ga = { event: sinon.stub() };
+    vm.$route = { name: 'a' };
+    vm.profile = { dob: '1972-10-22' };
     MockUsersService.register.returns(Promise.resolve());
+    MockUserUtils.getAge.returns('42');
 
     // ACT
     vm.register();
@@ -104,6 +109,7 @@ describe('Booking Create Account Form', () => {
     // ASSERT
     requestAnimationFrame(() => {
       expect(vm.profile).to.equal(storedUserData);
+      expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_adult');
       expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
       done();
     });
@@ -322,7 +328,7 @@ describe('Booking Create Account Form', () => {
       const userTypes = ['parent-guardian'];
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.eventId = eventId;
-
+      vm.profile = { dob: '' };
       const currentUserResponseMock = {
         login: {},
         user: {
@@ -354,7 +360,7 @@ describe('Booking Create Account Form', () => {
       const userTypes = ['attendee-o13'];
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.eventId = eventId;
-
+      vm.profile = { dob: '' };
       const currentUserResponseMock = {
         login: {},
         user: {
@@ -438,6 +444,8 @@ describe('Booking Create Account Form', () => {
       };
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.eventId = 'foo';
+      vm.$ga = { event: sinon.stub() };
+      vm.$route = { name: '' };
       MockStoreService.load.withArgs('selected-event').returns(mockSelectedEvent);
       MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(mockBookingData);
       MockUsersService.getCurrentUser.returns(Promise.resolve({ body: currentUserResponseMock }));
