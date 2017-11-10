@@ -85,7 +85,7 @@ describe('Booking Create Account Form', () => {
     expect(vm.profile).to.deep.equal(profile);
   });
 
-  it('should register the user', (done) => {
+  it('should register the user and notify GA that an adult registered', (done) => {
     // ARRANGE
     const storedUserData = {
       firstName: 'Foo',
@@ -99,7 +99,7 @@ describe('Booking Create Account Form', () => {
     vm.eventId = 1;
     vm.$ga = { event: sinon.stub() };
     vm.$route = { name: 'a' };
-    vm.profile = { dob: '1972-10-22' };
+    vm.profile = { dob: '' };
     MockUsersService.register.returns(Promise.resolve());
     MockUserUtils.getAge.returns('42');
 
@@ -110,6 +110,36 @@ describe('Booking Create Account Form', () => {
     requestAnimationFrame(() => {
       expect(vm.profile).to.equal(storedUserData);
       expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_adult');
+      expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
+      done();
+    });
+  });
+
+  it('should register the user and notify GA that a kid registered', (done) => {
+    // ARRANGE
+    const storedUserData = {
+      firstName: 'Foo',
+      lastName: 'Bar',
+      phone: '012345678',
+      email: 'foo.bar@baz.com',
+    };
+    MockStoreService.load.returns(storedUserData);
+
+    const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+    vm.eventId = 1;
+    vm.$ga = { event: sinon.stub() };
+    vm.$route = { name: 'a' };
+    vm.profile = { dob: '' };
+    MockUsersService.register.returns(Promise.resolve());
+    MockUserUtils.getAge.returns('17');
+
+    // ACT
+    vm.register();
+
+    // ASSERT
+    requestAnimationFrame(() => {
+      expect(vm.profile).to.equal(storedUserData);
+      expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_kid');
       expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
       done();
     });
@@ -453,6 +483,7 @@ describe('Booking Create Account Form', () => {
       // ACT
       vm.bookTickets().then(() => {
         // ASSERT
+        expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'book_tickets');
         expect(MockEventsService.manageTickets).to.have.been.calledOnce;
         expect(MockEventsService.manageTickets).to.have.been.calledWith([
           {
