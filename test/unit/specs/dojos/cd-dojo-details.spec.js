@@ -5,6 +5,8 @@ describe('Dojo details component', () => {
   let sandbox;
   let DojoDetailsWithMocks;
   let DojoServiceMock;
+  let UsersDojosServiceMock;
+  let UsersDojosUtilMock;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
@@ -13,8 +15,16 @@ describe('Dojo details component', () => {
       getByUrlSlug: sandbox.stub(),
       requestUserInvite: sandbox.stub(),
     };
+    UsersDojosServiceMock = {
+      getUsersDojos: sandbox.stub(),
+    };
+    UsersDojosUtilMock = {
+      hasPermission: sandbox.stub(),
+    };
     DojoDetailsWithMocks = dojoDetails({
       './service': DojoServiceMock,
+      '@/usersDojos/service': UsersDojosServiceMock,
+      '@/usersDojos/util': UsersDojosUtilMock,
     });
   });
 
@@ -92,13 +102,16 @@ describe('Dojo details component', () => {
       vm.user = {
         id: '74afa4b8-8449-46e4-a553-8febda8614ad',
       };
-      vm.id = '3ed47c6d-a689-46a0-883b-1f3fd46e9c77';
+      vm.dojoDetails = {
+        id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+      };
 
       // ACT
       vm.volunteer(userType);
 
       // ASSERT
-      expect(DojoServiceMock.requestUserInvite).to.have.been.calledWith(vm.user, vm.id, userType);
+      expect(DojoServiceMock.requestUserInvite).to
+        .have.been.calledWith(vm.user, vm.dojoDetails.id, userType);
     });
   });
 
@@ -201,7 +214,7 @@ describe('Dojo details component', () => {
     });
   });
 
-  describe('computed.canAdmin', () => {
+  describe('computed.isCDFAdmin', () => {
     it('should return true when the logged in user is a CDF admin', () => {
       // ARRANGE
       const vm = vueUnitHelper(DojoDetailsWithMocks);
@@ -210,7 +223,7 @@ describe('Dojo details component', () => {
       };
 
       // ASSERT
-      expect(vm.canAdmin).to.equal(true);
+      expect(vm.isCDFAdmin).to.equal(true);
     });
 
     it('should return false when user is null', () => {
@@ -219,7 +232,7 @@ describe('Dojo details component', () => {
       vm.user = null;
 
       // ASSERT
-      expect(vm.canAdmin).to.equal(false);
+      expect(vm.isCDFAdmin).to.equal(false);
     });
 
     it('should return false when the logged in user is not a CDF admin', () => {
@@ -230,7 +243,7 @@ describe('Dojo details component', () => {
       };
 
       // ASSERT
-      expect(vm.canAdmin).to.equal(false);
+      expect(vm.isCDFAdmin).to.equal(false);
     });
 
     it('should return false when the logged in user has no roles', () => {
@@ -239,7 +252,33 @@ describe('Dojo details component', () => {
       vm.user = {};
 
       // ASSERT
-      expect(vm.canAdmin).to.equal(false);
+      expect(vm.isCDFAdmin).to.equal(false);
+    });
+  });
+
+  describe('computed.isDojoAdmin', () => {
+    it('should return call to hasPermission with the usersDojos and dojo-admin', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      const mockUsersDojos = [{ name: 'dojo-admin' }];
+      UsersDojosUtilMock.hasPermission.withArgs(mockUsersDojos, 'dojo-admin').returns('yup');
+      vm.usersDojos = mockUsersDojos;
+
+      // ASSERT
+      expect(vm.isDojoAdmin).to.equal('yup');
+    });
+  });
+
+  describe('computed.isTicketingAdmin', () => {
+    it('should return call to hasPermission with the usersDojos and ticketing-admin', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      const mockUsersDojos = [{ name: 'ticketing-admin' }];
+      UsersDojosUtilMock.hasPermission.withArgs(mockUsersDojos, 'ticketing-admin').returns('yup');
+      vm.usersDojos = mockUsersDojos;
+
+      // ASSERT
+      expect(vm.isTicketingAdmin).to.equal('yup');
     });
   });
 
@@ -310,6 +349,40 @@ describe('Dojo details component', () => {
 
       // ACT & ASSERT
       expect(vm.buildFacebookLink).to.equal('http://facebook.com/DCU');
+    });
+  });
+
+  describe('methods.loadUserDojoRelationship', () => {
+    let vm;
+
+    beforeEach(() => {
+      vm = vueUnitHelper(DojoDetailsWithMocks);
+    });
+
+    it('should get the usersDojos if user.id exists and assign to usersDojos', async () => {
+      // ARRANGE
+      vm.user = { id: 'asdf' };
+      vm.dojoDetails = { id: 'qwer' };
+      UsersDojosServiceMock.getUsersDojos.withArgs('asdf', 'qwer').returns({ body: 'yup' });
+
+      // ACT
+      await vm.loadUserDojoRelationship();
+
+      // ASSERT
+      expect(vm.usersDojos).to.equal('yup');
+    });
+
+    it('should not get the usersDojos if user.id does not exist', async () => {
+      // ARRANGE
+      vm.user = {};
+      vm.usersDojos = 'nope';
+
+      // ACT
+      await vm.loadUserDojoRelationship();
+
+      // ASSERT
+      expect(UsersDojosServiceMock.getUsersDojos).to.not.have.been.called;
+      expect(vm.usersDojos).to.equal('nope');
     });
   });
 });

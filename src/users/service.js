@@ -18,6 +18,8 @@ const UserService = {
 
   getCurrentUser: () => Vue.http.get(`${Vue.config.apiServer}/api/2.0/users/instance`),
 
+  getChildren: userId => Vue.http.get(`${Vue.config.apiServer}/api/2.0/profiles/children-for-user/${userId}`),
+
   addChild(profile) {
     const payload = {
       profile: clone(profile),

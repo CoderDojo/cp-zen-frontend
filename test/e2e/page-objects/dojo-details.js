@@ -126,9 +126,14 @@ const DojoDetailsPage = Object.create(InfoColumn, {
       return $$('.cd-event-list__no-events-content');
     },
   },
-  joinButton: {
+  joinButtonNoEvents: {
     get() {
       return $('.cd-event-list__no-events-join-button');
+    },
+  },
+  joinButtonWEvents: {
+    get() {
+      return $('.cd-event-list__event-join-button');
     },
   },
   eventNames: {
@@ -149,6 +154,11 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   eventDate: {
     value(index) {
       return $$('.cd-event-list-item__date-timestamp')[index];
+    }
+  },
+  firstEventDate: {
+    get() {
+      return $('.cd-event-list-item__date-timestamp');
     }
   },
   eventTimes: {
@@ -224,17 +234,17 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   editDojo: {
     get() {
-      return $('.cd-dojo-details__settings-dropdown li:nth-child(1) a');
+      return $('.cd-dojo-details__settings-dropdown a[href*=edit-dojo]');
     },
   },
   manageUsers: {
     get() {
-      return $('.cd-dojo-details__settings-dropdown li:nth-child(2) a');
+      return $('.cd-dojo-details__settings-dropdown a[href*=users]');
     },
   },
   manageEvents: {
     get() {
-      return $('.cd-dojo-details__settings-dropdown li:nth-child(3) a');
+      return $('.cd-dojo-details__settings-dropdown a[href*=events]');
     },
   },
   privateNotice: {

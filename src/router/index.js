@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import DojoDetails from '@/dojos/cd-dojo-details';
 import FindDojo from '@/dojos/cd-find-dojo';
+import UserTickets from '@/users/cd-tickets';
 import EventDetails from '@/events/cd-event-details';
 import EventDobVerification from '@/events/cd-event-dob-verification';
 import EventSessions from '@/events/cd-event-sessions';
@@ -40,6 +41,16 @@ export default new Router({
       name: 'DojoDetailsId',
       component: DojoDetails,
       props: true,
+    },
+    {
+      path: '/dashboard/dojos/events/user-events',
+      redirect: '/dashboard/tickets',
+      name: 'NgMyTickets',
+    },
+    {
+      path: '/dashboard/tickets',
+      name: 'MyTickets',
+      component: UserTickets,
     },
     {
       path: '/v2',

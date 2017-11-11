@@ -218,6 +218,43 @@ describe('Event list component', () => {
           done();
         });
       });
+
+      it('should redirect to the login page', (done) => {
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.joinTheDojo();
+        expect(MockDojosService.joinDojo).not.to.have.been.called;
+        done();
+      });
+    });
+  });
+
+  describe('computed', () => {
+    describe('isDojoMember', () => {
+      it('should be true when there is a joined user', (done) => {
+        const vm = vueUnitHelper(eventList());
+        vm.currentUser = {
+          id: 1,
+        };
+        vm.usersDojos = [{ smthg: 'smthg' }];
+        expect(vm.isDojoMember).to.be.true;
+        done();
+      });
+      it('should be false when the user is not joined', (done) => {
+        const vm = vueUnitHelper(eventList());
+        vm.currentUser = {
+          id: 1,
+        };
+        vm.usersDojos = [];
+        expect(vm.isDojoMember).to.be.false;
+        done();
+      });
+      it('should be false when there is no user logged in', (done) => {
+        const vm = vueUnitHelper(eventList());
+        vm.currentUser = {};
+        vm.usersDojos = [];
+        expect(vm.isDojoMember).to.be.false;
+        done();
+      });
     });
   });
 
