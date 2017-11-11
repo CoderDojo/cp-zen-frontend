@@ -62,13 +62,12 @@ describe('Find Dojo page', () => {
     DojoPage.open();
     DojoPage.detectLocationButton.waitForVisible();
     DojoPage.detectLocationButton.click();
-    DojoPage.showDojoListCount.waitForVisible();
+    DojoPage.showDojoListCount.waitForVisible(20000); // gelocation takes a while on CircleCI
     expect(DojoPage.headerReduced.getText()).to.equal(`${db.dojos.length} Dojos found near you`);
-
     DojoPage.dojoListItemNames[0].click();
     browser.back();
 
-    DojoPage.detectLocationButton.waitForVisible();
+    DojoPage.showDojoListCount.waitForVisible(20000); // gelocation takes a while on CircleCI
     expect(DojoPage.dojoListItemNames.length).to.equal(6);
   });
 
