@@ -122,6 +122,8 @@
       },
       register() {
         this.profile = StoreService.load(`booking-${this.eventId}-user`);
+        const isAdult = UserUtils.getAge(new Date(this.profile.dob)) > 18;
+        this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
         return UserService.register(this.user, this.profile);
       },
       addChildren() {
@@ -147,7 +149,7 @@
           const user = response.body.user;
           const selectedEvent = StoreService.load('selected-event');
           // NOTE : u13 are not supposed to have an user account and hence cannot join
-          const userType = UserUtils.isYouthOverThirteen(new Date(user.dob)) ? 'attendee-o13' : 'parent-guardian';
+          const userType = UserUtils.isYouthOverThirteen(new Date(this.profile.dob)) ? 'attendee-o13' : 'parent-guardian';
           return DojoService.joinDojo(user.id, selectedEvent.dojoId, [userType]);
         });
       },
@@ -169,6 +171,7 @@
               notes: 'N/A',
             });
           });
+          this.$ga.event(this.$route.name, 'click', 'book_tickets', applications.length);
           return EventsService.manageTickets(applications);
         });
       },

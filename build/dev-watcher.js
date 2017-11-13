@@ -11,7 +11,7 @@ var merge = require('webpack-merge')
 var config = require('../config')
 var webpackConfig = merge(require('./webpack.prod.conf'), {watch: true})
 
-var spinner = ora('building for production...')
+var spinner = ora('building for development...')
 spinner.start()
 
 rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
