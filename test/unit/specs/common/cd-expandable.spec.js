@@ -2,11 +2,9 @@ import vueUnitHelper from 'vue-unit-helper';
 import Expandable from '@/common/cd-expandable';
 
 describe('Expandable component', () => {
-  let sandbox;
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     vm = vueUnitHelper(Expandable);
   });
 
@@ -50,5 +48,4 @@ describe('Expandable component', () => {
       expect(vm.linkName).to.equal('Hide');
     });
   });
-
 });

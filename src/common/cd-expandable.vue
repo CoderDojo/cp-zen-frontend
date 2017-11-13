@@ -6,7 +6,7 @@
     <a @click="expanded = !expanded" class="cd-expandable__action"
       :class="isExpandable ? 'cd-expandable__action--expandable': 'cd-expandable__action--hidden'">
       {{ $t(linkName) }}
-      <i :class="expanded? 'fa fa-chevron-left': 'fa fa-chevron-right'"></i>
+      <i :class="expanded? 'fa fa-chevron-up': 'fa fa-chevron-down'"></i>
     </a>
   </div>
 </template>
@@ -23,8 +23,8 @@
     },
     mounted() {
       this.$nextTick(() => {
-        // Remove the action if the total height is lesser than 10ch
-        this.isExpandable = this.$el.querySelector('.cd-expandable__slot').clientHeight > 80;
+        // Remove the action if the total height is greater than our arbitrary max-size + 10
+        this.isExpandable = this.$el.querySelector('.cd-expandable__slot').clientHeight >= 80;
       });
     },
     computed: {
@@ -39,13 +39,13 @@
   @import "../common/variables";
   .cd-expandable {
     &__slot {
-      word-break: break-all;
+      word-break: break-word;
       &--expanded {
         height: initial;
       }
       &--closed {
         overflow-y: hidden;
-        max-height: 10ch;
+        max-height: 90px;
       }
     }
     &__action {
