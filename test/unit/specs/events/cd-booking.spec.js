@@ -18,12 +18,12 @@ describe('Booking Page', () => {
     });
 
     MockBookingCreateAccount = {
-      isValid: sandbox.stub(),
+      validateForm: sandbox.stub(),
       getRecaptchaResponse: sandbox.stub(),
       submitAccount: sandbox.stub(),
     };
     MockBookingParentForm = {
-      isValid: sandbox.stub(),
+      validateForm: sandbox.stub(),
       submitBooking: sandbox.stub(),
     };
   });
@@ -58,11 +58,11 @@ describe('Booking Page', () => {
     expect(vm.tickets).to.deep.equal(bookingDataMock);
   });
 
-  it('should validate form', () => {
+  it('should validate form', async () => {
     // ARRANGE
-    MockBookingCreateAccount.isValid.returns(true);
+    MockBookingCreateAccount.validateForm.returns(Promise.resolve(true));
     MockBookingCreateAccount.getRecaptchaResponse.returns('recaptchaResponse');
-    MockBookingParentForm.isValid.returns(true);
+    MockBookingParentForm.validateForm.returns(true);
 
     const vm = vueUnitHelper(BookingComponentWithMocks);
     vm.$refs = {
@@ -71,16 +71,16 @@ describe('Booking Page', () => {
     };
 
     // ACT
-    const result = vm.isValidChildForm();
+    const result = await vm.isValidChildForm();
 
     // ASSERT
     expect(MockBookingCreateAccount.getRecaptchaResponse).to.be.calledOnce;
-    expect(MockBookingCreateAccount.isValid).to.be.calledOnce;
-    expect(MockBookingParentForm.isValid).to.be.calledOnce;
+    expect(MockBookingCreateAccount.validateForm).to.be.calledOnce;
+    expect(MockBookingParentForm.validateForm).to.be.calledOnce;
     expect(result).to.equal(true);
   });
 
-  it('should not validate form', () => {
+  it('should not validate form', async () => {
     // ARRANGE
     MockBookingCreateAccount.getRecaptchaResponse.returns(null);
 
@@ -93,21 +93,19 @@ describe('Booking Page', () => {
     sandbox.stub(window, 'alert');
 
     // ACT
-    const result = vm.isValidChildForm();
+    const result = await vm.isValidChildForm();
 
     // ASSERT
     expect(result).to.equal(false);
     expect(MockBookingCreateAccount.getRecaptchaResponse).to.be.calledOnce;
-    expect(MockBookingCreateAccount.isValid).to.not.be.called;
-    expect(MockBookingParentForm.isValid).to.not.be.called;
+    expect(MockBookingCreateAccount.validateForm).to.not.be.called;
+    expect(MockBookingParentForm.validateForm).to.not.be.called;
     expect(window.alert).to.be.calledOnce;
   });
 
-  it('should submit form and redirect', (done) => {
+  it('should submit form and redirect', async () => {
     // ARRANGE
-    MockBookingCreateAccount.getRecaptchaResponse.returns('recaptcha');
-    MockBookingCreateAccount.isValid.returns(true);
-    MockBookingParentForm.isValid.returns(true);
+    MockBookingCreateAccount.submitAccount.returns(Promise.resolve());
 
     const vm = vueUnitHelper(BookingComponentWithMocks);
     vm.eventId = 1;
@@ -122,15 +120,12 @@ describe('Booking Page', () => {
     MockBookingCreateAccount.submitAccount.returns(Promise.resolve());
 
     // ACT
-    vm.onSubmit();
+    await vm.onSubmit();
 
     // ASSERT
-    requestAnimationFrame(() => {
-      expect(vm.isValidChildForm).to.be.calledOnce;
-      expect(MockBookingParentForm.submitBooking).to.be.calledOnce;
-      expect(MockBookingCreateAccount.submitAccount).to.be.calledOnce;
-      expect(vm.$router.push).to.be.calledWith({ name: 'EventBookingConfirmation', params: { eventId: vm.eventId } });
-      done();
-    });
+    expect(vm.isValidChildForm).to.be.calledOnce;
+    expect(MockBookingParentForm.submitBooking).to.be.calledOnce;
+    expect(MockBookingCreateAccount.submitAccount).to.be.calledOnce;
+    expect(vm.$router.push).to.be.calledWith({ name: 'EventBookingConfirmation', params: { eventId: vm.eventId } });
   });
 });

@@ -9,10 +9,18 @@ const UserService = {
     password,
   }),
 
-  register: (user, profile) => Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/register`, {
-    profile,
-    user,
-  }).then(() => UserService.login(user.email, user.password)),
+  async register(user, profile) {
+    const payload = {
+      profile: clone(profile),
+      user: clone(user),
+    };
+    if (!(payload.profile.dob instanceof Date)) {
+      payload.profile.dob = new Date(payload.profile.dob);
+    }
+    payload.profile.dob = moment(payload.profile.dob).subtract(payload.profile.dob.getTimezoneOffset(), 'm').toISOString();
+    await Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/register`, payload);
+    return UserService.login(user.email, user.password);
+  },
 
   userProfileData: userId => Vue.http.post(`${Vue.config.apiServer}/api/2.0/profiles/user-profile-data`, { query: { userId } }),
 

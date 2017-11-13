@@ -12,9 +12,9 @@
       <div class="row">
         <label class="cd-booking-create-account__label" for="password">{{ $t('Password') }}</label>
         <input type="password" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
-               v-validate.initial="'required|confirmed:confirmPassword|cd-password'" v-model="password"/>
+               v-validate="'required|confirmed:confirmPassword|cd-password'" v-model="password"/>
         <label class="text-danger cd-booking-create-account__password-error"
-               v-show="formValidated && errors.has('password')">{{ $t(errors.first('password')) }}</label>
+               v-show="errors.has('password')">{{ $t(errors.first('password')) }}</label>
       </div>
       <div class="row cd-booking-create-account__password-hint">
         {{ $t('Password must be at least 8 characters with at least one numeric.') }}
@@ -22,9 +22,9 @@
       <div class="row">
         <label class="cd-booking-create-account__label" for="password">{{ $t('Confirm Password') }}</label>
         <input type="password" class="form-control" placeholder="Password" name="confirmPassword" id="confirmPassword" data-vv-as="password confirmation"
-               v-validate.initial="'required'" v-model="confirmPassword"/>
+               v-validate="'required'" v-model="confirmPassword"/>
         <label class="text-danger cd-booking-create-account__password-confirmation-error"
-               v-show="formValidated && errors.has('confirmPassword')">{{ $t(errors.first('confirmPassword')) }}</label>
+               v-show="errors.has('confirmPassword')">{{ $t(errors.first('confirmPassword')) }}</label>
       </div>
       <div class="row">
         <div class="cd-booking-create-account__recaptcha">
@@ -46,7 +46,7 @@
       <div class="row">
         <div class="cd-booking-create-account__label cd-booking-create-account__agreement">
           <span class="cd-booking-create-account__agreement-left">
-            <input type="checkbox" name="termsConditionsAccepted" v-validate.initial="'required'"
+            <input type="checkbox" name="termsConditionsAccepted" v-validate="'required'"
                       v-model="termsConditionsAccepted"/>
           </span>
           <span class="cd-booking-create-account__agreement-right">
@@ -54,7 +54,7 @@
           </span>
         </div>
         <label class="text-danger cd-booking-create-account__terms-conditions-error"
-               v-show="formValidated && errors.has('termsConditionsAccepted')">
+               v-show="errors.has('termsConditionsAccepted')">
             {{ $t('You must accept the terms and conditions before proceeding.') }}
         </label>
       </div>
@@ -110,11 +110,14 @@
       },
     },
     methods: {
-      isValid() {
-        this.formValidated = true;
-        return (!this.errors.any() && !!this.recaptchaResponse);
+      async validateForm() {
+        try {
+          return await this.$validator.validateAll() && !!this.recaptchaResponse;
+        } catch (e) {
+          return false;
+        }
       },
-      submitAccount() {
+      async submitAccount() {
         return this.register()
           .then(this.addChildren)
           .then(this.joinDojo)

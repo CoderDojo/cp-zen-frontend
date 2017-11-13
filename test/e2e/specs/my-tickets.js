@@ -13,7 +13,7 @@ describe('My tickets page', () => {
     TicketPage.open();
   });
   it('should show a list of events', () => {
-    TicketPage.events[0].waitForVisible();
+    TicketPage.firstEvent.waitForVisible();
     expect(TicketPage.events.length).to.equal(2);
     expect(TicketPage.eventName(0).getText()).to.equal('My First Amazing Event');
     expect(TicketPage.eventDate(0).getText()).to.equal(`September 6, ${currentYear + 1}`);
@@ -25,7 +25,7 @@ describe('My tickets page', () => {
   });
 
   it('should be booked with 2 tickets and allow cancellation', () => {
-    TicketPage.events[0].waitForVisible();
+    TicketPage.firstEvent.waitForVisible();
     expect(TicketPage.tickets.length).to.equal(2);
     expect(TicketPage.ticketUsername(0).getText()).to.equal('child two');
     expect(TicketPage.ticketName(0).getText()).to.equal('Laptop Required');
@@ -41,7 +41,7 @@ describe('My tickets page', () => {
   })
 
   it('should not be booked and allow booking', () => {
-    TicketPage.events[0].waitForVisible();
+    TicketPage.firstEvent.waitForVisible();
     expect(TicketPage.tickets.length).to.equal(2);
     // Index is 0 because it's the first time it appears, but it's the 2nd event
     expect(TicketPage.book(0).isVisible()).to.be.true;

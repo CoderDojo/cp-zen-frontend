@@ -233,7 +233,7 @@ describe('Book event page', () => {
     Booking.submitBookingButton.waitForVisible();
     Booking.submitBookingButton.click();
 
-    expect(Booking.phoneNumberValidationError.getText()).to.equal('The phone number field may only contain numeric characters.');
+    expect(Booking.phoneNumberValidationError[1].getText()).to.equal('Phone number is invalid');
   });
 
   it('should report validation errors for invalid email', () => {
@@ -246,12 +246,13 @@ describe('Book event page', () => {
     Booking.dateOfBirthYearInput.selectByValue('1980');
     Booking.phoneNumber.setValue('1555123456');
     Booking.email.setValue('john.doe');
+    browser.pause(2000);
     Booking.checkRecaptcha();
 
     Booking.submitBookingButton.waitForVisible();
     Booking.submitBookingButton.click();
 
-    expect(Booking.emailValidationError.getText()).to.equal('The email field must be a valid email.');
+    expect(Booking.emailValidationError[1].getText()).to.equal('Parent email address is invalid');
   });
 
   it('should report validation errors missing required fields', () => {
@@ -261,10 +262,17 @@ describe('Book event page', () => {
     Booking.submitBookingButton.waitForVisible();
     Booking.submitBookingButton.click();
 
-    expect(Booking.phoneNumberValidationError.getText()).to.equal('The phone number field is required.');
-    expect(Booking.firstNameValidationError.getText()).to.equal('The first name field is required.');
-    expect(Booking.lastNameValidationError.getText()).to.equal('The last name field is required.');
-    expect(Booking.emailValidationError.getText()).to.equal('The email field is required.');
+    expect(Booking.firstNameValidationError.getText()).to.equal('First name is required');
+    expect(Booking.lastNameValidationError.getText()).to.equal('Last name is required');
+    expect(Booking.dateOfBirthValidationError.getText()).to.equal('Date of birth is required');
+    expect(Booking.emailValidationError[0].getText()).to.equal('Parent email address is required');
+    expect(Booking.phoneNumberValidationError[0].getText()).to.equal('Phone number is required');
+
+    [0, 1].forEach((i) => {
+      expect(Booking.sessionTicketFirstNameValidationError[i].getText()).to.equal('First name is required');
+      expect(Booking.sessionTicketLastNameValidationError[i].getText()).to.equal('Last name is required');
+      expect(Booking.sessionTicketDateOfBirthValidationError[i].getText()).to.equal('Date of birth is required');
+    });
   });
 
   it('should show the proper event details for recurring event', () => {
@@ -432,5 +440,26 @@ describe('Book event page', () => {
 
     BookingConfirmation.recurringFrequencyInfo.waitForVisible();
     expect(BookingConfirmation.recurringFrequencyInfo.getText()).to.equal('Every two weeks on Sunday');
+  });
+
+  it('should require prefered gender if "Not listed" is selected', () => {
+    startBooking();
+
+    Booking.sessionTicketGender('Other')[0].click();
+    Booking.checkRecaptcha();
+    Booking.submitBookingButton.click();
+
+    expect(Booking.sessionOtherGenderValidationError[0].isVisible()).to.equal(true);
+    expect(Booking.sessionOtherGenderValidationError[0].getText()).to.equal('Prefered gender is required');
+  });
+
+  it('should not require prefered gender if "Not listed" is not selected', () => {
+    startBooking();
+
+    Booking.sessionTicketGender('Female')[0].click();
+    Booking.checkRecaptcha();
+    Booking.submitBookingButton.click();
+
+    expect(Booking.sessionOtherGenderValidationError[0].isVisible()).to.equal(false);
   });
 });

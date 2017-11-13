@@ -1,6 +1,5 @@
 import vueUnitHelper from 'vue-unit-helper';
 import { clone } from 'lodash';
-import { ErrorBag } from 'vee-validate';
 import BookingCreateAccountComponent from '!!vue-loader?inject!@/events/cd-booking-create-account';
 
 describe('Booking Create Account Form', () => {
@@ -171,66 +170,67 @@ describe('Booking Create Account Form', () => {
     });
   });
 
-  describe('form validation', () => {
-    it('should return a valid form', () => {
+  describe('validateForm()', () => {
+    it('should return true when form is valid and recaptchaResponse exists', async () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.recaptchaResponse = 'foo';
-      vm.errors = new ErrorBag();
-      vm.formValidated = false;
+      vm.$validator = {
+        validateAll: () => true,
+      };
 
       // ACT
-      const isValid = vm.isValid();
+      const isValid = await vm.validateForm();
 
       // ASSERT
       expect(isValid).to.equal(true);
-      expect(vm.formValidated).to.equal(true);
     });
-    it('should return a invalid form without recaptcha and empty error', () => {
+
+    it('should return false when form is valid and recaptchaResponse does not exist', async () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.recaptchaResponse = null;
-      vm.errors = new ErrorBag();
-      vm.formValidated = false;
+      vm.recaptchaResponse = undefined;
+      vm.$validator = {
+        validateAll: () => true,
+      };
 
       // ACT
-      const isValid = vm.isValid();
+      const isValid = await vm.validateForm();
 
       // ASSERT
       expect(isValid).to.equal(false);
-      expect(vm.formValidated).to.equal(true);
     });
-    it('should return a invalid form without recaptcha and with errors', () => {
+
+    it('should return false when form is invalid and recaptchaResponse exists', async () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.recaptchaResponse = null;
-      const bag = new ErrorBag();
-      bag.add('oooo');
-      vm.errors = bag;
-      vm.formValidated = false;
+      vm.recaptchaResponse = 'foo';
+      vm.$validator = {
+        validateAll: () => false,
+      };
 
       // ACT
-      const isValid = vm.isValid();
+      const isValid = await vm.validateForm();
 
       // ASSERT
       expect(isValid).to.equal(false);
-      expect(vm.formValidated).to.equal(true);
     });
-    it('should return a invalid form with recaptcha and with errors', () => {
+
+    it('should return false when validateAll throws an error', async () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.recaptchaResponse = 'some recaptcha';
-      const bag = new ErrorBag();
-      bag.add('oooo');
-      vm.errors = bag;
-      vm.formValidated = false;
+      vm.recaptchaResponse = 'foo';
+      vm.$validator = {
+        validateAll: () => {
+          throw new Error('Invalid form');
+        },
+      };
 
       // ACT
-      const isValid = vm.isValid();
+      const isValid = await vm.validateForm();
 
       // ASSERT
       expect(isValid).to.equal(false);
-      expect(vm.formValidated).to.equal(true);
     });
   });
 

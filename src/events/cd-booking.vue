@@ -45,23 +45,23 @@
       loadSessionData() {
         this.tickets = StoreService.load(`booking-${this.eventId}-sessions`);
       },
-      onSubmit() {
-        if (this.isValidChildForm()) {
+      async onSubmit() {
+        const childFormsValid = await this.isValidChildForm();
+        if (childFormsValid) {
           this.$refs.bookingParentFormRef.submitBooking();
-          this.$refs.bookingCreateAccountRef.submitAccount()
-            .then(() => {
-              this.$router.push({ name: 'EventBookingConfirmation', params: { eventId: this.eventId } });
-            });
+          await this.$refs.bookingCreateAccountRef.submitAccount();
+          this.$router.push({ name: 'EventBookingConfirmation', params: { eventId: this.eventId } });
         }
       },
-      isValidChildForm() {
+      async isValidChildForm() {
         if (!this.$refs.bookingCreateAccountRef.getRecaptchaResponse()) {
           // eslint-disable-next-line
           window.alert('Please complete the reCAPTCHA.');
           return false;
         }
-        return this.$refs.bookingParentFormRef.isValid() &&
-          this.$refs.bookingCreateAccountRef.isValid();
+        const parentFormValid = await this.$refs.bookingParentFormRef.validateForm();
+        const accountFormValid = await this.$refs.bookingCreateAccountRef.validateForm();
+        return parentFormValid && accountFormValid;
       },
     },
     created() {
