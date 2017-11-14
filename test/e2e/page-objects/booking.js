@@ -89,7 +89,7 @@ const BookingParentData = Object.create(EventDetails, {
   },
   emailValidationError: {
     get() {
-      return $$('p.cd-booking-parent-form__email-error');
+      return $$('label.cd-booking-create-account__email-error');
     },
   },
   attendeeHeading: {

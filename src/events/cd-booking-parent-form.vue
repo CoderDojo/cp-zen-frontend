@@ -30,11 +30,6 @@
     <p class="cd-booking-parent-form__phone-error text-danger" v-show="errors.has('phoneNumber:required')">{{ $t('Phone number is required') }}</p>
     <p class="cd-booking-parent-form__phone-error text-danger" v-show="errors.has('phoneNumber:numeric')">{{ $t('Phone number is invalid') }}</p>
 
-    <label class="cd-booking-parent-form__label" for="email">{{ $t('Email Address') }}</label>
-    <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate="'required|email'" v-model="parentUserData.email">
-    <p class="cd-booking-parent-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</p>
-    <p class="cd-booking-parent-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</p>
-
     <div v-for="ticket in ninjaTickets">
       <div v-for="(selectedTicket, index) in ticket.selectedTickets">
         <div class="cd-booking-parent-form__attendee-type-header">{{ selectedTicket.ticket.name }} ({{ ticket.session.name }})</div>
@@ -271,7 +266,7 @@
       margin-top: -7px;
     }
   }
-  .form-control[type=text], .form-control[type=email] {
+  .form-control[type=text] {
     width: 230px;
     display: inline-block;
     font-family: Lato, Arial, Helvetica, sans-serif;
