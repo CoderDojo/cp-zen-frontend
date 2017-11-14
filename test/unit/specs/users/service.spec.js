@@ -1,7 +1,5 @@
 import Vue from 'vue';
-import { extend, clone } from 'lodash';
 import UserService from '@/users/service';
-import UserUtils from '@/users/util';
 
 describe('UserService', () => {
   const sandbox = sinon.sandbox.create();
