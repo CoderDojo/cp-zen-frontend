@@ -87,7 +87,9 @@
       },
     },
     created() {
-      this.loadEvents();
+      if (this.dojo.verified) {
+        this.loadEvents();
+      }
       this.loadCurrentUser();
     },
   };
