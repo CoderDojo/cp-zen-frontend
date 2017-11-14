@@ -141,7 +141,7 @@ jobs:
             npm publish --tag=staging
       - run: {
         "name": "update_platform",
-        "command": "sh .circleci/update_platform.sh $(node build/get-version.js)-$(git rev-parse --short HEAD) staging"
+        "command": "sh .circleci/update_platform.sh $(node build/get-version.js) staging"
       }
 workflows:
   version: 2
