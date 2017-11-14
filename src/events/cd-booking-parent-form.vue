@@ -101,7 +101,6 @@
   </div>
 </template>
 <script>
-  // import moment from 'moment';
   import VueDobPicker from 'vue-dob-picker';
   import StoreService from '@/store/store-service';
   import UsersUtil from '@/users/util';

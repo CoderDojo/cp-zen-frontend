@@ -51,68 +51,6 @@ describe('UserService', () => {
       expect(UserService.login).to.have.been.calledOnce;
       expect(UserService.login).to.have.been.calledWith(user.email, user.password);
     });
-
-    it('should convert profile.dob into an ISO timestamp from a Date object', async () => {
-      // ARRANGE
-      const profile = {
-        id: 'bar',
-        dob: new Date(2017, 10, 10, 0, 0, 0, 0),
-      };
-      const transformedProfile = {
-        id: 'bar',
-        dob: '2017-11-10T00:00:00.000Z',
-      };
-
-      const user = {
-        id: 'foo',
-      };
-
-      sandbox.stub(Vue.http, 'post');
-      sandbox.stub(UserService, 'login').returns(Promise.resolve());
-
-      // ACT
-      await UserService.register(user, profile);
-
-      // ASSERT
-      expect(Vue.http.post).to.have.been.calledWith(
-        `${Vue.config.apiServer}/api/2.0/users/register`,
-        {
-          profile: transformedProfile,
-          user,
-        },
-      );
-    });
-
-    it('should convert profile.dob into an ISO timestamp from a string object', async () => {
-      // ARRANGE
-      const profile = {
-        id: 'bar',
-        dob: 'Fri Nov 10 2017 00:00:00 GMT+0000 (GMT)',
-      };
-      const transformedProfile = {
-        id: 'bar',
-        dob: '2017-11-10T00:00:00.000Z',
-      };
-
-      const user = {
-        id: 'foo',
-      };
-
-      sandbox.stub(Vue.http, 'post');
-      sandbox.stub(UserService, 'login').returns(Promise.resolve());
-
-      // ACT
-      await UserService.register(user, profile);
-
-      // ASSERT
-      expect(Vue.http.post).to.have.been.calledWith(
-        `${Vue.config.apiServer}/api/2.0/users/register`,
-        {
-          profile: transformedProfile,
-          user,
-        },
-      );
-    });
   });
 
   describe('userProfileData', () => {
@@ -161,7 +99,7 @@ describe('UserService', () => {
       const expectedPayload = {
         profile: extend(clone(mockProfile), {
           userTypes: ['attendee-u13'],
-          dob: '2008-10-10T00:00:00.000Z',
+          dob: new Date(2008, 9, 10, 0, 0, 0, 0),
         }),
       };
 
@@ -186,7 +124,7 @@ describe('UserService', () => {
       const expectedPayload = {
         profile: extend(clone(mockProfile), {
           userTypes: ['attendee-o13'],
-          dob: '2008-10-10T00:00:00.000Z',
+          dob: new Date(2008, 9, 10, 0, 0, 0, 0),
         }),
       };
 
@@ -212,7 +150,7 @@ describe('UserService', () => {
       const expectedPayload = {
         profile: {
           userTypes: ['attendee-o13'],
-          dob: '2008-10-10T00:00:00.000Z',
+          dob: new Date(2008, 9, 10, 0, 0, 0, 0),
           gender: 'Fluid',
         },
       };

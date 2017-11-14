@@ -1,3 +1,6 @@
+import { cloneDeep } from 'lodash';
+import moment from 'moment';
+
 export default {
   getAge(dob) {
     const todayDate = new Date();
@@ -25,5 +28,13 @@ export default {
   isYouthOverThirteen(dob) {
     const age = this.getAge(dob);
     return age > 12 && age < 18;
+  },
+  profileToJSON(profile) {
+    const profileClone = cloneDeep(profile);
+    if (!(profileClone.dob instanceof Date)) {
+      profileClone.dob = new Date(profileClone.dob);
+    }
+    profileClone.dob = moment(profileClone.dob).subtract(profileClone.dob.getTimezoneOffset(), 'm').toISOString();
+    return profileClone;
   },
 };

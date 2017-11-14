@@ -63,7 +63,7 @@
   </div>
 </template>
 <script>
-  import { extend, omit, cloneDeep } from 'lodash';
+  import { extend, omit } from 'lodash';
   import VueRecaptcha from 'vue-recaptcha';
   import UserService from '@/users/service';
   import UserUtils from '@/users/util';
@@ -123,18 +123,18 @@
           .then(this.joinDojo)
           .then(this.bookTickets);
       },
-      register() {
+      async register() {
         this.profile = StoreService.load(`booking-${this.eventId}-user`);
         const isAdult = UserUtils.getAge(new Date(this.profile.dob)) > 18;
         this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
-        return UserService.register(this.user, this.profile);
+        return UserService.register(this.user, UserUtils.profileToJSON(this.profile));
       },
       addChildren() {
         const bookingData = StoreService.load(`booking-${this.eventId}-sessions`);
         let promiseChain = Promise.resolve();
         forEachTicket(bookingData, (ticket) => {
           if (ticket.ticket.type === 'ninja') {
-            const child = cloneDeep(ticket.user);
+            const child = UserUtils.profileToJSON(ticket.user);
             promiseChain = promiseChain.then(() => UserService.addChild(child))
               .then((response) => {
                 ticket.user = response.body; // eslint-disable-line no-param-reassign
