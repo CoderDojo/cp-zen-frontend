@@ -69,11 +69,11 @@ describe('Booking Create Account Form', () => {
       lastName: 'Doe',
       dob: '1980-04-12T00:00:00.000Z',
       phone: '+1-555-123456',
-      email: 'john.doe@example.com',
     };
     const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
     vm.profile = clone(profile);
     vm.password = 'Passw0rd';
+    vm.email = 'john.doe@example.com';
     vm.recaptchaResponse = 'abc123';
     vm.termsConditionsAccepted = true;
     vm.isSubscribedToMailingList = true;
@@ -86,7 +86,7 @@ describe('Booking Create Account Form', () => {
     expect(vm.profile).to.deep.equal(profile);
   });
 
-  it('should register the user and notify GA that an adult registered', async () => {
+  it('should add email to the profile', async () => {
     // ARRANGE
     const storedUserData = {
       firstName: 'Foo',
@@ -99,9 +99,35 @@ describe('Booking Create Account Form', () => {
 
     const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
     vm.eventId = 1;
-    vm.$ga = { event: sinon.stub() };
     vm.$route = { name: 'a' };
     vm.profile = { dob: '' };
+    vm.user = {
+      id: 'foo',
+    };
+
+    // ACT
+    await vm.formatProfile();
+
+    // ASSERT
+    expect(vm.profile).to.equal(storedUserData);
+    expect(MockStoreService.save).to.have.been.calledWith('booking-1-user', storedUserData);
+  });
+
+  it('should register the user and notify GA that an adult registered', async () => {
+    // ARRANGE
+    MockUserUtils.profileToJSON.callsFake(profile => profile);
+
+    const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+    vm.eventId = 1;
+    vm.$ga = { event: sinon.stub() };
+    vm.$route = { name: 'a' };
+    vm.profile = {
+      firstName: 'Foo',
+      lastName: 'Bar',
+      phone: '012345678',
+      email: 'foo.bar@baz.com',
+      dob: '',
+    };
     vm.user = {
       id: 'foo',
     };
@@ -113,26 +139,23 @@ describe('Booking Create Account Form', () => {
     await vm.register();
 
     // ASSERT
-    expect(vm.profile).to.equal(storedUserData);
     expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_adult');
-    expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
+    expect(MockUsersService.register).to.have.been.calledWith(vm.user, vm.profile);
   });
 
   it('should register the user and notify GA that a kid registered', async () => {
     // ARRANGE
-    const storedUserData = {
-      firstName: 'Foo',
-      lastName: 'Bar',
-      phone: '012345678',
-      email: 'foo.bar@baz.com',
-    };
-    MockStoreService.load.returns(storedUserData);
-
     const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
     vm.eventId = 1;
     vm.$ga = { event: sinon.stub() };
     vm.$route = { name: 'a' };
-    vm.profile = { dob: '' };
+    vm.profile = {
+      firstName: 'Foo',
+      lastName: 'Bar',
+      phone: '012345678',
+      email: 'foo.bar@baz.com',
+      dob: '',
+    };
     vm.user = {
       id: 'foo',
     };
@@ -144,9 +167,8 @@ describe('Booking Create Account Form', () => {
     vm.register();
 
     // ASSERT
-    expect(vm.profile).to.equal(storedUserData);
     expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_kid');
-    expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
+    expect(MockUsersService.register).to.have.been.calledWith(vm.user, vm.profile);
   });
 
   describe('submitAccount()', () => {
@@ -156,6 +178,7 @@ describe('Booking Create Account Form', () => {
       vm.recaptchaResponse = 'foo';
       vm.eventId = 1;
 
+      sandbox.stub(vm, 'formatProfile').returns(Promise.resolve());
       sandbox.stub(vm, 'register').returns(Promise.resolve());
       sandbox.stub(vm, 'joinDojo').returns(Promise.resolve());
       sandbox.stub(vm, 'bookTickets').returns(Promise.resolve());
@@ -166,6 +189,7 @@ describe('Booking Create Account Form', () => {
 
       // ASSERT
       requestAnimationFrame(() => {
+        expect(vm.formatProfile).to.have.been.calledOnce;
         expect(vm.register).to.have.been.calledOnce;
         expect(vm.addChildren).to.have.been.calledOnce;
         expect(vm.joinDojo).to.have.been.calledOnce;
