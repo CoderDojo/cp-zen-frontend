@@ -135,6 +135,9 @@
         forEachTicket(bookingData, (ticket) => {
           if (ticket.ticket.type === 'ninja') {
             const child = UserUtils.profileToJSON(ticket.user);
+            child.userTypes = [UserUtils.isUnderAge(ticket.user.dob) ? 'attendee-u13' : 'attendee-o13'];
+            child.gender = child.otherGender ? child.otherGender : child.gender;
+            delete child.otherGender;
             promiseChain = promiseChain.then(() => UserService.addChild(child))
               .then((response) => {
                 ticket.user = response.body; // eslint-disable-line no-param-reassign

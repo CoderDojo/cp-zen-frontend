@@ -30,6 +30,7 @@ describe('Booking Create Account Form', () => {
     };
     MockUserUtils = {
       isYouthOverThirteen: sandbox.stub(),
+      isUnderAge: sandbox.stub(),
       getAge: sandbox.stub(),
       profileToJSON: sandbox.stub(),
     };
@@ -250,7 +251,7 @@ describe('Booking Create Account Form', () => {
   });
 
   describe('addChildren', () => {
-    it('should create a profile for each child', (done) => {
+    it('should create a profile for each child', async () => {
       // ARRANGE
       const mockBookingData = {
         foo: {
@@ -316,42 +317,43 @@ describe('Booking Create Account Form', () => {
         childIdCounter += 1;
         return Promise.resolve({ body: childClone });
       });
+      MockUserUtils.isUnderAge.withArgs('2002-02-01T00:00:00.000Z').returns(false);
+      MockUserUtils.isUnderAge.withArgs('2010-03-02T00:00:00.000Z').returns(true);
+      MockUserUtils.isUnderAge.withArgs('2008-04-03T00:00:00.000Z').returns(true);
 
       // ACT
-      vm.addChildren().then(() => {
-        // ASSERT
-        expect(MockUserUtils.profileToJSON).to.have.callCount(3);
-        expect(MockUsersService.addChild).to.have.callCount(3);
-        expect(MockUsersService.addChild.getCall(0).args[0]).to.deep.equal({
-          firstName: 'Fee',
-          lastName: 'Bar',
-          dob: '2002-02-01T00:00:00.000Z',
-          gender: 'Female',
-          otherGender: '',
-        });
-        expect(MockUsersService.addChild.getCall(1).args[0]).to.deep.equal({
-          firstName: 'Fie',
-          lastName: 'Bar',
-          dob: '2010-03-02T00:00:00.000Z',
-          gender: 'Male',
-          otherGender: '',
-        });
-        expect(MockUsersService.addChild.getCall(2).args[0]).to.deep.equal({
-          firstName: 'Foe',
-          lastName: 'Bar',
-          dob: '2008-04-03T00:00:00.000Z',
-          gender: 'Other',
-          otherGender: 'Fluid',
-        });
-        expect(mockBookingData.foo.selectedTickets[0].user.id).to.equal(1);
-        expect(mockBookingData.foo.selectedTickets[1].user.id).to.equal(2);
-        expect(mockBookingData.abc.selectedTickets[0].user.id).to.equal(3);
-        expect(mockBookingData.foo.selectedTickets[0].user.userId).to.equal(1001);
-        expect(mockBookingData.foo.selectedTickets[1].user.userId).to.equal(1002);
-        expect(mockBookingData.abc.selectedTickets[0].user.userId).to.equal(1003);
-        expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, mockBookingData);
-        done();
+      await vm.addChildren();
+      // ASSERT
+      expect(MockUserUtils.profileToJSON).to.have.callCount(3);
+      expect(MockUsersService.addChild).to.have.callCount(3);
+      expect(MockUsersService.addChild.getCall(0).args[0]).to.deep.equal({
+        firstName: 'Fee',
+        lastName: 'Bar',
+        dob: '2002-02-01T00:00:00.000Z',
+        gender: 'Female',
+        userTypes: ['attendee-o13'],
       });
+      expect(MockUsersService.addChild.getCall(1).args[0]).to.deep.equal({
+        firstName: 'Fie',
+        lastName: 'Bar',
+        dob: '2010-03-02T00:00:00.000Z',
+        gender: 'Male',
+        userTypes: ['attendee-u13'],
+      });
+      expect(MockUsersService.addChild.getCall(2).args[0]).to.deep.equal({
+        firstName: 'Foe',
+        lastName: 'Bar',
+        dob: '2008-04-03T00:00:00.000Z',
+        gender: 'Fluid',
+        userTypes: ['attendee-u13'],
+      });
+      expect(mockBookingData.foo.selectedTickets[0].user.id).to.equal(1);
+      expect(mockBookingData.foo.selectedTickets[1].user.id).to.equal(2);
+      expect(mockBookingData.abc.selectedTickets[0].user.id).to.equal(3);
+      expect(mockBookingData.foo.selectedTickets[0].user.userId).to.equal(1001);
+      expect(mockBookingData.foo.selectedTickets[1].user.userId).to.equal(1002);
+      expect(mockBookingData.abc.selectedTickets[0].user.userId).to.equal(1003);
+      expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, mockBookingData);
     });
   });
 

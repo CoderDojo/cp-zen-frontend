@@ -1,6 +1,4 @@
 import Vue from 'vue';
-import { clone } from 'lodash';
-import UserUtils from '@/users/util';
 
 const UserService = {
   login: (email, password) => Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/login`, {
@@ -22,15 +20,7 @@ const UserService = {
 
   getChildren: userId => Vue.http.get(`${Vue.config.apiServer}/api/2.0/profiles/children-for-user/${userId}`),
 
-  addChild(profile) {
-    const payload = {
-      profile: clone(profile),
-    };
-    payload.profile.userTypes = [UserUtils.isUnderAge(payload.profile.dob) ? 'attendee-u13' : 'attendee-o13'];
-    payload.profile.gender = profile.otherGender ? profile.otherGender : profile.gender;
-    delete payload.profile.otherGender;
-    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, payload);
-  },
+  addChild: profile => Vue.http.post(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, { profile }),
 };
 
 export default UserService;
