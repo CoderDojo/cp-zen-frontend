@@ -6,21 +6,22 @@ describe('Event Details', () => {
   let sandbox;
   let MockEventService;
   let EventDetailsWithMocks;
+  /* eslint-disable no-irregular-whitespace */
   const mockEventData = {
     address: 'CHQ',
     type: 'one-off',
     recurringType: 'weekly',
-    description: '<p>Join us for our second session back in the autumn term!</br> \
-      New beginners will be building games and creating projects using Scratch a visual programming language. Returning ninjas will working on more advanced content so come with your thinking hats and be ready to solve some advanced problems!   \
-      <b>Note</b>: Doors open at 5:50 pm attendees will not be able to enter Dogpatch Labs before this. </p> </br>\
-      <b>All ninjas should:</b> \
-      <ul>\
-      <li> Book a ticket </li>\
-      <li> Bring a laptop (there are limited laptops available). </li>\
-      <li> Bring an Android Phone/Tablet (if they have one & are using App Inventor)</li>\
-      <li> Be accompanied by a parent/guardian at all times. </li>\
-      </ul>\
-      Parents are asked to help get their child set up, laptops turned on etc so mentors can focus on mentoring.',
+    description: `<p>Join us for our second session back in the autumn term!</br>
+      New beginners will be building games and creating projects using Scratch a visual programming language. Returning ninjas will working on more advanced content so come with your thinking hats and be ready to solve some advanced problems!   
+      <b>Note</b>: Doors open at 5:50 pm attendees will not be able to enter Dogpatch Labs before this. </p> </br>
+      <b>All ninjas should:</b> 
+      <ul>
+      <li> Book a ticket </li>
+      <li> Bring a laptop (there are limited laptops available). </li>
+      <li> Bring an Android Phone/Tablet (if they have one & are using App Inventor)</li>
+      <li> Be accompanied by a parent/guardian at all times. </li>
+      </ul>
+      Parents are asked to help get their child set up, laptops turned on etc so mentors can focus on mentoring.`,
     dates: [
       {
         startTime: '2017-06-06T16:30:00.000Z',
@@ -32,17 +33,17 @@ describe('Event Details', () => {
     address: 'CHQ',
     type: 'recurring',
     recurringType: 'biweekly',
-    description: '<p>Join us for our second session back in the autumn term!</br> \
-      New beginners will be building games and creating projects using Scratch a visual programming language. Returning ninjas will working on more advanced content so come with your thinking hats and be ready to solve some advanced problems!   \
-      <b>Note</b>: Doors open at 5:50 pm attendees will not be able to enter Dogpatch Labs before this. </p> </br>\
-      <b>All ninjas should:</b> \
-      <ul>\
-      <li> Book a ticket </li>\
-      <li> Bring a laptop (there are limited laptops available). </li>\
-      <li> Bring an Android Phone/Tablet (if they have one & are using App Inventor)</li>\
-      <li> Be accompanied by a parent/guardian at all times. </li>\
-      </ul>\
-      Parents are asked to help get their child set up, laptops turned on etc so mentors can focus on mentoring.',
+    description: `<p>Join us for our second session back in the autumn term!</br>
+      New beginners will be building games and creating projects using Scratch a visual programming language. Returning ninjas will working on more advanced content so come with your thinking hats and be ready to solve some advanced problems!   
+      <b>Note</b>: Doors open at 5:50 pm attendees will not be able to enter Dogpatch Labs before this. </p> </br>
+      <b>All ninjas should:</b> 
+      <ul>
+      <li> Book a ticket </li>
+      <li> Bring a laptop (there are limited laptops available). </li>
+      <li> Bring an Android Phone/Tablet (if they have one & are using App Inventor)</li>
+      <li> Be accompanied by a parent/guardian at all times. </li>
+      </ul>
+      Parents are asked to help get their child set up, laptops turned on etc so mentors can focus on mentoring.`,
     dates: [
       {
         startTime: '2017-06-03T10:00:00.000Z',
@@ -66,6 +67,7 @@ describe('Event Details', () => {
       },
     ],
   };
+  /* eslint-enable no-irregular-whitespace */
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
