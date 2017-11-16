@@ -179,6 +179,7 @@ workflows:
       - publish_staging:
           requires:
             - test-unit
+            - test-e2e
             - test-lint
           filters:
             branches:
