@@ -24,7 +24,7 @@ const BookingParentData = Object.create(EventDetails, {
   },
   firstNameValidationError: {
     get() {
-      return $('p[id=firstNameValidationError]');
+      return $('p.cd-booking-parent-form__first-name-error');
     },
   },
   lastName: {
@@ -34,7 +34,7 @@ const BookingParentData = Object.create(EventDetails, {
   },
   lastNameValidationError: {
     get() {
-      return $('p[id=lastNameValidationError]');
+      return $('p.cd-booking-parent-form__last-name-error');
     },
   },
   dateOfBirthLabel: {
@@ -57,6 +57,11 @@ const BookingParentData = Object.create(EventDetails, {
       return $$('.cd-booking-parent-form__parent-dob select')[2];
     },
   },
+  dateOfBirthValidationError: {
+    get() {
+      return $('p.cd-booking-parent-form__dob-error');
+    },
+  },
   phoneNumberLabel: {
     get() {
       return $('label[for=phoneNumber]');
@@ -69,7 +74,7 @@ const BookingParentData = Object.create(EventDetails, {
   },
   phoneNumberValidationError: {
     get() {
-      return $('p[id=phoneNumberValidationError]');
+      return $$('p.cd-booking-parent-form__phone-error');
     },
   },
   emailLabel: {
@@ -84,7 +89,7 @@ const BookingParentData = Object.create(EventDetails, {
   },
   emailValidationError: {
     get() {
-      return $('p[id=emailValidationError]');
+      return $$('p.cd-booking-parent-form__email-error');
     },
   },
   attendeeHeading: {
@@ -130,6 +135,16 @@ const BookingParentData = Object.create(EventDetails, {
       return $$('.cd-booking-parent-form__child-last-name');
     },
   },
+  sessionTicketFirstNameValidationError: {
+    get() {
+      return $$('.cd-booking-parent-form__child-first-name-error');
+    },
+  },
+  sessionTicketLastNameValidationError: {
+    get() {
+      return $$('.cd-booking-parent-form__child-last-name-error');
+    },
+  },
   sessionTicketDayOfBirth: {
     value(index) {
       let datePicker = $$('.cd-booking-parent-form__child-dob')[index];
@@ -148,6 +163,11 @@ const BookingParentData = Object.create(EventDetails, {
       return datePicker.$$('select')[2];
     },
   },
+  sessionTicketDateOfBirthValidationError: {
+    get() {
+      return $$('.cd-booking-parent-form__child-dob-error');
+    },
+  },
   sessionTicketEmailAddress: {
     get() {
       return $$('.cd-booking-parent-form__child-email');
@@ -160,7 +180,12 @@ const BookingParentData = Object.create(EventDetails, {
   },
   sessionOtherGender: {
     get() {
-      return $$('.cd-booking-parent-form__child-gender input[name^=otherGender]');
+      return $$('.cd-booking-parent-form__other-gender input');
+    },
+  },
+  sessionOtherGenderValidationError: {
+    get() {
+      return $$('.cd-booking-parent-form__other-gender .text-danger');
     },
   },
   password: {

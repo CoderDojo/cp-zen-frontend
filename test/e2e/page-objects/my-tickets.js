@@ -11,6 +11,11 @@ const MyTicketPage = Object.create(BasePage, {
       return $$('.cd-user-ticket-list-item.cd-event-ticket-list__event');
     },
   },
+  firstEvent: {
+    get() {
+      return $('.cd-user-ticket-list-item.cd-event-ticket-list__event');
+    },
+  },
   eventName: {
     value(index) {
       return $$('.cd-user-ticket-list-item.cd-event-ticket-list__event .cd-user-ticket-list-item__name')[index];

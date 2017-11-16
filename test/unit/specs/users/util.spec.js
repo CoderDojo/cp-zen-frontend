@@ -73,4 +73,36 @@ describe('User Utils', () => {
       expect(UserUtils.isYouthOverThirteen(dob)).to.be.false;
     });
   });
+
+  describe('profileToJSON()', () => {
+    it('should convert profile.dob into an ISO timestamp from a Date object', () => {
+      // ARRANGE
+      const profile = {
+        id: 'bar',
+        dob: new Date(2017, 10, 10, 0, 0, 0, 0),
+      };
+      const transformedProfile = {
+        id: 'bar',
+        dob: '2017-11-10T00:00:00.000Z',
+      };
+
+      // ACT + ASSERT
+      expect(UserUtils.profileToJSON(profile)).to.deep.equal(transformedProfile);
+    });
+
+    it('should convert profile.dob into an ISO timestamp from a string object', () => {
+      // ARRANGE
+      const profile = {
+        id: 'bar',
+        dob: 'Fri Nov 10 2017 00:00:00 GMT+0000 (GMT)',
+      };
+      const transformedProfile = {
+        id: 'bar',
+        dob: '2017-11-10T00:00:00.000Z',
+      };
+
+      // ACT + ASSERT
+      expect(UserUtils.profileToJSON(profile)).to.deep.equal(transformedProfile);
+    });
+  });
 });
