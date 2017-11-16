@@ -9,8 +9,13 @@ describe('UserService', () => {
   });
 
   describe('login()', () => {
-    it('should login with the given email address and password', (done) => {
+    it('should login with the given email address and password', async () => {
       // ARRANGE
+      window.cdMenu = {
+        fns: {
+          loadProfileMenu: sandbox.stub(),
+        },
+      };
       const email = 'email';
       const password = 'password';
       sandbox.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/users/login`, {
@@ -19,11 +24,11 @@ describe('UserService', () => {
       }).returns(Promise.resolve('foo'));
 
       // ACT
-      UserService.login(email, password).then((resp) => {
-        // ASSERT
-        expect(resp).to.equal('foo');
-        done();
-      });
+      const resp = await UserService.login(email, password);
+
+      // ASSERT
+      expect(resp).to.equal('foo');
+      expect(window.cdMenu.fns.loadProfileMenu).to.have.been.calledOnce;
     });
   });
 
