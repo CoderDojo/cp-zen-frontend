@@ -19,6 +19,8 @@ function checkEventDetails(page) {
   page.sectionIcons[1].waitForVisible();
   expect(page.sectionHeaders[1].getText()).to.equal('LOCATION');
   expect(page.sectionContents[1].getText()).to.equal('CHQ, Dublin, Ireland');
+  // NOTE : this is wrong, but getText doesn't seem to grab the content of sub-nodes, while it should
+  expect(page.sectionContents[2].getText()).to.equal('Join us for our second session back in the autumn term!\nNew beginners will be building games and creating projects using Scratch a visual programming language. Returning ninjas will working on more advanced content so come with your thinking hats and be ready to solve some advanced problems!    : Doors open at 5:50 pm attendees will not be able to enter Dogpatch Labs before this. \n\n  Parents are asked to help get their child set up, laptops turned on etc so mentors can focus on mentoring.\nRead full event details');
 }
 
 function checkRecurringEventDetails(page) {
@@ -30,6 +32,8 @@ function checkRecurringEventDetails(page) {
   page.sectionIcons[1].waitForVisible();
   expect(page.sectionHeaders[1].getText()).to.equal('LOCATION');
   expect(page.sectionContents[1].getText()).to.equal('CHQ, Dublin, Ireland');
+  // NOTE : this is wrong, but getText doesn't seem to grab the content of sub-nodes, while it should
+  expect(page.sectionContents[2].getText()).to.equal('Join us for our second session back in the autumn term!\nNew beginners will be building games and creating projects using Scratch a visual programming language. Returning ninjas will working on more advanced content so come with your thinking hats and be ready to solve some advanced problems!    : Doors open at 5:50 pm attendees will not be able to enter Dogpatch Labs before this. \n\n  Parents are asked to help get their child set up, laptops turned on etc so mentors can focus on mentoring.\nRead full event details');
 }
 
 function startBooking() {
@@ -133,7 +137,7 @@ describe('Book event page', () => {
     expect(BookingConfirmation.approvalRequiredMessage.getText()).to.equal('Your tickets are now awaiting approval\nYou will be notified when the organizer approves your request.');
 
     expect(BookingConfirmation.eventDetailsHeader.getText()).to.equal('Event Details');
-    expect(BookingConfirmation.eventDescription.getText()).to.equal('LEARN ALL THE THINGS');
+    expect(BookingConfirmation.eventDescription.getText()).to.equal('Join us for our second session back in the autumn term!\nNew beginners will be building games and creating projects using Scratch a visual programming language. Returning ninjas will working on more advanced content so come with your thinking hats and be ready to solve some advanced problems!    Note: Doors open at 5:50 pm attendees will not be able to enter Dogpatch Labs before this. \n\nAll ninjas should: \nBook a ticket\nBring a laptop (there are limited laptops available). \nBring an Android Phone/Tablet (if they have one & are using App Inventor)\nBe accompanied by a parent/guardian at all times. \nParents are asked to help get their child set up, laptops turned on etc so mentors can focus on mentoring.');
 
     const hostedByLink = BookingConfirmation.hostedByMessage.$('a');
     hostedByLink.scroll(0, -200);
