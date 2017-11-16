@@ -1,7 +1,5 @@
 import Vue from 'vue';
-import { extend, clone } from 'lodash';
 import UserService from '@/users/service';
-import UserUtils from '@/users/util';
 
 describe('UserService', () => {
   const sandbox = sinon.sandbox.create();
@@ -30,7 +28,7 @@ describe('UserService', () => {
   });
 
   describe('register()', () => {
-    it('should register an account', (done) => {
+    it('should register an account', async () => {
       // ARRANGE
       const profile = {
         id: 'bar',
@@ -47,12 +45,9 @@ describe('UserService', () => {
       sandbox.stub(UserService, 'login').returns(Promise.resolve());
 
       // ACT
-      UserService.register(user, profile).then(() => {
-        // ASSERT
-        expect(UserService.login).to.have.been.calledOnce;
-        expect(UserService.login).to.have.been.calledWith(user.email, user.password);
-        done();
-      });
+      await UserService.register(user, profile);
+      expect(UserService.login).to.have.been.calledOnce;
+      expect(UserService.login).to.have.been.calledWith(user.email, user.password);
     });
   });
 
@@ -92,81 +87,19 @@ describe('UserService', () => {
   });
 
   describe('addChild()', () => {
-    it('should add the given u13 child profile to the current user', (done) => {
+    it('should add the given child profile to the current user', async () => {
       // ARRANGE
-      const mockProfile = {
-        gender: 'foo',
-        dob: new Date(2008, 9, 10, 0, 0, 0, 0),
-      };
-
-      const expectedPayload = {
-        profile: extend(clone(mockProfile), {
-          userTypes: ['attendee-u13'],
-          dob: '2008-10-10T00:00:00.000Z',
-        }),
+      const profile = {
+        id: 'foo',
       };
 
       sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
-      sandbox.stub(UserUtils, 'isUnderAge').withArgs(mockProfile.dob).returns(true);
 
       // ACT
-      UserService.addChild(mockProfile).then(() => {
-        // ASSERT
-        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, expectedPayload);
-        done();
-      });
-    });
+      await UserService.addChild(profile);
 
-    it('should add the given o13 child profile to the current user', (done) => {
-      // ARRANGE
-      const mockProfile = {
-        gender: 'foo',
-        dob: new Date(2008, 9, 10, 0, 0, 0, 0),
-      };
-
-      const expectedPayload = {
-        profile: extend(clone(mockProfile), {
-          userTypes: ['attendee-o13'],
-          dob: '2008-10-10T00:00:00.000Z',
-        }),
-      };
-
-      sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
-      sandbox.stub(UserUtils, 'isUnderAge').withArgs(mockProfile.dob).returns(false);
-
-      // ACT
-      UserService.addChild(mockProfile).then(() => {
-        // ASSERT
-        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, expectedPayload);
-        done();
-      });
-    });
-
-    it('should use otherGender if gender is "Other"', (done) => {
-      // ARRANGE
-      const mockProfile = {
-        gender: 'Other',
-        otherGender: 'Fluid',
-        dob: new Date(2008, 9, 10, 0, 0, 0, 0),
-      };
-
-      const expectedPayload = {
-        profile: {
-          userTypes: ['attendee-o13'],
-          dob: '2008-10-10T00:00:00.000Z',
-          gender: 'Fluid',
-        },
-      };
-
-      sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
-      sandbox.stub(UserUtils, 'isUnderAge').withArgs(mockProfile.dob).returns(false);
-
-      // ACT
-      UserService.addChild(mockProfile).then(() => {
-        // ASSERT
-        expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, expectedPayload);
-        done();
-      });
+      // ASSERT
+      expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, { profile });
     });
   });
 });
