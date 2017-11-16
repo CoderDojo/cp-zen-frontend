@@ -1,10 +1,14 @@
 import Vue from 'vue';
 
 const UserService = {
-  login: (email, password) => Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/login`, {
-    email,
-    password,
-  }),
+  async login(email, password) {
+    const loginResp = await Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/login`, {
+      email,
+      password,
+    });
+    window.cdMenu.fns.loadProfileMenu();
+    return loginResp;
+  },
 
   async register(user, profile) {
     await Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/register`, {
