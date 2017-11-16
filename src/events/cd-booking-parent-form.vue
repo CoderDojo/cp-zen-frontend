@@ -88,7 +88,7 @@
           <div class="cd-booking-parent-form__other-gender">
             <input :name="`otherChildGender${selectedTicket.ticket.id}${index}`" type="text" class="form-control" :placeholder="$t('Preferred Gender')" v-model="selectedTicket.user.otherGender" data-vv-as="gender" v-validate="selectedTicket.user.gender === 'Other' ? 'required' : ''" />
             <p class="text-danger" v-show="errors.has(`otherChildGender${selectedTicket.ticket.id}${index}:required`)">
-              {{ $t('Prefered gender is required') }}
+              {{ $t('Preferred gender is required') }}
             </p>
           </div>
           <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Undisclosed" v-model="selectedTicket.user.gender" /> <span>{{ $t('Prefer not to answer') }}</span></label>

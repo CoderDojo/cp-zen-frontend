@@ -442,7 +442,7 @@ describe('Book event page', () => {
     expect(BookingConfirmation.recurringFrequencyInfo.getText()).to.equal('Every two weeks on Sunday');
   });
 
-  it('should require prefered gender if "Not listed" is selected', () => {
+  it('should require preferred gender if "Not listed" is selected', () => {
     startBooking();
 
     Booking.sessionTicketGender('Other')[0].click();
@@ -450,10 +450,10 @@ describe('Book event page', () => {
     Booking.submitBookingButton.click();
 
     expect(Booking.sessionOtherGenderValidationError[0].isVisible()).to.equal(true);
-    expect(Booking.sessionOtherGenderValidationError[0].getText()).to.equal('Prefered gender is required');
+    expect(Booking.sessionOtherGenderValidationError[0].getText()).to.equal('Preferred gender is required');
   });
 
-  it('should not require prefered gender if "Not listed" is not selected', () => {
+  it('should not require preferred gender if "Not listed" is not selected', () => {
     startBooking();
 
     Booking.sessionTicketGender('Female')[0].click();
