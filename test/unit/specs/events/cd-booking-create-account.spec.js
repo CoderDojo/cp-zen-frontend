@@ -23,6 +23,7 @@ describe('Booking Create Account Form', () => {
       addChild: sandbox.stub(),
     };
     MockDojoService = {
+      getDojoById: sandbox.stub(),
       joinDojo: sandbox.stub(),
     };
     MockEventsService = {
@@ -48,6 +49,30 @@ describe('Booking Create Account Form', () => {
     sandbox.restore();
   });
 
+  describe('created', () => {
+    it('should recover the selectedEvent and the Dojo', async () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+      const mockEventData = {
+        id: 1,
+        dojoId: 2,
+      };
+      const mockDojoData = {
+        id: 2,
+        name: 'dojoData',
+      };
+      MockStoreService.load.withArgs('selected-event').returns(mockEventData);
+      MockDojoService.getDojoById.withArgs(mockEventData.dojoId)
+        .returns(Promise.resolve({ data: mockDojoData }));
+      // ACT
+      await vm.$lifecycleMethods.created();
+      expect(MockStoreService.load).to.have.been.calledOnce;
+      expect(vm.selectedEvent).to.equal(mockEventData);
+      expect(MockDojoService.getDojoById).to.have.been.calledOnce;
+      expect(vm.dojo).to.equal(mockDojoData);
+    });
+  });
+
   it('should generate user computed property', () => {
     // ARRANGE
     const expectedUser = {
@@ -70,6 +95,9 @@ describe('Booking Create Account Form', () => {
       dob: '1980-04-12T00:00:00.000Z',
       phone: '+1-555-123456',
       email: 'john.doe@example.com',
+      country: {
+        alpha2: 'FR',
+      },
     };
     const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
     vm.profile = clone(profile);
@@ -88,20 +116,19 @@ describe('Booking Create Account Form', () => {
 
   it('should register the user and notify GA that an adult registered', async () => {
     // ARRANGE
-    const storedUserData = {
-      firstName: 'Foo',
-      lastName: 'Bar',
-      phone: '012345678',
-      email: 'foo.bar@baz.com',
-    };
-    MockStoreService.load.returns(storedUserData);
     MockUserUtils.profileToJSON.callsFake(profile => profile);
 
     const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
     vm.eventId = 1;
     vm.$ga = { event: sinon.stub() };
     vm.$route = { name: 'a' };
-    vm.profile = { dob: '' };
+    vm.profile = {
+      firstName: 'Foo',
+      lastName: 'Bar',
+      phone: '012345678',
+      email: 'foo.bar@baz.com',
+      dob: '',
+    };
     vm.user = {
       id: 'foo',
     };
@@ -113,26 +140,24 @@ describe('Booking Create Account Form', () => {
     await vm.register();
 
     // ASSERT
-    expect(vm.profile).to.equal(storedUserData);
+    expect(vm.profile).to.equal(vm.profile);
     expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_adult');
-    expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
+    expect(MockUsersService.register).to.have.been.calledWith(vm.user, vm.profile);
   });
 
   it('should register the user and notify GA that a kid registered', async () => {
     // ARRANGE
-    const storedUserData = {
-      firstName: 'Foo',
-      lastName: 'Bar',
-      phone: '012345678',
-      email: 'foo.bar@baz.com',
-    };
-    MockStoreService.load.returns(storedUserData);
-
     const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
     vm.eventId = 1;
     vm.$ga = { event: sinon.stub() };
     vm.$route = { name: 'a' };
-    vm.profile = { dob: '' };
+    vm.profile = {
+      firstName: 'Foo',
+      lastName: 'Bar',
+      phone: '012345678',
+      email: 'foo.bar@baz.com',
+      dob: '',
+    };
     vm.user = {
       id: 'foo',
     };
@@ -144,9 +169,9 @@ describe('Booking Create Account Form', () => {
     vm.register();
 
     // ASSERT
-    expect(vm.profile).to.equal(storedUserData);
+    expect(vm.profile).to.equal(vm.profile);
     expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_kid');
-    expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
+    expect(MockUsersService.register).to.have.been.calledWith(vm.user, vm.profile);
   });
 
   describe('submitAccount()', () => {
@@ -160,12 +185,14 @@ describe('Booking Create Account Form', () => {
       sandbox.stub(vm, 'joinDojo').returns(Promise.resolve());
       sandbox.stub(vm, 'bookTickets').returns(Promise.resolve());
       sandbox.stub(vm, 'addChildren').returns(Promise.resolve());
+      sandbox.stub(vm, 'prepareProfile').returns(Promise.resolve());
 
       // ACT
       vm.submitAccount();
 
       // ASSERT
       requestAnimationFrame(() => {
+        expect(vm.prepareProfile).to.have.been.calledOnce;
         expect(vm.register).to.have.been.calledOnce;
         expect(vm.addChildren).to.have.been.calledOnce;
         expect(vm.joinDojo).to.have.been.calledOnce;
@@ -357,6 +384,35 @@ describe('Booking Create Account Form', () => {
     });
   });
 
+  describe('prepareProfile', () => {
+    it('should fill the country from the Dojo', () => {
+      //  ARRANGE
+      const mockProfileData = {
+        firstName: 'Foo',
+        lastName: 'Bar',
+        phone: '012345678',
+        email: 'foo.bar@baz.com',
+        dob: '',
+      };
+      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+      vm.dojo = {
+        country: {
+          alpha2: 'FR',
+        },
+      };
+      vm.eventId = 1;
+      const expectedProfileData = Object.assign({}, mockProfileData, vm.dojo);
+      MockStoreService.load.returns(mockProfileData);
+
+      vm.prepareProfile();
+      expect(MockStoreService.load).to.have.been.calledOnce;
+      expect(MockStoreService.load).to.have.been.calledWith('booking-1-user');
+      expect(vm.profile.country).to.eql(expectedProfileData.country);
+      expect(MockStoreService.save).to.have.been.calledOnce;
+      expect(MockStoreService.save).to.have.been.calledWith('booking-1-user', expectedProfileData);
+    });
+  });
+
   describe('joinDojo', () => {
     it('should join the logged in user to the dojo as a parent', (done) => {
       // ARRANGE
@@ -367,6 +423,7 @@ describe('Booking Create Account Form', () => {
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.eventId = eventId;
       vm.profile = { dob: '' };
+      vm.selectedEvent = { dojoId };
       const currentUserResponseMock = {
         login: {},
         user: {
@@ -377,9 +434,6 @@ describe('Booking Create Account Form', () => {
 
       // tell getcurrentuser what to return
       MockUsersService.getCurrentUser.returns(Promise.resolve({ body: currentUserResponseMock }));
-
-      // tell storeservice what to return for dojoId
-      MockStoreService.load.withArgs('selected-event').returns({ dojoId });
 
       MockUserUtils.isYouthOverThirteen.returns(false);
 
@@ -399,6 +453,7 @@ describe('Booking Create Account Form', () => {
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.eventId = eventId;
       vm.profile = { dob: '' };
+      vm.selectedEvent = { dojoId };
       const currentUserResponseMock = {
         login: {},
         user: {
@@ -409,9 +464,6 @@ describe('Booking Create Account Form', () => {
 
       // tell getcurrentuser what to return
       MockUsersService.getCurrentUser.returns(Promise.resolve({ body: currentUserResponseMock }));
-
-      // tell storeservice what to return for dojoId
-      MockStoreService.load.withArgs('selected-event').returns({ dojoId });
 
       MockUserUtils.isYouthOverThirteen.returns(true);
 
@@ -484,7 +536,7 @@ describe('Booking Create Account Form', () => {
       vm.eventId = 'foo';
       vm.$ga = { event: sinon.stub() };
       vm.$route = { name: '' };
-      MockStoreService.load.withArgs('selected-event').returns(mockSelectedEvent);
+      vm.selectedEvent = mockSelectedEvent;
       MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(mockBookingData);
       MockUsersService.getCurrentUser.returns(Promise.resolve({ body: currentUserResponseMock }));
 
