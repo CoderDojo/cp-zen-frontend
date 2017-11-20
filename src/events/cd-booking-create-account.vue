@@ -12,10 +12,7 @@
       <div class="row">
         <label class="cd-booking-create-account__label" for="email">{{ $t('Email Address') }}</label>
         <input type="email" :placeholder="$t('Email address')" class="form-control"
-          name="email" id="email" data-vv-as="email" v-validate="'required|email'" v-model="email">
-        <label class="cd-booking-create-account__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</label>
-        <label class="cd-booking-create-account__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</label>
-
+          name="email" id="email" v-model="email" readonly/>
       </div>
       <div class="row">
         <label class="cd-booking-create-account__label" for="password">{{ $t('Password') }}</label>
@@ -78,6 +75,7 @@
   import EventsService from '@/events/service';
   import DojoService from '@/dojos/service';
   import StoreService from '@/store/store-service';
+  import BookingUserStore from '@/events/booking-user-store';
 
   function forEachTicket(bookingData, cb) {
     Object.keys(bookingData).forEach((ticketId) => {
@@ -94,7 +92,9 @@
     data() {
       return {
         profile: null,
-        email: null,
+        get email() {
+          return BookingUserStore.state.email;
+        },
         password: null,
         confirmPassword: null,
         termsConditionsAccepted: false,
@@ -108,7 +108,6 @@
       user() {
         return extend(omit(this.profile, ['dob']), {
           password: this.password,
-          email: this.email,
           'g-recaptcha-response': this.recaptchaResponse,
           initUserType: {
             title: 'Parent/Guardian',
@@ -128,17 +127,11 @@
         }
       },
       async submitAccount() {
-        return this.formatProfile()
-          .then(this.register)
+        this.profile = StoreService.load(`booking-${this.eventId}-user`);
+        return this.register()
           .then(this.addChildren)
           .then(this.joinDojo)
           .then(this.bookTickets);
-      },
-      formatProfile() {
-        this.profile = StoreService.load(`booking-${this.eventId}-user`);
-        this.profile.email = this.email;
-        StoreService.save(`booking-${this.eventId}-user`, this.profile);
-        return Promise.resolve();
       },
       async register() {
         const isAdult = UserUtils.getAge(new Date(this.profile.dob)) > 18;
