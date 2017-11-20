@@ -128,10 +128,11 @@
         parentUserData: {},
         formValidated: false,
         childrenFormData: [],
+        applicantDob: null,
       };
     },
     computed: {
-      isYouthOverThirteen: () => UsersUtil.isYouthOverThirteen(new Date(StoreService.load('applicant-dob'))),
+      isYouthOverThirteen: () => UsersUtil.isYouthOverThirteen(this.applicantDob),
       ninjaTickets() {
         return getTicketsByType(this.tickets, 'ninja');
       },
@@ -160,6 +161,10 @@
         StoreService.save(`booking-${this.eventId}-user`, this.parentUserData);
         StoreService.save(`booking-${this.eventId}-sessions`, this.bookedTickets);
       },
+      prefillDateOfBirth() {
+        this.applicantDob = new Date(StoreService.load('applicant-dob'));
+        this.parentUserData.dob = this.applicantDob;
+      },
     },
     created() {
       this.bookedTickets = this.tickets;
@@ -169,6 +174,7 @@
           selectedTicket.user = { dob: null }; // eslint-disable-line no-param-reassign
         });
       });
+      this.prefillDateOfBirth();
     },
   };
 </script>
