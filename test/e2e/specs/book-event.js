@@ -55,6 +55,9 @@ function startBooking() {
   EventSessionsPage.ticketCounterIncrement(4).click();
 
   EventSessionsPage.nextButton.click();
+  expect(Booking.dateOfBirthDayInput.getValue()).to.equal('27');
+  expect(Booking.dateOfBirthMonthInput.getValue()).to.equal('3');
+  expect(Booking.dateOfBirthYearInput.getValue()).to.equal('1980');
 }
 
 describe('Book event page', () => {
@@ -76,9 +79,6 @@ describe('Book event page', () => {
 
     Booking.firstName.setValue('John');
     Booking.lastName.setValue('Doe');
-    Booking.dateOfBirthDayInput.selectByValue('27');
-    Booking.dateOfBirthMonthInput.selectByValue('3');
-    Booking.dateOfBirthYearInput.selectByValue('1980');
     Booking.phoneNumber.setValue('1555123456');
     Booking.email.setValue('john.doe@example.com');
 
@@ -196,9 +196,6 @@ describe('Book event page', () => {
 
     Booking.firstName.setValue('John');
     Booking.lastName.setValue('Doe');
-    Booking.dateOfBirthDayInput.selectByValue('27');
-    Booking.dateOfBirthMonthInput.selectByValue('3');
-    Booking.dateOfBirthYearInput.selectByValue('1980');
     Booking.phoneNumber.setValue('1555123456');
     Booking.email.setValue('john.doe@example.com');
 
@@ -229,9 +226,6 @@ describe('Book event page', () => {
 
     Booking.firstName.setValue('John');
     Booking.lastName.setValue('Doe');
-    Booking.dateOfBirthDayInput.selectByValue('27');
-    Booking.dateOfBirthMonthInput.selectByValue('3');
-    Booking.dateOfBirthYearInput.selectByValue('1980');
     Booking.phoneNumber.setValue('+1-555-12-3456');
     Booking.email.setValue('john.doe@example.com');
     Booking.checkRecaptcha();
@@ -247,9 +241,6 @@ describe('Book event page', () => {
 
     Booking.firstName.setValue('John');
     Booking.lastName.setValue('Doe');
-    Booking.dateOfBirthDayInput.selectByValue('27');
-    Booking.dateOfBirthMonthInput.selectByValue('3');
-    Booking.dateOfBirthYearInput.selectByValue('1980');
     Booking.phoneNumber.setValue('1555123456');
     Booking.email.setValue('john.doe');
     browser.pause(2000);
@@ -263,6 +254,7 @@ describe('Book event page', () => {
 
   it('should report validation errors missing required fields', () => {
     startBooking();
+
     Booking.checkRecaptcha();
 
     Booking.submitBookingButton.waitForVisible();
@@ -270,7 +262,6 @@ describe('Book event page', () => {
 
     expect(Booking.firstNameValidationError.getText()).to.equal('First name is required');
     expect(Booking.lastNameValidationError.getText()).to.equal('Last name is required');
-    expect(Booking.dateOfBirthValidationError.getText()).to.equal('Date of birth is required');
     expect(Booking.emailValidationError[0].getText()).to.equal('Parent email address is required');
     expect(Booking.phoneNumberValidationError[0].getText()).to.equal('Phone number is required');
 
@@ -424,9 +415,6 @@ describe('Book event page', () => {
 
     Booking.firstName.setValue('John');
     Booking.lastName.setValue('Doe');
-    Booking.dateOfBirthDayInput.selectByValue('27');
-    Booking.dateOfBirthMonthInput.selectByValue('3');
-    Booking.dateOfBirthYearInput.selectByValue('1980');
     Booking.phoneNumber.setValue('1555123456');
     Booking.email.setValue('john.doe@example.com');
 
