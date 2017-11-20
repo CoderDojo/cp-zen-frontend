@@ -9,7 +9,8 @@ describe('Booking Parent Form', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     MockStoreService = {
-      save: sandbox.spy(),
+      save: sandbox.stub(),
+      load: sandbox.stub(),
     };
     BookingParentFormComponentWithMocks = BookingParentFormComponent({
       '@/store/store-service': MockStoreService,
@@ -152,6 +153,21 @@ describe('Booking Parent Form', () => {
 
       // ASSERT
       expect(isValid).to.equal(false);
+    });
+  });
+
+  describe('prefillDateOfBirth()', () => {
+    it('should set applicantDob and parentUserData.dob from the store', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingParentFormComponentWithMocks);
+      MockStoreService.load.withArgs('applicant-dob').returns('1980-04-22T00:00:00.000Z');
+
+      // ACT
+      vm.prefillDateOfBirth();
+
+      // ASSERT
+      expect(vm.applicantDob.toString()).to.equal(new Date('1980-04-22T00:00:00.000Z').toString());
+      expect(vm.parentUserData.dob.toString()).to.equal(new Date('1980-04-22T00:00:00.000Z').toString());
     });
   });
 
@@ -326,6 +342,7 @@ describe('Booking Parent Form', () => {
           ],
         },
       };
+      sandbox.stub(vm, 'prefillDateOfBirth');
 
       // ACT
       vm.$lifecycleMethods.created();
@@ -361,6 +378,7 @@ describe('Booking Parent Form', () => {
           ],
         },
       });
+      expect(vm.prefillDateOfBirth).to.have.been.calledOnce;
     });
   });
 });
