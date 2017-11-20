@@ -132,7 +132,9 @@
       };
     },
     computed: {
-      isYouthOverThirteen: () => UsersUtil.isYouthOverThirteen(this.applicantDob),
+      isYouthOverThirteen() {
+        return UsersUtil.isYouthOverThirteen(this.applicantDob);
+      },
       ninjaTickets() {
         return getTicketsByType(this.tickets, 'ninja');
       },
