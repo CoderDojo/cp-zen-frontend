@@ -69,11 +69,11 @@ describe('Booking Create Account Form', () => {
       lastName: 'Doe',
       dob: '1980-04-12T00:00:00.000Z',
       phone: '+1-555-123456',
+      email: 'john.doe@example.com',
     };
     const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
     vm.profile = clone(profile);
     vm.password = 'Passw0rd';
-    vm.email = 'john.doe@example.com';
     vm.recaptchaResponse = 'abc123';
     vm.termsConditionsAccepted = true;
     vm.isSubscribedToMailingList = true;
@@ -84,33 +84,6 @@ describe('Booking Create Account Form', () => {
     // ASSERT
     expect(user).to.deep.equal(expectedUser);
     expect(vm.profile).to.deep.equal(profile);
-  });
-
-  it('should add email to the profile', async () => {
-    // ARRANGE
-    const storedUserData = {
-      firstName: 'Foo',
-      lastName: 'Bar',
-      phone: '012345678',
-      email: 'foo.bar@baz.com',
-    };
-    MockStoreService.load.returns(storedUserData);
-    MockUserUtils.profileToJSON.callsFake(profile => profile);
-
-    const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-    vm.eventId = 1;
-    vm.$route = { name: 'a' };
-    vm.profile = { dob: '' };
-    vm.user = {
-      id: 'foo',
-    };
-
-    // ACT
-    await vm.formatProfile();
-
-    // ASSERT
-    expect(vm.profile).to.equal(storedUserData);
-    expect(MockStoreService.save).to.have.been.calledWith('booking-1-user', storedUserData);
   });
 
   it('should register the user and notify GA that an adult registered', async () => {
@@ -178,7 +151,6 @@ describe('Booking Create Account Form', () => {
       vm.recaptchaResponse = 'foo';
       vm.eventId = 1;
 
-      sandbox.stub(vm, 'formatProfile').returns(Promise.resolve());
       sandbox.stub(vm, 'register').returns(Promise.resolve());
       sandbox.stub(vm, 'joinDojo').returns(Promise.resolve());
       sandbox.stub(vm, 'bookTickets').returns(Promise.resolve());
@@ -189,7 +161,8 @@ describe('Booking Create Account Form', () => {
 
       // ASSERT
       requestAnimationFrame(() => {
-        expect(vm.formatProfile).to.have.been.calledOnce;
+        expect(MockStoreService.load).to.have.been.calledWith('booking-1-user');
+        expect(MockStoreService.load).to.have.been.calledOnce;
         expect(vm.register).to.have.been.calledOnce;
         expect(vm.addChildren).to.have.been.calledOnce;
         expect(vm.joinDojo).to.have.been.calledOnce;
