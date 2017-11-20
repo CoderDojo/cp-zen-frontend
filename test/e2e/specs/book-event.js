@@ -167,6 +167,31 @@ describe('Book event page', () => {
     Booking.sessionTicketEmailAddress[0].waitForVisible();
   });
 
+  it.only('should prefill youth dob field from verification when youth is booking', () => {
+    DojoPage.openDojoWithQuery('dublin');
+    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
+    DojoDetailsPage.eventViewButtons[0].click();
+
+    const now = new Date();
+    const turned13 = new Date(now.getFullYear() - 13, now.getMonth(), now.getDate(), 0, 0, 0, 0);
+
+    EventDobVerificationPage.dateOfBirthDayInput.waitForVisible();
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue(turned13.getDate());
+    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue(turned13.getMonth());
+    EventDobVerificationPage.dateOfBirthYearInput.selectByValue(turned13.getFullYear());
+    EventDobVerificationPage.verify.click();
+
+    EventSessionsPage.ticketCounterIncrement(0).click();
+    EventSessionsPage.nextButton.click();
+
+    Booking.firstName.waitForVisible();
+
+    expect(Booking.sessionTicketDayOfBirth(0).getValue()).to.equal(`${turned13.getDate()}`);
+    expect(Booking.sessionTicketMonthOfBirth(0).getValue()).to.equal(`${turned13.getMonth()}`);
+    expect(Booking.sessionTicketYearOfBirth(0).getValue()).to.equal(`${turned13.getFullYear()}`);
+  });
+
   it('should not show youth email input field when parent is booking', () => {
     DojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
