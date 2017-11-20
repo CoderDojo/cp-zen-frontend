@@ -146,6 +146,13 @@
         }
         return null;
       },
+      primaryYouth() {
+        const firstTicket = this.bookedTickets[Object.keys(this.bookedTickets)[0]];
+        if (this.isYouthOverThirteen && firstTicket.selectedTickets.length > 0) {
+          return firstTicket.selectedTickets[0].user;
+        }
+        return null;
+      },
     },
     methods: {
       async validateForm() {
@@ -165,7 +172,11 @@
       },
       prefillDateOfBirth() {
         this.applicantDob = new Date(StoreService.load('applicant-dob'));
-        this.parentUserData.dob = this.applicantDob;
+        if (this.primaryYouth) {
+          this.primaryYouth.dob = this.applicantDob;
+        } else {
+          this.parentUserData.dob = this.applicantDob;
+        }
       },
     },
     created() {
