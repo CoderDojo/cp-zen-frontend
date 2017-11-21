@@ -40,12 +40,17 @@ const EventDobVerification = Object.create(EventDetails, {
   },
   verify: {
     get() {
-      return $('.cd-event-dob-verification__verify');
+      return $('.cd-event-dob-verification__actions-verify');
     },
   },
   dateOfBirthError: {
     get() {
       return $('.cd-event-dob-verification__dob-error');
+    },
+  },
+  dateOfBirthInvalidError: {
+    get() {
+      return $('.cd-event-dob-verification__invalid-dob-error');
     },
   },
   open: {

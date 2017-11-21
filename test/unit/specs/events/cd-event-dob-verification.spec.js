@@ -50,7 +50,7 @@ describe('Event DOB verification', () => {
     });
   });
 
-  it('should save selected event and dob and go to next page', () => {
+  it('should save selected event and dob and go to next page', async () => {
     const data = {
       $router: {
         push: sandbox.spy(),
@@ -58,9 +58,13 @@ describe('Event DOB verification', () => {
       eventDetails: mockEventData,
       date: mockDob,
       eventId: 'foo',
+      $validator: {
+        validateAll: sandbox.stub().returns(Promise.resolve(undefined)),
+      },
     };
 
-    vm.next.bind(data)();
+    await vm.next.bind(data)();
+    expect(data.$validator.validateAll).to.have.been.calledOnce;
     expect(MockStoreService.save).to.have.been.calledWith('selected-event', mockEventData);
     expect(MockStoreService.save).to.have.been.calledWith('applicant-dob', mockDob);
     expect(MockStoreService.save).to.be.calledTwice;
@@ -69,7 +73,28 @@ describe('Event DOB verification', () => {
     expect(data.$router.push).to.have.been.calledWith({ name: 'EventSessions', params: { eventId: data.eventId } });
   });
 
-  it('should allow adults', () => {
+  it('should not continue on falsy date', async () => {
+    const data = {
+      $router: {
+        push: sandbox.spy(),
+      },
+      eventDetails: mockEventData,
+      date: undefined,
+      isDobUnderage: false,
+      $validator: {
+        validateAll: sinon.stub().returns(Promise.reject(new Error('Err'))),
+      },
+    };
+
+    extend(vm, data);
+
+    await vm.next();
+    expect(data.$validator.validateAll).to.have.been.calledOnce;
+    expect(MockStoreService.save).to.not.have.been.called;
+    expect(vm.$router.push).to.not.have.been.called;
+  });
+
+  it('should allow adults', async () => {
     const mockDate = new Date(1980, 10, 25, 0, 0, 0, 0);
     const data = {
       $router: {
@@ -78,12 +103,16 @@ describe('Event DOB verification', () => {
       eventDetails: mockEventData,
       date: mockDate,
       isDobUnderage: false,
+      $validator: {
+        validateAll: sinon.stub().returns(Promise.resolve(undefined)),
+      },
     };
 
     extend(vm, data);
 
-    vm.next();
+    await vm.next();
     expect(vm.isDobUnderage).to.equal(false);
+    expect(data.$validator.validateAll).to.have.been.calledOnce;
     expect(MockStoreService.save).to.be.calledTwice;
     expect(MockStoreService.save).to.have.been.calledWith('applicant-dob', mockDate);
     expect(MockStoreService.save).to.have.been.calledWith('selected-event', mockEventData);
@@ -92,7 +121,7 @@ describe('Event DOB verification', () => {
     expect(vm.$router.push).to.have.been.calledWith({ name: 'EventSessions', params: { eventId: vm.eventId } });
   });
 
-  it('should allow someone who just turned 13', () => {
+  it('should allow someone who just turned 13', async () => {
     const now = new Date();
     const turned13 = new Date(now.getFullYear() - 13, now.getMonth(), now.getDate(), 0, 0, 0, 0);
     const data = {
@@ -102,11 +131,14 @@ describe('Event DOB verification', () => {
       eventDetails: mockEventData,
       date: turned13,
       isDobUnderage: false,
+      $validator: {
+        validateAll: sandbox.stub().returns(Promise.resolve(undefined)),
+      },
     };
 
     extend(vm, data);
 
-    vm.next();
+    await vm.next();
     expect(vm.isDobUnderage).to.equal(false);
     expect(MockStoreService.save).to.be.calledTwice;
     expect(MockStoreService.save).to.have.been.calledWith('applicant-dob', turned13);
@@ -116,7 +148,7 @@ describe('Event DOB verification', () => {
     expect(vm.$router.push).to.have.been.calledWith({ name: 'EventSessions', params: { eventId: vm.eventId } });
   });
 
-  it('should not allow someone who is under 13', () => {
+  it('should not allow someone who is under 13', async () => {
     const now = new Date();
     const under13 = new Date(now.getFullYear() - 11, now.getMonth(), now.getDate(), 0, 0, 0, 0);
     const data = {
@@ -126,11 +158,14 @@ describe('Event DOB verification', () => {
       eventDetails: mockEventData,
       date: under13,
       isDobUnderage: false,
+      $validator: {
+        validateAll: sandbox.stub().returns(Promise.resolve(undefined)),
+      },
     };
 
     extend(vm, data);
 
-    vm.next();
+    await vm.next();
     expect(vm.isDobUnderage).to.equal(true);
     expect(MockStoreService.save).not.to.be.called;
 
