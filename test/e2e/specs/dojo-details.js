@@ -142,6 +142,28 @@ describe('Dojo details page', () => {
     expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/book');
   });
 
+  it('should show an error if no tickets are selected', () => {
+    FindDojoPage.openDojoWithQuery('dublin');
+    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.eventViewButtons[0].click();
+
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
+    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('3');
+    EventDobVerificationPage.dateOfBirthYearInput.selectByValue('1980');
+    EventDobVerificationPage.verify.click();
+
+    expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+
+    expect(EventSessionsPage.ticketCounterValues.length).to.equal(8);
+    EventSessionsPage.ticketCounterValues.forEach((counterValue) => {
+      expect(counterValue.getValue()).to.equal('0');
+    });
+
+    expect(EventSessionsPage.nextButton.isVisible()).to.equal(true);
+    EventSessionsPage.nextButton.click();
+    expect(EventSessionsPage.noTicketSelectedError.getText()).to.equal('Please select at least one ticket');
+  });
+
   it('should not allow an underage person to proceed in the flow', () => {
     FindDojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
