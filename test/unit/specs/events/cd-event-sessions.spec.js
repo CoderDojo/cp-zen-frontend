@@ -7,8 +7,8 @@ describe('Event sessions component', () => {
     loadSessions: sandbox.stub(),
   };
   const MockStoreService = {
-    load: sinon.stub(),
-    save: sinon.stub(),
+    load: sandbox.stub(),
+    save: sandbox.stub(),
   };
   const SessionListWithMocks = SessionList({
     './service': mockService,
@@ -17,6 +17,56 @@ describe('Event sessions component', () => {
 
   afterEach(() => {
     sandbox.restore();
+  });
+
+  describe('methods', () => {
+    it('quantityBooked: should count the number of booked tickets', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(SessionListWithMocks);
+      vm.eventId = '123';
+      vm.submitted = true;
+      vm.totalBooked = 0;
+      MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`)
+        .returns({ '1a': { selectedTickets: [] } });
+
+      // ACT
+      vm.quantityBooked();
+
+      // ASSERT
+      expect(MockStoreService.load).to.be.calledTwice;
+      expect(vm.totalBooked).to.equal(0);
+      expect(vm.submitted).to.be.false;
+    });
+
+    it('next: should redirect when at least a ticket is selected', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(SessionListWithMocks);
+      vm.totalBooked = 1;
+      vm.eventId = 42;
+      vm.$router = {
+        push: sandbox.stub(),
+      };
+      // ACT
+      vm.next();
+
+      // ASSERT
+      expect(vm.$router.push).to.have.been.calledOnce;
+      expect(vm.$router.push).to.have.been.calledWith({ name: 'EventBookingForm', params: { eventId: 42 } });
+    });
+
+    it('next: should not redirect when no tickets are selected', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(SessionListWithMocks);
+      vm.totalBooked = 0;
+      vm.$router = {
+        push: sandbox.stub(),
+      };
+      // ACT
+      vm.next();
+
+      // ASSERT
+      expect(vm.$router.push).to.not.have.been.called;
+    });
   });
 
   it('should load the selected event', (done) => {

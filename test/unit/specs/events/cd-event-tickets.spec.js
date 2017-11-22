@@ -140,6 +140,7 @@ describe('Event tickets list', () => {
       vm.selectedTickets = {
         foo: 1,
       };
+      vm.$emit = sinon.stub();
       vm.session = 'bar';
       MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(storedTicketsMock);
 
@@ -157,6 +158,7 @@ describe('Event tickets list', () => {
           ],
         },
       });
+      expect(vm.$emit).to.have.been.calledWith('update');
     });
 
     it('should add to stored tickets when value is increased', () => {
@@ -176,6 +178,7 @@ describe('Event tickets list', () => {
       vm.selectedTickets = {
         foo: 2,
       };
+      vm.$emit = sinon.stub();
       vm.session = 'bar';
       MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(storedTicketsMock);
 
@@ -196,6 +199,7 @@ describe('Event tickets list', () => {
           ],
         },
       });
+      expect(vm.$emit).to.have.been.calledWith('update');
     });
 
     it('should remove from stored tickets when value is decreased', () => {
@@ -218,6 +222,7 @@ describe('Event tickets list', () => {
       vm.selectedTickets = {
         foo: 1,
       };
+      vm.$emit = sinon.stub();
       vm.session = 'bar';
       MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(storedTicketsMock);
 
@@ -235,6 +240,7 @@ describe('Event tickets list', () => {
           ],
         },
       });
+      expect(vm.$emit).to.have.been.calledWith('update');
     });
 
     it('should remove from stored tickets when value is decreased', () => {
@@ -253,6 +259,7 @@ describe('Event tickets list', () => {
       vm.eventId = 'foo';
       vm.selectedTickets = {};
       vm.session = 'bar';
+      vm.$emit = sinon.stub();
       MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(storedTicketsMock);
 
       // ACT
@@ -260,6 +267,7 @@ describe('Event tickets list', () => {
 
       // ASSERT
       expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, {});
+      expect(vm.$emit).to.have.been.calledWith('update');
     });
   });
 });
