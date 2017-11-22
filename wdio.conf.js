@@ -1,7 +1,7 @@
 const chai = require('chai');
 
 exports.config = {
-  host: '127.0.0.1',
+  host: 'selenium',
   port: 4444,
   //
   // ==================

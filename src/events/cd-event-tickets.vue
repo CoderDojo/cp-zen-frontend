@@ -50,8 +50,8 @@
           bookingData[ticket.id].selectedTickets
             .splice(bookingData[ticket.id].selectedTickets.indexOf(matchingTicket), 1);
         }
-
         StoreService.save(`booking-${this.eventId}-sessions`, bookingData);
+        this.$emit('update');
       },
     },
     computed: {
