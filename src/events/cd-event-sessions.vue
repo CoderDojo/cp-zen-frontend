@@ -4,13 +4,16 @@
     <div class="cd-event-sessions__session" v-for="session in sessions">
       <h3 class="cd-event-sessions__name">{{ session.name }}</h3>
       <p class="cd-event-sessions__description">{{ session.description }}</p>
-      <event-tickets :tickets="session.tickets" :session="session" :event-id="eventId"></event-tickets>
+      <event-tickets :tickets="session.tickets" :session="session" :event-id="eventId" v-on:update="quantityBooked"></event-tickets>
     </div>
 
-    <router-link :to="{name: 'EventBookingForm', params: {eventId: event.id}}"
-                 class="cd-event-sessions__next btn btn-primary"
-                 tag="button">{{ $t('Proceed') }}
-    </router-link>
+    <div class="cd-event-sessions__next-block">
+      <label v-show="totalBooked <= 0 && submitted" class="cd-event-sessions__next-error text-danger">
+        {{ $t('Please select at least one ticket') }}</label>
+      <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="next()">
+        {{ $t('Proceed') }}
+      </button>
+    </div>
   </div>
 </template>
 <script>
@@ -28,9 +31,28 @@
       return {
         sessions: [],
         event: null,
+        totalBooked: 0,
+        submitted: false,
       };
     },
     methods: {
+      quantityBooked() {
+        const tickets = StoreService.load(`booking-${this.eventId}-sessions`);
+        this.totalBooked = 0;
+        Object.keys(tickets).forEach((session) => {
+          if (tickets[session].selectedTickets) {
+            this.totalBooked += tickets[session].selectedTickets.length;
+          }
+        });
+        this.submitted = false;
+      },
+      next() {
+        if (this.totalBooked > 0) {
+          return this.$router.push({ name: 'EventBookingForm', params: { eventId: this.eventId } });
+        }
+        this.submitted = true;
+        return false;
+      },
       loadSessions() {
         service.loadSessions(this.eventId).then((response) => {
           this.sessions = response.body;
@@ -74,8 +96,12 @@
     }
 
     &__next {
-       margin: 34px 0 16px 0;
+      &-block {
+        margin: 34px 0 16px 0;
+      }
+      &-error {
+        display: block;
+      }
     }
   }
 </style>
-
