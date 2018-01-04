@@ -64,7 +64,7 @@
   export default {
     name: 'user-ticket-list-item',
     mixins: [EventTile],
-    props: ['event', 'dojo', 'usersDojos', 'users'],
+    props: ['event', 'usersDojos', 'users'],
     data() {
       return {
         applications: [],
@@ -77,7 +77,7 @@
         return this.applications.length > 0;
       },
       bookLink() {
-        return `/dojo/${this.dojo.id}/event/${this.event.id}`;
+        return `/dojo/${this.event.dojoId}/event/${this.event.id}`;
       },
     },
     methods: {

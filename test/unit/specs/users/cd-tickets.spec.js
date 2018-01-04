@@ -81,14 +81,12 @@ describe('Events/Tickets list component', () => {
           id: 'foo',
         };
         vm.usersDojos = [{ dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77' }];
-        const mockEventDataTransformed = mockEventDataResponse.map(
-          // eslint-disable-next-line no-param-reassign
-          (event) => { event.dojo = vm.usersDojos[0]; return event; });
+
         // ACT
         await vm.loadEvents();
 
         // ASSERT
-        expect(vm.events).to.deep.equal(mockEventDataTransformed);
+        expect(vm.events).to.deep.equal(mockEventDataResponse);
       });
     });
     describe('loadUserDojos', () => {

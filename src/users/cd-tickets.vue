@@ -10,7 +10,7 @@
         </p>
       </div>
     </div>
-    <user-tickets v-for="event in events" :key="event.id" :event="event" :dojo="event.dojo" :users-dojos="usersDojos" :users="users" class="cd-event-ticket-list__event"></user-tickets>
+    <user-tickets v-for="event in events" :key="event.id" :event="event" users-dojos="usersDojos" :users="users" class="cd-event-ticket-list__event"></user-tickets>
   </div>
 </template>
 <script>
@@ -41,9 +41,7 @@
       async loadEvents() {
         this.usersDojos.forEach(async (dojo) => {
           const res = await EventService.loadEvents(dojo.dojoId);
-          const events = res.body;
-          events.forEach((event) => { event.dojo = dojo; }); // eslint-disable-line no-param-reassign
-          this.events = this.events.concat(events);
+          this.events = this.events.concat(res.body);
         }, this);
       },
       async loadUserDojos() {
