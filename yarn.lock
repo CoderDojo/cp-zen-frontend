@@ -1686,9 +1686,9 @@ cosmiconfig@^2.1.0, cosmiconfig@^2.1.1:
     parse-json "^2.2.0"
     require-from-string "^1.1.0"
 
-cp-translations@^1.0.81:
-  version "1.0.81"
-  resolved "https://registry.yarnpkg.com/cp-translations/-/cp-translations-1.0.81.tgz#f3bcaca60207c7aae88c375cab8bead94205957c"
+cp-translations@^1.0.83:
+  version "1.0.83"
+  resolved "https://registry.yarnpkg.com/cp-translations/-/cp-translations-1.0.83.tgz#fcedb23cf0482c2ce70969543db2e9d759e2c6e5"
 
 crc32-stream@^2.0.0:
   version "2.0.0"
