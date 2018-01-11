@@ -98,39 +98,55 @@ describe('Lang Picker', () => {
   });
 
   describe('created()', () => {
-    it('should set lang to the cookie if set', () => {
+    it('should recover languages from the API', async () => {
       // ARRANGE
       const vm = vueUnitHelper(LangPickerWithMocks);
       CookieMock.get.withArgs('NG_TRANSLATE_LANG_KEY').returns('"es_ES"');
+      vm.getAvailableLanguages = sandbox.stub().resolves({ body: ['a'] });
+      // ACT
+      await vm.$lifecycleMethods.created();
+
+      // ASSERT
+      expect(vm.getAvailableLanguages).to.have.been.calledOnce;
+      expect(vm.availableLanguages).to.eql(['a']);
+    });
+
+    it('should set lang to the cookie if set', async () => {
+      // ARRANGE
+      const vm = vueUnitHelper(LangPickerWithMocks);
+      CookieMock.get.withArgs('NG_TRANSLATE_LANG_KEY').returns('"es_ES"');
+      vm.getAvailableLanguages = sandbox.stub().resolves({ body: [{ code: 'es_ES' }] });
 
       // ACT
-      vm.$lifecycleMethods.created();
+      await vm.$lifecycleMethods.created();
 
       // ASSERT
       expect(vm.lang).to.equal('es_ES');
     });
 
-    it('should set lang to the browser locale if no cookie, and locale matches an available one', () => {
+    it('should set lang to the browser locale if no cookie, and locale matches an available one', async () => {
       // ARRANGE
       const vm = vueUnitHelper(LangPickerWithMocks);
       CookieMock.get.withArgs('NG_TRANSLATE_LANG_KEY').returns(undefined);
+      vm.getAvailableLanguages = sandbox.stub().resolves({ body: [{ code: 'it_IT' }] });
       Object.defineProperty(window.navigator, 'language', { value: 'it-IT', configurable: true });
 
       // ACT
-      vm.$lifecycleMethods.created();
+      await vm.$lifecycleMethods.created();
 
       // ASSERT
       expect(vm.lang).to.equal('it_IT');
     });
 
-    it('should set lang to en_US if no cookie and browser locale doesnt match available lang', () => {
+    it('should set lang to en_US if no cookie and browser locale doesnt match available lang', async () => {
       // ARRANGE
       const vm = vueUnitHelper(LangPickerWithMocks);
+      vm.getAvailableLanguages = sandbox.stub().resolves({ body: [{ code: 'en_US' }] });
       CookieMock.get.withArgs('NG_TRANSLATE_LANG_KEY').returns(undefined);
       Object.defineProperty(window.navigator, 'language', { value: 'zh-CN', configurable: true });
 
       // ACT
-      vm.$lifecycleMethods.created();
+      await vm.$lifecycleMethods.created();
 
       // ASSERT
       expect(vm.lang).to.equal('en_US');
