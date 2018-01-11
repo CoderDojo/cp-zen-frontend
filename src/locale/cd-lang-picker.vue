@@ -61,7 +61,6 @@
       const matchingLocale = find(this.availableLanguages,
         language => language.code === browserLocale);
       const langCookie = Cookie.get('NG_TRANSLATE_LANG_KEY');
-      console.log('debug', langCookie, matchingLocale, browserLocale);
       if (langCookie) {
         this.lang = langCookie.substring(1, langCookie.length - 1);
       } else if (matchingLocale) {

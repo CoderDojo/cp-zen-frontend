@@ -159,6 +159,28 @@ server.get('/locale/data', (req, res) => {
   res.send(locales[lang]);
 });
 
+server.get('/locale/languages', (req, res) => {
+  res.send([
+    { 
+      name: 'pt', 
+      code: 'pt_PT'
+    },
+    { 
+      name: 'de', 
+      code: 'de_DE'
+    },
+    { 
+      name: 'es', 
+      code: 'es_ES'
+    },
+    { 
+      name: 'en', 
+      code: 'en_US'
+    },
+  ]);
+});
+
+
 server.listen(3000, () => {
   console.log('JSON Server is running')
 });

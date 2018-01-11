@@ -98,7 +98,6 @@ describe('Lang Picker', () => {
   });
 
   describe('created()', () => {
-
     it('should recover languages from the API', async () => {
       // ARRANGE
       const vm = vueUnitHelper(LangPickerWithMocks);
@@ -106,7 +105,7 @@ describe('Lang Picker', () => {
       vm.getAvailableLanguages = sandbox.stub().resolves({ body: ['a'] });
       // ACT
       await vm.$lifecycleMethods.created();
-      
+
       // ASSERT
       expect(vm.getAvailableLanguages).to.have.been.calledOnce;
       expect(vm.availableLanguages).to.eql(['a']);
