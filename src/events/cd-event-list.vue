@@ -3,11 +3,11 @@
     <div v-if="events.length === 0" class="cd-event-list__event">
       <div class="cd-event-list__no-events">
         <div class="cd-event-list__no-events-header">
-          {{ $t('No Upcoming Events') }}
+          {{ $t('No Listed Events') }}
         </div>
         <div>
-          <span class="cd-event-list__no-events-content" v-html="$t('There are no upcoming events planned for this Dojo.')"></span>
-          <span class="cd-event-list__no-events-content" v-html="$t(`${dojo.private ? 'Please email {email} if you have any questions.' : 'Please join this Dojo for updates or email {email}' }`, { email: '<a href=\'mailto:' + dojo.email + '\'>' + dojo.email + '</a>' })"></span>
+          <p class="cd-event-list__no-events-content" v-html="$t('This Dojo may list their events on another website or they may encourage people to attend without booking.')"></p>
+          <p class="cd-event-list__no-events-content" v-html="$t(`${dojo.private ? 'Please email the Dojo on {email} to find out about their upcoming events.' : 'Please join this Dojo for updates and email the Dojo on {email} to find out about their upcoming events.' }`, { email: '<a href=\'mailto:' + dojo.email + '\'>' + dojo.email + '</a>' })"></p>
         </div>
         <button @click="joinTheDojo()" v-if="!dojo.private && !isDojoMember" class="cd-event-list__no-events-join-button">{{ $t('Join Dojo') }}</button>
       </div>
