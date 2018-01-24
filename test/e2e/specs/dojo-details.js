@@ -87,15 +87,15 @@ describe('Dojo details page', () => {
     FindDojoPage.openDojoWithQuery('dublin', 0);
     DojoDetailsPage.name.waitForVisible();
 
-    expect(DojoDetailsPage.noEventsHeader.getText()).to.equal('No Upcoming Events');
-    expect(DojoDetailsPage.noEventsContent[0].getText()).to.equal('There are no upcoming events planned for this Dojo.');
-    expect(DojoDetailsPage.noEventsContent[1].getText()).to.equal('Please email cdrom@example.com if you have any questions.');
+    expect(DojoDetailsPage.noEventsHeader.getText()).to.equal('No Listed Events');
+    expect(DojoDetailsPage.noEventsContent[0].getText()).to.equal('This Dojo may list their events on another website or they may encourage people to attend without booking.');
+    expect(DojoDetailsPage.noEventsContent[1].getText()).to.equal('Please email the Dojo on cdrom@example.com to find out about their upcoming events.');
 
     FindDojoPage.openDojoWithQuery('dublin', 5);
     DojoDetailsPage.name.waitForVisible();
 
-    expect(DojoDetailsPage.noEventsContent[0].getText()).to.equal('There are no upcoming events planned for this Dojo.');
-    expect(DojoDetailsPage.noEventsContent[1].getText()).to.equal('Please join this Dojo for updates or email asudojo@example.com');
+    expect(DojoDetailsPage.noEventsContent[0].getText()).to.equal('This Dojo may list their events on another website or they may encourage people to attend without booking.');
+    expect(DojoDetailsPage.noEventsContent[1].getText()).to.equal('Please join this Dojo for updates and email the Dojo on asudojo@example.com to find out about their upcoming events.');
   });
 
   it('should show event details after clicking on an event', () => {
