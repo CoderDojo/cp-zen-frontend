@@ -9,14 +9,14 @@
           <p class="cd-event-list__no-events-content" v-html="$t('This Dojo may list their events on another website or they may encourage people to attend without booking.')"></p>
           <p class="cd-event-list__no-events-content" v-html="$t(`${dojo.private ? 'Please email the Dojo on {email} to find out about their upcoming events.' : 'Please join this Dojo for updates and email the Dojo on {email} to find out about their upcoming events.' }`, { email: '<a href=\'mailto:' + dojo.email + '\'>' + dojo.email + '</a>' })"></p>
         </div>
-        <button @click="joinTheDojo()" v-if="!dojo.private && !isDojoMember" class="cd-event-list__no-events-join-button" v-ga-track-click="{ eventCategory: $route.name, eventAction: 'click', eventLabel: 'join_dojo_no_events' }">{{ $t('Join Dojo') }}</button>
+        <button @click="joinTheDojo()" v-if="!dojo.private && !isDojoMember" class="cd-event-list__no-events-join-button" v-ga-track-click="'join_dojo_no_events'">{{ $t('Join Dojo') }}</button>
       </div>
     </div>
     <div v-else>
       <event-list-item v-for="event in events" :key="event.id" :event="event" :dojo="dojo" :users-dojos="usersDojos" :user="currentUser" class="cd-event-list__event"></event-list-item>
       <div v-if="!dojo.private && !isDojoMember" class="cd-event-list__event-join">
         <p class="cd-event-list__event-join-description">{{ $t('or') }}</p>
-        <button v-ga-track-click="{ eventCategory: $route.name, eventAction: 'click', eventLabel: 'join_dojo_has_events' }" @click="joinTheDojo()" class="cd-event-list__event-join-button">{{ $t('Join the Dojo') }}</button>
+        <button v-ga-track-click="'join_dojo_has_events'" @click="joinTheDojo()" class="cd-event-list__event-join-button">{{ $t('Join the Dojo') }}</button>
         <p class="cd-event-list__event-join-description">{{ $t('to get notified of new events') }}</p>
       </div>
     </div>

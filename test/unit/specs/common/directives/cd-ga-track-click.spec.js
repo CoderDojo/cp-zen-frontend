@@ -14,6 +14,11 @@ describe('GA Track Click directive', () => {
     };
     gaTrackClickWithMocks = gaTrackClick({
       vue: VueMock,
+      '@/router/index': {
+        currentRoute: {
+          name: 'myRoute',
+        },
+      },
     }).default;
   });
 
@@ -27,24 +32,25 @@ describe('GA Track Click directive', () => {
           eventCallback = callback;
         },
       };
-      const binding = {
-        value: {
-          eventCategory: 'foo',
-        },
-      };
+      const binding = { value: 'foo' };
 
       // ACT
       gaTrackClickWithMocks.bind(el, binding);
 
       // ASSERT
-      expect(el.dataset.trackingData).to.equal(JSON.stringify(binding.value));
+      expect(el.dataset.gaEventLabel).to.equal('foo');
+      expect(el.dataset.gaEventCategory).to.equal('myRoute');
 
       // ACT
       eventCallback();
 
       // ASSERT
       expect(VueMock.$ga.event).to.have.been.calledOnce;
-      expect(VueMock.$ga.event).to.have.been.calledWith(binding.value);
+      expect(VueMock.$ga.event).to.have.been.calledWith({
+        eventCategory: 'myRoute',
+        eventAction: 'click',
+        eventLabel: 'foo',
+      });
     });
   });
 
@@ -53,20 +59,18 @@ describe('GA Track Click directive', () => {
       // ARRANGE
       const el = {
         dataset: {
-          eventCategory: 'foo',
+          gaEventLabel: 'foo',
+          gaEventCategory: 'baz',
         },
       };
-      const binding = {
-        value: {
-          eventCategory: 'bar',
-        },
-      };
+      const binding = { value: 'bar' };
 
       // ACT
       gaTrackClickWithMocks.update(el, binding);
 
       // ASSERT
-      expect(el.dataset.trackingData).to.equal(JSON.stringify(binding.value));
+      expect(el.dataset.gaEventLabel).to.equal('bar');
+      expect(el.dataset.gaEventCategory).to.equal('myRoute');
     });
   });
 });

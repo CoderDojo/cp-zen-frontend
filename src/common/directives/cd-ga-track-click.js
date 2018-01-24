@@ -1,16 +1,23 @@
 import Vue from 'vue';
+import router from '@/router/index';
 
 export default {
   /* eslint-disable no-param-reassign */
   bind(el, binding) {
-    el.dataset.trackingData = JSON.stringify(binding.value);
+    el.dataset.gaEventCategory = router.currentRoute.name;
+    el.dataset.gaEventLabel = binding.value;
     el.addEventListener('click', () => {
-      const trackingData = JSON.parse(el.dataset.trackingData);
-      Vue.$ga.event(trackingData);
+      const eventLabel = el.dataset.gaEventLabel;
+      Vue.$ga.event({
+        eventCategory: el.dataset.gaEventCategory,
+        eventAction: 'click',
+        eventLabel,
+      });
     });
   },
   update(el, binding) {
-    el.dataset.trackingData = JSON.stringify(binding.value);
+    el.dataset.gaEventCategory = router.currentRoute.name;
+    el.dataset.gaEventLabel = binding.value;
   },
   /* eslint-enable no-param-reassign */
 };
