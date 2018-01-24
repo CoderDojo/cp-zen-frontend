@@ -137,15 +137,18 @@
 
     &__no-events {
       padding: 16px;
-      text-align: center;
+
       &-header {
         font-size: 18px;
         font-weight: bold;
         margin-bottom: 8px;
+        text-align: center;
       }
+
       &-content {
         .text-description;
       }
+
       &-join-button {
         margin-top: 16px;
         padding: 8px;
