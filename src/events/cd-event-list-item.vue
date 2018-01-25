@@ -24,11 +24,12 @@
     </div>
     <div v-if="canBook && !isPastEvent" class="cd-event-list-item__view-wrapper">
       <div v-if="event.eventbriteId">
-        <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-event-list-item__view">{{ $t('See Details and Book') }}</a>
+        <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-event-list-item__view" v-ga-track-click="'view_eventbrite_event'">{{ $t('See Details and Book') }}</a>
       </div>
       <router-link :to="bookLink"
                    :disabled="isFull" v-else
-                   tag="button" class="btn btn-lg btn-primary cd-event-list-item__view">
+                   tag="button" class="btn btn-lg btn-primary cd-event-list-item__view"
+                   v-ga-track-click="'see_details'">
         {{ isFull ? $t('Full') : $t('See Details and Book') }}
       </router-link>
     </div>

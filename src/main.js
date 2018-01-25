@@ -7,6 +7,7 @@ import * as VueGoogleMaps from 'vue2-google-maps';
 import VueAnalytics from 'vue-analytics';
 import PasswordValidator from '@/common/directives/cd-password-validator';
 import titleDirective from '@/common/directives/title';
+import gaTrackClickDirective from '@/common/directives/cd-ga-track-click';
 import 'font-awesome/css/font-awesome.min.css';
 import 'vue-dob-picker/dist/static/vue-dob-picker.css';
 import App from './App';
@@ -30,6 +31,7 @@ Vue.use(VueAnalytics, {
   router,
 });
 Vue.directive('title', titleDirective);
+Vue.directive('ga-track-click', gaTrackClickDirective);
 
 /* eslint-disable no-new */
 new Vue({
