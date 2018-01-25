@@ -29,7 +29,7 @@ jobs:
           name: Build
           command: GIT_BRANCH=$CIRCLE_BRANCH yarn build
       - save_cache:
-          key: build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          key: build-cache-{{ .Revision }}
           paths:
             - dist
   test-e2e:
@@ -47,8 +47,7 @@ jobs:
             - dependency-cache
       - restore_cache:
           keys:
-            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - build-cache-{{ .Branch }}
+            - build-cache-{{ .Revision }}
             - build-cache
       - run:
           name: Tests
@@ -67,8 +66,7 @@ jobs:
             - dependency-cache
       - restore_cache:
           keys:
-            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - build-cache-{{ .Branch }}
+            - build-cache-{{ .Revision }}
             - build-cache
       - run:
           name: Tests
@@ -85,8 +83,7 @@ jobs:
             - dependency-cache
       - restore_cache:
           keys:
-            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - build-cache-{{ .Branch }}
+            - build-cache-{{ .Revision }}
             - build-cache
       - run:
           name: Tests
@@ -102,8 +99,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - build-cache-{{ .Branch }}
+            - build-cache-{{ .Revision }}
             - build-cache
       - run:
           name: setup git and npm
@@ -130,8 +126,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - build-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - build-cache-{{ .Branch }}
+            - build-cache-{{ .Revision }}
             - build-cache
       - run:
           name: publish
