@@ -19,7 +19,7 @@
             totalTicketsBooked += ticket.approvedApplications;
           });
         });
-        return totalEventCapacity === totalTicketsBooked;
+        return totalEventCapacity <= totalTicketsBooked;
       },
       nextStartTime() {
         return EventsUtil.getNextStartTime(this.event);
