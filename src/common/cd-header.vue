@@ -5,13 +5,9 @@
         <a href="/">
           <img src="~@coderdojo/cd-common/dist/coderdojo-logo-light-bg.svg" width="120" height="44" />
         </a>
-        <a href="https://coderdojo.com/donate/" class="cd-menu__donate-button">{{ $t('Donate') }}</a>
-        <form class="cd-menu__search" role="search" action="https://coderdojo.com/">
-          <input class="cd-menu__search-input" type="text" placeholder=Search... name="s" />
-          <button class="cd-menu__search-button" type="submit"><span class="fa fa-search fa-2x"></span></button>
-        </form>
         <div class="cd-menu__flex-spacer"></div>
         <div class="cd-menu__account">
+          <a class="emphasis" href="https://help.coderdojo.com">{{ $t('Help') }}</a>
           <a href="/register/user">{{ $t('Register') }}</a>
           <a href="/login">{{ $t('Login') }}</a>
         </div>
@@ -62,11 +58,8 @@
         <span class="cd-menu__close-button">&times;</span>
       </div>
       <div class="cd-menu__content">
-        <div class="cd-menu__content-block cd-menu__search">
-          <input class="cd-menu__search-input" type="text" placeholder=Search...>
-          <button class="cd-menu__search-button" type="button"><span class="fa fa-search fa-2x"></span></button>
-        </div>
         <div class="cd-menu__content-block cd-menu__account">
+          <a class="emphasis" href="https://help.coderdojo.com">{{ $t('Help') }}</a>
           <a href="/register/user">{{ $t('Register') }}</a>
           <a href="/login">{{ $t('Login') }}</a>
         </div>
@@ -124,7 +117,6 @@
               </div>
             </span>
           </li>
-          <li><a href="https://coderdojo.com/donate/">{{ $t('Donate') }}</a></li>
         </ul>
       </div>
     </nav>
