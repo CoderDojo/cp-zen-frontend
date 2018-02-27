@@ -6,26 +6,28 @@
           <img src="~@coderdojo/cd-common/dist/coderdojo-logo-light-bg.svg" width="120" height="44" />
         </a>
         <div class="cd-menu__flex-spacer"></div>
-        <div class="cd-menu__account">
-          <a class="emphasis" href="https://help.coderdojo.com">{{ $t('Help') }}</a>
-          <a href="/register/user">{{ $t('Register') }}</a>
-          <a href="/login">{{ $t('Login') }}</a>
-        </div>
-        <div class="cd-menu__profile">
-          <div class="cd-menu__profile-pic"></div>
-          <span class="cd-menu__profile-name">{{ $t('My Account') }}</span>
-          <i class="cd-menu__sub-menu-icon fa fa-chevron-down"></i>
-          <ul class="cd-menu__profile-menu">
-            <li><a class="cd-menu__profile-link">{{ $t('My Profile') }}</a></li>
-            <li><a href="/dashboard/my-dojos">{{ $t('My Dojos') }}</a></li>
-            <li><a href="/dashboard/dojos/events/user-events">{{ $t('My Events') }}</a></li>
-            <li class="cd-menu__parent-link"><a href="/dashboard/children">{{ $t('My Children') }}</a></li>
-            <li class="cd-menu__e-learning-link"><a href="/dashboard/profile/lms">{{ $t('E-learning') }}</a></li>
-            <li class="cd-menu__cdf-admin-link"><a href="/dashboard/manage-dojos">{{ $t('Manage Dojos') }}</a></li>
-            <li class="cd-menu__cdf-admin-link"><a href="http://badgekit.coderdojo.com/">Badgekit</a></li>
-            <li class="cd-menu__cdf-admin-link"><a href="/dashboard/stats">{{ $t('Stats') }}</a></li>
-            <li><a class="cd-menu__referer-link" href="/logout">{{ $t('Logout') }}</a></li>
-          </ul>
+        <div class="cd-menu__nav-right">
+            <a class="emphasis" href="https://help.coderdojo.com">{{ $t('Help') }}</a>
+          <div class="cd-menu__account">
+            <a href="/register/user">{{ $t('Register') }}</a>
+            <a href="/login">{{ $t('Login') }}</a>
+         </div>
+         <div class="cd-menu__profile">
+            <div class="cd-menu__profile-pic"></div>
+            <span class="cd-menu__profile-name">{{ $t('My Account') }}</span>
+            <i class="cd-menu__sub-menu-icon fa fa-chevron-down"></i>
+            <ul class="cd-menu__profile-menu">
+              <li><a class="cd-menu__profile-link">{{ $t('My Profile') }}</a></li>
+              <li><a href="/dashboard/my-dojos">{{ $t('My Dojos') }}</a></li>
+              <li><a href="/dashboard/dojos/events/user-events">{{ $t('My Events') }}</a></li>
+              <li class="cd-menu__parent-link"><a href="/dashboard/children">{{ $t('My Children') }}</a></li>
+              <li class="cd-menu__e-learning-link"><a href="/dashboard/profile/lms">{{ $t('E-learning') }}</a></li>
+              <li class="cd-menu__cdf-admin-link"><a href="/dashboard/manage-dojos">{{ $t('Manage Dojos') }}</a></li>
+              <li class="cd-menu__cdf-admin-link"><a href="http://badgekit.coderdojo.com/">Badgekit</a></li>
+              <li class="cd-menu__cdf-admin-link"><a href="/dashboard/stats">{{ $t('Stats') }}</a></li>
+              <li><a class="cd-menu__referer-link" href="/logout">{{ $t('Logout') }}</a></li>
+            </ul>
+          </div>
         </div>
       </div>
       <ul class="cd-menu__second-row">
@@ -58,66 +60,68 @@
         <span class="cd-menu__close-button">&times;</span>
       </div>
       <div class="cd-menu__content">
-        <div class="cd-menu__content-block cd-menu__account">
+        <div class="cd-menu__content-pre">
           <a class="emphasis" href="https://help.coderdojo.com">{{ $t('Help') }}</a>
-          <a href="/register/user">{{ $t('Register') }}</a>
-          <a href="/login">{{ $t('Login') }}</a>
-        </div>
-        <ul class="cd-menu__content-block">
-          <li class="cd-menu__profile">
-            <span>
-              <div class="cd-menu__profile-pic"></div>
-              <span class="cd-menu__profile-name">{{ $t('My Account') }}</span>
-              <i class="cd-menu__sub-menu-icon fa fa-chevron-right"></i>
-            </span>
-            <div class="cd-menu__sliding-menu cd-menu__sliding-menu-secondary" data-toggle="closed">
-              <div class="cd-menu__close-row cd-bg-alt-white">
-                <span class="cd-menu__back-button fa fa-chevron-left fa-lg"></span>
-                <span class="cd-menu__close-button">&times;</span>
-              </div>
-              <div class="cd-menu__content">
-                <div class="cd-menu__content-block cd-menu__profile-header">
-                  <div class="cd-menu__profile-pic"></div>
-                  <span class="cd-menu__profile-name"></span>
-                </div>
-                <ul class="cd-menu__content-block cd-menu__profile-menu">
-                  <li><a class="cd-menu__profile-link">{{ $t('My Profile') }}</a></li>
-                  <li><a href="/dashboard/my-dojos">{{ $t('My Dojos') }}</a></li>
-                  <li><a href="/dashboard/dojos/events/user-events">{{ $t('My Events') }}</a></li>
-                  <li class="cd-menu__parent-link"><a href="/dashboard/children">{{ $t('My Children') }}</a></li>
-                  <li class="cd-menu__e-learning-link"><a href="/dashboard/profile/lms">{{ $t('E-learning') }}</a></li>
-                  <li class="cd-menu__cdf-admin-link"><a href="/dashboard/manage-dojos">{{ $t('Manage Dojos') }}</a></li>
-                  <li class="cd-menu__cdf-admin-link"><a href="http://badgekit.coderdojo.com/">Badgekit</a></li>
-                  <li class="cd-menu__cdf-admin-link"><a href="/dashboard/stats">{{ $t('Stats') }}</a></li>
-                  <li><a class="cd-menu__referer-link" href="/logout">{{ $t('Logout') }}</a></li>
-                </ul>
-              </div>
-            </div>
-          </li>
-          <li v-for="link in navigationLinks">
-            <a v-if="!link.subLinks" :href="link.href">{{ $t(link.text) }}</a>
-            <span v-if="link.subLinks">
+          <div class="cd-menu__account">
+            <a href="/register/user">{{ $t('Register') }}</a>
+            <a href="/login">{{ $t('Login') }}</a>
+          </div>
+          <ul class="cd-menu__content-block">
+            <li class="cd-menu__profile">
               <span>
-                {{ $t(link.text) }}
+                <div class="cd-menu__profile-pic"></div>
+                <span class="cd-menu__profile-name">{{ $t('My Account') }}</span>
                 <i class="cd-menu__sub-menu-icon fa fa-chevron-right"></i>
               </span>
               <div class="cd-menu__sliding-menu cd-menu__sliding-menu-secondary" data-toggle="closed">
-                <div class="cd-menu__close-row">
+                <div class="cd-menu__close-row cd-bg-alt-white">
                   <span class="cd-menu__back-button fa fa-chevron-left fa-lg"></span>
                   <span class="cd-menu__close-button">&times;</span>
                 </div>
                 <div class="cd-menu__content">
-                  <div class="cd-menu__content-block cd-menu__header">
-                    <span>{{ link.text }}</span>
+                  <div class="cd-menu__content-block cd-menu__profile-header">
+                    <div class="cd-menu__profile-pic"></div>
+                    <span class="cd-menu__profile-name"></span>
                   </div>
-                  <ul class="cd-menu__content-block">
-                    <li v-for="subLink in link.subLinks"><a :href="subLink.href">{{ $t(subLink.text) }}</a></li>
+                  <ul class="cd-menu__content-block cd-menu__profile-menu">
+                    <li><a class="cd-menu__profile-link">{{ $t('My Profile') }}</a></li>
+                    <li><a href="/dashboard/my-dojos">{{ $t('My Dojos') }}</a></li>
+                    <li><a href="/dashboard/dojos/events/user-events">{{ $t('My Events') }}</a></li>
+                    <li class="cd-menu__parent-link"><a href="/dashboard/children">{{ $t('My Children') }}</a></li>
+                    <li class="cd-menu__e-learning-link"><a href="/dashboard/profile/lms">{{ $t('E-learning') }}</a></li>
+                    <li class="cd-menu__cdf-admin-link"><a href="/dashboard/manage-dojos">{{ $t('Manage Dojos') }}</a></li>
+                    <li class="cd-menu__cdf-admin-link"><a href="http://badgekit.coderdojo.com/">Badgekit</a></li>
+                    <li class="cd-menu__cdf-admin-link"><a href="/dashboard/stats">{{ $t('Stats') }}</a></li>
+                    <li><a class="cd-menu__referer-link" href="/logout">{{ $t('Logout') }}</a></li>
                   </ul>
                 </div>
               </div>
-            </span>
-          </li>
-        </ul>
+            </li>
+            <li v-for="link in navigationLinks">
+              <a v-if="!link.subLinks" :href="link.href">{{ $t(link.text) }}</a>
+              <span v-if="link.subLinks">
+                <span>
+                  {{ $t(link.text) }}
+                  <i class="cd-menu__sub-menu-icon fa fa-chevron-right"></i>
+                </span>
+                <div class="cd-menu__sliding-menu cd-menu__sliding-menu-secondary" data-toggle="closed">
+                  <div class="cd-menu__close-row">
+                    <span class="cd-menu__back-button fa fa-chevron-left fa-lg"></span>
+                    <span class="cd-menu__close-button">&times;</span>
+                  </div>
+                  <div class="cd-menu__content">
+                    <div class="cd-menu__content-block cd-menu__header">
+                      <span>{{ link.text }}</span>
+                    </div>
+                    <ul class="cd-menu__content-block">
+                      <li v-for="subLink in link.subLinks"><a :href="subLink.href">{{ $t(subLink.text) }}</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </span>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
   </header>

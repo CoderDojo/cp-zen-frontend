@@ -16,7 +16,7 @@
     "mock-server": "node ./json-server/server.js"
   },
   "dependencies": {
-    "@coderdojo/cd-common": "1.1.9",
+    "@coderdojo/cd-common": "1.1.10",
     "bootstrap": "^3.3.7",
     "cp-translations": "1.0.84",
     "font-awesome": "^4.7.0",
