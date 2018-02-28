@@ -13,12 +13,14 @@
       </h4>
       <p class="cd-dojo-list-item__meta">{{dojo.address1}}</p>
       <p class="cd-dojo-list-item__meta">{{buildDojoFrequency(dojo)}}</p>
+      <event-stamp :dojo="dojo"></event-stamp>
     </div>
   </div>
 </template>
 
 <script>
   import ImgFallback from '@/common/directives/cd-img-fallback';
+  import EventStamp from '@/events/cd-event-stamp';
   import DojosUtil from '@/dojos/util';
 
   export default {
@@ -26,6 +28,9 @@
     props: ['dojo'],
     directives: {
       ImgFallback,
+    },
+    components: {
+      EventStamp,
     },
     methods: {
       getDojoUrl: DojosUtil.getDojoUrl,
