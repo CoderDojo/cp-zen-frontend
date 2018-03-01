@@ -18,7 +18,7 @@
     },
     computed: {
       date() {
-        const toBeFormatted = (this.event.date && this.event.date.startTime) ||
+        const toBeFormatted = (this.event.startTime) ||
           this.event.dates[0].startTime;
         return moment(toBeFormatted).format('dddd, MMMM Do');
       },
@@ -34,7 +34,7 @@
           {
             limit: 1,
             public: 1,
-            date_after: Date.now(),
+            dateAfter: Date.now(),
           },
         });
       if (events.body.length > 0) {

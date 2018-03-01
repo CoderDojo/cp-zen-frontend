@@ -26,9 +26,7 @@ describe('Event stamp component', () => {
         // ARRANGE
         const vm = vueUnitHelper(EventStamp());
         vm.event = {
-          date: {
-            startTime: moment('2018-06-03T10:00:00.000Z'),
-          },
+          startTime: moment('2018-06-03T10:00:00.000Z'),
         };
         // ACT & ASSERT
         expect(vm.date).to.equal('Sunday, June 3rd');
@@ -62,7 +60,7 @@ describe('Event stamp component', () => {
           {
             limit: 1,
             public: 1,
-            date_after: sinon.match.number,
+            dateAfter: sinon.match.number,
           },
         });
       expect(vm.event).to.eql(mockEventData);
@@ -84,7 +82,7 @@ describe('Event stamp component', () => {
           {
             limit: 1,
             public: 1,
-            date_after: sinon.match.number,
+            dateAfter: sinon.match.number,
           },
         });
       expect(vm.event).to.be.null;
