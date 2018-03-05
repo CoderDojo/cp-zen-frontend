@@ -126,6 +126,11 @@ const DojoDetailsPage = Object.create(InfoColumn, {
       return $$('.cd-event-list__no-events-content');
     },
   },
+  noEventsPastContent: {
+    get() {
+      return $$('.cd-event-list__no-events-content--had-events');
+    },
+  },
   joinButtonNoEvents: {
     get() {
       return $('.cd-event-list__no-events-join-button');

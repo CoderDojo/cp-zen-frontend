@@ -1,9 +1,9 @@
 <template>
   <div class="cd-event-list" >
-    <div class="cd-event-list__heading" v-if="headingVisible">{{ $t(heading) }}</div>
-    <div v-if="events.length === 0 && !past" class="cd-event-list__event">
+    <div class="cd-event-list__heading" >{{ $t('Upcoming Events') }}</div>
+    <div v-if="!hasFutureEvents" class="cd-event-list__event">
       <div class="cd-event-list__no-events">
-        <div class="cd-event-list__no-events-header">
+        <div class="cd-event-list__no-events-header" v-if="!hasPastEvents">
           {{ $t('No Listed Events') }}
         </div>
         <div v-if="!hasFutureEvents && !hasPastEvents">
@@ -11,24 +11,27 @@
           <p class="cd-event-list__no-events-content" v-html="$t(`${dojo.private ? 'Please email the Dojo on {email} to find out about their upcoming events.' : 'Please join this Dojo for updates and email the Dojo on {email} to find out about their upcoming events.' }`, { email: '<a href=\'mailto:' + dojo.email + '\'>' + dojo.email + '</a>' })"></p>
         </div>
         <div v-else>
-          <p class="cd-event-list__no-events-content">{{ $t(noEventsContent) }}</p>
+          <p class="cd-event-list__no-events-content--had-events">{{ $t(noEventsContent) }}</p>
         </div>
         <button @click="joinTheDojo()" v-if="!dojo.private && !isDojoMember" class="cd-event-list__no-events-join-button" v-ga-track-click="'join_dojo_no_events'">{{ $t('Join Dojo') }}</button>
       </div>
     </div>
-    <div v-if="eventsVisible">
-      <event-list-item v-for="event in events" :key="event.id" :event="event" :dojo="dojo" :users-dojos="usersDojos" :user="currentUser" :past="past" class="cd-event-list__event"></event-list-item>
-      <div v-if="!dojo.private && !isDojoMember && !past" class="cd-event-list__event-join">
-        <p class="cd-event-list__event-join-description">{{ $t('or') }}</p>
-        <button v-ga-track-click="'join_dojo_has_events'" @click="joinTheDojo()" class="cd-event-list__event-join-button">{{ $t('Join the Dojo') }}</button>
-        <p class="cd-event-list__event-join-description">{{ $t('to get notified of new events') }}</p>
+    <div class="cd-event-list__events">
+      <event-list-item v-for="event in futureEvents" :key="event.id" :event="event" :dojo="dojo" :users-dojos="usersDojos" :user="currentUser" class="cd-event-list__event"></event-list-item>
+      <div v-if="!hasFutureEvents">
+        <div class="cd-event-list__heading" v-if="hasPastEvents">{{ $t('Past Events') }}</div>
+        <event-list-item v-for="event in pastEvents" :key="event.id" :event="event" :dojo="dojo" :users-dojos="usersDojos" :user="currentUser" :past="true" class="cd-event-list__event"></event-list-item>
       </div>
+    </div>
+    <div v-if="!dojo.private && !isDojoMember && hasFutureEvents" class="cd-event-list__event-join">
+      <p class="cd-event-list__event-join-description">{{ $t('or') }}</p>
+      <button v-ga-track-click="'join_dojo_has_events'" @click="joinTheDojo()" class="cd-event-list__event-join-button">{{ $t('Join the Dojo') }}</button>
+      <p class="cd-event-list__event-join-description">{{ $t('to get notified of new events') }}</p>
     </div>
   </div>
 </template>
 <script>
   import moment from 'moment';
-  import store from '@/events/cd-event-list-store';
   import UserService from '@/users/service';
   import UsersUtil from '@/users/util';
   import DojosService from '@/dojos/service';
@@ -42,47 +45,33 @@
       dojo: {
         type: Object,
       },
-      past: {
-        default: false,
-        type: Boolean,
-      },
     },
     data() {
       return {
         currentUser: null,
         usersProfile: null,
         usersDojos: [],
-        events: [],
+        futureEvents: null,
+        pastEvents: null,
       };
     },
     components: {
       EventListItem,
     },
     computed: {
-      heading() {
-        return this.past ? 'Past Events' : 'Upcoming Events';
-      },
       noEventsContent() {
         const base = 'This Dojo had events recently!';
         const variant = this.isDojoMember ? 'You\'ll be notified when tickets for the next event are available.' : 'Join the Dojo to get notified when tickets for next event are available.';
         return `${base} ${variant}`;
       },
-      headingVisible() {
-        return (this.past && !this.hasFutureEvents && this.hasPastEvents) ||
-          (!this.past);
-      },
-      eventsVisible() {
-        return (this.past && !this.hasFutureEvents && this.hasPastEvents) ||
-          (!this.past && this.hasFutureEvents);
-      },
       isDojoMember() {
         return this.currentUser && this.usersDojos.length > 0;
       },
       hasFutureEvents() {
-        return store.state.hasFutureEvents;
+        return this.futureEvents && this.futureEvents.length > 0;
       },
       hasPastEvents() {
-        return store.state.hasPastEvents;
+        return this.pastEvents && this.pastEvents.length > 0;
       },
     },
     methods: {
@@ -98,26 +87,17 @@
         const res = await DojosService.getUsersDojos(this.currentUser.id, this.dojo.id);
         this.usersDojos = res.body;
       },
-      async loadEvents() {
+      async loadEvents(past = false) {
         const params = { status: 'published' };
         params.dateAfter = moment().format('x');
-        if (this.past) {
+        if (past) {
           params.dateBefore = moment().format('x');
           params.dateAfter = moment().subtract(70, 'days').format('x');
         }
-        const res = await service.v3.get(
+        return service.v3.get(
           this.dojo.id,
           { params },
         );
-        this.events = res.body;
-      },
-      setState() {
-        const status = this.events.length > 0;
-        if (this.past) {
-          store.commit('setHasPastEvents', status);
-        } else {
-          store.commit('setHasFutureEvents', status);
-        }
       },
       async joinTheDojo() {
         if (this.currentUser) {
@@ -139,13 +119,13 @@
           this.loadUsersProfile();
         }
       },
-      events() {
-        this.setState();
-      },
     },
     created() {
       if (this.dojo.verified) {
-        this.loadEvents();
+        this.loadEvents()
+          .then((res) => { this.futureEvents = res.body; });
+        this.loadEvents(true)
+          .then((res) => { this.pastEvents = res.body; });
       }
       this.loadCurrentUser();
     },
@@ -213,6 +193,10 @@
       &-content {
         .text-description;
         text-align: left;
+        &--had-events {
+          .text-description;
+          text-align: center;
+        }
       }
 
       &-join-button {

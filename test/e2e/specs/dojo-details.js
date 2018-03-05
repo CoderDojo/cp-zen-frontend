@@ -5,7 +5,7 @@ const EventSessionsPage = require('../page-objects/event-sessions');
 const LoginPage = require('../page-objects/login');
 const currentYear = (new Date()).getFullYear();
 
-describe.only('Dojo details page', () => {
+describe('Dojo details page', () => {
   it('should show dojo details', () => {
     FindDojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
@@ -269,8 +269,8 @@ describe.only('Dojo details page', () => {
   
   it('should show past events when there is no upcoming events and not joined', () => {
     FindDojoPage.openDojoWithQuery('dublin&p=2', 2);
-    expect(DojoDetailsPage.noEventsHeader.getText()).to.equal('No Listed Events');
-    expect(DojoDetailsPage.noEventsContent[0].getText()).to.equal('This Dojo had events recently! Join the Dojo to get notified when tickets for next event are available.');
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.noEventsPastContent[0].getText()).to.equal('This Dojo had events recently! Join the Dojo to get notified when tickets for next event are available.');
   });
   
   it('should show past events when there is no upcoming events and joined', () => {
@@ -281,8 +281,8 @@ describe.only('Dojo details page', () => {
     LoginPage.login.click();
  
     FindDojoPage.openDojoWithQuery('dublin&p=2', 2);
-    expect(DojoDetailsPage.noEventsHeader.getText()).to.equal('No Listed Events');
-    expect(DojoDetailsPage.noEventsContent[0].getText()).to.equal('This Dojo had events recently! You\'ll be notified when tickets for the next event are available.');
+    DojoDetailsPage.name.waitForVisible();
+    expect(DojoDetailsPage.noEventsPastContent[0].getText()).to.equal('This Dojo had events recently! You\'ll be notified when tickets for the next event are available.');
     browser.deleteCookie();
   });
 

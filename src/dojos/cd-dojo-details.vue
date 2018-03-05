@@ -43,7 +43,6 @@
         </div>
         <section class="cd-dojo-details__section">
           <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
-          <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails" :past="true"></events-list>
         </section>
         <section class="cd-dojo-details__section">
           <div class="cd-dojo-details__heading">{{ $t('Details') }}</div>

@@ -8,7 +8,6 @@ describe.only('Event list component', () => {
   let MockDojosService;
   let MockUsersService;
   let MockUsersUtil;
-  let MockStore;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
@@ -28,15 +27,10 @@ describe.only('Event list component', () => {
     MockUsersUtil = {
       isYouthOverThirteen: sandbox.stub(),
     };
-    MockStore = {
-      state: {},
-      commit: sandbox.stub(),
-    };
     EventListWithMocks = eventList({
       '@/users/service': MockUsersService,
       '@/users/util': MockUsersUtil,
       '@/dojos/service': MockDojosService,
-      '@/events/cd-event-list-store': MockStore,
       './service': MockEventsService,
     });
   });
@@ -45,7 +39,7 @@ describe.only('Event list component', () => {
     sandbox.restore();
   });
 
-  it('should show the list of dojo events', (done) => {
+  it('should show the list of dojo events', async () => {
     const mockEventDataResponse = [
       {
         id: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
@@ -74,11 +68,8 @@ describe.only('Event list component', () => {
     MockEventsService.v3.get.returns(Promise.resolve({ body: mockEventDataResponse }));
     const vm = vueUnitHelper(EventListWithMocks);
     vm.dojo = { id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77' };
-    vm.loadEvents();
-    requestAnimationFrame(() => {
-      expect(vm.events).to.deep.equal(mockEventDataResponse);
-      done();
-    });
+    const res = await vm.loadEvents();
+    expect(res.body).to.deep.equal(mockEventDataResponse);
   });
 
   describe('methods', () => {
@@ -154,10 +145,10 @@ describe.only('Event list component', () => {
           id: 'p4j8h55b-v3fw-gb4f-00gq-847bw5ctlme2',
         };
         // ACT
-        await vm.loadEvents();
+        const res = await vm.loadEvents();
 
         // ASSERT
-        expect(vm.events).to.deep.equal(mockEvents);
+        expect(res.body).to.deep.equal(mockEvents);
         expect(MockEventsService.v3.get).to.have.been.calledWith(vm.dojo.id, {
           params: {
             dateAfter: sinon.match(/^\d+$/),
@@ -173,12 +164,11 @@ describe.only('Event list component', () => {
         vm.dojo = {
           id: 'p4j8h55b-v3fw-gb4f-00gq-847bw5ctlme2',
         };
-        vm.past = true;
         // ACT
-        await vm.loadEvents();
+        const res = await vm.loadEvents(true);
 
         // ASSERT
-        expect(vm.events).to.deep.equal(mockEvents);
+        expect(res.body).to.deep.equal(mockEvents);
         expect(MockEventsService.v3.get).to.have.been.calledWith(vm.dojo.id, {
           params: {
             dateBefore: sinon.match(/^\d+$/),
@@ -186,21 +176,6 @@ describe.only('Event list component', () => {
             status: 'published',
           },
         });
-      });
-    });
-    describe('setState', () => {
-      it('should set the state for active events by default', () => {
-        const vm = vueUnitHelper(EventListWithMocks);
-        vm.events = [];
-        vm.setState();
-        expect(MockStore.commit).to.have.been.calledWith('setHasFutureEvents', false);
-      });
-      it('should set the state for past events', () => {
-        const vm = vueUnitHelper(EventListWithMocks);
-        vm.events = [{}, {}];
-        vm.past = true;
-        vm.setState();
-        expect(MockStore.commit).to.have.been.calledWith('setHasPastEvents', true);
       });
     });
     describe('joinTheDojo', () => {
@@ -277,19 +252,6 @@ describe.only('Event list component', () => {
   });
 
   describe('computed', () => {
-    describe('heading', () => {
-      it('should return the active event heading', () => {
-        const vm = vueUnitHelper(eventList());
-        const heading = vm.heading;
-        expect(heading).to.equal('Upcoming Events');
-      });
-      it('should return the active event heading', () => {
-        const vm = vueUnitHelper(eventList());
-        vm.past = true;
-        const heading = vm.heading;
-        expect(heading).to.equal('Past Events');
-      });
-    });
     describe('noEventsContent', () => {
       it('should set the content when past events exists and the user is not joined', () => {
         const vm = vueUnitHelper(eventList());
@@ -304,51 +266,28 @@ describe.only('Event list component', () => {
         expect(content).to.equal('This Dojo had events recently! You\'ll be notified when tickets for the next event are available.');
       });
     });
-    describe('eventsVisible', () => {
-      it('should set visibility of past events', () => {
-        const vm = vueUnitHelper(eventList());
-        vm.past = true;
-        vm.hasFutureEvents = false;
-        vm.hasPastEvents = true;
-        const visible = vm.eventsVisible;
-        expect(visible).to.equal(true);
-      });
-      it('should set visibility of future events', () => {
-        const vm = vueUnitHelper(eventList());
-        vm.past = false;
-        vm.hasFutureEvents = true;
-        const visible = vm.eventsVisible;
-        expect(visible).to.equal(true);
-      });
-    });
-    describe('headingVisible', () => {
-      it('should set visibility of the header for past events', () => {
-        const vm = vueUnitHelper(eventList());
-        vm.past = true;
-        vm.hasFutureEvents = false;
-        vm.hasPastEvents = true;
-        const visible = vm.headingVisible;
-        expect(visible).to.equal(true);
-      });
-      it('should set visibility of the header for the future events', () => {
-        const vm = vueUnitHelper(eventList());
-        vm.past = false;
-        const visible = vm.headingVisible;
-        expect(visible).to.equal(true);
-      });
-    });
     describe('hasPastEvents', () => {
-      it('should return the store value', () => {
+      it('should return if it has past events', () => {
         const vm = vueUnitHelper(EventListWithMocks);
-        MockStore.state.hasPastEvents = 'bla';
-        expect(vm.hasPastEvents).to.equal('bla');
+        vm.pastEvents = [];
+        expect(vm.hasPastEvents).to.be.false;
+      });
+      it('should return if it has past events', () => {
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.pastEvents = [{}];
+        expect(vm.hasPastEvents).to.be.true;
       });
     });
     describe('hasFutureEvents', () => {
-      it('should return the store value', () => {
+      it('should return if it has future events', () => {
         const vm = vueUnitHelper(EventListWithMocks);
-        MockStore.state.hasFutureEvents = 'blu';
-        expect(vm.hasFutureEvents).to.equal('blu');
+        vm.futureEvents = [];
+        expect(vm.hasFutureEvents).to.be.false;
+      });
+      it('should return if it has future events', () => {
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.futureEvents = [{}];
+        expect(vm.hasFutureEvents).to.be.true;
       });
     });
     describe('isDojoMember', () => {
@@ -408,14 +347,6 @@ describe.only('Event list component', () => {
         });
       });
     });
-    describe('events', () => {
-      it('should call setState', () => {
-        const vm = vueUnitHelper(EventListWithMocks);
-        const spy = sandbox.spy(vm, 'setState');
-        vm.$watchers.events();
-        expect(spy).to.have.been.calledOnce;
-      });
-    });
   });
 
   describe('lifecycle functions', () => {
@@ -423,7 +354,7 @@ describe.only('Event list component', () => {
       it('should load user and event data', () => {
         // ARRANGE
         const vm = vueUnitHelper(eventList());
-        sandbox.stub(vm, 'loadEvents');
+        sandbox.stub(vm, 'loadEvents').resolves({ body: [] });
         sandbox.stub(vm, 'loadCurrentUser');
         MockUsersService.getCurrentUser.returns({ body: { user: { id: '34174952-8ca4-4189-b8cb-d383e3fde992' } } });
         vm.dojo = { verified: 1 };
@@ -431,7 +362,7 @@ describe.only('Event list component', () => {
         vm.$lifecycleMethods.created();
 
         // ASSERT
-        expect(vm.loadEvents).to.have.been.calledOnce;
+        expect(vm.loadEvents).to.have.been.calledTwice;
         expect(vm.loadCurrentUser).to.have.been.calledOnce;
       });
       it('shouldnt load event data', () => {
