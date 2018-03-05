@@ -207,6 +207,31 @@ module.exports = {
       alternativeFrequency: 'Fridays from 2pm to 3:30pm',
       website: null,
       supporterImage: ''
+    },
+    {
+      entity$: '-/cd/dojos',
+      name: 'Berthom Dojo',
+      geoPoint: {
+        lat: 53.349351,
+        lon: -6.247585999999956
+      },
+      stage: 0,
+      urlSlug: 'ie/lyon/berthom',
+      private: 0,
+      verified: 1,
+      id: 'bkr5hk4a9-78gf-9b44-63h2-6gtgfbqy0lkx',
+      address1: 'berthom, lyon',
+      countryName: 'France',
+      email: 'berthome@example.com',
+      facebook: null, 
+      googleGroup: null,
+      twitter: 'CoderDojo',
+      notes: '<h2>Suggested Notes:<br />\n<br />\nPlease bring:</h2>\n\n<ul>\n\t<li>\n\t<h2>A laptop. Borrow one from somebody if needs be.</h2>\n\t</li>\n\t<li>\n\t<h2><strong>A parent! (Very important). If you are 12 or under, your parent must stay with you during the session.</strong></h2>\n\t</li>\n</ul>\n\n<h2>&nbsp;</h2>\n',
+      needMentors: 0,
+      placeName: 'Lyon',
+      frequency: '1/w',
+      website: null,
+      supporterImage: 'http://www.xconomy.com/wordpress/wp-content/images/2013/01/dogpatch-labs-logo.png'
     }
   ],
   events: require('./events'),

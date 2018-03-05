@@ -2,10 +2,12 @@
 const jsonServer = require('json-server');
 const path = require('path');
 const uuidv1 = require('uuid/v1');
+const moment = require('moment');
 const users = require('./users');
 const usersProfile = require('./users-profile');
 const usersDojos = require('./users-dojos');
 const applications = require('./applications');
+const events = require('./events');
 
 const server = jsonServer.create();
 const router = jsonServer.router(require('./db'));
@@ -151,6 +153,17 @@ server.post('/api/2.0/dojos/users', (req, res) => {
   } else {
     res.send([]);
   }
+});
+
+server.get('/api/3.0/dojos/:dojoId/events', (req, res) => {
+  const dojoId = req.params.dojoId;
+  const { dateBefore, dateAfter } = req.query;
+
+  res.send(events.filter((e) => { 
+    return (e.dojoId === dojoId) && 
+    (dateAfter && moment(e.dates[0].startTime).format('x') > dateAfter)
+  }
+  ));
 });
 
 server.use('/api/2.0', router);

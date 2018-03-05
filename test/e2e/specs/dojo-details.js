@@ -5,7 +5,7 @@ const EventSessionsPage = require('../page-objects/event-sessions');
 const LoginPage = require('../page-objects/login');
 const currentYear = (new Date()).getFullYear();
 
-describe('Dojo details page', () => {
+describe.only('Dojo details page', () => {
   it('should show dojo details', () => {
     FindDojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
@@ -96,6 +96,8 @@ describe('Dojo details page', () => {
 
     expect(DojoDetailsPage.noEventsContent[0].getText()).to.equal('This Dojo may list their events on another website or they may encourage people to attend without booking.');
     expect(DojoDetailsPage.noEventsContent[1].getText()).to.equal('Please join this Dojo for updates and email the Dojo on asudojo@example.com to find out about their upcoming events.');
+
+    expect(DojoDetailsPage.detailsLabel[1]).to.not.equal('Past Events');
   });
 
   it('should show event details after clicking on an event', () => {
@@ -262,6 +264,25 @@ describe('Dojo details page', () => {
 
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.eventNames.length).to.equal(1);
+    browser.deleteCookie();
+  });
+  
+  it('should show past events when there is no upcoming events and not joined', () => {
+    FindDojoPage.openDojoWithQuery('dublin&p=2', 2);
+    expect(DojoDetailsPage.noEventsHeader.getText()).to.equal('No Listed Events');
+    expect(DojoDetailsPage.noEventsContent[0].getText()).to.equal('This Dojo had events recently! Join the Dojo to get notified when tickets for next event are available.');
+  });
+  
+  it('should show past events when there is no upcoming events and joined', () => {
+    LoginPage.open();
+    LoginPage.email.waitForVisible();
+    LoginPage.email.setValue('parent2@example.com');
+    LoginPage.password.setValue('testparent2');
+    LoginPage.login.click();
+ 
+    FindDojoPage.openDojoWithQuery('dublin&p=2', 2);
+    expect(DojoDetailsPage.noEventsHeader.getText()).to.equal('No Listed Events');
+    expect(DojoDetailsPage.noEventsContent[0].getText()).to.equal('This Dojo had events recently! You\'ll be notified when tickets for the next event are available.');
     browser.deleteCookie();
   });
 

@@ -1,18 +1,21 @@
 import vueUnitHelper from 'vue-unit-helper';
 import eventList from '!!vue-loader?inject!@/events/cd-event-list';
 
-describe('Event list component', () => {
+describe.only('Event list component', () => {
   let sandbox;
   let EventListWithMocks;
   let MockEventsService;
   let MockDojosService;
   let MockUsersService;
   let MockUsersUtil;
+  let MockStore;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     MockEventsService = {
-      loadEvents: sandbox.stub(),
+      v3: {
+        get: sandbox.stub(),
+      },
     };
     MockDojosService = {
       getUsersDojos: sandbox.stub(),
@@ -25,10 +28,15 @@ describe('Event list component', () => {
     MockUsersUtil = {
       isYouthOverThirteen: sandbox.stub(),
     };
+    MockStore = {
+      state: {},
+      commit: sandbox.stub(),
+    };
     EventListWithMocks = eventList({
       '@/users/service': MockUsersService,
       '@/users/util': MockUsersUtil,
       '@/dojos/service': MockDojosService,
+      '@/events/cd-event-list-store': MockStore,
       './service': MockEventsService,
     });
   });
@@ -63,7 +71,7 @@ describe('Event list component', () => {
       },
     ];
 
-    MockEventsService.loadEvents.returns(Promise.resolve({ body: mockEventDataResponse }));
+    MockEventsService.v3.get.returns(Promise.resolve({ body: mockEventDataResponse }));
     const vm = vueUnitHelper(EventListWithMocks);
     vm.dojo = { id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77' };
     vm.loadEvents();
@@ -137,22 +145,62 @@ describe('Event list component', () => {
       });
     });
     describe('loadEvents', () => {
-      it('should load the dojo events', (done) => {
+      it('should load the dojo events', async () => {
         // ARRANGE
         const mockEvents = [{ id: '1', name: 'Event' }];
-        MockEventsService.loadEvents.returns(Promise.resolve({ body: mockEvents }));
+        MockEventsService.v3.get.returns(Promise.resolve({ body: mockEvents }));
         const vm = vueUnitHelper(EventListWithMocks);
         vm.dojo = {
           id: 'p4j8h55b-v3fw-gb4f-00gq-847bw5ctlme2',
         };
         // ACT
-        vm.loadEvents();
+        await vm.loadEvents();
 
         // ASSERT
-        requestAnimationFrame(() => {
-          expect(vm.events).to.deep.equal(mockEvents);
-          done();
+        expect(vm.events).to.deep.equal(mockEvents);
+        expect(MockEventsService.v3.get).to.have.been.calledWith(vm.dojo.id, {
+          params: {
+            dateAfter: sinon.match(/^\d+$/),
+            status: 'published',
+          },
         });
+      });
+      it('should load the dojo past events', async () => {
+        // ARRANGE
+        const mockEvents = [{ id: '1', name: 'Event' }];
+        MockEventsService.v3.get.returns(Promise.resolve({ body: mockEvents }));
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.dojo = {
+          id: 'p4j8h55b-v3fw-gb4f-00gq-847bw5ctlme2',
+        };
+        vm.past = true;
+        // ACT
+        await vm.loadEvents();
+
+        // ASSERT
+        expect(vm.events).to.deep.equal(mockEvents);
+        expect(MockEventsService.v3.get).to.have.been.calledWith(vm.dojo.id, {
+          params: {
+            dateBefore: sinon.match(/^\d+$/),
+            dateAfter: sinon.match(/^\d+$/),
+            status: 'published',
+          },
+        });
+      });
+    });
+    describe('setState', () => {
+      it('should set the state for active events by default', () => {
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.events = [];
+        vm.setState();
+        expect(MockStore.commit).to.have.been.calledWith('setHasFutureEvents', false);
+      });
+      it('should set the state for past events', () => {
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.events = [{}, {}];
+        vm.past = true;
+        vm.setState();
+        expect(MockStore.commit).to.have.been.calledWith('setHasPastEvents', true);
       });
     });
     describe('joinTheDojo', () => {
@@ -229,6 +277,80 @@ describe('Event list component', () => {
   });
 
   describe('computed', () => {
+    describe('heading', () => {
+      it('should return the active event heading', () => {
+        const vm = vueUnitHelper(eventList());
+        const heading = vm.heading;
+        expect(heading).to.equal('Upcoming Events');
+      });
+      it('should return the active event heading', () => {
+        const vm = vueUnitHelper(eventList());
+        vm.past = true;
+        const heading = vm.heading;
+        expect(heading).to.equal('Past Events');
+      });
+    });
+    describe('noEventsContent', () => {
+      it('should set the content when past events exists and the user is not joined', () => {
+        const vm = vueUnitHelper(eventList());
+        vm.isDojoMember = false;
+        const content = vm.noEventsContent;
+        expect(content).to.equal('This Dojo had events recently! Join the Dojo to get notified when tickets for next event are available.');
+      });
+      it('should set the content when past events exists and the user is joined', () => {
+        const vm = vueUnitHelper(eventList());
+        vm.isDojoMember = true;
+        const content = vm.noEventsContent;
+        expect(content).to.equal('This Dojo had events recently! You\'ll be notified when tickets for the next event are available.');
+      });
+    });
+    describe('eventsVisible', () => {
+      it('should set visibility of past events', () => {
+        const vm = vueUnitHelper(eventList());
+        vm.past = true;
+        vm.hasFutureEvents = false;
+        vm.hasPastEvents = true;
+        const visible = vm.eventsVisible;
+        expect(visible).to.equal(true);
+      });
+      it('should set visibility of future events', () => {
+        const vm = vueUnitHelper(eventList());
+        vm.past = false;
+        vm.hasFutureEvents = true;
+        const visible = vm.eventsVisible;
+        expect(visible).to.equal(true);
+      });
+    });
+    describe('headingVisible', () => {
+      it('should set visibility of the header for past events', () => {
+        const vm = vueUnitHelper(eventList());
+        vm.past = true;
+        vm.hasFutureEvents = false;
+        vm.hasPastEvents = true;
+        const visible = vm.headingVisible;
+        expect(visible).to.equal(true);
+      });
+      it('should set visibility of the header for the future events', () => {
+        const vm = vueUnitHelper(eventList());
+        vm.past = false;
+        const visible = vm.headingVisible;
+        expect(visible).to.equal(true);
+      });
+    });
+    describe('hasPastEvents', () => {
+      it('should return the store value', () => {
+        const vm = vueUnitHelper(EventListWithMocks);
+        MockStore.state.hasPastEvents = 'bla';
+        expect(vm.hasPastEvents).to.equal('bla');
+      });
+    });
+    describe('hasFutureEvents', () => {
+      it('should return the store value', () => {
+        const vm = vueUnitHelper(EventListWithMocks);
+        MockStore.state.hasFutureEvents = 'blu';
+        expect(vm.hasFutureEvents).to.equal('blu');
+      });
+    });
     describe('isDojoMember', () => {
       it('should be true when there is a joined user', (done) => {
         const vm = vueUnitHelper(eventList());
@@ -284,6 +406,14 @@ describe('Event list component', () => {
           expect(vm.loadUsersProfile).to.have.been.calledOnce;
           done();
         });
+      });
+    });
+    describe('events', () => {
+      it('should call setState', () => {
+        const vm = vueUnitHelper(EventListWithMocks);
+        const spy = sandbox.spy(vm, 'setState');
+        vm.$watchers.events();
+        expect(spy).to.have.been.calledOnce;
       });
     });
   });

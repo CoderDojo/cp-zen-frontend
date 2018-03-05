@@ -42,8 +42,8 @@
           <p v-html="$t('To learn more please email {email}', { email: '<a href=\'mailto:' + dojoDetails.email + '\'>' + dojoDetails.email + '</a>' })"></p>
         </div>
         <section class="cd-dojo-details__section">
-          <div class="cd-dojo-details__heading">{{ $t('Upcoming Events') }}</div>
           <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails"></events-list>
+          <events-list v-if="dojoDetails.id" v-bind:dojo="dojoDetails" :past="true"></events-list>
         </section>
         <section class="cd-dojo-details__section">
           <div class="cd-dojo-details__heading">{{ $t('Details') }}</div>
@@ -228,7 +228,7 @@
         this.user = response.body.user;
       },
       async loadUserDojoRelationship() {
-        if (this.user.id) {
+        if (this.user && this.user.id) {
           const response = await UsersDojosService.getUsersDojos(this.user.id, this.dojoDetails.id);
           this.usersDojos = response.body;
         }

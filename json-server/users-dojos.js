@@ -40,7 +40,24 @@ module.exports = {
       "deleted": 0,
       "deletedBy": null,
       "deletedAt": null
-    }]
+    }],
+    "bkr5hk4a9-78gf-9b44-63h2-6gtgfbqy0lkx": [{
+      "entity$": "-/cd/usersdojos",
+      "id": "3ed47c6d-a689-46a0-883b-169e7540a9c9",
+      "mysqlUserId": null,
+      "mysqlDojoId": null,
+      "owner": 0,
+      "userId": "parent1",
+      "dojoId": "bkr5hk4a9-78gf-9b44-63h2-6gtgfbqy0lkx",
+      "userTypes": [
+        "parent-guardian"
+      ],
+      "userPermissions": [],
+      "backgroundChecked": true,
+      "deleted": 0,
+      "deletedBy": null,
+      "deletedAt": null
+    }],
   },
   "champion1": {
     "70e868a9-f2b2-4b73-8f83-7e3a79dfa150": [{

@@ -93,7 +93,7 @@ describe('Find Dojo page', () => {
     DojoPage.paginationButtonPageTwo.click();
     DojoPage.showDojoListCount.waitForVisible();
     expect(DojoPage.showDojoListCount.getText()).to.equal(`Showing 7 to ${Math.min(db.dojos.length, 12)} of ${db.dojos.length} Dojos`);
-    expect(DojoPage.dojoListItemNames.length).to.equal(2);
+    expect(DojoPage.dojoListItemNames.length).to.equal(3);
   });
 
   describe('Mobile specific tests', () => {
