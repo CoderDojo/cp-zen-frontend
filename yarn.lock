@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@coderdojo/cd-common@1.1.10":
-  version "1.1.10"
-  resolved "https://registry.yarnpkg.com/@coderdojo/cd-common/-/cd-common-1.1.10.tgz#6583174b6295f2fc6796be288f3d215bdde1882e"
+"@coderdojo/cd-common@1.1.11":
+  version "1.1.11"
+  resolved "https://registry.yarnpkg.com/@coderdojo/cd-common/-/cd-common-1.1.11.tgz#fb42fa68eff8b47d9843007db013d3f3fb4b1f95"
 
 abbrev@1:
   version "1.1.0"
