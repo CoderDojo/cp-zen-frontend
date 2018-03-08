@@ -32,9 +32,12 @@
         {
           params:
           {
-            limit: 1,
-            public: 1,
-            dateAfter: Date.now(),
+            pageSize: 1,
+            query: {
+              public: 1,
+              dateAfter: moment().format('X'),
+              utcOffset: moment().utcOffset(),
+            },
           },
         });
       if (events.body.length > 0) {

@@ -58,9 +58,12 @@ describe('Event stamp component', () => {
         {
           params:
           {
-            limit: 1,
-            public: 1,
-            dateAfter: sinon.match.number,
+            pageSize: 1,
+            query: {
+              public: 1,
+              dateAfter: sinon.match(/\d+/),
+              utcOffset: -0,
+            },
           },
         });
       expect(vm.event).to.eql(mockEventData);
@@ -80,9 +83,12 @@ describe('Event stamp component', () => {
         {
           params:
           {
-            limit: 1,
-            public: 1,
-            dateAfter: sinon.match.number,
+            pageSize: 1,
+            query: {
+              public: 1,
+              dateAfter: sinon.match(/\d+/),
+              utcOffset: -0,
+            },
           },
         });
       expect(vm.event).to.be.null;
