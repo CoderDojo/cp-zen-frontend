@@ -1,7 +1,7 @@
 import vueUnitHelper from 'vue-unit-helper';
 import eventList from '!!vue-loader?inject!@/events/cd-event-list';
 
-describe.only('Event list component', () => {
+describe('Event list component', () => {
   let sandbox;
   let EventListWithMocks;
   let MockEventsService;
@@ -151,8 +151,11 @@ describe.only('Event list component', () => {
         expect(res.body).to.deep.equal(mockEvents);
         expect(MockEventsService.v3.get).to.have.been.calledWith(vm.dojo.id, {
           params: {
-            dateAfter: sinon.match(/^\d+$/),
-            status: 'published',
+            query: {
+              dateAfter: sinon.match(/^\d+$/),
+              utcOffset: -0,
+              status: 'published',
+            },
           },
         });
       });
@@ -171,9 +174,12 @@ describe.only('Event list component', () => {
         expect(res.body).to.deep.equal(mockEvents);
         expect(MockEventsService.v3.get).to.have.been.calledWith(vm.dojo.id, {
           params: {
-            dateBefore: sinon.match(/^\d+$/),
-            dateAfter: sinon.match(/^\d+$/),
-            status: 'published',
+            query: {
+              dateBefore: sinon.match(/^\d+$/),
+              dateAfter: sinon.match(/^\d+$/),
+              utcOffset: -0,
+              status: 'published',
+            },
           },
         });
       });

@@ -88,15 +88,16 @@
         this.usersDojos = res.body;
       },
       async loadEvents(past = false) {
-        const params = { status: 'published' };
-        params.dateAfter = moment().format('x');
+        const query = { status: 'published' };
+        query.dateAfter = moment().format('X');
+        query.utcOffset = moment().utcOffset();
         if (past) {
-          params.dateBefore = moment().format('x');
-          params.dateAfter = moment().subtract(70, 'days').format('x');
+          query.dateBefore = moment().format('X');
+          query.dateAfter = moment().subtract(70, 'days').format('X');
         }
         return service.v3.get(
           this.dojo.id,
-          { params },
+          { params: { query } },
         );
       },
       async joinTheDojo() {
