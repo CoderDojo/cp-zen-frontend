@@ -6,6 +6,11 @@ const MyTicketPage = Object.create(BasePage, {
       return BasePage.open.call(this, '/dashboard/tickets');
     },
   },
+  firstEvent: {
+    get() {
+      return $('.cd-user-ticket-list-item.cd-event-ticket-list__event');
+    },
+  },
   events: {
     get() {
       return $$('.cd-user-ticket-list-item.cd-event-ticket-list__event');
