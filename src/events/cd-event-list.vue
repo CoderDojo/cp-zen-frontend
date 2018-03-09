@@ -89,11 +89,11 @@
       },
       async loadEvents(past = false) {
         const query = { status: 'published' };
-        query.dateAfter = moment().format('X');
+        query.afterDate = moment().format('X');
         query.utcOffset = moment().utcOffset();
         if (past) {
-          query.dateBefore = moment().format('X');
-          query.dateAfter = moment().subtract(70, 'days').format('X');
+          query.beforeDate = moment().format('X');
+          query.afterDate = moment().subtract(70, 'days').format('X');
         }
         return service.v3.get(
           this.dojo.id,
@@ -124,9 +124,9 @@
     created() {
       if (this.dojo.verified) {
         this.loadEvents()
-          .then((res) => { this.futureEvents = res.body; });
+          .then((res) => { this.futureEvents = res.body.results; });
         this.loadEvents(true)
-          .then((res) => { this.pastEvents = res.body; });
+          .then((res) => { this.pastEvents = res.body.results; });
       }
       this.loadCurrentUser();
     },

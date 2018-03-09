@@ -152,7 +152,7 @@ describe('Event list component', () => {
         expect(MockEventsService.v3.get).to.have.been.calledWith(vm.dojo.id, {
           params: {
             query: {
-              dateAfter: sinon.match(/^\d+$/),
+              afterDate: sinon.match(/^\d+$/),
               utcOffset: -0,
               status: 'published',
             },
@@ -175,8 +175,8 @@ describe('Event list component', () => {
         expect(MockEventsService.v3.get).to.have.been.calledWith(vm.dojo.id, {
           params: {
             query: {
-              dateBefore: sinon.match(/^\d+$/),
-              dateAfter: sinon.match(/^\d+$/),
+              beforeDate: sinon.match(/^\d+$/),
+              afterDate: sinon.match(/^\d+$/),
               utcOffset: -0,
               status: 'published',
             },
