@@ -34,6 +34,7 @@
           {
             pageSize: 1,
             query: {
+              status: 'published',
               public: 1,
               afterDate: moment().format('X'),
               utcOffset: moment().utcOffset(),

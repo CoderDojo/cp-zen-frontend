@@ -61,6 +61,7 @@ describe('Event stamp component', () => {
             pageSize: 1,
             query: {
               public: 1,
+              status: 'published',
               afterDate: sinon.match(/\d+/),
               utcOffset: -0,
             },
@@ -86,6 +87,7 @@ describe('Event stamp component', () => {
             pageSize: 1,
             query: {
               public: 1,
+              status: 'published',
               afterDate: sinon.match(/\d+/),
               utcOffset: -0,
             },
