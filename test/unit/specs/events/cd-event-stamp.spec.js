@@ -46,7 +46,7 @@ describe('Event stamp component', () => {
         name: 'event',
       };
       MockEventService.v3.get.resolves({
-        body: [mockEventData],
+        body: { results: [mockEventData] },
       });
       const vm = vueUnitHelper(EventStampWithMocks);
       vm.dojo = { id: '111' };
@@ -61,7 +61,7 @@ describe('Event stamp component', () => {
             pageSize: 1,
             query: {
               public: 1,
-              dateAfter: sinon.match(/\d+/),
+              afterDate: sinon.match(/\d+/),
               utcOffset: -0,
             },
           },
@@ -86,7 +86,7 @@ describe('Event stamp component', () => {
             pageSize: 1,
             query: {
               public: 1,
-              dateAfter: sinon.match(/\d+/),
+              afterDate: sinon.match(/\d+/),
               utcOffset: -0,
             },
           },

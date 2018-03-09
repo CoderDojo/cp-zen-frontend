@@ -35,13 +35,13 @@
             pageSize: 1,
             query: {
               public: 1,
-              dateAfter: moment().format('X'),
+              afterDate: moment().format('X'),
               utcOffset: moment().utcOffset(),
             },
           },
         });
-      if (events.body.length > 0) {
-        this.event = events.body[0];
+      if (events.body.results && events.body.results.length > 0) {
+        this.event = events.body.results[0];
       }
     },
   };
