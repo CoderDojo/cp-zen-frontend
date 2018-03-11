@@ -62,7 +62,7 @@ describe('Event stamp component', () => {
             query: {
               public: 1,
               status: 'published',
-              afterDate: sinon.match(/\d+/),
+              afterDate: sinon.match.number,
               utcOffset: -0,
             },
           },
@@ -88,7 +88,7 @@ describe('Event stamp component', () => {
             query: {
               public: 1,
               status: 'published',
-              afterDate: sinon.match(/\d+/),
+              afterDate: sinon.match.number,
               utcOffset: -0,
             },
           },

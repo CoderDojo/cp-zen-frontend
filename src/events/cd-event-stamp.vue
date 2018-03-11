@@ -20,7 +20,7 @@
       date() {
         const toBeFormatted = (this.event.startTime) ||
           this.event.dates[0].startTime;
-        return moment(toBeFormatted).format('dddd, MMMM Do');
+        return moment.utc(toBeFormatted).format('dddd, MMMM Do');
       },
     },
     methods: {
@@ -36,7 +36,7 @@
             query: {
               status: 'published',
               public: 1,
-              afterDate: moment().format('X'),
+              afterDate: moment().unix(),
               utcOffset: moment().utcOffset(),
             },
           },
