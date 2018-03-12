@@ -30,6 +30,11 @@ const EventsService = {
     });
     return Vue.http.post(`${Vue.config.apiServer}/api/2.0/events/bulk-apply-applications`, { applications });
   },
+  v3: {
+    get(dojoId, options) {
+      return Vue.http.get(`${Vue.config.apiServer}/api/3.0/dojos/${dojoId}/events`, options);
+    },
+  },
 };
 
 export default EventsService;

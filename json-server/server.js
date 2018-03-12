@@ -6,6 +6,7 @@ const users = require('./users');
 const usersProfile = require('./users-profile');
 const usersDojos = require('./users-dojos');
 const applications = require('./applications');
+const events = require('./events');
 
 const server = jsonServer.create();
 const router = jsonServer.router(require('./db'));
@@ -151,6 +152,12 @@ server.post('/api/2.0/dojos/users', (req, res) => {
   } else {
     res.send([]);
   }
+});
+
+server.get('/api/3.0/dojos/:dojoId/events', (req, res) => {
+  const dojoId = req.params.dojoId;
+  const _events = events.filter((e) => e.dojoId === dojoId);
+  res.send({ results: _events });
 });
 
 server.use('/api/2.0', router);
