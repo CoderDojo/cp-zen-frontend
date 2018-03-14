@@ -59,6 +59,10 @@ export default {
           href: 'http://github.coderdojo.com',
           text: 'Contribute',
         },
+        {
+          href: 'https://coderdojo.com/donate/',
+          text: 'Donate',
+        },
       ],
       socialLinks: [
         {

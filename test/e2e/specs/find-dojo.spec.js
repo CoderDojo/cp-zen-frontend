@@ -96,6 +96,15 @@ describe('Find Dojo page', () => {
     expect(DojoPage.dojoListItemNames.length).to.equal(3);
   });
 
+  it('should display if a dojo has an upcoming event', () => {
+    DojoPage.openWithQuery('dublin');
+    const dojosListEvents = DojoPage.dojoListHasEvent;
+    expect(dojosListEvents.length).to.equal(3);
+    dojosListEvents.forEach((dojoEvent) => {
+      expect(dojoEvent.getText()).to.have.string('Next event on');
+    });
+  });
+
   describe('Mobile specific tests', () => {
     beforeEach(() => {
       DojoPage.open();

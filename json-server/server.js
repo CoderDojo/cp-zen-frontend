@@ -159,7 +159,7 @@ server.get('/api/3.0/dojos/:dojoId/events', (req, res) => {
   const dojoId = req.params.dojoId;
   const { afterDate, beforeDate } = req.query.query;
 
-  const _events = events.filter(e => (e.dojoId === dojoId) && 
+  const _events = events.filter(e => (e.dojoId === dojoId) &&
     (afterDate && moment(e.dates[0].startTime).unix() > afterDate))
   res.send({ results: _events, count: _events.length });
 });

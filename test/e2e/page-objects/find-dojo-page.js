@@ -57,6 +57,12 @@ const DojoPage = Object.create(BasePage, {
       return $$('.cd-dojo-list-item__name');
     },
   },
+  dojoListHasEvent: {
+    get() {
+      $('.cd-dojo-list-item .cd-event-stamp').waitForVisible();
+      return $$('.cd-dojo-list-item .cd-event-stamp');
+    },
+  },
   dojoListItemMetas: {
     get() {
       $('.cd-dojo-list-item__meta').waitForVisible();

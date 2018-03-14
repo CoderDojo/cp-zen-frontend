@@ -1,6 +1,6 @@
 {
   "name": "cp-zen-frontend",
-  "version": "1.0.23",
+  "version": "1.0.26",
   "description": "Frontend for CoderDojo Community Platform (Zen)",
   "author": "CoderDojo Foundation <webteam@coderdojo.com>",
   "scripts": {
@@ -16,9 +16,9 @@
     "mock-server": "node ./json-server/server.js"
   },
   "dependencies": {
-    "@coderdojo/cd-common": "1.1.7",
+    "@coderdojo/cd-common": "1.1.11",
     "bootstrap": "^3.3.7",
-    "cp-translations": "1.0.84",
+    "cp-translations": "1.0.89",
     "font-awesome": "^4.7.0",
     "handlebars": "^4.0.10",
     "js-cookie": "^2.1.4",
