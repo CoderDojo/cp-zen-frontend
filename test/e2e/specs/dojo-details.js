@@ -97,7 +97,7 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.noEventsContent[0].getText()).to.equal('This Dojo may list their events on another website or they may encourage people to attend without booking.');
     expect(DojoDetailsPage.noEventsContent[1].getText()).to.equal('Please join this Dojo for updates and email the Dojo on asudojo@example.com to find out about their upcoming events.');
 
-    expect(DojoDetailsPage.detailsLabel[1]).to.not.equal('Past Events');
+    expect(DojoDetailsPage.detailsLabel[1]).to.not.equal('Recent Events');
   });
 
   it('should show event details after clicking on an event', () => {

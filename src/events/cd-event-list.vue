@@ -90,7 +90,7 @@
       async loadEvents(past = false) {
         const params = { };
         const query = { status: 'published' };
-        query.afterDate = moment().format('X');
+        query.afterDate = moment().unix();
         query.utcOffset = moment().utcOffset();
         if (past) {
           query.beforeDate = moment().unix();
