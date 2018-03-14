@@ -270,7 +270,7 @@ describe('Dojo details page', () => {
   it('should show past events when there is no upcoming events and not joined', () => {
     FindDojoPage.openDojoWithQuery('dublin&p=2', 2);
     DojoDetailsPage.name.waitForVisible();
-    expect(DojoDetailsPage.noEventsPastContent[0].getText()).to.equal('This Dojo had events recently! Join the Dojo to get notified when tickets for next event are available.');
+    expect(DojoDetailsPage.noEventsPastContent[0].getText()).to.equal('This Dojo had events recently. Join the Dojo to get notified when tickets for the next event are available.');
   });
   
   it('should show past events when there is no upcoming events and joined', () => {
@@ -282,7 +282,7 @@ describe('Dojo details page', () => {
  
     FindDojoPage.openDojoWithQuery('dublin&p=2', 2);
     DojoDetailsPage.name.waitForVisible();
-    expect(DojoDetailsPage.noEventsPastContent[0].getText()).to.equal('This Dojo had events recently! You\'ll be notified when tickets for the next event are available.');
+    expect(DojoDetailsPage.noEventsPastContent[0].getText()).to.equal('This Dojo had events recently. You\'ll be notified when tickets for the next event are available.');
     browser.deleteCookie();
   });
 

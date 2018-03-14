@@ -156,6 +156,7 @@ describe('Event list component', () => {
               utcOffset: -0,
               status: 'published',
             },
+            related: 'sessions.tickets',
           },
         });
       });
@@ -180,6 +181,10 @@ describe('Event list component', () => {
               utcOffset: -0,
               status: 'published',
             },
+            orderBy: 'startTime',
+            direction: 'desc',
+            page: 1,
+            pageSize: 1,
           },
         });
       });
@@ -263,13 +268,13 @@ describe('Event list component', () => {
         const vm = vueUnitHelper(eventList());
         vm.isDojoMember = false;
         const content = vm.noEventsContent;
-        expect(content).to.equal('This Dojo had events recently! Join the Dojo to get notified when tickets for next event are available.');
+        expect(content).to.equal('This Dojo had events recently. Join the Dojo to get notified when tickets for the next event are available.');
       });
       it('should set the content when past events exists and the user is joined', () => {
         const vm = vueUnitHelper(eventList());
         vm.isDojoMember = true;
         const content = vm.noEventsContent;
-        expect(content).to.equal('This Dojo had events recently! You\'ll be notified when tickets for the next event are available.');
+        expect(content).to.equal('This Dojo had events recently. You\'ll be notified when tickets for the next event are available.');
       });
     });
     describe('hasPastEvents', () => {

@@ -8,7 +8,7 @@
         </div>
         <div v-if="!hasFutureEvents && !hasPastEvents">
           <p class="cd-event-list__no-events-content" v-html="$t('This Dojo may list their events on another website or they may encourage people to attend without booking.')"></p>
-          <p class="cd-event-list__no-events-content" v-html="$t(`${dojo.private ? 'Please email the Dojo on {email} to find out about their upcoming events.' : 'Please join this Dojo for updates and email the Dojo on {email} to find out about their upcoming events.' }`, { email: '<a href=\'mailto:' + dojo.email + '\'>' + dojo.email + '</a>' })"></p>
+          <p class="cd-event-list__no-events-content" v-if="!isDojoMember" v-html="$t(`${dojo.private ? 'Please email the Dojo on {email} to find out about their upcoming events.' : 'Please join this Dojo for updates and email the Dojo on {email} to find out about their upcoming events.' }`, { email: '<a href=\'mailto:' + dojo.email + '\'>' + dojo.email + '</a>' })"></p>
         </div>
         <div v-else>
           <p class="cd-event-list__no-events-content--had-events">{{ $t(noEventsContent) }}</p>
@@ -19,7 +19,7 @@
     <div class="cd-event-list__events">
       <event-list-item v-for="event in futureEvents" :key="event.id" :event="event" :dojo="dojo" :users-dojos="usersDojos" :user="currentUser" class="cd-event-list__event"></event-list-item>
       <div v-if="!hasFutureEvents">
-        <div class="cd-event-list__heading" v-if="hasPastEvents">{{ $t('Past Events') }}</div>
+        <div class="cd-event-list__heading" v-if="hasPastEvents">{{ $t('Recent Events') }}</div>
         <event-list-item v-for="event in pastEvents" :key="event.id" :event="event" :dojo="dojo" :users-dojos="usersDojos" :user="currentUser" :past="true" class="cd-event-list__event"></event-list-item>
       </div>
     </div>
@@ -60,8 +60,8 @@
     },
     computed: {
       noEventsContent() {
-        const base = 'This Dojo had events recently!';
-        const variant = this.isDojoMember ? 'You\'ll be notified when tickets for the next event are available.' : 'Join the Dojo to get notified when tickets for next event are available.';
+        const base = 'This Dojo had events recently.';
+        const variant = this.isDojoMember ? 'You\'ll be notified when tickets for the next event are available.' : 'Join the Dojo to get notified when tickets for the next event are available.';
         return `${base} ${variant}`;
       },
       isDojoMember() {
@@ -88,16 +88,24 @@
         this.usersDojos = res.body;
       },
       async loadEvents(past = false) {
+        const params = { };
         const query = { status: 'published' };
         query.afterDate = moment().format('X');
         query.utcOffset = moment().utcOffset();
         if (past) {
-          query.beforeDate = moment().format('X');
-          query.afterDate = moment().subtract(70, 'days').format('X');
+          query.beforeDate = moment().unix();
+          query.afterDate = moment().subtract(70, 'days').unix();
+          params.page = 1;
+          params.pageSize = 1;
+          params.orderBy = 'startTime';
+          params.direction = 'desc';
+        } else {
+          params.related = 'sessions.tickets';
         }
+        params.query = query;
         return service.v3.get(
           this.dojo.id,
-          { params: { query } },
+          { params },
         );
       },
       async joinTheDojo() {

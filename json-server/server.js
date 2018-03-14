@@ -157,13 +157,11 @@ server.post('/api/2.0/dojos/users', (req, res) => {
 
 server.get('/api/3.0/dojos/:dojoId/events', (req, res) => {
   const dojoId = req.params.dojoId;
-  const { dateBefore, dateAfter } = req.query.query;
+  const { afterDate, beforeDate } = req.query.query;
 
-  res.send(events.filter((e) => { 
-    return (e.dojoId === dojoId) && 
-    (dateAfter && moment(e.dates[0].startTime).format('X') > dateAfter)
-  }
-  ));
+  const _events = events.filter(e => (e.dojoId === dojoId) && 
+    (afterDate && moment(e.dates[0].startTime).unix() > afterDate))
+  res.send({ results: _events, count: _events.length });
 });
 
 server.use('/api/2.0', router);

@@ -5,7 +5,7 @@
         <h3 class="cd-event-list-item__name">
           {{ event.name }}
         </h3>
-        <h4 class="cd-event-list-item__sessions">
+        <h4 class="cd-event-list-item__sessions" v-if="!past">
           <strong>{{ $t('Sessions') }}:</strong> {{ getSessionListForEvent }}
         </h4>
       </header>
