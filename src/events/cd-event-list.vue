@@ -18,8 +18,8 @@
     </div>
     <div class="cd-event-list__events">
       <event-list-item v-for="event in futureEvents" :key="event.id" :event="event" :dojo="dojo" :users-dojos="usersDojos" :user="currentUser" class="cd-event-list__event"></event-list-item>
-      <div v-if="!hasFutureEvents">
-        <div class="cd-event-list__heading" v-if="hasPastEvents">{{ $t('Recent Events') }}</div>
+      <div v-if="!hasFutureEvents && hasPastEvents">
+        <div class="cd-event-list__heading">{{ $t('Recent Events') }}</div>
         <event-list-item v-for="event in pastEvents" :key="event.id" :event="event" :dojo="dojo" :users-dojos="usersDojos" :user="currentUser" :past="true" class="cd-event-list__event"></event-list-item>
       </div>
     </div>
