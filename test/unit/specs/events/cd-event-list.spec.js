@@ -216,7 +216,8 @@ describe('Event list component', () => {
           expect(MockDojosService.joinDojo).to.have.been.calledWith(
             vm.currentUser.id,
             vm.dojo.id,
-            [mockUserType]);
+            [mockUserType],
+          );
           expect(MockDojosService.getUsersDojos).to.have.been.calledWith(vm.currentUser.id);
           done();
         });
@@ -247,7 +248,8 @@ describe('Event list component', () => {
           expect(MockDojosService.joinDojo).to.have.been.calledWith(
             vm.currentUser.id,
             vm.dojo.id,
-            [mockUserType]);
+            [mockUserType],
+          );
           expect(MockDojosService.getUsersDojos).to.have.been.calledWith(vm.currentUser.id);
           done();
         });

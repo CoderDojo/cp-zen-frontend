@@ -34,11 +34,9 @@ describe('Event DOB verification', () => {
 
   it('should get the event details for the given eventId', (done) => {
     // ARRANGE
-    MockEventService.loadEvent.withArgs(1).returns(Promise.resolve(
-      {
-        body: mockEventData,
-      },
-    ));
+    MockEventService.loadEvent.withArgs(1).returns(Promise.resolve({
+      body: mockEventData,
+    }));
 
     // ACT
     vm.loadEvent();

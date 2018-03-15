@@ -3,7 +3,8 @@ import Vue from 'vue';
 const EventsService = {
 
   loadEvents(dojoId) {
-    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/events/search`,
+    return Vue.http.post(
+      `${Vue.config.apiServer}/api/2.0/events/search`,
       {
         query: { dojoId, filterPastEvents: true, status: 'published' },
       },

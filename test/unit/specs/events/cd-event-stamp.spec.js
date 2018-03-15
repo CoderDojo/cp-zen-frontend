@@ -66,7 +66,8 @@ describe('Event stamp component', () => {
               utcOffset: -0,
             },
           },
-        });
+        },
+      );
       expect(vm.event).to.eql(mockEventData);
     });
     it('vm.event should stay null if there is no event', async () => {
@@ -92,7 +93,8 @@ describe('Event stamp component', () => {
               utcOffset: -0,
             },
           },
-        });
+        },
+      );
       expect(vm.event).to.be.null;
     });
   });

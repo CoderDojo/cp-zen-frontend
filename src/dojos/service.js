@@ -19,7 +19,8 @@ const DojosService = {
   },
 
   getByUrlSlug(urlSlug) {
-    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/find`,
+    return Vue.http.post(
+      `${Vue.config.apiServer}/api/2.0/dojos/find`,
       {
         query: { urlSlug },
       },

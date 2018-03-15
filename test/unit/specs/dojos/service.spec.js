@@ -95,7 +95,8 @@ describe('Dojos Service', () => {
         query: {
           urlSlug: 'aUrlSlug',
         },
-      }).returns(Promise.resolve(expectedResult));
+      },
+    ).returns(Promise.resolve(expectedResult));
 
     DojosServiceWithMocks.getByUrlSlug('aUrlSlug').then((dojo) => {
       expect(dojo).to.deep.equal(expectedResult);
