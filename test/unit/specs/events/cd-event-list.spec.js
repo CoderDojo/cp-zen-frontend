@@ -12,7 +12,9 @@ describe('Event list component', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     MockEventsService = {
-      loadEvents: sandbox.stub(),
+      v3: {
+        get: sandbox.stub(),
+      },
     };
     MockDojosService = {
       getUsersDojos: sandbox.stub(),
@@ -37,7 +39,7 @@ describe('Event list component', () => {
     sandbox.restore();
   });
 
-  it('should show the list of dojo events', (done) => {
+  it('should show the list of dojo events', async () => {
     const mockEventDataResponse = [
       {
         id: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
@@ -63,14 +65,11 @@ describe('Event list component', () => {
       },
     ];
 
-    MockEventsService.loadEvents.returns(Promise.resolve({ body: mockEventDataResponse }));
+    MockEventsService.v3.get.returns(Promise.resolve({ body: mockEventDataResponse }));
     const vm = vueUnitHelper(EventListWithMocks);
     vm.dojo = { id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77' };
-    vm.loadEvents();
-    requestAnimationFrame(() => {
-      expect(vm.events).to.deep.equal(mockEventDataResponse);
-      done();
-    });
+    const res = await vm.loadEvents();
+    expect(res.body).to.deep.equal(mockEventDataResponse);
   });
 
   describe('methods', () => {
@@ -137,21 +136,56 @@ describe('Event list component', () => {
       });
     });
     describe('loadEvents', () => {
-      it('should load the dojo events', (done) => {
+      it('should load the dojo events', async () => {
         // ARRANGE
         const mockEvents = [{ id: '1', name: 'Event' }];
-        MockEventsService.loadEvents.returns(Promise.resolve({ body: mockEvents }));
+        MockEventsService.v3.get.returns(Promise.resolve({ body: mockEvents }));
         const vm = vueUnitHelper(EventListWithMocks);
         vm.dojo = {
           id: 'p4j8h55b-v3fw-gb4f-00gq-847bw5ctlme2',
         };
         // ACT
-        vm.loadEvents();
+        const res = await vm.loadEvents();
 
         // ASSERT
-        requestAnimationFrame(() => {
-          expect(vm.events).to.deep.equal(mockEvents);
-          done();
+        expect(res.body).to.deep.equal(mockEvents);
+        expect(MockEventsService.v3.get).to.have.been.calledWith(vm.dojo.id, {
+          params: {
+            query: {
+              afterDate: sinon.match.number,
+              utcOffset: -0,
+              status: 'published',
+            },
+            related: 'sessions.tickets',
+          },
+        });
+      });
+      it('should load the dojo past events', async () => {
+        // ARRANGE
+        const mockEvents = [{ id: '1', name: 'Event' }];
+        MockEventsService.v3.get.returns(Promise.resolve({ body: mockEvents }));
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.dojo = {
+          id: 'p4j8h55b-v3fw-gb4f-00gq-847bw5ctlme2',
+        };
+        // ACT
+        const res = await vm.loadEvents(true);
+
+        // ASSERT
+        expect(res.body).to.deep.equal(mockEvents);
+        expect(MockEventsService.v3.get).to.have.been.calledWith(vm.dojo.id, {
+          params: {
+            query: {
+              beforeDate: sinon.match.number,
+              afterDate: sinon.match.number,
+              utcOffset: -0,
+              status: 'published',
+            },
+            orderBy: 'startTime',
+            direction: 'desc',
+            page: 1,
+            pageSize: 1,
+          },
         });
       });
     });
@@ -229,6 +263,44 @@ describe('Event list component', () => {
   });
 
   describe('computed', () => {
+    describe('noEventsContent', () => {
+      it('should set the content when past events exists and the user is not joined', () => {
+        const vm = vueUnitHelper(eventList());
+        vm.isDojoMember = false;
+        const content = vm.noEventsContent;
+        expect(content).to.equal('This Dojo had events recently. Join the Dojo to get notified when tickets for the next event are available.');
+      });
+      it('should set the content when past events exists and the user is joined', () => {
+        const vm = vueUnitHelper(eventList());
+        vm.isDojoMember = true;
+        const content = vm.noEventsContent;
+        expect(content).to.equal('This Dojo had events recently. You\'ll be notified when tickets for the next event are available.');
+      });
+    });
+    describe('hasPastEvents', () => {
+      it('should return if it has past events', () => {
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.pastEvents = [];
+        expect(vm.hasPastEvents).to.be.false;
+      });
+      it('should return if it has past events', () => {
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.pastEvents = [{}];
+        expect(vm.hasPastEvents).to.be.true;
+      });
+    });
+    describe('hasFutureEvents', () => {
+      it('should return if it has future events', () => {
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.futureEvents = [];
+        expect(vm.hasFutureEvents).to.be.false;
+      });
+      it('should return if it has future events', () => {
+        const vm = vueUnitHelper(EventListWithMocks);
+        vm.futureEvents = [{}];
+        expect(vm.hasFutureEvents).to.be.true;
+      });
+    });
     describe('isDojoMember', () => {
       it('should be true when there is a joined user', (done) => {
         const vm = vueUnitHelper(eventList());
@@ -293,7 +365,7 @@ describe('Event list component', () => {
       it('should load user and event data', () => {
         // ARRANGE
         const vm = vueUnitHelper(eventList());
-        sandbox.stub(vm, 'loadEvents');
+        sandbox.stub(vm, 'loadEvents').resolves({ body: [] });
         sandbox.stub(vm, 'loadCurrentUser');
         MockUsersService.getCurrentUser.returns({ body: { user: { id: '34174952-8ca4-4189-b8cb-d383e3fde992' } } });
         vm.dojo = { verified: 1 };
@@ -301,7 +373,7 @@ describe('Event list component', () => {
         vm.$lifecycleMethods.created();
 
         // ASSERT
-        expect(vm.loadEvents).to.have.been.calledOnce;
+        expect(vm.loadEvents).to.have.been.calledTwice;
         expect(vm.loadCurrentUser).to.have.been.calledOnce;
       });
       it('shouldnt load event data', () => {

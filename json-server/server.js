@@ -2,6 +2,7 @@
 const jsonServer = require('json-server');
 const path = require('path');
 const uuidv1 = require('uuid/v1');
+const moment = require('moment');
 const users = require('./users');
 const usersProfile = require('./users-profile');
 const usersDojos = require('./users-dojos');
@@ -156,8 +157,11 @@ server.post('/api/2.0/dojos/users', (req, res) => {
 
 server.get('/api/3.0/dojos/:dojoId/events', (req, res) => {
   const dojoId = req.params.dojoId;
-  const _events = events.filter((e) => e.dojoId === dojoId);
-  res.send({ results: _events });
+  const { afterDate, beforeDate } = req.query.query;
+
+  const _events = events.filter(e => (e.dojoId === dojoId) &&
+    (afterDate && moment(e.dates[0].startTime).unix() > afterDate))
+  res.send({ results: _events, count: _events.length });
 });
 
 server.use('/api/2.0', router);

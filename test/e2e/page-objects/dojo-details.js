@@ -63,7 +63,7 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   detailsLabel: {
     get() {
-      return $$('.cd-dojo-details__heading')[1];
+      return $$('.cd-dojo-details__heading')[0];
     },
   },
   staticMap: {
@@ -88,7 +88,7 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   },
   sponsorHeading: {
     get() {
-      return $$('.cd-dojo-details__heading')[3];
+      return $$('.cd-dojo-details__heading')[2];
     },
   },
   sponsorImage: {
@@ -124,6 +124,11 @@ const DojoDetailsPage = Object.create(InfoColumn, {
   noEventsContent: {
     get() {
       return $$('.cd-event-list__no-events-content');
+    },
+  },
+  noEventsPastContent: {
+    get() {
+      return $$('.cd-event-list__no-events-content--had-events');
     },
   },
   joinButtonNoEvents: {

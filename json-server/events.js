@@ -707,5 +707,61 @@ module.exports = [
         ]
       }
     ]
-  }
+  },
+  {
+    entity$: '-/cd/events',
+    id: '63636e6d-da21-407f-9d73-f553ab8a1ab2',
+    name: 'Sri Lannnka',
+    country: {
+      countryName: 'Sri Lanka',
+      countryNumber: 92,
+      continent: 'ASIA',
+      alpha2: 'LK',
+      alpha3: 'LK'
+    },
+    city: {
+      nameWithHierarchy: 'Ganewalpola'
+    },
+    address: 'Ganewalpola',
+    createdAt: '2017-05-29T13:53:16.502Z',
+    createdBy: 'e73a4435-fcd2-4578-b081-bb9ae004f83b',
+    type: 'one-off',
+    description: '<p>LEARN ALL THE THINGS</p>\n',
+    dojoId: 'bkr5hk4a9-78gf-9b44-63h2-6gtgfbqy0lkx',
+    eventbriteId: 'k2ivy3lc-9ebc-p0bn-gcvd-bb9ae0048h33',
+    eventbriteUrl: 'www.eventbrite.com',
+    position: null,
+    public: true,
+    status: 'published',
+    recurringType: 'weekly',
+    dates: [
+      {
+        startTime: moment.utc({ hour: 16, minute: 30, second: 0}).subtract(3, 'd').toISOString(),
+        endTime: moment.utc({ hour: 17, minute: 30, second: 0}).subtract(3, 'd').toISOString()
+      }
+    ],
+    ticketApproval: true,
+    sessions: [
+      {
+        entity$: '-/cd/sessions',
+        id: 'dc666f88-b14e-44f5-b76a-08e8e62c0e25',
+        name: 'Hardware',
+        description: 'Advanced',
+        eventId: '63636e6d-da21-407f-9d73-f553ab8a1ab2',
+        status: 'active',
+        tickets: [
+          {
+            entity$: '-/cd/tickets',
+            id: 'a8b2a03a-c742-4388-b195-469397eb0er4',
+            sessionId: 'dc666f88-b14e-44f5-b76a-08e8e62c0e25',
+            name: 'Ninja',
+            type: 'ninja',
+            quantity: 2,
+            deleted: 0,
+            invites: null,
+          },
+        ],
+      },
+    ],
+  },
 ];

@@ -1,11 +1,11 @@
 <template>
-  <div class="cd-event-list-item" v-if="isVisible">
+  <div class="cd-event-list-item" v-if="isVisible" :class="{ 'cd-event-list-item--past': past }" >
     <div class="cd-event-list-item__details">
       <header class="cd-event-list-item__header">
         <h3 class="cd-event-list-item__name">
           {{ event.name }}
         </h3>
-        <h4 class="cd-event-list-item__sessions">
+        <h4 class="cd-event-list-item__sessions" v-if="!past">
           <strong>{{ $t('Sessions') }}:</strong> {{ getSessionListForEvent }}
         </h4>
       </header>
@@ -53,7 +53,7 @@
   export default {
     name: 'event-list-item',
     mixins: [EventTile],
-    props: ['event', 'dojo', 'usersDojos', 'user'],
+    props: ['event', 'dojo', 'usersDojos', 'user', 'past'],
     computed: {
       isMember() {
         return !!(this.usersDojos.length);
@@ -89,5 +89,8 @@
 
   .cd-event-list-item {
     .cd-event-tile;
+    &--past {
+      border-color: #bdc3c6; 
+    }
   }
 </style>
