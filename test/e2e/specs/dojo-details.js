@@ -178,6 +178,20 @@ describe('Dojo details page', () => {
     expect(EventDobVerificationPage.dateOfBirthError.getText()).to.equal('You will need your parent to carry out the registration.');
   });
 
+  it('should not allow to proceed in the flow if the dob is invalid', () => {
+    FindDojoPage.openDojoWithQuery('dublin');
+    DojoDetailsPage.name.waitForVisible();
+    DojoDetailsPage.firstEventViewButton.waitForVisible();
+    DojoDetailsPage.eventViewButtons[0].click();
+
+    EventDobVerificationPage.dateOfBirthDayInput.selectByValue('25');
+    // Missing Month & Year for example
+    EventDobVerificationPage.verify.click();
+    EventDobVerificationPage.dateOfBirthInvalidError.waitForVisible();
+    expect(EventDobVerificationPage.dateOfBirthInvalidError.getText()).to.equal('Date of birth is required');
+  });
+
+
   it('should hide book button on private dojos when not logged in', () => {
     FindDojoPage.openDojoWithQuery('dublin', 3);
     DojoDetailsPage.name.waitForVisible();
