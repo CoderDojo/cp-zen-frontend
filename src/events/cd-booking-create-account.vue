@@ -93,11 +93,12 @@
         recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
         recaptchaResponse: null,
         formValidated: false,
+        selectedEvent: {},
       };
     },
     computed: {
       user() {
-        return extend(omit(this.profile, ['dob']), {
+        return extend(omit(this.profile, ['dob', 'country']), {
           password: this.password,
           'g-recaptcha-response': this.recaptchaResponse,
           initUserType: {
@@ -117,14 +118,20 @@
           return false;
         }
       },
+      async prepareProfile() {
+        this.profile = StoreService.load(`booking-${this.eventId}-user`);
+        this.profile.country = this.dojo.country;
+        StoreService.save(`booking-${this.eventId}-user`, this.profile);
+        return Promise.resolve();
+      },
       async submitAccount() {
-        return this.register()
+        return this.prepareProfile()
+          .then(this.register)
           .then(this.addChildren)
           .then(this.joinDojo)
           .then(this.bookTickets);
       },
       async register() {
-        this.profile = StoreService.load(`booking-${this.eventId}-user`);
         const isAdult = UserUtils.getAge(new Date(this.profile.dob)) > 18;
         this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
         return UserService.register(this.user, UserUtils.profileToJSON(this.profile));
@@ -153,22 +160,20 @@
       joinDojo() {
         return UserService.getCurrentUser().then((response) => {
           const user = response.body.user;
-          const selectedEvent = StoreService.load('selected-event');
           // NOTE : u13 are not supposed to have an user account and hence cannot join
           const userType = UserUtils.isYouthOverThirteen(new Date(this.profile.dob)) ? 'attendee-o13' : 'parent-guardian';
-          return DojoService.joinDojo(user.id, selectedEvent.dojoId, [userType]);
+          return DojoService.joinDojo(user.id, this.selectedEvent.dojoId, [userType]);
         });
       },
       bookTickets() {
         return UserService.getCurrentUser().then((response) => {
           const loggedInUser = response.body.user;
-          const selectedEvent = StoreService.load('selected-event');
           const bookingSessions = StoreService.load(`booking-${this.eventId}-sessions`);
           const applications = [];
           forEachTicket(bookingSessions, (ticket) => {
             applications.push({
-              dojoId: selectedEvent.dojoId,
-              eventId: selectedEvent.id,
+              dojoId: this.selectedEvent.dojoId,
+              eventId: this.selectedEvent.id,
               sessionId: ticket.ticket.sessionId,
               ticketName: ticket.ticket.name,
               ticketType: ticket.ticket.type,
@@ -187,6 +192,10 @@
       onRecaptchaVerify(response) {
         this.recaptchaResponse = response;
       },
+    },
+    async created() {
+      this.selectedEvent = StoreService.load('selected-event');
+      this.dojo = (await DojoService.getDojoById(this.selectedEvent.dojoId)).data;
     },
   };
 </script>
