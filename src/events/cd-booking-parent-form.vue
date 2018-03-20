@@ -4,22 +4,36 @@
       {{ $t('Parent / Guardian') }}
     </div>
     <label class="cd-booking-parent-form__label" for="name">{{ $t('Name') }}</label>
-    <input type="text" class="form-control" name="firstName" :placeholder="$t('First Name')" id="name" data-vv-as="first name" v-validate.initial="'required'" v-model="parentUserData.firstName">
+    <input type="text" class="form-control" name="firstName" :placeholder="$t('First Name')" id="name" data-vv-as="first name" v-validate="'required'" v-model="parentUserData.firstName">
 
-    <input type="text" class="form-control" name="lastName" :placeholder="$t('Last Name')" id="lastName" data-vv-as="last name" v-validate.initial="'required'" v-model="parentUserData.lastName">
-    <p id="firstNameValidationError" class="text-danger" v-show="formValidated && errors.has('firstName')">{{ $t(errors.first('firstName')) }}</p>
-    <p id="lastNameValidationError" class="text-danger" v-show="formValidated && errors.has('lastName')">{{ $t(errors.first('lastName')) }}</p>
+    <input type="text" class="form-control" name="lastName" :placeholder="$t('Last Name')" id="lastName" data-vv-as="last name" v-validate="'required'" v-model="parentUserData.lastName">
+    <p class="cd-booking-parent-form__first-name-error text-danger" v-show="errors.has('firstName:required')">{{ $t('First name is required') }}</p>
+    <p class="cd-booking-parent-form__last-name-error text-danger" v-show="errors.has('lastName:required')">{{ $t('Last name is required') }}</p>
 
     <label class="cd-booking-parent-form__label cd-booking-parent-form__parent-dob-label">{{ $t('Date of Birth') }}</label>
-    <vue-dob-picker class="cd-booking-parent-form__parent-dob" v-model="parentUserDataDoB" select-class="form-control" select-placeholder-class="form-control cd-select-placeholder" month-format="short" show-labels="false" :placeholders="[$t('Date'), $t('Month'), $t('Year')]" :proportions="[7, 9, 9]"></vue-dob-picker>
+    <vue-dob-picker v-model="parentUserData.dob"
+                    v-validate="'required'"
+                    data-vv-name="parentDob"
+                    data-vv-value-path="value"
+                    data-vv-as="date of birth"
+                    class="cd-booking-parent-form__parent-dob"
+                    select-class="form-control"
+                    select-placeholder-class="form-control cd-select-placeholder"
+                    month-format="short"
+                    show-labels="false"
+                    :placeholders="[$t('Date'), $t('Month'), $t('Year')]"
+                    :proportions="[7, 9, 9]"></vue-dob-picker>
+    <p class="cd-booking-parent-form__dob-error text-danger" v-show="errors.has('parentDob:required')">{{ $t('Date of birth is required') }}</p>
 
     <label class="cd-booking-parent-form__label" for="phoneNumber">{{ $t('Phone Number') }}</label>
-    <input type="text" class="form-control" placeholder="Eg. 353 123 45678" name="phoneNumber" id="phoneNumber" data-vv-as="phone number" v-validate.initial="'required|numeric'" v-model="parentUserData.phone"><br/>
-    <p id="phoneNumberValidationError" class="text-danger" v-show="formValidated && errors.has('phoneNumber')">{{ $t(errors.first('phoneNumber')) }}</p>
+    <input type="text" class="form-control" placeholder="e.g. 35312345678" name="phoneNumber" id="phoneNumber" data-vv-as="phone number" v-validate="'required|numeric'" v-model="parentUserData.phone"><br/>
+    <p class="cd-booking-parent-form__phone-error text-danger" v-show="errors.has('phoneNumber:required')">{{ $t('Phone number is required') }}</p>
+    <p class="cd-booking-parent-form__phone-error text-danger" v-show="errors.has('phoneNumber:numeric')">{{ $t('Phone number is invalid') }}</p>
 
     <label class="cd-booking-parent-form__label" for="email">{{ $t('Email Address') }}</label>
-    <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate.initial="'required|email'" v-model="parentUserData.email">
-    <p id="emailValidationError" class="text-danger" v-show="formValidated && errors.has('email')">{{ $t(errors.first('email')) }}</p>
+    <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate="'required|email'" v-model="parentUserData.email">
+    <p class="cd-booking-parent-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</p>
+    <p class="cd-booking-parent-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</p>
 
     <div v-for="ticket in ninjaTickets">
       <div v-for="(selectedTicket, index) in ticket.selectedTickets">
@@ -27,18 +41,32 @@
         <label class="cd-booking-parent-form__label">
           {{ $t('Name') }}
         </label>
-        <input type="text" :placeholder="$t('First Name')" v-model="selectedTicket.user.firstName" class="cd-booking-parent-form__child-first-name form-control" />
-        <input type="text" :placeholder="$t('Last Name')" v-model="selectedTicket.user.lastName" class="cd-booking-parent-form__child-last-name form-control" />
-        <br/>
+        <input :name="`firstName-${selectedTicket.ticket.id}-${index}`" type="text" :placeholder="$t('First Name')" v-model="selectedTicket.user.firstName" class="cd-booking-parent-form__child-first-name form-control" data-vv-as="first name" v-validate="'required'" />
+        <input :name="`lastName-${selectedTicket.ticket.id}-${index}`" type="text" :placeholder="$t('Last Name')" v-model="selectedTicket.user.lastName" class="cd-booking-parent-form__child-last-name form-control" data-vv-as="last name" v-validate="'required'" />
+        <p class="cd-booking-parent-form__child-first-name-error text-danger" v-show="errors.has(`firstName-${selectedTicket.ticket.id}-${index}:required`)">
+          {{ $t('First name is required') }}
+        </p>
+        <p class="cd-booking-parent-form__child-last-name-error text-danger" v-show="errors.has(`lastName-${selectedTicket.ticket.id}-${index}:required`)">
+          {{ $t('Last name is required') }}
+        </p>
+
         <label class="cd-booking-parent-form__label">
           {{ $t('Date of Birth') }}
         </label>
         <div class="cd-booking-parent-form__child-dob-wrapper">
-          <vue-dob-picker v-model="selectedTicket.user.dob" select-class="form-control"
-                          id="dob" class="cd-booking-parent-form__child-dob"
-                          show-labels="false" month-format="short"
-                          :placeholders="['Date', 'Month', 'Year']"
+          <vue-dob-picker v-model="selectedTicket.user.dob"
+                          v-validate="'required'"
+                          :data-vv-name="`dob-${selectedTicket.ticket.id}-${index}`"
+                          data-vv-value-path="value"
+                          data-vv-as="date of birth"
+                          class="cd-booking-parent-form__child-dob"
+                          select-class="form-control"
+                          select-placeholder-class="form-control cd-select-placeholder"
+                          month-format="short"
+                          show-labels="false"
+                          :placeholders="[$t('Date'), $t('Month'), $t('Year')]"
                           :proportions="[7, 9, 9]"></vue-dob-picker>
+          <p class="cd-booking-parent-form__child-dob-error text-danger" v-show="errors.has(`dob-${selectedTicket.ticket.id}-${index}:required`)">{{ $t('Date of birth is required') }}</p>
         </div>
         <span v-if="isYouthOverThirteen">
           <label class="cd-booking-parent-form__label">
@@ -48,21 +76,31 @@
         </span>
         <label class="cd-booking-parent-form__label">{{ $t('Gender') }}</label>
         <div class="cd-booking-parent-form__child-gender">
-          <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Male" v-model="selectedTicket.user.gender" /><span> {{ $t('Male') }}</span></label>
+          <label class="cd-booking-parent-form__child-gender-option">
+            <input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Male" v-model="selectedTicket.user.gender" data-vv-as="gender" v-validate="'required'" />
+            <span> {{ $t('Male') }}</span>
+          </label>
           <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Female" v-model="selectedTicket.user.gender" /><span> {{ $t('Female') }}</span></label>
           <label class="cd-booking-parent-form__child-gender-option">
             <input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Other" v-model="selectedTicket.user.gender" />
             <span> {{ $t('Not Listed. Specify here:') }}</span>
           </label>
-          <input type="text" class="form-control cd-booking-parent-form__other" :placeholder="$t('Preferred Gender')" :name="'otherGender' + index"  v-model="selectedTicket.user.otherGender"  />
+          <div class="cd-booking-parent-form__other-gender">
+            <input :name="`otherChildGender${selectedTicket.ticket.id}${index}`" type="text" class="form-control" :placeholder="$t('Preferred Gender')" v-model="selectedTicket.user.otherGender" data-vv-as="gender" v-validate="selectedTicket.user.gender === 'Other' ? 'required' : ''" />
+            <p class="text-danger" v-show="errors.has(`otherChildGender${selectedTicket.ticket.id}${index}:required`)">
+              {{ $t('Preferred gender is required') }}
+            </p>
+          </div>
           <label class="cd-booking-parent-form__child-gender-option"><input type="radio" :name="'childGender' + selectedTicket.ticket.id + index" value="Undisclosed" v-model="selectedTicket.user.gender" /> <span>{{ $t('Prefer not to answer') }}</span></label>
         </div>
+        <p class="text-danger" v-show="errors.has(`childGender${selectedTicket.ticket.id}${index}`)">
+          {{ $t(errors.first(`childGender${selectedTicket.ticket.id}${index}`)) }}
+        </p>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import moment from 'moment';
   import VueDobPicker from 'vue-dob-picker';
   import StoreService from '@/store/store-service';
   import UsersUtil from '@/users/util';
@@ -90,10 +128,13 @@
         parentUserData: {},
         formValidated: false,
         childrenFormData: [],
+        applicantDob: null,
       };
     },
     computed: {
-      isYouthOverThirteen: () => UsersUtil.isYouthOverThirteen(new Date(StoreService.load('applicant-dob'))),
+      isYouthOverThirteen() {
+        return UsersUtil.isYouthOverThirteen(this.applicantDob);
+      },
       ninjaTickets() {
         return getTicketsByType(this.tickets, 'ninja');
       },
@@ -105,25 +146,21 @@
         }
         return null;
       },
-      parentUserDataDoB: {
-        get() {
-          const dob = new Date(this.parentUserData.dob);
-          if (dob.toString() !== 'Invalid Date') {
-            return moment(dob).add(dob.getTimezoneOffset(), 'm').toDate();
-          }
-          return null;
-        },
-        set(val) {
-          if (val) {
-            this.parentUserData.dob = moment(val).subtract(val.getTimezoneOffset(), 'm').toISOString();
-          }
-        },
+      primaryYouth() {
+        const firstTicket = this.bookedTickets[Object.keys(this.bookedTickets)[0]];
+        if (this.isYouthOverThirteen && firstTicket.selectedTickets.length > 0) {
+          return firstTicket.selectedTickets[0].user;
+        }
+        return null;
       },
     },
     methods: {
-      isValid() {
-        this.formValidated = true;
-        return !this.errors.any();
+      async validateForm() {
+        try {
+          return await this.$validator.validateAll();
+        } catch (e) {
+          return false;
+        }
       },
       submitBooking() {
         if (this.parentTicket && this.parentTicket.selectedTickets
@@ -132,6 +169,14 @@
         }
         StoreService.save(`booking-${this.eventId}-user`, this.parentUserData);
         StoreService.save(`booking-${this.eventId}-sessions`, this.bookedTickets);
+      },
+      prefillDateOfBirth() {
+        this.applicantDob = new Date(StoreService.load('applicant-dob'));
+        if (this.primaryYouth) {
+          this.primaryYouth.dob = this.applicantDob;
+        } else {
+          this.parentUserData.dob = this.applicantDob;
+        }
       },
     },
     created() {
@@ -142,6 +187,7 @@
           selectedTicket.user = { dob: null }; // eslint-disable-line no-param-reassign
         });
       });
+      this.prefillDateOfBirth();
     },
   };
 </script>
@@ -219,7 +265,7 @@
         width: 266px;
       }
     }
-    &__other {
+    &__other-gender {
       margin-bottom: 20px;
       margin-left: 20px;
       margin-top: -7px;

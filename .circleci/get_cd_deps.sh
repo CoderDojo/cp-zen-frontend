@@ -4,10 +4,7 @@ set -e
 GITHUB_AUTH_TOKEN="cb22643b3777b22c663f09e8621a2a985b720426" # public read-only
 
 echo "BUILD_BRANCH: ${BUILD_BRANCH}"
-if [[ $BUILD_BRANCH == "staging" ]]; then
-  echo "Building staging"
-  yarn add cp-translations@staging @coderdojo/cd-common@staging
-elif [[ "${BUILD_BRANCH}" =~ ^pull/[0-9]+$ ]]; then
+if [[ "${BUILD_BRANCH}" =~ ^pull/[0-9]+$ ]]; then
   echo "Building PR"
   PR_ID=$(echo "${BUILD_BRANCH}" | cut -d '/' -f 2)
   PR_JSON=$(curl "https://api.github.com/repos/coderdojo/cp-zen-frontend/pulls/${PR_ID}?access_token=${GITHUB_AUTH_TOKEN}")
@@ -21,15 +18,5 @@ elif [[ "${BUILD_BRANCH}" =~ ^pull/[0-9]+$ ]]; then
   if [[ "${CP_TRANSLATIONS_BRANCH_STATUS}" == "200" ]]; then
     echo "Installing cp-translations from ${GITHUB_USERNAME}:${PR_BRANCH_NAME}"
     yarn add "git://github.com/${GITHUB_USERNAME}/cp-translations.git#${PR_BRANCH_NAME}"
-  elif [[ "${PR_TARGET_BRANCH_NAME}" == 'staging' ]]; then
-    echo "Installing cp-translations@staging"
-    yarn add cp-translations@staging
-  fi
-
-  # cd-common
-  # TODO: Allow install from PR branch
-  if [[ "${PR_TARGET_BRANCH_NAME}" == "staging" ]]; then
-    echo "Installing @coderdojo/cd-common@staging"
-    yarn add @coderdojo/cd-common@staging
   fi
 fi

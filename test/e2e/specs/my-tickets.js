@@ -41,7 +41,7 @@ describe('My tickets page', () => {
   })
 
   it('should not be booked and allow booking', () => {
-    TicketPage.events[0].waitForVisible();
+    TicketPage.firstEvent.waitForVisible();
     expect(TicketPage.tickets.length).to.equal(2);
     // Index is 0 because it's the first time it appears, but it's the 2nd event
     expect(TicketPage.book(0).isVisible()).to.be.true;

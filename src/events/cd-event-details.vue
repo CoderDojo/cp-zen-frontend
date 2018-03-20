@@ -26,7 +26,14 @@
         </info-column-section>
         <info-column-section icon="map-marker" :header="$t('Location')">
           <div class="cd-event-details__left-column-section-value">
-            {{ getFullAddress() }}
+            {{ fullAddress }}
+          </div>
+        </info-column-section>
+        <info-column-section icon="list" :header="$t('Event details')">
+          <div class="cd-event-details__left-column-section-value">
+            <cd-expandable>
+              <div v-html="description"></div>
+            </cd-expandable>
           </div>
         </info-column-section>
       </info-column>
@@ -40,6 +47,8 @@
 <script>
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
+  import cdHTMLFilter from '@/common/filters/cd-html-filter';
+  import cdExpandable from '@/common/cd-expandable';
   import InfoColumn from '@/common/cd-info-column';
   import InfoColumnSection from '@/common/cd-info-column-section';
   import EventsUtil from '@/events/util';
@@ -60,6 +69,7 @@
     components: {
       InfoColumn,
       InfoColumnSection,
+      cdExpandable,
     },
     methods: {
       loadEvent() {
@@ -67,12 +77,17 @@
           this.eventDetails = response.body;
         });
       },
-      getFullAddress() {
-        return `${this.eventDetails.address}, ${this.eventDetails.city.nameWithHierarchy}, ${this.eventDetails.country.countryName}`;
-      },
       buildRecurringFrequencyInfo: EventsUtil.buildRecurringFrequencyInfo,
       getNextStartTime: EventsUtil.getNextStartTime,
       isRecurring: EventsUtil.isRecurring,
+    },
+    computed: {
+      fullAddress() {
+        return `${this.eventDetails.address}, ${this.eventDetails.city.nameWithHierarchy}, ${this.eventDetails.country.countryName}`;
+      },
+      description() {
+        return cdHTMLFilter(this.eventDetails.description);
+      },
     },
     created() {
       this.loadEvent();

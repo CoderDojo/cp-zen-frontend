@@ -21,6 +21,11 @@ const BookingConfirmation = Object.create(BasePage, {
       return $$('.cd-booking-confirmation__account-confirmation')[1];
     },
   },
+  approvalRequiredMessage: {
+    get() {
+      return $('.cd-booking-confirmation__account-confirmation-approval');
+    },
+  },
   hostedByMessage: {
     get() {
       return $('.cd-booking-confirmation__hosted-by-message');

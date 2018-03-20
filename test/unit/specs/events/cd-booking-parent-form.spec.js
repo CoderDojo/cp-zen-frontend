@@ -1,6 +1,5 @@
 import vueUnitHelper from 'vue-unit-helper';
 import BookingParentFormComponent from '!!vue-loader?inject!@/events/cd-booking-parent-form';
-import { ErrorBag } from 'vee-validate';
 
 describe('Booking Parent Form', () => {
   let sandbox;
@@ -10,7 +9,8 @@ describe('Booking Parent Form', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     MockStoreService = {
-      save: sandbox.spy(),
+      save: sandbox.stub(),
+      load: sandbox.stub(),
     };
     BookingParentFormComponentWithMocks = BookingParentFormComponent({
       '@/store/store-service': MockStoreService,
@@ -108,34 +108,66 @@ describe('Booking Parent Form', () => {
     });
   });
 
-  describe('form validation', () => {
-    it('should return a valid form', () => {
+  describe('validateForm()', () => {
+    it('should return true when form is valid', async () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingParentFormComponentWithMocks);
-      vm.errors = new ErrorBag();
-      vm.formValidated = false;
+      vm.$validator = {
+        validateAll: () => true,
+      };
 
       // ACT
-      const isValid = vm.isValid();
+      const isValid = await vm.validateForm();
 
       // ASSERT
       expect(isValid).to.equal(true);
-      expect(vm.formValidated).to.equal(true);
     });
-    it('should return a invalid form with errors', () => {
+
+    it('should return false when form is invalid', async () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingParentFormComponentWithMocks);
-      const bag = new ErrorBag();
-      bag.add('oooo');
-      vm.errors = bag;
-      vm.formValidated = false;
+      vm.recaptchaResponse = 'foo';
+      vm.$validator = {
+        validateAll: () => false,
+      };
 
       // ACT
-      const isValid = vm.isValid();
+      const isValid = await vm.validateForm();
 
       // ASSERT
       expect(isValid).to.equal(false);
-      expect(vm.formValidated).to.equal(true);
+    });
+
+    it('should return false when validateAll throws an error', async () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingParentFormComponentWithMocks);
+      vm.recaptchaResponse = 'foo';
+      vm.$validator = {
+        validateAll: () => {
+          throw new Error('Invalid form');
+        },
+      };
+
+      // ACT
+      const isValid = await vm.validateForm();
+
+      // ASSERT
+      expect(isValid).to.equal(false);
+    });
+  });
+
+  describe('prefillDateOfBirth()', () => {
+    it('should set applicantDob and parentUserData.dob from the store', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(BookingParentFormComponentWithMocks);
+      MockStoreService.load.withArgs('applicant-dob').returns('1980-04-22T00:00:00.000Z');
+
+      // ACT
+      vm.prefillDateOfBirth();
+
+      // ASSERT
+      expect(vm.applicantDob.toString()).to.equal(new Date('1980-04-22T00:00:00.000Z').toString());
+      expect(vm.parentUserData.dob.toString()).to.equal(new Date('1980-04-22T00:00:00.000Z').toString());
     });
   });
 
@@ -285,32 +317,6 @@ describe('Booking Parent Form', () => {
     });
   });
 
-  describe('computed.parentGuardianDateOfBirth', () => {
-    it('should return a date object for the ISO String stored in parentUserData', () => {
-      // ARRANGE
-      const vm = vueUnitHelper(BookingParentFormComponent());
-      vm.parentUserData = {
-        dob: '1980-08-27T00:00:00.000Z',
-      };
-
-      // ASSERT
-      expect(vm.parentUserDataDoB.toString())
-        .to.equal(new Date(1980, 7, 27, 0, 0, 0, 0).toString());
-    });
-
-    it('should transform date into ISO String and store it in parentUserData', () => {
-      // ARRANGE
-      const vm = vueUnitHelper(BookingParentFormComponent());
-      vm.parentUserData = {};
-
-      // ACT
-      vm.parentUserDataDoB = new Date(1980, 7, 27, 0, 0, 0, 0);
-
-      // ASSERT
-      expect(vm.parentUserData.dob).to.equal('1980-08-27T00:00:00.000Z');
-    });
-  });
-
   describe('created()', () => {
     it('should assign bookedTickets, and generate user objects for each ticket', () => {
       // ARRANGE
@@ -336,6 +342,7 @@ describe('Booking Parent Form', () => {
           ],
         },
       };
+      sandbox.stub(vm, 'prefillDateOfBirth');
 
       // ACT
       vm.$lifecycleMethods.created();
@@ -371,6 +378,7 @@ describe('Booking Parent Form', () => {
           ],
         },
       });
+      expect(vm.prefillDateOfBirth).to.have.been.calledOnce;
     });
   });
 });

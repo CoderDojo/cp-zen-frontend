@@ -1,6 +1,5 @@
 import vueUnitHelper from 'vue-unit-helper';
 import { clone } from 'lodash';
-import { ErrorBag } from 'vee-validate';
 import BookingCreateAccountComponent from '!!vue-loader?inject!@/events/cd-booking-create-account';
 
 describe('Booking Create Account Form', () => {
@@ -31,7 +30,9 @@ describe('Booking Create Account Form', () => {
     };
     MockUserUtils = {
       isYouthOverThirteen: sandbox.stub(),
+      isUnderAge: sandbox.stub(),
       getAge: sandbox.stub(),
+      profileToJSON: sandbox.stub(),
     };
 
     BookingCreateAccountComponentWithMocks = BookingCreateAccountComponent({
@@ -85,7 +86,7 @@ describe('Booking Create Account Form', () => {
     expect(vm.profile).to.deep.equal(profile);
   });
 
-  it('should register the user and notify GA that an adult registered', (done) => {
+  it('should register the user and notify GA that an adult registered', async () => {
     // ARRANGE
     const storedUserData = {
       firstName: 'Foo',
@@ -94,28 +95,30 @@ describe('Booking Create Account Form', () => {
       email: 'foo.bar@baz.com',
     };
     MockStoreService.load.returns(storedUserData);
+    MockUserUtils.profileToJSON.callsFake(profile => profile);
 
     const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
     vm.eventId = 1;
     vm.$ga = { event: sinon.stub() };
     vm.$route = { name: 'a' };
     vm.profile = { dob: '' };
+    vm.user = {
+      id: 'foo',
+    };
     MockUsersService.register.returns(Promise.resolve());
     MockUserUtils.getAge.returns('42');
+    MockUserUtils.profileToJSON.callsFake(profile => profile);
 
     // ACT
-    vm.register();
+    await vm.register();
 
     // ASSERT
-    requestAnimationFrame(() => {
-      expect(vm.profile).to.equal(storedUserData);
-      expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_adult');
-      expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
-      done();
-    });
+    expect(vm.profile).to.equal(storedUserData);
+    expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_adult');
+    expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
   });
 
-  it('should register the user and notify GA that a kid registered', (done) => {
+  it('should register the user and notify GA that a kid registered', async () => {
     // ARRANGE
     const storedUserData = {
       firstName: 'Foo',
@@ -130,19 +133,20 @@ describe('Booking Create Account Form', () => {
     vm.$ga = { event: sinon.stub() };
     vm.$route = { name: 'a' };
     vm.profile = { dob: '' };
+    vm.user = {
+      id: 'foo',
+    };
     MockUsersService.register.returns(Promise.resolve());
     MockUserUtils.getAge.returns('17');
+    MockUserUtils.profileToJSON.callsFake(profile => profile);
 
     // ACT
     vm.register();
 
     // ASSERT
-    requestAnimationFrame(() => {
-      expect(vm.profile).to.equal(storedUserData);
-      expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_kid');
-      expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
-      done();
-    });
+    expect(vm.profile).to.equal(storedUserData);
+    expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_kid');
+    expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
   });
 
   describe('submitAccount()', () => {
@@ -171,66 +175,67 @@ describe('Booking Create Account Form', () => {
     });
   });
 
-  describe('form validation', () => {
-    it('should return a valid form', () => {
+  describe('validateForm()', () => {
+    it('should return true when form is valid and recaptchaResponse exists', async () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.recaptchaResponse = 'foo';
-      vm.errors = new ErrorBag();
-      vm.formValidated = false;
+      vm.$validator = {
+        validateAll: () => true,
+      };
 
       // ACT
-      const isValid = vm.isValid();
+      const isValid = await vm.validateForm();
 
       // ASSERT
       expect(isValid).to.equal(true);
-      expect(vm.formValidated).to.equal(true);
     });
-    it('should return a invalid form without recaptcha and empty error', () => {
+
+    it('should return false when form is valid and recaptchaResponse does not exist', async () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.recaptchaResponse = null;
-      vm.errors = new ErrorBag();
-      vm.formValidated = false;
+      vm.recaptchaResponse = undefined;
+      vm.$validator = {
+        validateAll: () => true,
+      };
 
       // ACT
-      const isValid = vm.isValid();
+      const isValid = await vm.validateForm();
 
       // ASSERT
       expect(isValid).to.equal(false);
-      expect(vm.formValidated).to.equal(true);
     });
-    it('should return a invalid form without recaptcha and with errors', () => {
+
+    it('should return false when form is invalid and recaptchaResponse exists', async () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.recaptchaResponse = null;
-      const bag = new ErrorBag();
-      bag.add('oooo');
-      vm.errors = bag;
-      vm.formValidated = false;
+      vm.recaptchaResponse = 'foo';
+      vm.$validator = {
+        validateAll: () => false,
+      };
 
       // ACT
-      const isValid = vm.isValid();
+      const isValid = await vm.validateForm();
 
       // ASSERT
       expect(isValid).to.equal(false);
-      expect(vm.formValidated).to.equal(true);
     });
-    it('should return a invalid form with recaptcha and with errors', () => {
+
+    it('should return false when validateAll throws an error', async () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.recaptchaResponse = 'some recaptcha';
-      const bag = new ErrorBag();
-      bag.add('oooo');
-      vm.errors = bag;
-      vm.formValidated = false;
+      vm.recaptchaResponse = 'foo';
+      vm.$validator = {
+        validateAll: () => {
+          throw new Error('Invalid form');
+        },
+      };
 
       // ACT
-      const isValid = vm.isValid();
+      const isValid = await vm.validateForm();
 
       // ASSERT
       expect(isValid).to.equal(false);
-      expect(vm.formValidated).to.equal(true);
     });
   });
 
@@ -246,7 +251,7 @@ describe('Booking Create Account Form', () => {
   });
 
   describe('addChildren', () => {
-    it('should create a profile for each child', (done) => {
+    it('should create a profile for each child', async () => {
       // ARRANGE
       const mockBookingData = {
         foo: {
@@ -304,6 +309,7 @@ describe('Booking Create Account Form', () => {
       vm.eventId = 1;
       MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns(mockBookingData);
       let childIdCounter = 1;
+      MockUserUtils.profileToJSON.callsFake(child => child);
       MockUsersService.addChild.callsFake((child) => {
         const childClone = clone(child);
         childClone.id = childIdCounter;
@@ -311,41 +317,43 @@ describe('Booking Create Account Form', () => {
         childIdCounter += 1;
         return Promise.resolve({ body: childClone });
       });
+      MockUserUtils.isUnderAge.withArgs('2002-02-01T00:00:00.000Z').returns(false);
+      MockUserUtils.isUnderAge.withArgs('2010-03-02T00:00:00.000Z').returns(true);
+      MockUserUtils.isUnderAge.withArgs('2008-04-03T00:00:00.000Z').returns(true);
 
       // ACT
-      vm.addChildren().then(() => {
-        // ASSERT
-        expect(MockUsersService.addChild).to.have.callCount(3);
-        expect(MockUsersService.addChild.getCall(0).args[0]).to.deep.equal({
-          firstName: 'Fee',
-          lastName: 'Bar',
-          dob: '2002-02-01T00:00:00.000Z',
-          gender: 'Female',
-          otherGender: '',
-        });
-        expect(MockUsersService.addChild.getCall(1).args[0]).to.deep.equal({
-          firstName: 'Fie',
-          lastName: 'Bar',
-          dob: '2010-03-02T00:00:00.000Z',
-          gender: 'Male',
-          otherGender: '',
-        });
-        expect(MockUsersService.addChild.getCall(2).args[0]).to.deep.equal({
-          firstName: 'Foe',
-          lastName: 'Bar',
-          dob: '2008-04-03T00:00:00.000Z',
-          gender: 'Other',
-          otherGender: 'Fluid',
-        });
-        expect(mockBookingData.foo.selectedTickets[0].user.id).to.equal(1);
-        expect(mockBookingData.foo.selectedTickets[1].user.id).to.equal(2);
-        expect(mockBookingData.abc.selectedTickets[0].user.id).to.equal(3);
-        expect(mockBookingData.foo.selectedTickets[0].user.userId).to.equal(1001);
-        expect(mockBookingData.foo.selectedTickets[1].user.userId).to.equal(1002);
-        expect(mockBookingData.abc.selectedTickets[0].user.userId).to.equal(1003);
-        expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, mockBookingData);
-        done();
+      await vm.addChildren();
+      // ASSERT
+      expect(MockUserUtils.profileToJSON).to.have.callCount(3);
+      expect(MockUsersService.addChild).to.have.callCount(3);
+      expect(MockUsersService.addChild.getCall(0).args[0]).to.deep.equal({
+        firstName: 'Fee',
+        lastName: 'Bar',
+        dob: '2002-02-01T00:00:00.000Z',
+        gender: 'Female',
+        userTypes: ['attendee-o13'],
       });
+      expect(MockUsersService.addChild.getCall(1).args[0]).to.deep.equal({
+        firstName: 'Fie',
+        lastName: 'Bar',
+        dob: '2010-03-02T00:00:00.000Z',
+        gender: 'Male',
+        userTypes: ['attendee-u13'],
+      });
+      expect(MockUsersService.addChild.getCall(2).args[0]).to.deep.equal({
+        firstName: 'Foe',
+        lastName: 'Bar',
+        dob: '2008-04-03T00:00:00.000Z',
+        gender: 'Fluid',
+        userTypes: ['attendee-u13'],
+      });
+      expect(mockBookingData.foo.selectedTickets[0].user.id).to.equal(1);
+      expect(mockBookingData.foo.selectedTickets[1].user.id).to.equal(2);
+      expect(mockBookingData.abc.selectedTickets[0].user.id).to.equal(3);
+      expect(mockBookingData.foo.selectedTickets[0].user.userId).to.equal(1001);
+      expect(mockBookingData.foo.selectedTickets[1].user.userId).to.equal(1002);
+      expect(mockBookingData.abc.selectedTickets[0].user.userId).to.equal(1003);
+      expect(MockStoreService.save).to.have.been.calledWith(`booking-${vm.eventId}-sessions`, mockBookingData);
     });
   });
 

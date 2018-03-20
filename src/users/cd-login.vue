@@ -20,11 +20,9 @@
       };
     },
     methods: {
-      login() {
-        UserService.login(this.email, this.password)
-          .then(() => {
-            this.$router.push('/');
-          });
+      async login() {
+        await UserService.login(this.email, this.password);
+        this.$router.push('/');
       },
     },
   };
