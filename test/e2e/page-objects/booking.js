@@ -178,6 +178,11 @@ const BookingParentData = Object.create(EventDetails, {
       return $$(`.cd-booking-parent-form__child-gender input[value=${gender}]`);
     },
   },
+  sessionTicketNotes: {
+    get() {
+      return $$(`.cd-booking-parent-form__child-notes textarea]`);
+    },
+  },
   sessionOtherGender: {
     get() {
       return $$('.cd-booking-parent-form__other-gender input');

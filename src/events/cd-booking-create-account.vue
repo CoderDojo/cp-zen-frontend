@@ -174,7 +174,7 @@
               ticketType: ticket.ticket.type,
               ticketId: ticket.ticket.id,
               userId: (ticket.user && ticket.user.userId) || loggedInUser.id,
-              notes: 'N/A',
+              notes: ticket.ticket.notes,
             });
           });
           this.$ga.event(this.$route.name, 'click', 'book_tickets', applications.length);

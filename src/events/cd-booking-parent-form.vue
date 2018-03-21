@@ -96,12 +96,19 @@
         <p class="text-danger" v-show="errors.has(`childGender${selectedTicket.ticket.id}${index}`)">
           {{ $t(errors.first(`childGender${selectedTicket.ticket.id}${index}`)) }}
         </p>
+        <label class="cd-booking-parent-form__label" :for="`notes-${selectedTicket.ticket.id}-${index}`">
+          {{ $t('Additional requests/information') }}
+        </label>
+        <div class="cd-booking-parent-form__child-notes">
+          <textarea :name="`notes-${selectedTicket.ticket.id}-${index}`" v-model="selectedTicket.ticket.notes" rows="4" class="form-control"></textarea>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
   import VueDobPicker from 'vue-dob-picker';
+  import i18n from '@/i18n';
   import StoreService from '@/store/store-service';
   import UsersUtil from '@/users/util';
 
@@ -185,6 +192,7 @@
         const ticketData = this.bookedTickets[ticketId];
         ticketData.selectedTickets.forEach((selectedTicket) => {
           selectedTicket.user = { dob: null }; // eslint-disable-line no-param-reassign
+          selectedTicket.ticket.notes = i18n.t('N/A'); // eslint-disable-line no-param-reassign
         });
       });
       this.prefillDateOfBirth();
@@ -271,23 +279,27 @@
       margin-top: -7px;
     }
   }
-  .form-control[type=text], .form-control[type=email] {
-    width: 230px;
+  .input() {
     display: inline-block;
     font-family: Lato, Arial, Helvetica, sans-serif;
     font-size: 14px;
     text-align: left;
     font-weight: 300;
-    height: 36px;
     color: black;
   }
+  .form-control[type=text], .form-control[type=email] {
+    .input;
+    width: 230px;
+    height: 36px;
+  }
+  textarea.form-control {
+    .input;
+    width: 230px;
+  }
+
   .form-control[name="firstName"], .form-control[name="lastName"]{
+    .input;
     width: 170px;
-    display: inline-block;
-    font-family: Lato, Arial, Helvetica, sans-serif;
-    font-size: 14px;
-    text-align: left;
-    font-weight: 300;
   }
   .form-control[type=radio] {
     box-shadow: none;

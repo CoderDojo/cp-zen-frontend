@@ -83,12 +83,14 @@ describe('Book event page', () => {
     Booking.email.setValue('john.doe@example.com');
 
     expect(Booking.attendeeTypeHeader[1].getText()).to.equal('Laptop required (Arduino)');
+    expect(Booking.sessionTicketNotes[0]).to.equal('N/A');
     Booking.sessionTicketFirstName[0].setValue('Child');
     Booking.sessionTicketLastName[0].setValue('One');
     Booking.sessionTicketDayOfBirth(0).selectByValue('1');
     Booking.sessionTicketMonthOfBirth(0).selectByValue('0');
     Booking.sessionTicketYearOfBirth(0).selectByValue('2008');
     Booking.sessionTicketGender('Male')[0].click();
+    Booking.sessionTicketNotes[0].setValue('Bananas');
 
     expect(Booking.attendeeTypeHeader[2].getText()).to.equal('Laptop required (Arduino)');
     Booking.sessionTicketFirstName[1].setValue('Child');
