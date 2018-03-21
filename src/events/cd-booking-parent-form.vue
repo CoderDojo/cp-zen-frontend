@@ -26,9 +26,9 @@
     <p class="cd-booking-parent-form__dob-error text-danger" v-show="errors.has('parentDob:required')">{{ $t('Date of birth is required') }}</p>
 
     <label class="cd-booking-parent-form__label" for="phoneNumber">{{ $t('Phone Number') }}</label>
-    <input type="text" class="form-control" placeholder="e.g. 35312345678" name="phoneNumber" id="phoneNumber" data-vv-as="phone number" v-validate="'required|numeric'" v-model="parentUserData.phone"><br/>
+    <input type="text" class="form-control" :placeholder="$t('e.g. +35312345678')" name="phoneNumber" id="phoneNumber" data-vv-as="phone number" v-validate="{ required: true, regex: /^(\+)?[0-9\ \.\-]+$/ }" v-model="parentUserData.phone"><br/>
     <p class="cd-booking-parent-form__phone-error text-danger" v-show="errors.has('phoneNumber:required')">{{ $t('Phone number is required') }}</p>
-    <p class="cd-booking-parent-form__phone-error text-danger" v-show="errors.has('phoneNumber:numeric')">{{ $t('Phone number is invalid') }}</p>
+    <p class="cd-booking-parent-form__phone-error text-danger" v-show="errors.has('phoneNumber:regex')">{{ $t('Phone number is invalid') }}</p>
 
     <label class="cd-booking-parent-form__label" for="email">{{ $t('Email Address') }}</label>
     <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate="'required|email'" v-model="parentUserData.email">
