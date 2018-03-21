@@ -448,6 +448,7 @@ describe('Booking Create Account Form', () => {
                 name: 'Foo',
                 sessionId: 'bar',
                 type: 'ninja',
+                notes: 'N/A',
               },
               user: {
                 userId: 1,
@@ -459,6 +460,7 @@ describe('Booking Create Account Form', () => {
                 name: 'Foo',
                 sessionId: 'bar',
                 type: 'ninja',
+                notes: 'Loves bananas',
               },
               user: {
                 userId: 2,
@@ -475,6 +477,7 @@ describe('Booking Create Account Form', () => {
                 name: 'ABC',
                 sessionId: 'xyz',
                 type: 'parent-guardian',
+                notes: 'N/A',
               },
             },
           ],
@@ -512,7 +515,7 @@ describe('Booking Create Account Form', () => {
             ticketType: 'ninja',
             ticketId: 'foo',
             userId: 2,
-            notes: 'N/A',
+            notes: 'Loves bananas',
           },
           {
             dojoId: mockSelectedEvent.dojoId,

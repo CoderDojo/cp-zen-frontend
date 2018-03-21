@@ -355,12 +355,14 @@ describe('Booking Parent Form', () => {
             {
               ticket: {
                 id: 'foo',
+                notes: 'N/A',
               },
               user: { dob: null },
             },
             {
               ticket: {
                 id: 'foo',
+                notes: 'N/A',
               },
               user: { dob: null },
             },
@@ -372,6 +374,7 @@ describe('Booking Parent Form', () => {
             {
               ticket: {
                 id: 'bar',
+                notes: 'N/A',
               },
               user: { dob: null },
             },
