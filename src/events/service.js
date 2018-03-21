@@ -34,6 +34,14 @@ const EventsService = {
     get(dojoId, options) {
       return Vue.http.get(`${Vue.config.apiServer}/api/3.0/dojos/${dojoId}/events`, options);
     },
+    load(dojoId, eventId, options) {
+      return Vue.http.get(`${Vue.config.apiServer}/api/3.0/dojos/${dojoId}/events/${eventId}`, options);
+    },
+    applications: {
+      list(dojoId, eventId, options) {
+        return Vue.http.get(`${Vue.config.apiServer}/api/3.0/dojos/${dojoId}/events/${eventId}/applications`, options);
+      }
+    }
   },
 };
 

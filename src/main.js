@@ -8,6 +8,7 @@ import VueAnalytics from 'vue-analytics';
 import PasswordValidator from '@/common/directives/cd-password-validator';
 import titleDirective from '@/common/directives/title';
 import gaTrackClickDirective from '@/common/directives/cd-ga-track-click';
+import VueTable from 'vue-tables-2';
 import 'font-awesome/css/font-awesome.min.css';
 import 'vue-dob-picker/dist/static/vue-dob-picker.css';
 import App from './App';
@@ -30,6 +31,7 @@ Vue.use(VueAnalytics, {
   id: process.env.GOOGLE_ANALYTICS_PROPERTY_ID,
   router,
 });
+Vue.use(VueTable.ClientTable);
 Vue.directive('title', titleDirective);
 Vue.directive('ga-track-click', gaTrackClickDirective);
 

@@ -6,6 +6,7 @@ import UserTickets from '@/users/cd-tickets';
 import EventDetails from '@/events/cd-event-details';
 import EventDobVerification from '@/events/cd-event-dob-verification';
 import EventSessions from '@/events/cd-event-sessions';
+import EventApplicants from '@/events/cd-event-applications';
 import Booking from '@/events/cd-booking';
 import BookingConfirmation from '@/events/cd-booking-confirmation';
 import Login from '@/users/cd-login';
@@ -51,6 +52,11 @@ export default new Router({
       path: '/dashboard/tickets',
       name: 'MyTickets',
       component: UserTickets,
+    },
+    {
+      path: '/dashboard/dojos/:dojoId/events/:eventId/applications',
+      name: 'Event applicants',
+      component: EventApplicants,
     },
     {
       path: '/v2',
