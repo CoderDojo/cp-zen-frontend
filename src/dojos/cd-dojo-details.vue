@@ -153,11 +153,9 @@
         },
       },
       imageUrl() {
-        return `https://s3-eu-west-1.amazonaws.com/zen-dojo-images/${this.dojoDetails.id}`;
+        return DojoUtil.imageUrl(this.dojoDetails.id);
       },
-      loadImage() {
-        return require('../assets/avatars/dojo-default-logo.png');
-      },
+      loadImage: DojoUtil.fallbackImage,
       googleMapsLink() {
         return `https://www.google.com/maps/search/?api=1&query=${this.dojoDetails.geoPoint.lat},${this.dojoDetails.geoPoint.lon}`;
       },

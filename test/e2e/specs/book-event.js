@@ -13,6 +13,9 @@ function checkHeaderContent(page) {
 
 function checkEventDetails(page) {
   page.sectionIcons[0].waitForVisible();
+  expect(page.dojoName.getText()).to.equal('CD ROM');
+  expect(page.dojoIcon.getAttribute('src')).to.have.string('dojo-default-logo.png');
+  expect(page.sectionHeaders[0].getText()).to.equal('TIME');
   expect(page.sectionHeaders[0].getText()).to.equal('TIME');
   expect(page.sectionContents[0].getText()).to.have.string(`September 6, ${currentYear + 1}`);
   expect(page.sectionContents[0].getText()).to.have.string('4:30pm - 6pm');

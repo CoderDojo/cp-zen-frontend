@@ -1,14 +1,21 @@
 <template>
   <div v-if="eventDetails" class="cd-event-details">
     <div class="row cd-event-details__header">
-      <div class="col-md-12">
-        <p class="cd-event-details__book-event-title">{{ $t('Book Event') }}</p>
-        <p class="cd-event-details__event-title">{{ eventDetails.name }}</p>
-      </div>
+      <p class="cd-event-details__book-event-title">{{ $t('Book Event') }}</p>
+      <p class="cd-event-details__event-title">{{ eventDetails.name }}</p>
     </div>
     <div class="cd-event-details__container">
       <info-column class="cd-event-details__left-column">
-        <info-column-section icon="clock-o" :header="$t('Time')">
+        <info-column-section class="cd-event-details__left-column--dojo">
+          <div class="cd-event-details__left-column-section-value-dojo">
+            {{ $t('Event hosted by') }}
+            <div v-if="dojo && dojo.id">
+              <img v-img-fallback="{src: dojoImage, fallback: dojoFallbackImage}" class="img-circle cd-event-details__left-column-section-value-dojo-image"/>
+              <router-link :to="getDojoUrl(dojo)">{{ dojo.name }}</router-link>
+            </div>
+          </div>
+        </info-column-section>
+        <info-column-section icon="clock-o" :header="$t('Time')" class="cd-event-details__left-column--time" >
           <div v-if="!isRecurring(eventDetails)" class="cd-event-details__left-column-section-value">
             {{ eventDetails.dates[0].startTime |  cdDateFormatter }}
           </div>
@@ -51,7 +58,10 @@
   import cdExpandable from '@/common/cd-expandable';
   import InfoColumn from '@/common/cd-info-column';
   import InfoColumnSection from '@/common/cd-info-column-section';
+  import ImgFallback from '@/common/directives/cd-img-fallback';
   import EventsUtil from '@/events/util';
+  import DojoService from '@/dojos/service';
+  import DojoUtils from '@/dojos/util';
   import service from './service';
 
   export default {
@@ -60,11 +70,15 @@
     data() {
       return {
         eventDetails: null,
+        dojo: null,
       };
     },
     filters: {
       cdDateFormatter,
       cdTimeFormatter,
+    },
+    directives: {
+      ImgFallback,
     },
     components: {
       InfoColumn,
@@ -73,13 +87,15 @@
     },
     methods: {
       loadEvent() {
-        service.loadEvent(this.eventId).then((response) => {
-          this.eventDetails = response.body;
-        });
+        return service.loadEvent(this.eventId);
+      },
+      loadDojo() {
+        return DojoService.getDojoById(this.eventDetails.dojoId);
       },
       buildRecurringFrequencyInfo: EventsUtil.buildRecurringFrequencyInfo,
       getNextStartTime: EventsUtil.getNextStartTime,
       isRecurring: EventsUtil.isRecurring,
+      getDojoUrl: DojoUtils.getDojoUrl,
     },
     computed: {
       fullAddress() {
@@ -88,9 +104,16 @@
       description() {
         return cdHTMLFilter(this.eventDetails.description);
       },
+      dojoImage() {
+        return DojoUtils.imageUrl(this.eventDetails.dojoId);
+      },
+      dojoFallbackImage: {
+        get: DojoUtils.fallbackImage,
+      },
     },
-    created() {
-      this.loadEvent();
+    async created() {
+      this.eventDetails = (await this.loadEvent()).body;
+      this.dojo = (await this.loadDojo()).body;
     },
   };
 </script>
@@ -106,11 +129,13 @@
       min-height: 108px;
       display: flex;
       align-items: center;
+      flex-direction: column;
     }
     &__book-event-title {
       font-size: 30px;
       line-height: 30px;
       margin: 16px 0 8px 0;
+      font-weight: bold;
     }
     &__event-title {
       font-size: 18px;
@@ -127,6 +152,12 @@
       flex: 4;
       max-width: 340px;
 
+      &--dojo {
+        margin: 24px 0;
+      }
+      &--time {
+        margin: 24px 0 48px 0;
+      }
       &-section {
         &-value {
           &-frequency {
@@ -134,6 +165,14 @@
           }
           &-next-session {
             font-weight: bold;
+          }
+          &-dojo {
+            padding-bottom: 24px;
+            border-bottom: 1px solid @cd-grey;
+            &-image {
+              width: 24px;
+              height: 24px;
+            }
           }
         }
       }
