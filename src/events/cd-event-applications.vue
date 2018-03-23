@@ -11,15 +11,17 @@
     <div id="people">
       <v-client-table :data="tableData" :columns="tableColumns" :options="tableOptions" @sorted="removeGroupBy" @filter::sessionName="updateSelectableTickets">
         <template slot="afterBody" scope="props">
-          <tr>
-            <td>
-              <p>aaaaaaaaaaaaaa</p>
-              <i class="fa fa-file-o"> </i>
-            </td>
-          </tr>
+          <!-- TODO : export -->
+        </template>
+        <!-- TODO : mailTo -->
+        <template slot="__group_meta" scope="{value, data}">
+          <span class="cd-event-applications__grouping-header">({{ data.booked }}/{{ data.qty }})</span>
         </template>
         <template slot="status" scope="props">
           <input type="checkbox" v-model="props.row.isApproved"/> <!--@change="toggleApproval"> </input> -->
+        </template>
+        <template slot="avatar" scope="props">
+          <img src="https://placebear.com/30/30"/>
         </template>
         <!--<div slot="filter__sessionName">
           <input type="checkbox" class="form-control" v-model="tableOptions.groupBy" @change="toggleGrouping()">
@@ -63,6 +65,7 @@
             is: 'fa-sort',
           },
           groupBy: this.groupBy,
+          groupMeta: this.groupMeta,
           perPage: 999,
           perPageValues: [],
           headings: {
@@ -105,6 +108,15 @@
         }
         return [];
       },
+      groupMeta() {
+        return this.event && this.event.sessions ? this.event.sessions.map((s) => ({
+          value: s.name,
+          data: {
+            qty: s.tickets.reduce((qty, t) => qty + t.quantity, 0),
+            booked: (this.applications.results.filter((a) => a.sessionId === s.id)).length, 
+          },
+        })) : [];
+      },
       tickets() {
         if (this.event && this.event.sessions) {
           if (this.filteredOnSession) {
@@ -120,7 +132,8 @@
         return this.event.sessions.reduce(reducer, {});
       },
       tableColumns() {
-        let columns = ['name', 'parent', 'ticketName','ticketType', 'status', 'created', ]
+        let columns = ['avatar', 'name', 'parent', 'ticketName','ticketType', 'status', 'created', ]
+        // TODO : do we need age, really ?
         //let columns = ['name', 'parent', 'ticketName','ticketType', 'status', 'age', 'created', ]
         if (this.hasCustomNotes) columns.splice(columns.length - 1, 0, 'notes');
         if (this.event && this.event.sessions && this.event.sessions.length > 1) columns.splice(3, 0, 'sessionName');
@@ -211,5 +224,12 @@
         text-align: right;
       }
     }
+    &__grouping-header {
+      float: right;
+    }
   }
+    tr {
+      font-weight: bold;
+      text-align: center;
+    }
 </style>
