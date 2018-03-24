@@ -1,33 +1,22 @@
 <template>
-  <div class="cd-event-dob-verification">
-    <form @submit.prevent="next">
-      <h2 v-if="isDobUnderage" class="cd-event-dob-verification__dob-error">{{ $t('You will need your parent to carry out the registration.') }}</h2>
-      <label class="cd-event-dob-verification__verify-age-message">{{ $t('Please verify your age') }}</label>
-      <label class="cd-event-dob-verification__dob-input-label" for="dob">{{ $t('Enter your Date of Birth') }}</label>
-      <div class="cd-event-dob-verification__dob-picker-wrapper">
-        <vue-dob-picker v-model="date" select-class="form-control" id="dob" class="cd-event-dob-verification__dob"
-                        show-labels="false" month-format="short"
-                        :placeholders="[$t('Date'), $t('Month'), $t('Year')]"
-                        :proportions="[2, 2, 3]"></vue-dob-picker>
-      </div>
-      <button @click="$router.back()" class="cd-event-dob-verification__cancel btn btn-primary">{{ $t('Cancel') }}</button>
-      <input type="submit" class="cd-event-dob-verification__verify btn btn-primary" :value="$t('Verify')">
-    </form>
+  <div class="cd-login-or-register">
+    <createAccount :eventId="eventId" ref="bookingCreateAccountRef"></createAccount>
+
+    <redirectToLogin></redirectToLogin>
   </div>
 </template>
 <script>
-  import VueDobPicker from 'vue-dob-picker';
   import StoreService from '@/store/store-service';
   import UsersUtil from '@/users/util';
-  import EventService from './service';
-  import EventSessions from './cd-event-sessions';
+  import EventService from '@/events/service';
+  import CreateAccount from '@/users/cd-create-account';
+
 
   export default {
-    name: 'EventDobVerification',
+    name: 'LoginOrRegister',
     props: ['eventId'],
     components: {
-      EventSessions,
-      VueDobPicker,
+      CreateAccount,
     },
     data() {
       return {

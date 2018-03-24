@@ -1,62 +1,87 @@
 <template>
-  <div class="cd-booking-create-account">
-    <div class="cd-booking-create-account__header row">
-      <div class="cd-booking-create-account__header-title">
+  <div class="cd-create-account">
+    <div class="cd-create-account__header row">
+      <div class="cd-create-account__header-title">
         {{ $t('Create a CoderDojo Account') }}
       </div>
-      <div class="cd-booking-create-account__header-info">
+      <div class="cd-create-account__header-info">
         {{ $t('Keep track of your Dojos and book event tickets faster') }}
       </div>
     </div>
-    <div class="cd-booking-create-account__container">
+    <div class="cd-create-account__container">
       <div class="row">
-        <label class="cd-booking-create-account__label" for="password">{{ $t('Password') }}</label>
+        <label class="cd-create-account__label" for="email">{{ $t('Email Address') }}</label>
+        <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate="'required|email'" v-model="profile.email">
+        <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</p>
+        <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</p>
+      </div>
+      <div class="row">
+        <label class="cd-create-account__label" for="name">{{ $t('Name') }}</label>
+        <input type="text" class="form-control" name="firstName" :placeholder="$t('First Name')" id="name" data-vv-as="first name" v-validate="'required'" v-model="profile.firstName">
+
+        <input type="text" class="form-control" name="lastName" :placeholder="$t('Last Name')" id="lastName" data-vv-as="last name" v-validate="'required'" v-model="profile.lastName">
+        <p class="cd-create-account-form__first-name-error text-danger" v-show="errors.has('firstName:required')">{{ $t('First name is required') }}</p>
+        <p class="cd-create-account-form__last-name-error text-danger" v-show="errors.has('lastName:required')">{{ $t('Last name is required') }}</p>
+      </div>
+      <div class="row">
+        <h2 v-if="isDobUnderage" class="cd-create-account-dob-verification__dob-error">{{ $t('You will need your parent to carry out the registration.') }}</h2>
+        <label class="cd-create-account__label" for="dob">{{ $t('Enter your Date of Birth') }}</label>
+        <div class="cd-create-account__dob-picker-wrapper">
+          <vue-dob-picker v-model="date" select-class="form-control" id="dob" class="cd-create-account"
+            show-labels="false" month-format="short"
+            :placeholders="[$t('Date'), $t('Month'), $t('Year')]"
+            :proportions="[2, 2, 3]"></vue-dob-picker>
+        </div>
+      </div>
+      <div class="row">
+        <label class="cd-create-account__label" for="password">{{ $t('Password') }}</label>
         <input type="password" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
-               v-validate="'required|confirmed:confirmPassword|cd-password'" v-model="password"/>
-        <label class="text-danger cd-booking-create-account__password-error"
+               v-validate="'required|confirmed:confirmPassword|cd-password'" v-model="profile.password"/>
+        <label class="text-danger cd-create-account__password-error"
                v-show="errors.has('password')">{{ $t(errors.first('password')) }}</label>
       </div>
-      <div class="row cd-booking-create-account__password-hint">
+      <div class="row cd-create-account__password-hint">
         {{ $t('Password must be at least 8 characters with at least one numeric.') }}
       </div>
       <div class="row">
-        <label class="cd-booking-create-account__label" for="password">{{ $t('Confirm Password') }}</label>
+        <label class="cd-create-account__label" for="password">{{ $t('Confirm Password') }}</label>
         <input type="password" class="form-control" placeholder="Password" name="confirmPassword" id="confirmPassword" data-vv-as="password confirmation"
                v-validate="'required'" v-model="confirmPassword"/>
-        <label class="text-danger cd-booking-create-account__password-confirmation-error"
+        <label class="text-danger cd-create-account__password-confirmation-error"
                v-show="errors.has('confirmPassword')">{{ $t(errors.first('confirmPassword')) }}</label>
       </div>
       <div class="row">
-        <div class="cd-booking-create-account__recaptcha">
+        <div class="cd-create-account__recaptcha">
           <vue-recaptcha :sitekey="recaptchaSiteKey" @verify="onRecaptchaVerify"></vue-recaptcha>
         </div>
       </div>
 
       <div class="row">
-        <div class="cd-booking-create-account__label cd-booking-create-account__agreement">
-          <span class="cd-booking-create-account__agreement-left">
+        <div class="cd-create-account__label cd-create-account__agreement">
+          <span class="cd-create-account__agreement-left">
             <input type="checkbox" name="isSubscribedToMailingList" v-model="isSubscribedToMailingList"/>
           </span>
-          <span class="cd-booking-create-account__agreement-right">
+          <span class="cd-create-account__agreement-right">
             <span>{{ $t('I want to join the CoderDojo Mailing List') }}</span>
           </span>
         </div>
       </div>
 
       <div class="row">
-        <div class="cd-booking-create-account__label cd-booking-create-account__agreement">
-          <span class="cd-booking-create-account__agreement-left">
+        <div class="cd-create-account__label cd-create-account__agreement">
+          <span class="cd-create-account__agreement-left">
             <input type="checkbox" name="termsConditionsAccepted" v-validate="'required'"
-                      v-model="termsConditionsAccepted"/>
+                      v-model="profile.termsConditionsAccepted"/>
           </span>
-          <span class="cd-booking-create-account__agreement-right">
-            <span v-html="$t('I agree with {openLinkTag}Terms & Conditions{closingLinkTag}', { openLinkTag: '<a class=\'cd-booking-create-account__terms-conditions-link\' href=\'https://zen.coderdojo.com/terms-and-conditions\'>', closingLinkTag: '</a>' })"></span>
+          <span class="cd-create-account__agreement-right">
+            <span v-html="$t('I agree with {openLinkTag}Terms & Conditions{closingLinkTag}', { openLinkTag: '<a class=\'cd-create-account__terms-conditions-link\' href=\'https://zen.coderdojo.com/terms-and-conditions\'>', closingLinkTag: '</a>' })"></span>
           </span>
         </div>
-        <label class="text-danger cd-booking-create-account__terms-conditions-error"
+        <label class="text-danger cd-create-account__terms-conditions-error"
                v-show="errors.has('termsConditionsAccepted')">
             {{ $t('You must accept the terms and conditions before proceeding.') }}
         </label>
+        <button type="submit" class="cd-create-account__submit">{{ $t('Next') }}</button>
       </div>
 
     </div>
@@ -65,10 +90,9 @@
 <script>
   import { extend, omit } from 'lodash';
   import VueRecaptcha from 'vue-recaptcha';
+  import VueDobPicker from 'vue-dob-picker';
   import UserService from '@/users/service';
   import UserUtils from '@/users/util';
-  import EventsService from '@/events/service';
-  import DojoService from '@/dojos/service';
   import StoreService from '@/store/store-service';
 
   function forEachTicket(bookingData, cb) {
@@ -82,13 +106,12 @@
     props: ['eventId'],
     components: {
       VueRecaptcha,
+      VueDobPicker,
     },
     data() {
       return {
-        profile: null,
-        password: null,
+        profile: {},
         confirmPassword: null,
-        termsConditionsAccepted: false,
         isSubscribedToMailingList: false,
         recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
         recaptchaResponse: null,
@@ -117,69 +140,11 @@
           return false;
         }
       },
-      async submitAccount() {
-        return this.register()
-          .then(this.addChildren)
-          .then(this.joinDojo)
-          .then(this.bookTickets);
-      },
       async register() {
         this.profile = StoreService.load(`booking-${this.eventId}-user`);
         const isAdult = UserUtils.getAge(new Date(this.profile.dob)) > 18;
         this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
         return UserService.register(this.user, UserUtils.profileToJSON(this.profile));
-      },
-      addChildren() {
-        const bookingData = StoreService.load(`booking-${this.eventId}-sessions`);
-        let promiseChain = Promise.resolve();
-        forEachTicket(bookingData, (ticket) => {
-          if (ticket.ticket.type === 'ninja') {
-            const child = UserUtils.profileToJSON(ticket.user);
-            child.userTypes = [UserUtils.isUnderAge(ticket.user.dob) ? 'attendee-u13' : 'attendee-o13'];
-            child.gender = child.otherGender ? child.otherGender : child.gender;
-            delete child.otherGender;
-            promiseChain = promiseChain.then(() => UserService.addChild(child))
-              .then((response) => {
-                ticket.user = response.body; // eslint-disable-line no-param-reassign
-              });
-          }
-        });
-        promiseChain = promiseChain.then(() => {
-          StoreService.save(`booking-${this.eventId}-sessions`, bookingData);
-          return Promise.resolve();
-        });
-        return promiseChain;
-      },
-      joinDojo() {
-        return UserService.getCurrentUser().then((response) => {
-          const user = response.body.user;
-          const selectedEvent = StoreService.load('selected-event');
-          // NOTE : u13 are not supposed to have an user account and hence cannot join
-          const userType = UserUtils.isYouthOverThirteen(new Date(this.profile.dob)) ? 'attendee-o13' : 'parent-guardian';
-          return DojoService.joinDojo(user.id, selectedEvent.dojoId, [userType]);
-        });
-      },
-      bookTickets() {
-        return UserService.getCurrentUser().then((response) => {
-          const loggedInUser = response.body.user;
-          const selectedEvent = StoreService.load('selected-event');
-          const bookingSessions = StoreService.load(`booking-${this.eventId}-sessions`);
-          const applications = [];
-          forEachTicket(bookingSessions, (ticket) => {
-            applications.push({
-              dojoId: selectedEvent.dojoId,
-              eventId: selectedEvent.id,
-              sessionId: ticket.ticket.sessionId,
-              ticketName: ticket.ticket.name,
-              ticketType: ticket.ticket.type,
-              ticketId: ticket.ticket.id,
-              userId: (ticket.user && ticket.user.userId) || loggedInUser.id,
-              notes: 'N/A',
-            });
-          });
-          this.$ga.event(this.$route.name, 'click', 'book_tickets', applications.length);
-          return EventsService.manageTickets(applications);
-        });
       },
       getRecaptchaResponse() {
         return this.recaptchaResponse;
@@ -191,7 +156,8 @@
   };
 </script>
 <style scoped lang="less">
-  .cd-booking-create-account {
+  /*import '../common/styles/cd-primary-button'; */
+  .cd-create-account {
     margin-right: 33px;
     margin-top: 50px;
     padding: 0 16px 16px 16px;
@@ -227,6 +193,9 @@
       color: #808890;
       margin-top: 4px;
       font-weight: 300;
+    }
+    &__submit {
+      /*.cd-primary-button;*/
     }
     input[type=checkbox] {
       width: 21px;
@@ -268,6 +237,28 @@
         flex:12;
       }
     }
+  }
+
+  .form-control[type=text], .form-control[type=email] {
+    width: 230px;
+    display: inline-block;
+    font-family: Lato, Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    text-align: left;
+    font-weight: 300;
+    height: 36px;
+    color: black;
+  }
+  .form-control[name="firstName"], .form-control[name="lastName"]{
+    width: 170px;
+    display: inline-block;
+    font-family: Lato, Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    text-align: left;
+    font-weight: 300;
+  }
+  .form-control[type=radio] {
+    box-shadow: none;
   }
   .form-control[type=password] {
     width: 230px;

@@ -4,7 +4,7 @@ import DojoDetails from '@/dojos/cd-dojo-details';
 import FindDojo from '@/dojos/cd-find-dojo';
 import UserTickets from '@/users/cd-tickets';
 import EventDetails from '@/events/cd-event-details';
-import EventDobVerification from '@/events/cd-event-dob-verification';
+import LoginOrRegister from '@/users/cd-login-or-register';
 import EventSessions from '@/events/cd-event-sessions';
 import Booking from '@/events/cd-booking';
 import BookingConfirmation from '@/events/cd-booking-confirmation';
@@ -66,7 +66,7 @@ export default new Router({
             {
               path: '',
               name: 'EventDobVerification',
-              component: EventDobVerification,
+              component: LoginOrRegister,
               props: true,
             },
             {

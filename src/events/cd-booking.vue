@@ -19,7 +19,6 @@
     </div>
     <form>
       <bookingParentForm :eventId="eventId" :tickets="tickets" ref="bookingParentFormRef"></bookingParentForm>
-      <bookingCreateAccount :eventId="eventId" ref="bookingCreateAccountRef"></bookingCreateAccount>
     </form>
     <input type="button" class="cd-booking__submit-button btn-primary" @click="onSubmit()" value="Confirm Booking"/>
   </div>
@@ -27,14 +26,12 @@
 <script>
   import StoreService from '@/store/store-service';
   import BookingParentForm from '@/events/cd-booking-parent-form';
-  import BookingCreateAccount from '@/events/cd-booking-create-account';
 
   export default {
     name: 'Booking',
     props: ['eventId'],
     components: {
       bookingParentForm: BookingParentForm,
-      bookingCreateAccount: BookingCreateAccount,
     },
     data() {
       return {
@@ -49,7 +46,8 @@
         const childFormsValid = await this.isValidChildForm();
         if (childFormsValid) {
           this.$refs.bookingParentFormRef.submitBooking();
-          await this.$refs.bookingCreateAccountRef.submitAccount();
+          // await this.$refs.bookingCreateAccountRef.submitAccount();
+
           this.$router.push({ name: 'EventBookingConfirmation', params: { eventId: this.eventId } });
         }
       },
@@ -60,7 +58,7 @@
           return false;
         }
         const parentFormValid = await this.$refs.bookingParentFormRef.validateForm();
-        const accountFormValid = await this.$refs.bookingCreateAccountRef.validateForm();
+        // const accountFormValid = await this.$refs.bookingCreateAccountRef.validateForm();
         return parentFormValid && accountFormValid;
       },
     },
