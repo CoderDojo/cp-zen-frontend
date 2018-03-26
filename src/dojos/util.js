@@ -1,6 +1,8 @@
 import moment from 'moment';
 import i18n from '@/i18n';
 
+const defaultImage = require('../assets/avatars/dojo-default-logo.png');
+
 const pluralDays = [
   'Mondays',
   'Tuesdays',
@@ -30,6 +32,12 @@ const nthStrings = {
 export default {
   getDojoUrl(dojo) {
     return `/dojos/${dojo.url_slug || dojo.urlSlug}`;
+  },
+  imageUrl(dojoId) {
+    return `https://s3-eu-west-1.amazonaws.com/zen-dojo-images/${dojoId}`;
+  },
+  fallbackImage() {
+    return defaultImage;
   },
   buildDojoFrequency(dojo) {
     const startTime = dojo.startTime

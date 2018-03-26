@@ -71,6 +71,7 @@
 </script>
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
+  @import "../common/styles/cd-primary-button";
 
   .cd-booking {
     &__attendee-heading {
@@ -96,12 +97,7 @@
       margin-right: 33px;
     }
     &__submit-button {
-      margin-top: 48px;
-      width: 200px;
-      height: 50px;
-      border-radius: 4px;
-      font-size: 16px;
-      border: none;
+      .primary-button;
     }
     &__header-container{
       display: flex;

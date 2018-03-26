@@ -69,6 +69,7 @@
 
     &__name {
       min-width: 150px;
+      font-weight: bold;
     }
   }
 </style>

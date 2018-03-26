@@ -1,6 +1,9 @@
 <template>
   <div class="cd-event-sessions">
-    <h1 class="cd-event-sessions__header">{{ $t('Select Event Tickets') }}</h1>
+    <h1 class="cd-event-sessions__header">{{ $t('Select tickets') }}</h1>
+    <p>{{ $t('Select tickets for the sessions that you wish to attend.') }}</p>
+    <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
+    {{ $t('Please contact the Dojo if you have any questions.') }}</p>
     <div class="cd-event-sessions__session" v-for="session in sessions">
       <h3 class="cd-event-sessions__name">{{ session.name }}</h3>
       <p class="cd-event-sessions__description">{{ session.description }}</p>
@@ -11,7 +14,7 @@
       <label v-show="totalBooked <= 0 && submitted" class="cd-event-sessions__next-error text-danger">
         {{ $t('Please select at least one ticket') }}</label>
       <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="next()">
-        {{ $t('Proceed') }}
+        {{ $t('Next') }}
       </button>
     </div>
   </div>
@@ -73,16 +76,18 @@
 </script>
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
+  @import "../common/styles/cd-primary-button";
 
   .cd-event-sessions {
     &__header {
       font-size: 24px;
       margin: 45px 0 16px 0;
+      font-weight: bold;
     }
     &__name {
-      color: @cd-purple;
       margin: 0;
       font-size: 18px;
+      font-weight: bold;
     }
     &__description {
       margin: 4px 0;
@@ -96,9 +101,7 @@
     }
 
     &__next {
-      &-block {
-        margin: 34px 0 16px 0;
-      }
+      .primary-button;
       &-error {
         display: block;
       }

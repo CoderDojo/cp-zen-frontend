@@ -20,6 +20,17 @@ const InfoColumn = Object.create(BasePage, {
       return $$('.cd-info-column-section__content');
     },
   },
+  dojoName: {
+    get() {
+      return $('.cd-event-details__left-column-section-value-dojo a');
+    },
+  },
+  dojoIcon: {
+    get() {
+      return $('.cd-event-details__left-column-section-value-dojo img');
+    },
+  },
+
 });
 
 module.exports = InfoColumn;
