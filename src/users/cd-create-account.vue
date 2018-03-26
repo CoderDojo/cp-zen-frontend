@@ -1,16 +1,24 @@
 <template>
   <div class="cd-create-account">
-    <div class="cd-create-account__header row">
+    <!--<div class="cd-create-account__header row">
       <div class="cd-create-account__header-title">
         {{ $t('Create a CoderDojo Account') }}
       </div>
       <div class="cd-create-account__header-info">
         {{ $t('Keep track of your Dojos and book event tickets faster') }}
       </div>
-    </div>
+    </div>-->
+    <h3>{{ $t('Register your details so you can book Dojo Events') }}</h3>
     <div class="cd-create-account__container">
       <div class="row">
-        <label class="cd-create-account__label" for="email">{{ $t('Email Address') }}</label>
+        <p>
+          <i class="fa fa-info-circle"></i>
+          {{ $t('If you are a parent or a guardian booking tickets for a child, please still tell us your details here.')  }} <br/>
+          {{ $t('We collect this to help Dojos to contact them who\'s coming.') }}
+        </p>
+      </div>
+      <div class="row">
+        <label class="cd-create-account__label" for="email">{{ $t('Your email') }}</label>
         <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate="'required|email'" v-model="profile.email">
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</p>
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</p>
@@ -24,10 +32,10 @@
         <p class="cd-create-account-form__last-name-error text-danger" v-show="errors.has('lastName:required')">{{ $t('Last name is required') }}</p>
       </div>
       <div class="row">
-        <h2 v-if="isDobUnderage" class="cd-create-account-dob-verification__dob-error">{{ $t('You will need your parent to carry out the registration.') }}</h2>
+        <h2 v-if="isDobUnderage" class="cd-create-account-dob__dob-error">{{ $t('You will need your parent to carry out the registration.') }}</h2>
         <label class="cd-create-account__label" for="dob">{{ $t('Enter your Date of Birth') }}</label>
         <div class="cd-create-account__dob-picker-wrapper">
-          <vue-dob-picker v-model="date" select-class="form-control" id="dob" class="cd-create-account"
+          <vue-dob-picker v-model="date" select-class="form-control" id="dob" class="cd-create-account__dob"
             show-labels="false" month-format="short"
             :placeholders="[$t('Date'), $t('Month'), $t('Year')]"
             :proportions="[2, 2, 3]"></vue-dob-picker>
@@ -36,19 +44,13 @@
       <div class="row">
         <label class="cd-create-account__label" for="password">{{ $t('Password') }}</label>
         <input type="password" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
-               v-validate="'required|confirmed:confirmPassword|cd-password'" v-model="profile.password"/>
+               v-validate="'required|cd-password'" v-model="profile.password"/>
+        <i class="fa cd-create-account__password-visibility" :class="isPasswordVisible ? 'fa-eye-slash': 'fa-eye' " @click="togglePasswordVisibility()"></i>
         <label class="text-danger cd-create-account__password-error"
                v-show="errors.has('password')">{{ $t(errors.first('password')) }}</label>
       </div>
       <div class="row cd-create-account__password-hint">
         {{ $t('Password must be at least 8 characters with at least one numeric.') }}
-      </div>
-      <div class="row">
-        <label class="cd-create-account__label" for="password">{{ $t('Confirm Password') }}</label>
-        <input type="password" class="form-control" placeholder="Password" name="confirmPassword" id="confirmPassword" data-vv-as="password confirmation"
-               v-validate="'required'" v-model="confirmPassword"/>
-        <label class="text-danger cd-create-account__password-confirmation-error"
-               v-show="errors.has('confirmPassword')">{{ $t(errors.first('confirmPassword')) }}</label>
       </div>
       <div class="row">
         <div class="cd-create-account__recaptcha">
@@ -57,7 +59,7 @@
       </div>
 
       <div class="row">
-        <div class="cd-create-account__label cd-create-account__agreement">
+        <div class="cd-create-account__agreement">
           <span class="cd-create-account__agreement-left">
             <input type="checkbox" name="isSubscribedToMailingList" v-model="isSubscribedToMailingList"/>
           </span>
@@ -68,7 +70,7 @@
       </div>
 
       <div class="row">
-        <div class="cd-create-account__label cd-create-account__agreement">
+        <div class="cd-create-account__agreement">
           <span class="cd-create-account__agreement-left">
             <input type="checkbox" name="termsConditionsAccepted" v-validate="'required'"
                       v-model="profile.termsConditionsAccepted"/>
@@ -116,6 +118,7 @@
         recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
         recaptchaResponse: null,
         formValidated: false,
+        isPasswordVisible: false,
       };
     },
     computed: {
@@ -152,6 +155,11 @@
       onRecaptchaVerify(response) {
         this.recaptchaResponse = response;
       },
+      togglePasswordVisibility() {
+        this.isPasswordVisible = !this.isPasswordVisible;
+        const field = document.querySelector('input[name="password"]');
+        field.type = this.isPasswordVisible ? 'text' : 'password';
+      },
     },
   };
 </script>
@@ -161,7 +169,6 @@
     margin-right: 33px;
     margin-top: 50px;
     padding: 0 16px 16px 16px;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
     &__recaptcha{
       margin-top: 33px;
     }
@@ -183,16 +190,25 @@
       margin-left: 25px;
     }
     &__label {
-      margin-top: 32px;
+      margin-top: 16px;
       display: block;
       font-size: 16px;
-      font-weight: normal;
+      font-weight: bold;
     }
     &__password-hint{
       font-size: 14px;
       color: #808890;
       margin-top: 4px;
       font-weight: 300;
+    }
+    &__dob {
+      padding-left: 0;
+      max-width: 600px;
+    }
+    &__password {
+      &-visibility {
+        padding-left: 6px;
+      }
     }
     &__submit {
       /*.cd-primary-button;*/

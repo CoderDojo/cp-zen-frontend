@@ -2,7 +2,7 @@
   <div class="cd-login-or-register">
     <createAccount :eventId="eventId" ref="bookingCreateAccountRef"></createAccount>
 
-    <redirectToLogin></redirectToLogin>
+    <redirectToLogin :url="redirectionUrl"></redirectToLogin>
   </div>
 </template>
 <script>
@@ -10,6 +10,7 @@
   import UsersUtil from '@/users/util';
   import EventService from '@/events/service';
   import CreateAccount from '@/users/cd-create-account';
+  import RedirectToLogin from '@/users/cd-redirect-to-login';
 
 
   export default {
@@ -17,6 +18,7 @@
     props: ['eventId'],
     components: {
       CreateAccount,
+      RedirectToLogin,
     },
     data() {
       return {
@@ -40,6 +42,11 @@
         StoreService.save('selected-event', this.eventDetails);
         StoreService.save('applicant-dob', this.date);
         this.$router.push({ name: 'EventSessions', params: { eventId: this.eventId } });
+      },
+    },
+    computed: {
+      redirectionUrl() {
+        return `/events/${this.eventId}`;
       },
     },
     created() {
