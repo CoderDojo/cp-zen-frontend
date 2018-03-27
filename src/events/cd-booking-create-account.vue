@@ -108,6 +108,9 @@
           mailingList: this.isSubscribedToMailingList,
         });
       },
+      email() {
+        return BookingUserStore.state.email;
+      },
     },
     methods: {
       async validateForm() {
