@@ -94,12 +94,11 @@
   </form>
 </template>
 <script>
-  import { extend, omit } from 'lodash';
+  import { extend } from 'lodash';
   import VueRecaptcha from 'vue-recaptcha';
   import VueDobPicker from 'vue-dob-picker';
   import UserService from '@/users/service';
   import UserUtils from '@/users/util';
-  import StoreService from '@/store/store-service';
 
   export default {
     name: 'BookingCreateAccount',
@@ -139,7 +138,7 @@
       },
       isUnderage() {
         return UserUtils.isUnderAge(this.dob);
-      }
+      },
     },
     methods: {
       async validateForm() {
@@ -164,9 +163,16 @@
           const context = this.context;
           this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
           try {
-            await UserService.register(this.user, UserUtils.profileToJSON(extend({}, this.profile, { dob: this.dob , ...context })));
+            await UserService.register(
+              this.user,
+              UserUtils.profileToJSON(
+                extend(
+                  {},
+                  this.profile,
+                  { dob: this.dob, ...context },
+            )));
             this.$emit('registered');
-          } catch(err) {
+          } catch (err) {
             console.log(err);
             alert(err);
           }

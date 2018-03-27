@@ -58,8 +58,7 @@
           return false;
         }
         const parentFormValid = await this.$refs.bookingParentFormRef.validateForm();
-        // const accountFormValid = await this.$refs.bookingCreateAccountRef.validateForm();
-        return parentFormValid && accountFormValid;
+        return parentFormValid;
       },
     },
     created() {

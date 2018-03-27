@@ -17,7 +17,7 @@ const UserService = {
     });
     if (res.body.error || !res.body.ok) {
       throw new Error(res.body.error || res.body.why);
-    } 
+    }
     return UserService.login(user.email, user.password);
   },
 

@@ -8,7 +8,6 @@
 </template>
 <script>
   import StoreService from '@/store/store-service';
-  import UsersUtil from '@/users/util';
   import EventService from '@/events/service';
   import DojoService from '@/dojos/service';
   import CreateAccount from '@/users/cd-create-account';
@@ -46,7 +45,7 @@
       },
       context() {
         return {
-          country: this.dojoDetails.country, 
+          country: this.dojoDetails.country,
         };
       },
     },
