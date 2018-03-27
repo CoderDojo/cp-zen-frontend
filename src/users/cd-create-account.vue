@@ -1,6 +1,6 @@
 <template>
   <div class="cd-create-account">
-    <!--<div class="cd-create-account__header row">
+    <!--<div class="cd-create-account__header">
       <div class="cd-create-account__header-title">
         {{ $t('Create a CoderDojo Account') }}
       </div>
@@ -9,21 +9,21 @@
       </div>
     </div>-->
     <h3>{{ $t('Register your details so you can book Dojo Events') }}</h3>
-    <div class="cd-create-account__container">
-      <div class="row">
+    <div>
+      <div>
         <p>
           <i class="fa fa-info-circle"></i>
           {{ $t('If you are a parent or a guardian booking tickets for a child, please still tell us your details here.')  }} <br/>
           {{ $t('We collect this to help Dojos to contact them who\'s coming.') }}
         </p>
       </div>
-      <div class="row">
+      <div>
         <label class="cd-create-account__label" for="email">{{ $t('Your email') }}</label>
         <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate="'required|email'" v-model="profile.email">
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</p>
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</p>
       </div>
-      <div class="row">
+      <div>
         <label class="cd-create-account__label" for="name">{{ $t('Name') }}</label>
         <input type="text" class="form-control" name="firstName" :placeholder="$t('First Name')" id="name" data-vv-as="first name" v-validate="'required'" v-model="profile.firstName">
 
@@ -31,7 +31,7 @@
         <p class="cd-create-account-form__first-name-error text-danger" v-show="errors.has('firstName:required')">{{ $t('First name is required') }}</p>
         <p class="cd-create-account-form__last-name-error text-danger" v-show="errors.has('lastName:required')">{{ $t('Last name is required') }}</p>
       </div>
-      <div class="row">
+      <div>
         <h2 v-if="isDobUnderage" class="cd-create-account-dob__dob-error">{{ $t('You will need your parent to carry out the registration.') }}</h2>
         <label class="cd-create-account__label" for="dob">{{ $t('Enter your Date of Birth') }}</label>
         <div class="cd-create-account__dob-picker-wrapper">
@@ -41,7 +41,7 @@
             :proportions="[2, 2, 3]"></vue-dob-picker>
         </div>
       </div>
-      <div class="row">
+      <div>
         <label class="cd-create-account__label" for="password">{{ $t('Password') }}</label>
         <input type="password" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
                v-validate="'required|cd-password'" v-model="profile.password"/>
@@ -49,16 +49,16 @@
         <label class="text-danger cd-create-account__password-error"
                v-show="errors.has('password')">{{ $t(errors.first('password')) }}</label>
       </div>
-      <div class="row cd-create-account__password-hint">
+      <div class="cd-create-account__password-hint">
         {{ $t('Password must be at least 8 characters with at least one numeric.') }}
       </div>
-      <div class="row">
+      <div>
         <div class="cd-create-account__recaptcha">
           <vue-recaptcha :sitekey="recaptchaSiteKey" @verify="onRecaptchaVerify"></vue-recaptcha>
         </div>
       </div>
 
-      <div class="row">
+      <div>
         <div class="cd-create-account__agreement">
           <span class="cd-create-account__agreement-left">
             <input type="checkbox" name="isSubscribedToMailingList" v-model="isSubscribedToMailingList"/>
@@ -69,7 +69,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div>
         <div class="cd-create-account__agreement">
           <span class="cd-create-account__agreement-left">
             <input type="checkbox" name="termsConditionsAccepted" v-validate="'required'"
@@ -83,9 +83,8 @@
                v-show="errors.has('termsConditionsAccepted')">
             {{ $t('You must accept the terms and conditions before proceeding.') }}
         </label>
-        <button type="submit" class="cd-create-account__submit">{{ $t('Next') }}</button>
+        <button type="submit" class="cd-create-account__submit" >{{ $t('Next') }}</button>
       </div>
-
     </div>
   </div>
 </template>
@@ -117,7 +116,6 @@
         isSubscribedToMailingList: false,
         recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
         recaptchaResponse: null,
-        formValidated: false,
         isPasswordVisible: false,
       };
     },
@@ -164,11 +162,10 @@
   };
 </script>
 <style scoped lang="less">
-  /*import '../common/styles/cd-primary-button'; */
+  @import '../common/styles/cd-primary-button'; 
   .cd-create-account {
     margin-right: 33px;
     margin-top: 50px;
-    padding: 0 16px 16px 16px;
     &__recaptcha{
       margin-top: 33px;
     }
@@ -185,9 +182,6 @@
         font-size: 16px;
         margin-top: 4px;
       }
-    }
-    &__container{
-      margin-left: 25px;
     }
     &__label {
       margin-top: 16px;
@@ -211,7 +205,7 @@
       }
     }
     &__submit {
-      /*.cd-primary-button;*/
+      .active-primary-button;
     }
     input[type=checkbox] {
       width: 21px;

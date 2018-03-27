@@ -1,8 +1,9 @@
 <template>
   <div class="cd-login-or-register">
     <createAccount :eventId="eventId" ref="bookingCreateAccountRef"></createAccount>
-
-    <redirectToLogin :url="redirectionUrl"></redirectToLogin>
+    <div class="cd-login-or-register__login">
+      <redirectToLogin :url="redirectionUrl"></redirectToLogin>
+    </div>
   </div>
 </template>
 <script>
@@ -55,7 +56,7 @@
   };
 </script>
 <style scoped lang="less">
-  .cd-event-dob-verification {
+  .cd-login-or-register {
     &__verify-age-message {
       display: block;
       margin-bottom: 30px;
@@ -63,17 +64,15 @@
       margin-top: 45px;
       font-weight: bold;
     }
-    &__dob-input-label {
-      font-size: 16px;
-      margin-bottom: 8px;
-      font-weight: normal;
-    }
     &__verify {
       margin-top: 60px;
       width: 197px;
       height: 46px;
       font-size: 16px;
       font-weight: bold;
+    }
+    &__login {
+      width: 100%;
     }
     &__cancel {
       margin-top: 60px;
