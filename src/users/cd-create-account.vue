@@ -26,26 +26,36 @@
           <p class="cd-create-account-form__last-name-error text-danger" v-show="errors.has('lastName:required')" for="lastName">{{ $t('Last name is required') }}</p>
         </div>
       </div>
-      <div>
-        <h2 v-if="isDobUnderage" class="cd-create-account-dob__dob-error">{{ $t('You will need your parent to carry out the registration.') }}</h2>
+      <div class="cd-create-account__dob">
         <label class="cd-create-account__label" for="dob">{{ $t('Enter your Date of Birth') }}</label>
         <div class="cd-create-account__dob-picker-wrapper">
-          <vue-dob-picker v-model="date" select-class="form-control" id="dob" class="cd-create-account__dob"
+          <vue-dob-picker v-model="dob" select-class="form-control" id="dob" class="cd-create-account__dob-picker"
+            show-labels="false" month-format="short"
+            v-validate="'required'"
+            data-vv-name="dob"
+            data-vv-value-path="value"
+            data-vv-as="date of birth"
             show-labels="false" month-format="short"
             :placeholders="[$t('Date'), $t('Month'), $t('Year')]"
             :proportions="[2, 2, 3]"></vue-dob-picker>
         </div>
+        <p v-if="isUnderage" class="cd-create-account__dob-error text-danger">
+          {{ $t('Sorry :( Children under 13 are note allowed to book events.') }} 
+          {{ $t('You can ask your parent or guardian to bookfor you.') }}
+        </p>
+        <p class="cd-create-account__dob-error text-danger"
+          v-show="errors.has('dob:required')">{{ $t('Date of birth is required') }}</p>
       </div>
       <div>
         <label class="cd-create-account__label" for="password">{{ $t('Password') }}</label>
+        <p class="cd-create-account__password-hint">
+          {{ $t('Password must be at least 8 characters with at least one numeric.') }}
+        </p>
         <input type="password" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
                v-validate="'required|cd-password'" v-model="password"/>
         <i class="fa cd-create-account__password-visibility" :class="isPasswordVisible ? 'fa-eye-slash': 'fa-eye' " @click="togglePasswordVisibility()"></i>
-        <label class="text-danger cd-create-account__password-error"
-               v-show="errors.has('password')">{{ $t(errors.first('password')) }}</label>
-      </div>
-      <div class="cd-create-account__password-hint">
-        {{ $t('Password must be at least 8 characters with at least one numeric.') }}
+        <p class="text-danger cd-create-account__password-error"
+               v-show="errors.has('password')">{{ $t(errors.first('password')) }}</p>
       </div>
       <div>
         <div class="cd-create-account__recaptcha">
@@ -74,10 +84,10 @@
             <span v-html="$t('I agree with {openLinkTag}Terms & Conditions{closingLinkTag}', { openLinkTag: '<a class=\'cd-create-account__terms-conditions-link\' href=\'https://zen.coderdojo.com/terms-and-conditions\'>', closingLinkTag: '</a>' })"></span>
           </span>
         </div>
-        <label class="text-danger cd-create-account__terms-conditions-error"
+        <p class="text-danger cd-create-account__terms-conditions-error"
                v-show="errors.has('termsConditionsAccepted')">
             {{ $t('You must accept the terms and conditions before proceeding.') }}
-        </label>
+        </p>
         <button type="submit" class="cd-create-account__submit" >{{ $t('Next') }}</button>
       </div>
     </div>
@@ -91,15 +101,9 @@
   import UserUtils from '@/users/util';
   import StoreService from '@/store/store-service';
 
-  function forEachTicket(bookingData, cb) {
-    Object.keys(bookingData).forEach((ticketId) => {
-      bookingData[ticketId].selectedTickets.forEach(cb);
-    });
-  }
-
   export default {
     name: 'BookingCreateAccount',
-    props: ['eventId'],
+    props: ['context'],
     components: {
       VueRecaptcha,
       VueDobPicker,
@@ -108,10 +112,10 @@
       return {
         profile: {
           email: null,
-          dob: null,
           firstName: null,
           lastName: null,
         },
+        dob: null,
         password: null,
         termConditionsAccepted: null,
         isSubscribedToMailingList: false,
@@ -122,7 +126,7 @@
     },
     computed: {
       user() {
-        return extend(omit(this.profile, ['dob']), {
+        return extend({}, this.profile, {
           password: this.password,
           'g-recaptcha-response': this.recaptchaResponse,
           initUserType: {
@@ -133,11 +137,22 @@
           mailingList: this.isSubscribedToMailingList,
         });
       },
+      isUnderage() {
+        return UserUtils.isUnderAge(this.dob);
+      }
     },
     methods: {
       async validateForm() {
         try {
-          return await this.$validator.validateAll() && !!this.recaptchaResponse;
+          if (this.isUnderage) {
+            return false;
+          }
+          const res = await this.$validator.validateAll() && !!this.recaptchaResponse;
+          if (!this.getRecaptchaResponse()) {
+            alert('Please complete the reCAPTCHA');
+            return false;
+          }
+          return res;
         } catch (e) {
           return false;
         }
@@ -145,9 +160,16 @@
       async register() {
         const ready = await this.validateForm();
         if (ready) {
-          const isAdult = UserUtils.getAge(new Date(this.profile.dob)) > 18;
+          const isAdult = UserUtils.getAge(new Date(this.dob)) > 18;
+          const context = this.context;
           this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
-          return UserService.register(this.user, UserUtils.profileToJSON(this.profile));
+          try {
+            await UserService.register(this.user, UserUtils.profileToJSON(extend({}, this.profile, { dob: this.dob , ...context })));
+            this.$emit('registered');
+          } catch(err) {
+            console.log(err);
+            alert(err);
+          }
         }
       },
       getRecaptchaResponse() {
@@ -212,7 +234,7 @@
       margin-top: 4px;
       font-weight: 300;
     }
-    &__dob {
+    &__dob-picker {
       padding-left: 0;
       max-width: 600px;
     }

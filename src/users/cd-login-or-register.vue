@@ -1,6 +1,6 @@
 <template>
   <div class="cd-login-or-register">
-    <createAccount :eventId="eventId" ref="bookingCreateAccountRef"></createAccount>
+    <createAccount ref="bookingCreateAccountRef" :context="context" @registered="next()"></createAccount>
     <div class="cd-login-or-register__login">
       <redirectToLogin :url="redirectionUrl"></redirectToLogin>
     </div>
@@ -10,6 +10,7 @@
   import StoreService from '@/store/store-service';
   import UsersUtil from '@/users/util';
   import EventService from '@/events/service';
+  import DojoService from '@/dojos/service';
   import CreateAccount from '@/users/cd-create-account';
   import RedirectToLogin from '@/users/cd-redirect-to-login';
 
@@ -24,24 +25,18 @@
     data() {
       return {
         eventDetails: {},
-        isDobUnderage: false,
-        date: null,
+        dojoDetails: {},
       };
     },
     methods: {
-      loadEvent() {
-        EventService.loadEvent(this.eventId)
-          .then((response) => {
-            this.eventDetails = response.body;
-          });
+      async loadEvent() {
+        this.eventDetails = (await EventService.loadEvent(this.eventId)).body;
+      },
+      async loadDojo() {
+        this.dojoDetails = (await DojoService.getDojoById(this.eventDetails.dojoId)).body;
       },
       next() {
-        this.isDobUnderage = UsersUtil.isUnderAge(this.date);
-        if (this.isDobUnderage) {
-          return;
-        }
         StoreService.save('selected-event', this.eventDetails);
-        StoreService.save('applicant-dob', this.date);
         this.$router.push({ name: 'EventSessions', params: { eventId: this.eventId } });
       },
     },
@@ -49,43 +44,22 @@
       redirectionUrl() {
         return `/events/${this.eventId}`;
       },
+      context() {
+        return {
+          country: this.dojoDetails.country, 
+        };
+      },
     },
-    created() {
-      this.loadEvent();
+    async created() {
+      await this.loadEvent();
+      this.loadDojo();
     },
   };
 </script>
 <style scoped lang="less">
   .cd-login-or-register {
-    &__verify-age-message {
-      display: block;
-      margin-bottom: 30px;
-      font-size: 24px;
-      margin-top: 45px;
-      font-weight: bold;
-    }
-    &__verify {
-      margin-top: 60px;
-      width: 197px;
-      height: 46px;
-      font-size: 16px;
-      font-weight: bold;
-    }
     &__login {
       width: 100%;
-    }
-    &__cancel {
-      margin-top: 60px;
-      margin-right: 18.9px;
-      width: 100px;
-      height: 46px;
-      color: #337ab7;
-      background-color: #ffffff;
-      font-size: 16px;
-      font-weight: bold;
-    }
-    &__dob-picker-wrapper {
-      max-width: 35%;
     }
   }
 </style>
