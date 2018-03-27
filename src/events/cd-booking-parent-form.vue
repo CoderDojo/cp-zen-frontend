@@ -32,15 +32,7 @@
 
     <label class="cd-booking-parent-form__label" for="email">{{ $t('Email Address') }}</label>
     <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email"
-<<<<<<< HEAD
-<<<<<<< HEAD
-      data-vv-as="email" v-validate="'required|email'" v-model="parentUserData.email" @change="setUserEmail">
-=======
       data-vv-as="email" v-validate="'required|email'" v-model="parentUserData.email" @input="setUserEmail">
->>>>>>> bd826d4... Set up docker for frontend with tests using selenium
-=======
-      data-vv-as="email" v-validate="'required|email'" v-model="parentUserData.email" @input="setUserEmail">
->>>>>>> bd826d4e082adb2e018021bd6ecee106c99f9d13
     <p class="cd-booking-parent-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</p>
     <p class="cd-booking-parent-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</p>
 
