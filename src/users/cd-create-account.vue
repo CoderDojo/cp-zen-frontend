@@ -1,13 +1,5 @@
 <template>
-  <div class="cd-create-account">
-    <!--<div class="cd-create-account__header">
-      <div class="cd-create-account__header-title">
-        {{ $t('Create a CoderDojo Account') }}
-      </div>
-      <div class="cd-create-account__header-info">
-        {{ $t('Keep track of your Dojos and book event tickets faster') }}
-      </div>
-    </div>-->
+  <form class="cd-create-account" @submit.prevent="register">
     <h3>{{ $t('Register your details so you can book Dojo Events') }}</h3>
     <div>
       <div>
@@ -44,7 +36,7 @@
       <div>
         <label class="cd-create-account__label" for="password">{{ $t('Password') }}</label>
         <input type="password" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
-               v-validate="'required|cd-password'" v-model="profile.password"/>
+               v-validate="'required|cd-password'" v-model="password"/>
         <i class="fa cd-create-account__password-visibility" :class="isPasswordVisible ? 'fa-eye-slash': 'fa-eye' " @click="togglePasswordVisibility()"></i>
         <label class="text-danger cd-create-account__password-error"
                v-show="errors.has('password')">{{ $t(errors.first('password')) }}</label>
@@ -73,7 +65,7 @@
         <div class="cd-create-account__agreement">
           <span class="cd-create-account__agreement-left">
             <input type="checkbox" name="termsConditionsAccepted" v-validate="'required'"
-                      v-model="profile.termsConditionsAccepted"/>
+                      v-model="termsConditionsAccepted"/>
           </span>
           <span class="cd-create-account__agreement-right">
             <span v-html="$t('I agree with {openLinkTag}Terms & Conditions{closingLinkTag}', { openLinkTag: '<a class=\'cd-create-account__terms-conditions-link\' href=\'https://zen.coderdojo.com/terms-and-conditions\'>', closingLinkTag: '</a>' })"></span>
@@ -86,7 +78,7 @@
         <button type="submit" class="cd-create-account__submit" >{{ $t('Next') }}</button>
       </div>
     </div>
-  </div>
+  </form>
 </template>
 <script>
   import { extend, omit } from 'lodash';
@@ -111,8 +103,14 @@
     },
     data() {
       return {
-        profile: {},
-        confirmPassword: null,
+        profile: {
+          email: null,
+          dob: null,
+          firstName: null,
+          lastName: null,
+        },
+        password: null,
+        termConditionsAccepted: null,
         isSubscribedToMailingList: false,
         recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
         recaptchaResponse: null,
@@ -142,10 +140,11 @@
         }
       },
       async register() {
-        this.profile = StoreService.load(`booking-${this.eventId}-user`);
-        const isAdult = UserUtils.getAge(new Date(this.profile.dob)) > 18;
-        this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
-        return UserService.register(this.user, UserUtils.profileToJSON(this.profile));
+        if (await this.validateForm()) {
+          const isAdult = UserUtils.getAge(new Date(this.profile.dob)) > 18;
+          this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
+          return UserService.register(this.user, UserUtils.profileToJSON(this.profile));
+        }
       },
       getRecaptchaResponse() {
         return this.recaptchaResponse;
