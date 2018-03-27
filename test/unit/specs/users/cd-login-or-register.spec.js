@@ -1,7 +1,7 @@
 import vueUnitHelper from 'vue-unit-helper';
 import LoginOrRegisterComponent from '!!vue-loader?inject!@/users/cd-login-or-register';
 
-describe.only('Login or register', () => {
+describe('Login or register', () => {
   let sandbox;
   let MockStoreService;
   let MockDojoService;
@@ -37,7 +37,7 @@ describe.only('Login or register', () => {
       // ARRANGE
       const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
       vm.eventId = 1;
-      MockEventsService.loadEvent.resolves({ body: { bananas: 1 }});
+      MockEventsService.loadEvent.resolves({ body: { bananas: 1 } });
 
       // ACT
       await vm.loadEvent();
@@ -55,7 +55,7 @@ describe.only('Login or register', () => {
       vm.eventDetails = {
         dojoId: 1,
       };
-      MockDojoService.getDojoById.resolves({ body: { bananas: 1 }});
+      MockDojoService.getDojoById.resolves({ body: { bananas: 1 } });
       // ACT
       await vm.loadDojo();
 
@@ -76,24 +76,24 @@ describe.only('Login or register', () => {
       };
       vm.next();
       expect(MockStoreService.save).to.have.been.calledWith('selected-event', vm.eventDetails);
-      expect(vm.$router.push).to.have.been.calledWith({ name: 'EventSessions', params: { eventId: vm.eventId }});
+      expect(vm.$router.push).to.have.been.calledWith({ name: 'EventSessions', params: { eventId: vm.eventId } });
     });
   });
   describe('computed', () => {
     it('redirectionUrl', () => {
       const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
-      vm.eventId = 1
+      vm.eventId = 1;
       expect(vm.redirectionUrl).to.equal('/events/1');
     });
 
     it('context', () => {
       const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
       vm.dojoDetails = {
-        country :{
-          alpha2: 'FR'
+        country: {
+          alpha2: 'FR',
         },
       };
-      expect(vm.context).to.deep.equal({ country: { alpha2: 'FR' }});
+      expect(vm.context).to.deep.equal({ country: { alpha2: 'FR' } });
     });
   });
   describe('created', () => {
