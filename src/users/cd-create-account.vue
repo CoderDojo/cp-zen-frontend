@@ -15,13 +15,16 @@
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</p>
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</p>
       </div>
-      <div>
-        <label class="cd-create-account__label" for="name">{{ $t('Name') }}</label>
-        <input type="text" class="form-control" name="firstName" :placeholder="$t('First Name')" id="name" data-vv-as="first name" v-validate="'required'" v-model="profile.firstName">
-
-        <input type="text" class="form-control" name="lastName" :placeholder="$t('Last Name')" id="lastName" data-vv-as="last name" v-validate="'required'" v-model="profile.lastName">
-        <p class="cd-create-account-form__first-name-error text-danger" v-show="errors.has('firstName:required')">{{ $t('First name is required') }}</p>
-        <p class="cd-create-account-form__last-name-error text-danger" v-show="errors.has('lastName:required')">{{ $t('Last name is required') }}</p>
+      <div class="cd-create-account__names" >
+        <label class="cd-create-account__label cd-create-account__names-label" for="firstName">{{ $t('Name') }}</label>
+        <div class="cd-create-account__names-first" :class="{'cd-create-account__names--error': errors.has('lastName:required') && !errors.has('firstName:required')}">
+          <input type="text" class="form-control" name="firstName" :placeholder="$t('First Name')" id="name" data-vv-as="first name" v-validate="'required'" v-model="profile.firstName">
+          <p class="cd-create-account-form__first-name-error text-danger" v-show="errors.has('firstName:required')" for="firstName">{{ $t('First name is required') }}</p>
+        </div>
+          <div class="cd-create-account__names-last" :class="{'cd-create-account__names--error': !errors.has('lastName:required') && errors.has('firstName:required')}">
+          <input type="text" class="form-control" name="lastName" :placeholder="$t('Last Name')" id="lastName" data-vv-as="last name" v-validate="'required'" v-model="profile.lastName">
+          <p class="cd-create-account-form__last-name-error text-danger" v-show="errors.has('lastName:required')" for="lastName">{{ $t('Last name is required') }}</p>
+        </div>
       </div>
       <div>
         <h2 v-if="isDobUnderage" class="cd-create-account-dob__dob-error">{{ $t('You will need your parent to carry out the registration.') }}</h2>
@@ -140,7 +143,8 @@
         }
       },
       async register() {
-        if (await this.validateForm()) {
+        const ready = await this.validateForm();
+        if (ready) {
           const isAdult = UserUtils.getAge(new Date(this.profile.dob)) > 18;
           this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
           return UserService.register(this.user, UserUtils.profileToJSON(this.profile));
@@ -188,6 +192,20 @@
       font-size: 16px;
       font-weight: bold;
     }
+    &__names {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      &-label {
+        flex-basis: 100%;
+      }
+      &-first {
+        margin-right: 8px;
+      }
+      &--error {
+        margin-top: -30px;
+      }
+    }
     &__password-hint{
       font-size: 14px;
       color: #808890;
@@ -201,6 +219,11 @@
     &__password {
       &-visibility {
         padding-left: 6px;
+      }
+    }
+    &__terms-conditions {
+      &-error {
+        display: block;
       }
     }
     &__submit {
@@ -247,33 +270,30 @@
       }
     }
   }
-
-  .form-control[type=text], .form-control[type=email] {
-    width: 230px;
+  .form() {
     display: inline-block;
     font-family: Lato, Arial, Helvetica, sans-serif;
     font-size: 14px;
     text-align: left;
     font-weight: 300;
-    height: 36px;
     color: black;
   }
+
+  .form-control[type=text], .form-control[type=email] {
+    .form;
+    width: 230px;
+    height: 36px;
+  }
   .form-control[name="firstName"], .form-control[name="lastName"]{
+    .form;
     width: 170px;
-    display: inline-block;
-    font-family: Lato, Arial, Helvetica, sans-serif;
-    font-size: 14px;
-    text-align: left;
-    font-weight: 300;
   }
   .form-control[type=radio] {
     box-shadow: none;
   }
   .form-control[type=password] {
+    .form;
     width: 230px;
-    display: inline-block;
-    font-weight: 300;
     height: 36px;
-    color: black;
   }
 </style>
