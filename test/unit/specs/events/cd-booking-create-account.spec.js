@@ -88,20 +88,19 @@ describe('Booking Create Account Form', () => {
 
   it('should register the user and notify GA that an adult registered', async () => {
     // ARRANGE
-    const storedUserData = {
-      firstName: 'Foo',
-      lastName: 'Bar',
-      phone: '012345678',
-      email: 'foo.bar@baz.com',
-    };
-    MockStoreService.load.returns(storedUserData);
     MockUserUtils.profileToJSON.callsFake(profile => profile);
 
     const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
     vm.eventId = 1;
     vm.$ga = { event: sinon.stub() };
     vm.$route = { name: 'a' };
-    vm.profile = { dob: '' };
+    vm.profile = {
+      firstName: 'Foo',
+      lastName: 'Bar',
+      phone: '012345678',
+      email: 'foo.bar@baz.com',
+      dob: '',
+    };
     vm.user = {
       id: 'foo',
     };
@@ -113,26 +112,23 @@ describe('Booking Create Account Form', () => {
     await vm.register();
 
     // ASSERT
-    expect(vm.profile).to.equal(storedUserData);
     expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_adult');
-    expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
+    expect(MockUsersService.register).to.have.been.calledWith(vm.user, vm.profile);
   });
 
   it('should register the user and notify GA that a kid registered', async () => {
     // ARRANGE
-    const storedUserData = {
-      firstName: 'Foo',
-      lastName: 'Bar',
-      phone: '012345678',
-      email: 'foo.bar@baz.com',
-    };
-    MockStoreService.load.returns(storedUserData);
-
     const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
     vm.eventId = 1;
     vm.$ga = { event: sinon.stub() };
     vm.$route = { name: 'a' };
-    vm.profile = { dob: '' };
+    vm.profile = {
+      firstName: 'Foo',
+      lastName: 'Bar',
+      phone: '012345678',
+      email: 'foo.bar@baz.com',
+      dob: '',
+    };
     vm.user = {
       id: 'foo',
     };
@@ -144,9 +140,8 @@ describe('Booking Create Account Form', () => {
     vm.register();
 
     // ASSERT
-    expect(vm.profile).to.equal(storedUserData);
     expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_kid');
-    expect(MockUsersService.register).to.have.been.calledWith(vm.user, storedUserData);
+    expect(MockUsersService.register).to.have.been.calledWith(vm.user, vm.profile);
   });
 
   describe('submitAccount()', () => {
@@ -166,6 +161,8 @@ describe('Booking Create Account Form', () => {
 
       // ASSERT
       requestAnimationFrame(() => {
+        expect(MockStoreService.load).to.have.been.calledWith('booking-1-user');
+        expect(MockStoreService.load).to.have.been.calledOnce;
         expect(vm.register).to.have.been.calledOnce;
         expect(vm.addChildren).to.have.been.calledOnce;
         expect(vm.joinDojo).to.have.been.calledOnce;

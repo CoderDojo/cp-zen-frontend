@@ -31,7 +31,8 @@
     <p class="cd-booking-parent-form__phone-error text-danger" v-show="errors.has('phoneNumber:numeric')">{{ $t('Phone number is invalid') }}</p>
 
     <label class="cd-booking-parent-form__label" for="email">{{ $t('Email Address') }}</label>
-    <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate="'required|email'" v-model="parentUserData.email">
+    <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email"
+      data-vv-as="email" v-validate="'required|email'" v-model="parentUserData.email" @input="setUserEmail">
     <p class="cd-booking-parent-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</p>
     <p class="cd-booking-parent-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</p>
 
@@ -103,6 +104,7 @@
 <script>
   import VueDobPicker from 'vue-dob-picker';
   import StoreService from '@/store/store-service';
+  import BookingUserStore from '@/events/booking-user-store';
   import UsersUtil from '@/users/util';
 
   function getTicketsByType(tickets, type) {
@@ -161,6 +163,9 @@
         } catch (e) {
           return false;
         }
+      },
+      setUserEmail() {
+        BookingUserStore.commit('setEmail', this.parentUserData.email);
       },
       submitBooking() {
         if (this.parentTicket && this.parentTicket.selectedTickets

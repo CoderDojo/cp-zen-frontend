@@ -10,6 +10,11 @@
     </div>
     <div class="cd-booking-create-account__container">
       <div class="row">
+        <label class="cd-booking-create-account__label" for="email">{{ $t('Email Address') }}</label>
+        <input type="email" :placeholder="$t('Email address')" class="form-control"
+          name="email" id="email" v-model="email" readonly/>
+      </div>
+      <div class="row">
         <label class="cd-booking-create-account__label" for="password">{{ $t('Password') }}</label>
         <input type="password" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
                v-validate="'required|confirmed:confirmPassword|cd-password'" v-model="password"/>
@@ -70,6 +75,7 @@
   import EventsService from '@/events/service';
   import DojoService from '@/dojos/service';
   import StoreService from '@/store/store-service';
+  import BookingUserStore from '@/events/booking-user-store';
 
   function forEachTicket(bookingData, cb) {
     Object.keys(bookingData).forEach((ticketId) => {
@@ -86,6 +92,9 @@
     data() {
       return {
         profile: null,
+        get email() {
+          return BookingUserStore.state.email;
+        },
         password: null,
         confirmPassword: null,
         termsConditionsAccepted: false,
@@ -108,6 +117,9 @@
           mailingList: this.isSubscribedToMailingList,
         });
       },
+      email() {
+        return BookingUserStore.state.email;
+      },
     },
     methods: {
       async validateForm() {
@@ -118,13 +130,13 @@
         }
       },
       async submitAccount() {
+        this.profile = StoreService.load(`booking-${this.eventId}-user`);
         return this.register()
           .then(this.addChildren)
           .then(this.joinDojo)
           .then(this.bookTickets);
       },
       async register() {
-        this.profile = StoreService.load(`booking-${this.eventId}-user`);
         const isAdult = UserUtils.getAge(new Date(this.profile.dob)) > 18;
         this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
         return UserService.register(this.user, UserUtils.profileToJSON(this.profile));
@@ -269,7 +281,7 @@
       }
     }
   }
-  .form-control[type=password] {
+  .form-control[type=password], .form-control[type=email] {
     width: 230px;
     display: inline-block;
     font-weight: 300;

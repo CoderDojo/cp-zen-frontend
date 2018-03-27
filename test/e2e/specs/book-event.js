@@ -225,7 +225,6 @@ describe('Book event page', () => {
     Booking.firstName.setValue('John');
     Booking.lastName.setValue('Doe');
     Booking.phoneNumber.setValue('1555123456');
-    Booking.email.setValue('john.doe@example.com');
 
     Booking.submitBookingButton.click();
 
@@ -236,6 +235,7 @@ describe('Book event page', () => {
 
     Booking.submitBookingButton.click();
 
+    expect(Booking.emailValidationError[0].getText()).to.equal('Parent email address is required');
     expect(Booking.passwordError.getText()).to.equal('The password field is required.');
     expect(Booking.confirmPasswordError.getText()).to.equal('The password confirmation field is required.');
     expect(Booking.termsAndConditionsError.getText()).to.equal('You must accept the terms and conditions before proceeding.');
