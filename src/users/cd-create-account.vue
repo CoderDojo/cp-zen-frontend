@@ -30,7 +30,6 @@
         <label class="cd-create-account__label" for="dob">{{ $t('Enter your Date of Birth') }}</label>
         <div class="cd-create-account__dob-picker-wrapper">
           <vue-dob-picker v-model="dob" select-class="form-control" id="dob" class="cd-create-account__dob-picker"
-            show-labels="false" month-format="short"
             v-validate="'required'"
             data-vv-name="dob"
             data-vv-value-path="value"
@@ -51,7 +50,7 @@
         <p class="cd-create-account__password-hint">
           {{ $t('Password must be at least 8 characters with at least one numeric.') }}
         </p>
-        <input type="password" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
+        <input :type="isPasswordVisible? 'text': 'password'" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
                v-validate="'required|cd-password'" v-model="password"/>
         <i class="fa cd-create-account__password-visibility" :class="isPasswordVisible ? 'fa-eye-slash': 'fa-eye' " @click="togglePasswordVisibility()"></i>
         <p class="text-danger cd-create-account__password-error"
@@ -147,7 +146,7 @@
             return false;
           }
           const res = await this.$validator.validateAll() && !!this.recaptchaResponse;
-          if (!this.getRecaptchaResponse()) {
+          if (!this.recaptchaResponse) {
             alert('Please complete the reCAPTCHA');
             return false;
           }
@@ -173,21 +172,15 @@
             )));
             this.$emit('registered');
           } catch (err) {
-            console.log(err);
             alert(err);
           }
         }
-      },
-      getRecaptchaResponse() {
-        return this.recaptchaResponse;
       },
       onRecaptchaVerify(response) {
         this.recaptchaResponse = response;
       },
       togglePasswordVisibility() {
         this.isPasswordVisible = !this.isPasswordVisible;
-        const field = document.querySelector('input[name="password"]');
-        field.type = this.isPasswordVisible ? 'text' : 'password';
       },
     },
   };
