@@ -158,7 +158,7 @@ describe.only('Booking Create Account Form', () => {
 
     it('register should display an error on registration failure', async () => {
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      const err = new Error('nick-exists');
+      const err = new Error('server crashed');
       const alerting = sandbox.stub(window, 'alert');
       vm.validateForm = sandbox.stub().resolves(true);
       MockUserUtils.profileToJSON = sandbox.stub().returnsArg(0);
@@ -188,6 +188,42 @@ describe.only('Booking Create Account Form', () => {
       expect(vm.$emit).to.not.have.been.called;
       expect(alerting).to.have.been.calledOnce;
       expect(alerting).to.have.been.calledWith(err);
+    });
+    it('register should display nick-exists error on duplicate email', async () => {
+      const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
+      const err = new Error('nick-exists');
+      vm.validateForm = sandbox.stub().resolves(true);
+      MockUserUtils.profileToJSON = sandbox.stub().returnsArg(0);
+      MockUsersService.register.throws(err);
+      vm.context = {
+        country: {
+          alpha2: 'FR',
+        },
+      };
+      vm.dob = '2017/03/01';
+      vm.user = { lastName: 'blu' };
+      vm.profile = { firstName: 'bla' };
+      vm.$ga = {
+        event: sandbox.stub(),
+      };
+      vm.$validator = {
+        errorBag: {
+          add: sandbox.stub(),
+        },
+      };
+      vm.$route = {
+        name: 'Highway2L',
+      };
+      vm.$emit = sandbox.stub();
+      MockUserUtils.getAge.returns(17);
+
+      await vm.register();
+
+      expect(MockUserUtils.getAge).to.have.been.calledWith(sinon.match.date);
+      expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_kid');
+      expect(MockUsersService.register).to.have.been.calledWith(vm.user, { firstName: 'bla', dob: '2017/03/01', country: { alpha2: 'FR' } });
+      expect(vm.$emit).to.not.have.been.called;
+      expect(vm.$validator.errorBag.add).to.have.been.calledWith('registration', 'Nick exists', 'nick-exists');
     });
     it('onRecaptchaVerify should set the recaptcha response', () => {
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);

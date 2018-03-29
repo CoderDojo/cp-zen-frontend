@@ -87,7 +87,8 @@
                v-show="errors.has('termsConditionsAccepted')">
             {{ $t('You must accept the terms and conditions before proceeding.') }}
         </p>
-        <button type="submit" class="cd-create-account__submit" >{{ $t('Next') }}</button>
+        <button type="submit" name="registration" class="cd-create-account__submit" v-validate="'nick-exists'" >{{ $t('Next') }}</button>
+        <p class="cd-create-account__errors text-danger" v-show="errors.has('registration')">{{ $t('An user already exists for this email.') }} {{ $t('Login to your account to continue.') }}</p>
       </div>
     </div>
   </form>
@@ -172,6 +173,10 @@
             )));
             this.$emit('registered');
           } catch (err) {
+            if (err.message === 'nick-exists') {
+              this.$validator.errorBag.add('registration', 'Nick exists', 'nick-exists');
+              return;
+            }
             alert(err);
           }
         }
@@ -226,6 +231,9 @@
       &--error {
         margin-top: -30px;
       }
+    }
+    &__errors {
+      padding: 6px 0px;
     }
     &__password-hint{
       font-size: 14px;
