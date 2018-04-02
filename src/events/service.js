@@ -40,8 +40,8 @@ const EventsService = {
     applications: {
       list(dojoId, eventId, options) {
         return Vue.http.get(`${Vue.config.apiServer}/api/3.0/dojos/${dojoId}/events/${eventId}/applications`, options);
-      }
-    }
+      },
+    },
   },
 };
 

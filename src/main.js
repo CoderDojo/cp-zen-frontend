@@ -8,7 +8,6 @@ import VueAnalytics from 'vue-analytics';
 import PasswordValidator from '@/common/directives/cd-password-validator';
 import titleDirective from '@/common/directives/title';
 import gaTrackClickDirective from '@/common/directives/cd-ga-track-click';
-import vSelect from 'vue-select';
 import VueTable from 'vue-tables-2';
 import 'font-awesome/css/font-awesome.min.css';
 import 'vue-dob-picker/dist/static/vue-dob-picker.css';
@@ -33,7 +32,6 @@ Vue.use(VueAnalytics, {
   router,
 });
 Vue.use(VueTable.ClientTable);
-Vue.component('v-select', vSelect);
 Vue.directive('title', titleDirective);
 Vue.directive('ga-track-click', gaTrackClickDirective);
 

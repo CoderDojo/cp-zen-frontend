@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'btn-group': true, 'open': open }">
     <button type="button" :class="buttonClass" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="open = !open" @blur="onButtonBlur">
-      <i v-if="icon" :class="iconClass"></i>{{ text }} <span class="caret"></span>
+      <i v-if="icon" :class="iconClass"></i>{{ text }} <span class="caret" v-if="caret"></span>
     </button>
     <ul :class="{ 'dropdown-menu': true, 'dropdown-menu--right': align === 'right' }">
       <slot></slot>
@@ -16,6 +16,10 @@
       icon: String,
       text: String,
       align: String,
+      caret: {
+        type: Boolean,
+        default: true,
+      },
       type: {
         type: String,
         default: 'default',
