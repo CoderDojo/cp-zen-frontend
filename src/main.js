@@ -31,7 +31,7 @@ Vue.use(VueAnalytics, {
   id: process.env.GOOGLE_ANALYTICS_PROPERTY_ID,
   router,
 });
-Vue.use(VueTable.ClientTable);
+Vue.use(VueTable.ClientTable, {}, true);
 Vue.directive('title', titleDirective);
 Vue.directive('ga-track-click', gaTrackClickDirective);
 

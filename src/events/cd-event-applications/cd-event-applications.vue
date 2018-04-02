@@ -7,20 +7,32 @@
           <h3 class="cd-event-applications__header-title">
             {{ event.name }}
           </h3>
-          <div class="cd-event-applications__header-title-actions">
-            <i class="fa fa-2x fa-file-text-o"></i>
-            <i class="fa fa-2x fa-envelope-o"></i>
+          <div class="cd-event-applications__header-title-actions btn-group">
+            <dropdown icon="file-o" align="right" :caret="false">
+              <li>
+                <router-link :to="`/api/2.0/events/export-guest-list/dojo/${dojoId}/event/${eventId}/full-export.csv`">Full export</a>
+              </li>
+              <li>
+                <router-link :to="`/api/2.0/events/export-guest-list/dojo/${dojoId}/event/${eventId}/guest-export.csv`">Guest export</a>
+              </li>
+              <li>
+                <router-link :to="`/api/2.0/events/export-guest-list/dojo/${dojoId}/event/${eventId}/waiting-export.csv`">Waiting list export</a>
+              </li>
+            </dropdown>
+            <button class="btn btn-default"><i class="fa fa-envelope-o"></i></button>
           </div>
         </div>
       </header>
     </div>
     <div id="people">
-      <v-client-table ref="applicationTable" :data="tableData" :columns="tableColumns" :options="tableOptions" @sorted="removeGroupBy" @filter::sessionName="updateSelectableTickets" class="cd-event-applications__table">
-        <template slot="afterBody" scope="props">
-          <!-- TODO : export -->
-        </template>
+      <v-client-table name="applicationTable" ref="applicationTable" :data="data" :columns="tableColumns" :options="tableOptions" @sorted="removeGroupBy" @filter::sessionName="updateSelectableTickets" class="cd-event-applications__table">
         <template slot="__group_meta" scope="{value, data}">
           <span class="cd-event-applications__grouping-header">({{ data.booked }}/{{ data.qty }})</span>
+        </template>
+        <template slot="parent" scope="props">
+          <div v-if="props.row.parent">
+            <router-link :to="{ path: profileUrl(props.row.parent.userId) }">{{ props.row.parent.name }}</router-link>
+          </div>
         </template>
         <template slot="status" scope="props">
           <input type="checkbox" v-model="props.row.isApproved"/> <!--@change="toggleApproval"> </input> -->
@@ -46,11 +58,6 @@
             <!-- TODO : mailTo -->
             <li @click="contact(props.row.userId)"><a><i class="fa fa-envelope-o"></i>Contact</a></li>
           </dropdown>
-          <!--<div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" :id="`actions-${props.row.id}`" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fa fa-ellipsis-v"></i>
-            </button>
-          </div>--> 
         </template>
         <!--<div slot="filter__sessionName">
           <input type="checkbox" class="form-control" v-model="tableOptions.groupBy" @change="toggleGrouping()">
@@ -63,23 +70,22 @@
   import moment from 'moment';
   import { flatten, uniqBy } from 'lodash';
   import i18n from '@/i18n';
+  import { mapGetters } from 'vuex';
   import Dropdown from '@/common/cd-dropdown';
   import UserService from '@/users/service';
-  import UserUtils from '@/users/util';
-  import cdAttendee from './cd-attendee';
-  import EventService from './service';
+  import cdAttendee from '../cd-attendee';
+  import EventService from '../service';
+  import Store from './table-store';
 
   export default {
     name: 'event-applications',
-    props: [],
+    store: Store,
     data() {
       return {
         dojoId: null,
         eventId: null,
-        event: {},
         filteredOnSession: null,
         tableOrdered: false,
-        applications: [],
         parents: {},
       };
     },
@@ -125,36 +131,18 @@
           descOrderColumn: 'applicationDate',
         };
       },
-      tableData() {
-        if (this.applications && this.applications.results) {
-          return this.applications.results.map((a) => {
-            const { id, name, dateOfBirth, userId, notes, ticketName, ticketType, created, status } = a;
-            return Object.assign({
-              sessionName: this.sessions[a.sessionId].name,
-            }, {
-              id,
-              userId,
-              name,
-              parent: this.parents && this.parents[userId],
-              age: UserUtils.getAge(moment.utc(dateOfBirth).toDate()),
-              ticketName,
-              ticketType,
-              notes,
-              created: moment.utc(created),
-              status,
-              notesVisible: false,
-              isApproved: status === 'approved',
-            });
-          });
-        }
-        return [];
-      },
+      ...mapGetters([
+        'applications',
+        'event',
+        'sessions',
+        'data',
+      ]),
       groupMeta() {
         return this.event && this.event.sessions ? this.event.sessions.map(s => ({
           value: s.name,
           data: {
             qty: s.tickets.reduce((qty, t) => qty + t.quantity, 0),
-            booked: (this.applications.results.filter(a => a.sessionId === s.id)).length,
+            booked: (this.applications.filter(a => a.sessionId === s.id)).length,
           },
         })) : [];
       },
@@ -168,11 +156,6 @@
           }
         }
         return tickets;
-      },
-      sessions() {
-        // eslint-disable-next-line no-param-reassign
-        const reducer = (sessions, el) => { sessions[el.id] = el; return sessions; };
-        return this.event.sessions.reduce(reducer, {});
       },
       tableColumns() {
         const columns = ['name', 'parent', 'ticketName', 'ticketType', 'status', 'created'];
@@ -194,8 +177,8 @@
         return {};
       },
       hasCustomNotes() {
-        if (this.applications && this.applications.results) {
-          return !this.applications.results.every(a => !this.isCustomNote(a.notes));
+        if (this.applications && this.applications) {
+          return !this.applications.every(a => !this.isCustomNote(a.notes));
         }
         return true;
       },
@@ -210,14 +193,14 @@
         return `/dashboard/my-dojos/${this.dojoId}/events/${this.eventId}/applications`;
       },
       nbNinja() {
-        if (this.applications && this.applications.results) {
-          return (this.applications.results.filter(a => a.ticketType === 'ninja' && a.deleted === false && a.status === 'approved')).length;
+        if (this.applications && this.applications) {
+          return (this.applications.filter(a => a.ticketType === 'ninja' && a.deleted === false && a.status === 'approved')).length;
         }
         return 0;
       },
       nbMentor() {
-        if (this.applications && this.applications.results) {
-          return (this.applications.results.filter(a => a.ticketType === 'mentor' && a.deleted === false && a.status === 'approved')).length;
+        if (this.applications && this.applications) {
+          return (this.applications.filter(a => a.ticketType === 'mentor' && a.deleted === false && a.status === 'approved')).length;
         }
         return 0;
       },
@@ -228,12 +211,10 @@
       }, */
       getParents() {
         // TODO : filter if child?
-        this.applications.results.map(a =>
+        this.applications.map(a =>
           UserService.parentsOf(a.userId)
           .then((res) => { 
-            this.parents[a.userId] = res.body[0]; 
-            const row = this.$refs.applicationTable.data.findIndex((row) => row.userId === a.userId);
-            this.$refs.applicationTable.data[row].parent = res.body[0];
+            this.$store.commit('parentsOf', { userId: a.userId, data: res.body[0] });
           }),
         );
         
@@ -250,7 +231,7 @@
         return !(strippedNote === '' || note === defaultNote);
       },
       profileUrl(id) {
-        return `/dashboard/profile/${id}`;
+        return `/profile/${id}`;
       },
       delete(applicationId) {
         // TODO: 
@@ -281,8 +262,8 @@
           this.eventId,
         ),
       ]);
-      this.event = data[0].body;
-      this.applications = data[1].body;
+      this.$store.commit('event', data[0].body);
+      this.$store.commit('applications', data[1].body.results);
       this.getParents();
     },
   };
@@ -316,9 +297,6 @@
           background-color: @cd-white;
           color: @cd-purple;
           border-bottom: 8px solid @cd-purple;
-          .fa {
-            padding: 6px;
-          }
         }
       }
       &-old-interface {
