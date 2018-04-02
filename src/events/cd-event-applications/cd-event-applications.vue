@@ -10,13 +10,13 @@
           <div class="cd-event-applications__header-title-actions btn-group">
             <dropdown icon="file-o" align="right" :caret="false">
               <li>
-                <router-link :to="`/api/2.0/events/export-guest-list/dojo/${dojoId}/event/${eventId}/full-export.csv`">Full export</a>
+                <a :href="`/api/2.0/events/export-guest-list/dojo/${dojoId}/event/${eventId}/full-export.csv`" target="_blank">Full export</a>
               </li>
               <li>
-                <router-link :to="`/api/2.0/events/export-guest-list/dojo/${dojoId}/event/${eventId}/guest-export.csv`">Guest export</a>
+                <a :href="`/api/2.0/events/export-guest-list/dojo/${dojoId}/event/${eventId}/guest-export.csv`" target="_blank">Guest export</a>
               </li>
               <li>
-                <router-link :to="`/api/2.0/events/export-guest-list/dojo/${dojoId}/event/${eventId}/waiting-export.csv`">Waiting list export</a>
+                <a :href="`/api/2.0/events/export-guest-list/dojo/${dojoId}/event/${eventId}/waiting-export.csv`" target="_blank">Waiting list export</a>
               </li>
             </dropdown>
             <button class="btn btn-default"><i class="fa fa-envelope-o"></i></button>
