@@ -44,14 +44,16 @@
         <template slot="notes" scope="props">
           <i class="fa fa-commenting-o" :title="props.row.notes" v-if="isCustomNote(props.row.notes)"></i>
         </template>
-        <tr slot="appendBody" scope="props">
-          <td colspan="3">
-            <div> {{ $t('Ninjas') }}: {{ nbNinja }} </div>
-          </td>
-          <td colspan="5">
-            <div> {{ $t('Mentors') }}: {{ nbMentor }} </div>
-          </td>
-        </tr>
+        <template>
+          <tr slot="appendBody" slot-scope="props">
+            <td colspan="3">
+              <div> {{ $t('Ninjas') }}: {{ nbNinja }} </div>
+            </td>
+            <td colspan="5">
+              <div> {{ $t('Mentors') }}: {{ nbMentor }} </div>
+            </td>
+          </tr>
+        </template>
         <template slot="actions" scope="props">
           <dropdown icon="ellipsis-v" align="right" :caret="false">
             <li @click="delete(props.row.id)"><a><i class="fa fa-times"></i>Delete</a></li>
