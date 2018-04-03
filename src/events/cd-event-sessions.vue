@@ -101,7 +101,7 @@
     }
 
     &__next {
-      .primary-button;
+      .primary-button-large;
       &-error {
         display: block;
       }

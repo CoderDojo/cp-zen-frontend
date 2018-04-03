@@ -102,8 +102,12 @@ server.post('/api/2.0/users/register', (req, res) => {
 });
 
 server.post('/api/2.0/users/login', (req, res) => {
-  res.cookie('loggedIn', req.body.email, { maxAge: 900000, httpOnly: true });
-  res.send();
+  if (users[req.body.email]) {
+    res.cookie('loggedIn', req.body.email, { maxAge: 900000, httpOnly: true });
+    res.send();
+  } else {
+    res.send({ ok: false });
+  }
 });
 
 server.get('/api/2.0/user/events/:id/applications', (req, res) => {

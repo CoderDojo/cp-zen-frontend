@@ -346,7 +346,7 @@ describe('Dojo details page', () => {
     LoginPage.open();
     LoginPage.email.waitForVisible();
     LoginPage.email.setValue('parent1@example.com');
-    LoginPage.password.setValue('password');
+    LoginPage.password.setValue('password1');
     LoginPage.login.click();
     FindDojoPage.header.waitForVisible();
 
@@ -364,7 +364,7 @@ describe('Dojo details page', () => {
     LoginPage.open();
     LoginPage.email.waitForVisible();
     LoginPage.email.setValue('parent1@example.com');
-    LoginPage.password.setValue('password');
+    LoginPage.password.setValue('password1');
     LoginPage.login.click();
     FindDojoPage.header.waitForVisible();
 
@@ -391,7 +391,7 @@ describe('Dojo details page', () => {
     LoginPage.open();
     LoginPage.email.waitForVisible();
     LoginPage.email.setValue('parent1@example.com');
-    LoginPage.password.setValue('password');
+    LoginPage.password.setValue('password1');
     LoginPage.login.click();
     FindDojoPage.header.waitForVisible();
 
@@ -408,7 +408,7 @@ describe('Dojo details page', () => {
     LoginPage.open();
     LoginPage.email.waitForVisible();
     LoginPage.email.setValue('parent1@example.com');
-    LoginPage.password.setValue('password');
+    LoginPage.password.setValue('password1');
     LoginPage.login.click();
     FindDojoPage.header.waitForVisible();
 
@@ -428,7 +428,7 @@ describe('Dojo details page', () => {
       LoginPage.open();
       LoginPage.email.waitForVisible();
       LoginPage.email.setValue('admin@coderdojo.org');
-      LoginPage.password.setValue('cdfadmin');
+      LoginPage.password.setValue('cdfadmin1');
       LoginPage.login.click();
       FindDojoPage.header.waitForVisible();
       browser.url(url);
