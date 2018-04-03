@@ -119,7 +119,7 @@ describe('Login', () => {
       // ARRANGE
       sandbox.stub(vm, 'validateForm').resolves(true);
       MockUserService.login.resolves({ body: {} });
-      vm.$route.query.referer = '/book';
+      vm.$route.query.referrer = '/book';
 
       // ACT
       await vm.login();

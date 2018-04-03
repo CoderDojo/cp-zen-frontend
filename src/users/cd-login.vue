@@ -41,7 +41,11 @@
     },
     methods: {
       async validateForm() {
-        return this.$validator.validateAll();
+        try {
+          return this.$validator.validateAll();
+        } catch (e) {
+          return false;
+        }
       },
       async login() {
         const valid = await this.validateForm();
