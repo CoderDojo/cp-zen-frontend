@@ -1,4 +1,5 @@
 var path = require('path');
+const url = require('url');
 const BasePage = require('./base-page');
 
 const LoginPage = Object.create(BasePage, {
@@ -71,13 +72,8 @@ const LoginPage = Object.create(BasePage, {
     },
   },
   open: {
-    value() {
-      return BasePage.open.call(this, '/v2/login');
-    },
-  },
-  openWithReferrer: {
-    value(arg) {
-      return BasePage.open.call(this, arg.referrer || '/');
+    value(query) {
+      return BasePage.open.call(this, url.format({ pathname: '/v2/login', query }));
     },
   },
 });

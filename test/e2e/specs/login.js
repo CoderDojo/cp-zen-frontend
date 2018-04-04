@@ -97,20 +97,18 @@ describe('Login Page', () => {
   });
 
   it('should login successfully with a referrer query param', () => {
-    LoginPage.open();
+    LoginPage.open({ referrer: '/dashboard/tickets' });
     LoginPage.email.setValue('parent1@example.com');
     LoginPage.password.setValue('testparent1');
     LoginPage.login.click();
-    LoginPage.openWithReferrer({ referrer: '/dashboard/tickets' });
-    expect(browser.getUrl()).to.equal('http://localhost:8080/dashboard/tickets');
+    expect(browser.getUrl()).to.contain('/dashboard/tickets');
   });
 
-  it('should should login successfully without a referrer query param', () => {
+  it('should login successfully without a referrer query param', () => {
     LoginPage.open();
     LoginPage.email.setValue('parent1@example.com');
     LoginPage.password.setValue('testparent1');
     LoginPage.login.click();
-    LoginPage.openWithReferrer({ referrer: '/' });
-    expect(browser.getUrl()).to.equal('http://localhost:8080/');
+    expect(browser.getUrl()).to.equal(browser.options.baseUrl);
   });
 });

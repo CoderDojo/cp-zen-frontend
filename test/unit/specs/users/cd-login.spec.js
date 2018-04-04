@@ -48,22 +48,6 @@ describe('Login', () => {
       // ASSERT
       expect(isValid).to.equal(false);
     });
-
-    it('should return false when validateAll throws an error', async () => {
-      // ARRANGE
-      const vm = vueUnitHelper(LoginComponentWithMocks);
-      vm.$validator = {
-        validateAll: () => {
-          throw new Error('Invalid form');
-        },
-      };
-
-      // ACT
-      const isValid = await vm.validateForm();
-
-      // ASSERT
-      expect(isValid).to.equal(false);
-    });
   });
 
   describe('login()', () => {
@@ -73,6 +57,11 @@ describe('Login', () => {
       vm = vueUnitHelper(LoginComponentWithMocks);
       vm.$router = { push: sandbox.stub() };
       vm.$route = { query: {} };
+      vm.$validator = {
+        errorBag: {
+          add: sandbox.stub(),
+        },
+      };
     });
 
     it('should do nothing if form is invalid', async () => {
@@ -83,12 +72,12 @@ describe('Login', () => {
       await vm.login();
 
       // ASSERT
-      expect(vm.loginFailed).to.equal(false);
+      expect(vm.$validator.errorBag.add).to.not.have.been.called;
       expect(MockUserService.login).to.not.have.been.called;
       expect(vm.$router.push).to.not.have.been.called;
     });
 
-    it('should set loginFailed to true if login fails', async () => {
+    it('should add an error if login fails', async () => {
       // ARRANGE
       sandbox.stub(vm, 'validateForm').resolves(true);
       MockUserService.login.resolves({ body: { ok: false } });
@@ -97,7 +86,7 @@ describe('Login', () => {
       await vm.login();
 
       // ASSERT
-      expect(vm.loginFailed).to.equal(true);
+      expect(vm.$validator.errorBag.add).to.have.been.calledWith('loginFailed');
       expect(vm.$router.push).to.not.have.been.called;
     });
 
@@ -110,7 +99,7 @@ describe('Login', () => {
       await vm.login();
 
       // ASSERT
-      expect(vm.loginFailed).to.equal(false);
+      expect(vm.$validator.errorBag.add).to.not.have.been.called;
       expect(vm.$router.push).to.have.been.calledOnce;
       expect(vm.$router.push).to.have.been.calledWith('/');
     });
@@ -125,7 +114,7 @@ describe('Login', () => {
       await vm.login();
 
       // ASSERT
-      expect(vm.loginFailed).to.equal(false);
+      expect(vm.$validator.errorBag.add).to.not.have.been.called;
       expect(vm.$router.push).to.have.been.calledOnce;
       expect(vm.$router.push).to.have.been.calledWith('/book');
     });

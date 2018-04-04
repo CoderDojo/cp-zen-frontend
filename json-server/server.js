@@ -105,8 +105,10 @@ server.post('/api/2.0/users/login', (req, res) => {
   if (users[req.body.email]) {
     res.cookie('loggedIn', req.body.email, { maxAge: 900000, httpOnly: true });
     res.send();
+  } else if (req.body.email === 'failure@example.com') {
+    res.send({ ok: false, why: 'invalid-password' });
   } else {
-    res.send({ ok: false });
+    res.send({ ok: false, why: 'user-not-found' });
   }
 });
 

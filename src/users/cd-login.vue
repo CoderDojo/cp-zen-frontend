@@ -19,7 +19,7 @@
            <p class="cd-login__password-req-err text-danger" v-show="errors.has('password:required')">{{ $t('Password is required.') }}</p>
           <input class="cd-login__button btn btn-primary" type="submit" value="Login" />
         </form>
-        <p v-if="loginFailed" class="cd-login__login-failed text-danger">There was a problem logging in! Invalid email or password.</p>
+        <p v-show="errors.has('loginFailed')" class="cd-login__login-failed text-danger">There was a problem logging in! Invalid email or password.</p>
         <p class="cd-login__forgot-password"><a href="/reset">Forgot Password?</a></p>
         <p class="cd-login__register">Don't have an account? <a href="/register">Register Here</a></p>
       </div>
@@ -36,23 +36,18 @@
       return {
         email: '',
         password: '',
-        loginFailed: false,
       };
     },
     methods: {
       async validateForm() {
-        try {
-          return this.$validator.validateAll();
-        } catch (e) {
-          return false;
-        }
+        return this.$validator.validateAll();
       },
       async login() {
         const valid = await this.validateForm();
         if (valid) {
           const response = await UserService.login(this.email, this.password);
           if (response.body.ok === false) {
-            this.loginFailed = true;
+            this.$validator.errorBag.add('loginFailed', response.body.why);
           } else {
             this.$router.push(this.$route.query.referrer || '/');
           }

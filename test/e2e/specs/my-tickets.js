@@ -38,7 +38,7 @@ describe('My tickets page', () => {
     expect(TicketPage.cancel(0).isVisible()).to.be.true;
     // TODO : fix test once translation supports plurals
     expect(TicketPage.cancel(0).getText()).to.equal('Cancel ticket');
-  })
+  });
 
   it('should not be booked and allow booking', () => {
     TicketPage.firstEvent.waitForVisible();
