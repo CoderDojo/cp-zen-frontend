@@ -6873,9 +6873,9 @@ vary@^1, vary@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.1.tgz#67535ebb694c1d52257457984665323f587e8d37"
 
-vee-validate@2.0.0-rc.5:
-  version "2.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/vee-validate/-/vee-validate-2.0.0-rc.5.tgz#1de41866ddab3f8bebae3f3db653ef2c1c782fa0"
+vee-validate@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/vee-validate/-/vee-validate-2.0.6.tgz#0a28046e3c80fb5b9b944da5f7771c7404f90a6a"
 
 vendors@^1.0.0:
   version "1.0.1"
@@ -6909,9 +6909,9 @@ vue-awesome@^2.3.1:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/vue-awesome/-/vue-awesome-2.3.3.tgz#e83f976fe5c7f86d207c24ca33731bdc6e9906a9"
 
-vue-dob-picker@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/vue-dob-picker/-/vue-dob-picker-1.0.8.tgz#f2acb5cf185f1523e729f3932efe9384ad34b5a4"
+vue-dob-picker@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/vue-dob-picker/-/vue-dob-picker-1.0.9.tgz#2c6e9736a0b2d08e0accd3458b23bcddc515696d"
 
 vue-hot-reload-api@^2.0.11:
   version "2.1.0"
@@ -6937,6 +6937,10 @@ vue-loader@^11.3.4:
     vue-hot-reload-api "^2.0.11"
     vue-style-loader "^2.0.0"
     vue-template-es2015-compiler "^1.2.2"
+
+vue-multiselect@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/vue-multiselect/-/vue-multiselect-2.1.0.tgz#9e8ee7087658f029d06778cdb8da0b34ee3f1e28"
 
 vue-pagination-2@^0.3.2:
   version "0.3.2"

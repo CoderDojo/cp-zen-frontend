@@ -1,21 +1,22 @@
 <template>
   <div class="cd-event-sessions">
     <h1 class="cd-event-sessions__header">{{ $t('Select tickets') }}</h1>
-    <p>{{ $t('Select tickets for the sessions that you wish to attend.') }}</p>
+    <child-ticket :eventId="eventId" :event="event" :sessions="sessions"></child-ticket>
+<!--     <p>{{ $t('Select tickets for the sessions that you wish to attend.') }}</p>
     <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
-    {{ $t('Please contact the Dojo if you have any questions.') }}</p>
-    <div class="cd-event-sessions__session" v-for="session in sessions">
-      <h3 class="cd-event-sessions__name">{{ session.name }}</h3>
-      <p class="cd-event-sessions__description">{{ session.description }}</p>
-      <event-tickets :tickets="session.tickets" :session="session" :event-id="eventId" v-on:update="quantityBooked"></event-tickets>
-    </div>
+    {{ $t('Please contact the Dojo if you have any questions.') }}</p> -->
+<!--     <div class="cd-event-sessions__session" v-for="session in sessions">
+      <h3 class="cd-event-sessions__name">{{ session.name }}</h3> -->
+<!--       <p class="cd-event-sessions__description">{{ session.description }}</p> -->
+<!--       <event-tickets :tickets="session.tickets" :session="session" :event-id="eventId" v-on:update="quantityBooked"></event-tickets>
+    </div> -->
 
-    <div class="cd-event-sessions__next-block">
+<!--     <div class="cd-event-sessions__next-block">
       <label v-show="totalBooked <= 0 && submitted" class="cd-event-sessions__next-error text-danger">
         {{ $t('Please select at least one ticket') }}</label>
       <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="next()">
         {{ $t('Next') }}
-      </button>
+      </button> -->
     </div>
   </div>
 </template>
@@ -23,12 +24,14 @@
   import StoreService from '@/store/store-service';
   import service from './service';
   import EventTickets from './cd-event-tickets';
+  import ChildTicket from './cd-event-add-child-ticket';
 
   export default {
     name: 'sessions',
     props: ['eventId'],
     components: {
       EventTickets,
+      ChildTicket,
     },
     data() {
       return {
