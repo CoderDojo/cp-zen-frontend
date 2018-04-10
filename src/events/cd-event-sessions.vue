@@ -1,10 +1,10 @@
 <template>
   <div class="cd-event-sessions">
-    <h1 class="cd-event-sessions__header">{{ $t('Select tickets') }}</h1>
+    <h1 class="cd-event-sessions__header">Select Youth Tickets</h1>
+     <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
+    {{ $t('Please contact the Dojo if you have any questions.') }}</p>
     <child-ticket :eventId="eventId" :event="event" :sessions="sessions"></child-ticket>
-<!--     <p>{{ $t('Select tickets for the sessions that you wish to attend.') }}</p>
-    <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
-    {{ $t('Please contact the Dojo if you have any questions.') }}</p> -->
+<!--     <p>{{ $t('Select tickets for the sessions that you wish to attend.') }}</p> -->
 <!--     <div class="cd-event-sessions__session" v-for="session in sessions">
       <h3 class="cd-event-sessions__name">{{ session.name }}</h3> -->
 <!--       <p class="cd-event-sessions__description">{{ session.description }}</p> -->
