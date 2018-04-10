@@ -25,20 +25,6 @@ describe('Add Child Ticket', () => {
     sandbox.restore();
   });
 
-  describe('methods.showWhy()', () => {
-    it('should change the value of whyGender to true', async () => {
-      // ARRANGE
-      const vm = vueUnitHelper(ChildTicketWithMocks);
-      vm.whyGender = false;
-
-      // ACT
-      await vm.showWhy();
-
-      // ASSERT
-      expect(vm.whyGender).to.equal(true);
-    });
-  });
-
   describe('methods.onTicketTouch()', () => {
     it('should change the value of ticketTouch to true', async () => {
       // ARRANGE
@@ -59,7 +45,7 @@ describe('Add Child Ticket', () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
         vm.sessions = [{ description: 'description1',
-          entity$: 'sessionentity',
+          entity: 'sessionentity',
           eventId: 'some-eventId',
           id: 'sessionId',
           name: 'Session1',
@@ -67,7 +53,7 @@ describe('Add Child Ticket', () => {
           tickets: [
             { approvedApplications: 0,
               deleted: 0,
-              entity$: 'ticketentity',
+              entity: 'ticketentity',
               id: 'ticketId1',
               invites: null,
               name: 'Ticket1',
@@ -77,7 +63,7 @@ describe('Add Child Ticket', () => {
               type: 'parent-guardian' },
             { approvedApplications: 0,
               deleted: 0,
-              entity$: 'ticketentity',
+              entity: 'ticketentity',
               id: 'ticketId2',
               invites: null,
               name: 'Ticket2',
@@ -91,7 +77,7 @@ describe('Add Child Ticket', () => {
 
         // ASSERT
         expect(vm.childTickets).to.deep.equal([{ description: 'description1',
-          entity$: 'sessionentity',
+          entity: 'sessionentity',
           eventId: 'some-eventId',
           id: 'sessionId',
           name: 'Session1',
@@ -99,7 +85,7 @@ describe('Add Child Ticket', () => {
           tickets: [
             { approvedApplications: 0,
               deleted: 0,
-              entity$: 'ticketentity',
+              entity: 'ticketentity',
               id: 'ticketId2',
               invites: null,
               name: 'Ticket2',
@@ -125,61 +111,12 @@ describe('Add Child Ticket', () => {
       });
     });
 
-    describe('computed.specifyGender', () => {
-      it('should return true if the selected gender has the value specify', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.genderSelect = 'specify';
-
-        // ACT
-
-        // ASSERT
-        expect(vm.specifyGender).to.equal(true);
-      });
-
-      it('should return false if the selected gender does not hav the value specify', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.genderSelect = 'male';
-
-        // ACT
-
-        // ASSERT
-        expect(vm.specifyGender).to.equal(false);
-      });
-    });
-
-    describe('computed.gender', () => {
-      it('should return the input gender value if the if the selected gender has the value specify', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.genderSelect = 'specify';
-        vm.genderInput = 'non-binary';
-
-        // ACT
-
-        // ASSERT
-        expect(vm.gender).to.equal('non-binary');
-      });
-
-      it('should return the selected gender value if the selected gender does not have the value specify', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.genderSelect = 'male';
-
-        // ACT
-
-        // ASSERT
-        expect(vm.gender).to.equal('male');
-      });
-    });
-
     describe('computed.invalidTicket', () => {
       it('should return the true if the ticketTouch is true and if the ticket length is equal to 0', async () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
         vm.ticketTouch = true;
-        vm.tickets = '';
+        vm.tickets = [];
 
         // ACT
 
@@ -194,7 +131,7 @@ describe('Add Child Ticket', () => {
         vm.tickets = [{
           approvedApplications: 0,
           deleted: 0,
-          entity$: 'ticketentity',
+          entity: 'ticketentity',
           id: 'ticketId2',
           invites: null,
           name: 'Ticket2',
@@ -213,7 +150,7 @@ describe('Add Child Ticket', () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
         vm.ticketTouch = false;
-        vm.tickets = '';
+        vm.tickets = [];
 
         // ACT
 
@@ -229,7 +166,7 @@ describe('Add Child Ticket', () => {
         vm.tickets = [{
           approvedApplications: 0,
           deleted: 0,
-          entity$: 'ticketentity',
+          entity: 'ticketentity',
           id: 'ticketId2',
           invites: null,
           name: 'Ticket2',
@@ -280,7 +217,7 @@ describe('Add Child Ticket', () => {
         vm.tickets = [{
           approvedApplications: 0,
           deleted: 0,
-          entity$: 'ticketentity',
+          entity: 'ticketentity',
           id: 'ticketId2',
           invites: null,
           name: 'Ticket2',
@@ -308,4 +245,5 @@ describe('Add Child Ticket', () => {
       });
     });
   });
+// put test for filter
 });

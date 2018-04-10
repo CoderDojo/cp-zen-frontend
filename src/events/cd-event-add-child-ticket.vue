@@ -22,18 +22,8 @@
       <p class="cd-child-ticket__dob-err text-danger" v-show="errors.has('dob:required')">{{ $t('Date of Birth is required') }}</p>      
 
       <label>{{ $t('Gender') }}</label>
-      <div class="cd-child-ticket__gender-selector">
-        <select class="cd-child-ticket__select-box form-control" data-vv-name="gender" data-vv-validate-on="blur" v-validate="'required'" v-model="genderSelect">
-          <option value="" selected data-default disabled>{{ $t('Select an option') }}</option>
-          <option value="male">{{ $t('Male') }}</option>
-          <option value="female">{{ $t('Female') }}</option>
-          <option value="prefer not to answer">{{ $t('Prefer not to answer') }}</option>
-          <option value="specify">{{ $t('Specify Identity') }}</option>
-        </select>
-        <input v-show="specifyGender" class="form-control" v-model="genderInput" :placeholder="$t('Identify as...')" data-vv-name="gender" data-vv-validate-on="blur" v-validate="specifyGender ? 'required' : ''"/>
-      </div>
-      <p class="cd-child-ticket__gender-err text-danger" v-show="errors.has('gender:required')">{{ $t('Gender is required') }} <a v-on:click="showWhy">{{ $t('Why is this required? Click Here To Find Out More') }}</a><p v-show="whyGender && errors.has('gender:required')">{{ $t(`We want to provide activities that appeal to people regardless of their gender. To check how well we are succeeding, we'd like to find out whether or not people of different genders are equally likely to take part.`) }}</p></p> 
-
+      <gender-component class="cd-child-ticket__gender-selector" v-model="gender"></gender-component>
+      
       <label>{{ $t('Ticket') }}</label>
       <div class="cd-child-ticket__ticket-selector"> 
         <multiselect v-model="tickets" :options="childTickets" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select Event Tickets')" track-by="id" label="name" @close="onTicketTouch" ></multiselect>
@@ -46,6 +36,7 @@
 <script>
   import VueDobPicker from 'vue-dob-picker';
   import Multiselect from 'vue-multiselect';
+  import GenderComponent from '@/common/cd-gender-component';
 
   export default {
     name: 'ChildTicket',
@@ -53,23 +44,19 @@
     components: {
       VueDobPicker,
       Multiselect,
+      GenderComponent,
     },
     data() {
       return {
         firstName: '',
         surname: '',
         dob: null,
-        genderSelect: '',
-        genderInput: '',
-        whyGender: false,
+        gender: '',
         ticketTouch: false,
-        tickets: '',
+        tickets: [],
       };
     },
     methods: {
-      showWhy() {
-        this.whyGender = true;
-      },
       onTicketTouch() {
         this.ticketTouch = true;
       },
@@ -86,7 +73,7 @@
       childTickets() {
         return this.sessions.map(session => ({
           description: session.description,
-          entity$: session.entity$,
+          entity: session.entity,
           eventId: session.eventId,
           id: session.id,
           name: session.name,
@@ -96,16 +83,6 @@
       },
       name() {
         return `${this.firstName} ${this.surname}`;
-      },
-      specifyGender() {
-        return this.genderSelect === 'specify';
-      },
-      gender() {
-        this.whyGender = false;
-        if (this.genderSelect === 'specify') {
-          return this.genderInput;
-        }
-        return this.genderSelect;
       },
       invalidTicket() {
         return this.ticketTouch && this.tickets.length === 0;
@@ -170,10 +147,7 @@
     &__gender-selector {
       max-width: 50%;
       padding: 8px 0px 24px;
-    }
-    &__select-box {
-      margin-bottom: 8px;
-    }          
+    }         
     &__ticket-selector {
       max-width: 50%;
       padding: 8px 0px 24px;
