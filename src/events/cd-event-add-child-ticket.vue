@@ -26,7 +26,7 @@
       
       <label>{{ $t('Ticket') }}</label>
       <div class="cd-child-ticket__ticket-selector"> 
-        <multiselect v-model="tickets" :options="childTickets" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select Event Tickets')" track-by="id" label="name" @close="onTicketTouch" ></multiselect>
+        <multiselect v-model="tickets" :options="childTickets" group-label="name" group-values="tickets" :multiple="false" :searchable="false" :group-select="false" :placeholder="$t('Select Event Tickets')" track-by="id" label="name" @close="onTicketTouch" ></multiselect>
       </div>
       <p class="cd-child-ticket__ticket-select-err text-danger" v-show="invalidTicket">{{ $t('Ticket selection is required') }}</p>  
     </div>
