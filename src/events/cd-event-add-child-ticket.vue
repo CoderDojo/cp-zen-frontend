@@ -7,7 +7,7 @@
       <label>{{ $t('Name')}}</label>
       <div class="cd-child-ticket__child-name">
         <input class="cd-child-ticket__first-name form-control" v-model="firstName" type="firstName" :placeholder="$t('First Name')" data-vv-name="firstName" data-vv-validate-on="blur" v-validate="'required'"/>
-        <input class="cd-child-ticket__surname form-control" v-model="surename" type="surname" :placeholder="$t('Surname')" data-vv-name="surname" data-vv-validate-on="blur" v-validate="'required'"/>
+        <input class="cd-child-ticket__surname form-control" v-model="surname" type="surname" :placeholder="$t('Surname')" data-vv-name="surname" data-vv-validate-on="blur" v-validate="'required'"/>
       </div>
       <p class="cd-child-ticket__first-name-err text-danger" v-show="errors.has('firstName:required')">{{ $t('First name is required') }}</p>
       <p class="cd-child-ticket__surname-err text-danger" v-show="errors.has('surname:required')">{{ $t('Surname is required') }}</p>
@@ -57,7 +57,7 @@
     data() {
       return {
         firstName: '',
-        surame: '',
+        surname: '',
         dob: null,
         genderSelect: '',
         genderInput: '',
@@ -95,7 +95,7 @@
         }));
       },
       name() {
-        return `${this.firstName} ${this.surame}`;
+        return `${this.firstName} ${this.surname}`;
       },
       specifyGender() {
         return this.genderSelect === 'specify';
