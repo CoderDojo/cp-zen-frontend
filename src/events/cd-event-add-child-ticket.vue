@@ -3,7 +3,7 @@
     <div class="cd-child-ticket__header">
        <h3 class="cd-child-ticket__ticket-name">{{ $t('Ticket')}} {{firstName|addPosession}} </h3>
     </div>
-    <div class="cd-child-ticket__body">
+    <form class="cd-child-ticket__body">
       <label>{{ $t('Name')}}</label>
       <div class="cd-child-ticket__child-name">
         <input class="cd-child-ticket__first-name form-control" v-model="firstName" type="firstName" :placeholder="$t('First Name')" data-vv-name="firstName" data-vv-validate-on="blur" v-validate="'required'"/>
@@ -22,14 +22,16 @@
       <p class="cd-child-ticket__dob-err text-danger" v-show="errors.has('dob:required')">{{ $t('Date of Birth is required') }}</p>      
 
       <label>{{ $t('Gender') }}</label>
-      <gender-component class="cd-child-ticket__gender-selector" v-model="gender"></gender-component>
+      <gender-component class="cd-child-ticket__gender-selector" v-model="gender" data-vv-name="gender" v-validate="'required'"></gender-component>
+      <p class="gender-err text-danger" v-show="errors.has('gender:required')">{{ $t('Gender is required') }}<br/><a v-on:click="showWhy">{{ $t('Why is this required? Click here to find out more') }}</a></p>
+      <p class="gender-why" v-show="whyGender && errors.has('gender:required')">{{ $t(`We want to provide activities that appeal to people regardless of their gender.`) }}<br/>{{ $t(`To check how well we are succeeding, we'd like to find out whether or not people of different genders are equally likely to take part.`) }}</p>  
       
       <label>{{ $t('Ticket') }}</label>
       <div class="cd-child-ticket__ticket-selector"> 
-        <multiselect v-model="tickets" :options="childTickets" group-label="name" group-values="tickets" :multiple="false" :searchable="false" :group-select="false" :placeholder="$t('Select Event Tickets')" track-by="id" label="name" @close="onTicketTouch" ></multiselect>
+        <multiselect v-model="tickets" :options="childTickets" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select Event Tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" data-vv-name="tickets" v-validate="'required'"></multiselect>
       </div>
-      <p class="cd-child-ticket__ticket-select-err text-danger" v-show="invalidTicket">{{ $t('Ticket selection is required') }}</p>  
-    </div>
+      <p class="cd-child-ticket__ticket-select-err text-danger" v-show="errors.has('tickets:required')">{{ $t('Ticket selection is required') }}</p>  
+    </form>
   </div>
 </template>
 
@@ -52,13 +54,21 @@
         surname: '',
         dob: null,
         gender: '',
-        ticketTouch: false,
+        whyGender: false,
         tickets: [],
       };
     },
     methods: {
-      onTicketTouch() {
-        this.ticketTouch = true;
+      showWhy() {
+        this.whyGender = true;
+      },
+      onBlur() {
+        this.blurTimeout = window.setTimeout(() => {
+          this.$emit('blur');
+        }, 50);
+      },
+      onFocus() {
+        window.clearTimeout(this.blurTimeout);
       },
     },
     filters: {
@@ -78,14 +88,11 @@
           id: session.id,
           name: session.name,
           status: session.status,
-          tickets: session.tickets.filter(ticket => ticket.type === 'ninja'),
+          tickets: session.tickets.filter(ticket => ticket.type === 'ninja' && 'others'),
         }));
       },
       name() {
         return `${this.firstName} ${this.surname}`;
-      },
-      invalidTicket() {
-        return this.ticketTouch && this.tickets.length === 0;
       },
       status() {
         if (this.event.ticketApproval) {
