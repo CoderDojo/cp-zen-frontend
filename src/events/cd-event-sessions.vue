@@ -3,7 +3,14 @@
     <h1 class="cd-event-sessions__header">Select Youth Tickets</h1>
      <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
     {{ $t('Please contact the Dojo if you have any questions.') }}</p>
-    <child-ticket :eventId="eventId" :event="event" :sessions="sessions"></child-ticket>
+    <template v-for="(child, index) in children">
+      <component :is="child" :key="child.name" :eventId="eventId" :event="event" :sessions="sessions"></component>      
+    </template>
+<!--     needs test for this error -->
+    <p v-show="errors.has('addChildFailed')" class="text-danger">{{ $t('There was a problem adding child: The above child is not valid/complete') }}</p>
+
+    <button class="cd-event-sessions__add-youth btn btn-primary" tag="button" @click="addYouth"><i class="fa fa-plus" aria-hidden="true"></i> Add Another Youth</button>
+<!--     <input class="cd-event-sessions__add-youth btn btn-primary" tag="button" type="submit" value="&#xf002; Add Another Youth" /> -->
 <!--     <p>{{ $t('Select tickets for the sessions that you wish to attend.') }}</p> -->
 <!--     <div class="cd-event-sessions__session" v-for="session in sessions">
       <h3 class="cd-event-sessions__name">{{ session.name }}</h3> -->
@@ -35,6 +42,8 @@
     },
     data() {
       return {
+        children: [ChildTicket],
+        valid: true,
         sessions: [],
         event: null,
         totalBooked: 0,
@@ -42,6 +51,25 @@
       };
     },
     methods: {
+      async validateAllChildren() {
+        return Promise.all(this.$children.map(child => child.$validator.validateAll()));
+      },
+      async addYouth() {
+        const validatedChildren = await this.validateAllChildren();
+        validatedChildren.forEach((childIsValid) => {
+          if (!childIsValid) {
+            this.valid = false;
+          } else {
+            this.valid = true;
+          }
+        });
+        if (this.valid === false) {
+          this.errors.add('addChildFailed', 'Child not valid');
+        } else {
+          this.errors.clear();
+          this.children.push(ChildTicket);
+        }
+      },
       quantityBooked() {
         const tickets = StoreService.load(`booking-${this.eventId}-sessions`);
         this.totalBooked = 0;
@@ -102,12 +130,21 @@
       padding: 16px;
       margin-bottom: 24px;
     }
-
     &__next {
       .primary-button-large;
       &-error {
         display: block;
       }
+    }
+    &__add-youth {
+      font-family: FontAwesome;
+      .primary-button;
+      @blue-color: #0093D5;
+      background-color: white;
+      color:@blue-color;
+      border-style: solid;
+      border-color:@blue-color;
+      border-width: 1px;
     }
   }
 </style>

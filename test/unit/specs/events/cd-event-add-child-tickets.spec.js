@@ -39,6 +39,24 @@ describe('Add Child Ticket', () => {
     });
   });
 
+  // put test for filter
+  describe('filter.addPosession', () => {
+    it('should add possesion if a first name is provided', async () => {
+      // ARRANGE
+      const vm = vueUnitHelper(ChildTicketWithMocks);
+
+      // ASSERT
+      expect(vm.addPosession('Jane')).to.equal(' - Jane');
+    });
+    it('should not possesion if a first name is not provided', async () => {
+      // ARRANGE
+      const vm = vueUnitHelper(ChildTicketWithMocks);
+
+      // ASSERT
+      expect(vm.addPosession('')).to.equal('');
+    });
+  });
+
   describe('computed', () => {
     describe('computed.childTickets', () => {
       it('should filter out only child tickets from each sessions tickets', async () => {
@@ -245,5 +263,4 @@ describe('Add Child Ticket', () => {
       });
     });
   });
-// put test for filter
 });
