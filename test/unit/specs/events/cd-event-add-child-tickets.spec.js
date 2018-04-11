@@ -25,35 +25,17 @@ describe('Add Child Ticket', () => {
     sandbox.restore();
   });
 
-  describe('methods.onTicketTouch()', () => {
-    it('should change the value of ticketTouch to true', async () => {
+  describe('methods.showWhy()', () => {
+    it('should change the value of whyGender to true', async () => {
       // ARRANGE
       const vm = vueUnitHelper(ChildTicketWithMocks);
-      vm.ticketTouch = false;
+      vm.whyGender = false;
 
       // ACT
-      await vm.onTicketTouch();
+      await vm.showWhy();
 
       // ASSERT
-      expect(vm.ticketTouch).to.equal(true);
-    });
-  });
-
-  // put test for filter
-  describe('filter.addPosession', () => {
-    it('should add possesion if a first name is provided', async () => {
-      // ARRANGE
-      const vm = vueUnitHelper(ChildTicketWithMocks);
-
-      // ASSERT
-      expect(vm.addPosession('Jane')).to.equal(' - Jane');
-    });
-    it('should not possesion if a first name is not provided', async () => {
-      // ARRANGE
-      const vm = vueUnitHelper(ChildTicketWithMocks);
-
-      // ASSERT
-      expect(vm.addPosession('')).to.equal('');
+      expect(vm.whyGender).to.equal(true);
     });
   });
 
@@ -126,77 +108,6 @@ describe('Add Child Ticket', () => {
 
         // ASSERT
         expect(vm.name).to.equal('Jane Doe');
-      });
-    });
-
-    describe('computed.invalidTicket', () => {
-      it('should return the true if the ticketTouch is true and if the ticket length is equal to 0', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.ticketTouch = true;
-        vm.tickets = [];
-
-        // ACT
-
-        // ASSERT
-        expect(vm.invalidTicket).to.equal(true);
-      });
-
-      it('should return false if the ticketTouch is true and if the ticket length is not equal to 0', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.ticketTouch = true;
-        vm.tickets = [{
-          approvedApplications: 0,
-          deleted: 0,
-          entity: 'ticketentity',
-          id: 'ticketId2',
-          invites: null,
-          name: 'Ticket2',
-          quantity: 1,
-          sessionId: 'sessionId',
-          totalApplications: 0,
-          type: 'ninja' }];
-
-        // ACT
-
-        // ASSERT
-        expect(vm.invalidTicket).to.equal(false);
-      });
-
-      it('should return false if the ticketTouch is false and if the ticket length is equal to 0', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.ticketTouch = false;
-        vm.tickets = [];
-
-        // ACT
-
-        // ASSERT
-        expect(vm.invalidTicket).to.equal(false);
-      });
-
-
-      it('should return false if the ticketTouch is false and if the ticket length is not equal to 0', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.ticketTouch = false;
-        vm.tickets = [{
-          approvedApplications: 0,
-          deleted: 0,
-          entity: 'ticketentity',
-          id: 'ticketId2',
-          invites: null,
-          name: 'Ticket2',
-          quantity: 1,
-          sessionId: 'sessionId',
-          totalApplications: 0,
-          type: 'ninja' }];
-
-        // ACT
-
-        // ASSERT
-        expect(vm.invalidTicket).to.equal(false);
       });
     });
 
