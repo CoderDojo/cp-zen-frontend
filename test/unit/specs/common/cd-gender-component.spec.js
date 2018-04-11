@@ -2,20 +2,6 @@ import vueUnitHelper from 'vue-unit-helper';
 import GenderComponent from '@/common/cd-gender-component';
 
 describe('Gender Component', () => {
-  describe('methods.showWhy()', () => {
-    it('should change the value of whyGender to true', async () => {
-      // ARRANGE
-      const vm = vueUnitHelper(GenderComponent);
-      vm.whyGender = false;
-
-      // ACT
-      await vm.showWhy();
-
-      // ASSERT
-      expect(vm.whyGender).to.equal(true);
-    });
-  });
-
   describe('computed', () => {
     describe('computed.specifyGender', () => {
       it('should return true if the selected gender has the value specify', async () => {

@@ -1,7 +1,7 @@
 <template>
   <div class="cd-child-ticket__ticket-box">
     <div class="cd-child-ticket__header">
-       <h3 class="cd-child-ticket__ticket-name">{{ $t('Ticket')}} {{firstName|addPosession}} </h3>
+       <h3 class="cd-child-ticket__ticket-name">{{ $t('Ticket')}} {{firstName|addPossession}} </h3>
     </div>
     <form class="cd-child-ticket__body">
       <label>{{ $t('Name')}}</label>
@@ -39,10 +39,15 @@
   import VueDobPicker from 'vue-dob-picker';
   import Multiselect from 'vue-multiselect';
   import GenderComponent from '@/common/cd-gender-component';
+  import addPossession from '@/common/filters/cd-add-possession';
+
 
   export default {
     name: 'ChildTicket',
     props: ['sessions', 'eventId', 'event'],
+    filters: {
+      addPossession,
+    },
     components: {
       VueDobPicker,
       Multiselect,
@@ -69,14 +74,6 @@
       },
       onFocus() {
         window.clearTimeout(this.blurTimeout);
-      },
-    },
-    filters: {
-      addPosession(firstName) {
-        if (firstName) {
-          return ` - ${firstName}`;
-        }
-        return firstName;
       },
     },
     computed: {

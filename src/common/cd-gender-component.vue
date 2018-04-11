@@ -14,7 +14,7 @@
 <script>
   export default {
     name: 'cd-gender-component',
-    props: ['genders'],
+    props: ['gender'],
     data() {
       return {
         genderSelect: '',
