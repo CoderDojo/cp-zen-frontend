@@ -80,6 +80,36 @@ describe('Add Child Ticket', () => {
     });
   });
 
+  describe('watch', () => {
+    describe('applications()', () => {
+      it('should emit an "input" event with the entering of application details', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(ChildTicketWithMocks);
+        const mockApplication = {
+          created: new Date(),
+          date_of_birth: new Date(1980, 10, 25, 0, 0, 0, 0),
+          dojo_id: 'dojoId',
+          event_id: 'eventId',
+          name: 'Jane Doe',
+          session_id: 'sessionId',
+          status: 'pending',
+          ticket_id: 'ticketId2',
+          ticket_name: 'Ticket2',
+          ticket_type: 'ninja',
+        };
+        const emitStub = sandbox.stub();
+        vm.$emit = emitStub;
+        vm.applications = mockApplication;
+
+        // ACT
+        vm.$watchers.applications();
+
+        // ASSERT
+        expect(emitStub).to.have.been.calledWith('input', mockApplication);
+      });
+    });
+  });
+
   describe('computed', () => {
     describe('computed.childTickets', () => {
       it('should filter out only child tickets from each sessions tickets', async () => {

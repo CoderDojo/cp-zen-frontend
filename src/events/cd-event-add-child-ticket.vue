@@ -1,7 +1,8 @@
 <template>
   <div class="cd-child-ticket__ticket-box">
     <div class="cd-child-ticket__header">
-       <h3 class="cd-child-ticket__ticket-name">{{ $t('Ticket')}} {{firstName|addPossession}} </h3>
+       <h3 class="cd-child-ticket__ticket-name">{{ $t('Ticket')}} {{firstName|addPossession}}</h3>
+       <button class="cd-child-ticket__delete-ticket"><i class="fa fa-trash" aria-hidden="true" @click="$emit('delete')"></i></button>
     </div>
     <form class="cd-child-ticket__body">
       <label>{{ $t('Name')}}</label>
@@ -76,6 +77,11 @@
         window.clearTimeout(this.blurTimeout);
       },
     },
+    watch: {
+      applications() {
+        this.$emit('input', this.applications);
+      },
+    },
     computed: {
       childTickets() {
         return this.sessions.map(session => ({
@@ -128,6 +134,12 @@
     &__header {
       background-color: #f4f5f6;
       padding: 24px;
+      display: flex;
+      justify-content: space-between;
+    }
+    &__delete-ticket {
+      border: none;
+      background-color: transparent;
     }
     &__body {
       padding: 24px;
