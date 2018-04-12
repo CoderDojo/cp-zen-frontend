@@ -14,7 +14,7 @@
 <script>
   export default {
     name: 'cd-gender-component',
-    props: ['gender'],
+    props: ['value'],
     data() {
       return {
         genderSelect: '',
@@ -35,12 +35,22 @@
       specifyGender() {
         return this.genderSelect === 'specify';
       },
-      gender() {
-        this.whyGender = false;
-        if (this.genderSelect === 'specify') {
-          return this.genderInput;
-        }
-        return this.genderSelect;
+      gender: {
+        get() {
+          this.whyGender = false;
+          if (this.genderSelect === 'specify') {
+            return this.genderInput;
+          }
+          return this.genderSelect;
+        },
+        set(genderVal) {
+          if (genderVal !== ('male' || 'female' || 'prefer not to answer')) {
+            this.genderSelect = 'specify';
+            this.genderInput = genderVal;
+          } else {
+            this.genderSelect = genderVal;
+          }
+        },
       },
     },
     watch: {
