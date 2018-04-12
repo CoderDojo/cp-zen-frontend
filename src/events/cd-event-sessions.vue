@@ -3,9 +3,7 @@
     <h1 class="cd-event-sessions__header">Select Youth Tickets</h1>
      <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
     {{ $t('Please contact the Dojo if you have any questions.') }}</p>
-    <template v-for="(child, index) in children">
-      <component :is="child" :key="child.name" :eventId="eventId" :event="event" :sessions="sessions"></component>      
-    </template>
+    <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="sessions" v-model="child.value" v-on:delete="deleteChildComponent(index)"></child-ticket>
 <!--     needs test for this error -->
     <p v-show="errors.has('addChildFailed')" class="text-danger">{{ $t('There was a problem adding child: The above child is not valid/complete') }}</p>
 
@@ -28,6 +26,7 @@
   </div>
 </template>
 <script>
+  import uuid from 'uuid/v4';
   import StoreService from '@/store/store-service';
   import service from './service';
   import EventTickets from './cd-event-tickets';
@@ -42,7 +41,7 @@
     },
     data() {
       return {
-        children: [ChildTicket],
+        children: [{ value: {}, id: uuid() }],
         valid: true,
         sessions: [],
         event: null,
@@ -51,8 +50,10 @@
       };
     },
     methods: {
+      // needs tests for these bois
       async validateAllChildren() {
-        return Promise.all(this.$children.map(child => child.$validator.validateAll()));
+        return Promise.all(this.$refs.allChildComponents.map(
+          child => child.$validator.validateAll()));
       },
       async addYouth() {
         const validatedChildren = await this.validateAllChildren();
@@ -67,9 +68,13 @@
           this.errors.add('addChildFailed', 'Child not valid');
         } else {
           this.errors.clear();
-          this.children.push(ChildTicket);
+          this.children.push({ value: {}, id: uuid() });
         }
       },
+      deleteChildComponent(index) {
+        this.children.splice(index, 1);
+      },
+      //
       quantityBooked() {
         const tickets = StoreService.load(`booking-${this.eventId}-sessions`);
         this.totalBooked = 0;
