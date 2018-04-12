@@ -22,7 +22,7 @@
       <p class="cd-child-ticket__dob-err text-danger" v-show="errors.has('dob:required')">{{ $t('Date of Birth is required') }}</p>      
 
       <label>{{ $t('Gender') }}</label>
-      <gender-component class="cd-child-ticket__gender-selector" v-model="gender" data-vv-name="gender" v-validate="'required'"></gender-component>
+      <gender-component class="cd-child-ticket__gender-selector" v-model="gender" data-vv-value-path="value" data-vv-name="gender" v-validate="'required'"></gender-component>
       <p class="gender-err text-danger" v-show="errors.has('gender:required')">{{ $t('Gender is required') }}<br/><a v-on:click="showWhy">{{ $t('Why is this required? Click here to find out more') }}</a></p>
       <p class="gender-why" v-show="whyGender && errors.has('gender:required')">{{ $t(`We want to provide activities that appeal to people regardless of their gender.`) }}<br/>{{ $t(`To check how well we are succeeding, we'd like to find out whether or not people of different genders are equally likely to take part.`) }}</p>  
       

@@ -25,17 +25,58 @@ describe('Add Child Ticket', () => {
     sandbox.restore();
   });
 
-  describe('methods.showWhy()', () => {
-    it('should change the value of whyGender to true', async () => {
-      // ARRANGE
-      const vm = vueUnitHelper(ChildTicketWithMocks);
-      vm.whyGender = false;
+  describe('methods', () => {
+    describe('methods.showWhy()', () => {
+      it('should change the value of whyGender to true', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(ChildTicketWithMocks);
+        vm.whyGender = false;
 
-      // ACT
-      await vm.showWhy();
+        // ACT
+        await vm.showWhy();
 
-      // ASSERT
-      expect(vm.whyGender).to.equal(true);
+        // ASSERT
+        expect(vm.whyGender).to.equal(true);
+      });
+    });
+
+    describe('methods.onBlur()', () => {
+      it('should emit a blur event after 50ms and assign the timeout to blurTimeout', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(ChildTicketWithMocks);
+        sandbox.stub(window, 'setTimeout').callsFake((cb) => {
+          cb();
+          return 'foo';
+        });
+        const emitStub = sandbox.stub();
+        vm.$emit = emitStub;
+
+        // ACT
+        vm.onBlur();
+
+        // ASSERT
+        expect(window.setTimeout).to.have.been.calledOnce;
+        expect(window.setTimeout).to.have.been.calledWith(sinon.match.func, 50);
+        expect(vm.$emit).to.have.been.calledOnce;
+        expect(vm.$emit).to.have.been.calledWith('blur');
+        expect(vm.blurTimeout).to.equal('foo');
+      });
+    });
+
+    describe('methods.onFocus()', () => {
+      it('should clear any existing blur timeout', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(ChildTicketWithMocks);
+        sandbox.stub(window, 'clearTimeout');
+        vm.blurTimeout = 'foo';
+
+        // ACT
+        vm.onFocus();
+
+        // ASSERT
+        expect(window.clearTimeout).to.have.been.calledOnce;
+        expect(window.clearTimeout).to.have.been.calledWith('foo');
+      });
     });
   });
 

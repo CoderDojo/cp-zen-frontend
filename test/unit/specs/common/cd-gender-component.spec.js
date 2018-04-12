@@ -2,6 +2,57 @@ import vueUnitHelper from 'vue-unit-helper';
 import GenderComponent from '@/common/cd-gender-component';
 
 describe('Gender Component', () => {
+  let sandbox;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  describe('methods', () => {
+    describe('methods.onBlur()', () => {
+      it('should emit a blur event after 50ms and assign the timeout to blurTimeout', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(GenderComponent);
+        sandbox.stub(window, 'setTimeout').callsFake((cb) => {
+          cb();
+          return 'foo';
+        });
+        const emitStub = sandbox.stub();
+        vm.$emit = emitStub;
+
+        // ACT
+        vm.onBlur();
+
+        // ASSERT
+        expect(window.setTimeout).to.have.been.calledOnce;
+        expect(window.setTimeout).to.have.been.calledWith(sinon.match.func, 50);
+        expect(vm.$emit).to.have.been.calledOnce;
+        expect(vm.$emit).to.have.been.calledWith('blur');
+        expect(vm.blurTimeout).to.equal('foo');
+      });
+    });
+
+    describe('methods.onFocus()', () => {
+      it('should clear any existing blur timeout', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(GenderComponent);
+        sandbox.stub(window, 'clearTimeout');
+        vm.blurTimeout = 'foo';
+
+        // ACT
+        vm.onFocus();
+
+        // ASSERT
+        expect(window.clearTimeout).to.have.been.calledOnce;
+        expect(window.clearTimeout).to.have.been.calledWith('foo');
+      });
+    });
+  });
+
   describe('computed', () => {
     describe('computed.specifyGender', () => {
       it('should return true if the selected gender has the value specify', async () => {
@@ -49,6 +100,25 @@ describe('Gender Component', () => {
 
         // ASSERT
         expect(vm.gender).to.equal('male');
+      });
+    });
+  });
+
+  describe('watch', () => {
+    describe('gender()', () => {
+      it('should emit an "input" event with the updated gender', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(GenderComponent);
+        const mockGender = 'female';
+        const emitStub = sandbox.stub();
+        vm.$emit = emitStub;
+        vm.gender = mockGender;
+
+        // ACT
+        vm.$watchers.gender();
+
+        // ASSERT
+        expect(emitStub).to.have.been.calledWith('input', mockGender);
       });
     });
   });
