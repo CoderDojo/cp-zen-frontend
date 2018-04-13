@@ -5,6 +5,7 @@ module.exports = {
     lastName: 'one',
     name: 'parent one',
     email: 'parent1@example.com',
+    phone: '',
     initUserType: JSON.stringify({name: 'parent-guardian', title: 'Parent/Guardian'}),
     roles: ['basic-user'],
     children: {'child1': {
@@ -21,6 +22,7 @@ module.exports = {
     lastName: 'two',
     name: 'parent two',
     email: 'parent2@example.com',
+    phone: '123456789',
     initUserType: JSON.stringify({name: 'parent-guardian', title: 'Parent/Guardian'}),
     roles: ['basic-user'],
     children: {'child1': {
