@@ -1,10 +1,13 @@
 import vueUnitHelper from 'vue-unit-helper';
+import { clone } from 'lodash';
 import ChildTicket from '!!vue-loader?inject!@/events/cd-event-add-child-ticket';
 
 describe('Add Child Ticket', () => {
   let sandbox;
   let MockVueDobPicker;
   let MockVueMultiselect;
+  let MockUserUtils;
+  let MockUsersService;
   let ChildTicketWithMocks;
 
   beforeEach(() => {
@@ -15,9 +18,18 @@ describe('Add Child Ticket', () => {
     MockVueMultiselect = {
       ticketSelect: sandbox.stub(),
     };
+    MockUserUtils = {
+      isUnderAge: sandbox.stub(),
+      profileToJSON: sandbox.stub(),
+    };
+    MockUsersService = {
+      addChild: sandbox.stub(),
+    };
     ChildTicketWithMocks = ChildTicket({
       'vue-dob-picker': MockVueDobPicker,
       'vue-multiselect': MockVueMultiselect,
+      '@/users/util': MockUserUtils,
+      '@/users/service': MockUsersService,
     });
   });
 
@@ -27,13 +39,13 @@ describe('Add Child Ticket', () => {
 
   describe('methods', () => {
     describe('methods.showWhy()', () => {
-      it('should change the value of whyGender to true', async () => {
+      it('should change the value of whyGender to true', () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
         vm.whyGender = false;
 
         // ACT
-        await vm.showWhy();
+        vm.showWhy();
 
         // ASSERT
         expect(vm.whyGender).to.equal(true);
@@ -78,10 +90,42 @@ describe('Add Child Ticket', () => {
         expect(window.clearTimeout).to.have.been.calledWith('foo');
       });
     });
+
+    describe('methods.createChild()', () => {
+      it('should create a new child profile with the computed child object and change/set the userId with the id of the reponse', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(ChildTicketWithMocks);
+        const childIdCounter = 1;
+        vm.child = {
+          name: 'John Doe',
+          dob: new Date(2010, 0, 1, 0, 0, 0, 0),
+          gender: 'male',
+          userTypes: ['attendee-u13'],
+        };
+        MockUserUtils.profileToJSON.callsFake(child => child);
+        MockUsersService.addChild.callsFake((child) => {
+          const childClone = clone(child);
+          childClone.id = childIdCounter;
+          childClone.userId = 1000 + childIdCounter;
+          return Promise.resolve({ body: childClone });
+        });
+        // ACT
+        await vm.createChild();
+
+        // ASSERT
+        expect(MockUsersService.addChild.getCall(0).args[0]).to.deep.equal({
+          name: 'John Doe',
+          dob: new Date(2010, 0, 1, 0, 0, 0, 0),
+          gender: 'male',
+          userTypes: ['attendee-u13'],
+        });
+        expect(vm.userId).to.equal(1);
+      });
+    });
   });
 
   describe('watch', () => {
-    describe('applications()', () => {
+    describe('watch.applications()', () => {
       it('should emit an "input" event with the entering of application details', () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
@@ -214,6 +258,7 @@ describe('Add Child Ticket', () => {
         vm.dob = new Date(1980, 10, 25, 0, 0, 0, 0);
         vm.eventId = 'eventId';
         vm.status = 'pending';
+        vm.userId = null;
         vm.tickets = [{
           approvedApplications: 0,
           deleted: 0,
@@ -241,7 +286,28 @@ describe('Add Child Ticket', () => {
           ticket_id: 'ticketId2',
           ticket_name: 'Ticket2',
           ticket_type: 'ninja',
+          user_id: null,
         }]);
+      });
+    });
+
+    describe('computed.child', () => {
+      it('should return child info', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(ChildTicketWithMocks);
+        vm.name = 'Jane Doe';
+        vm.dob = new Date(2010, 1, 1, 0, 0, 0, 0);
+        vm.gender = 'female';
+        MockUserUtils.isUnderAge.withArgs(vm.dob).returns(true);
+        // ACT
+
+        // ASSERT
+        expect(vm.child).to.deep.equal({
+          name: 'Jane Doe',
+          dob: new Date(2010, 1, 1, 0, 0, 0, 0),
+          gender: 'female',
+          userTypes: ['attendee-u13'],
+        });
       });
     });
   });

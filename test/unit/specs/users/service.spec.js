@@ -73,6 +73,23 @@ describe('UserService', () => {
     });
   });
 
+  describe('updateUserProfileData()', () => {
+    it('should update the current users profile with the given profile', async () => {
+      // ARRANGE
+      const profile = {
+        id: 'foo',
+      };
+
+      sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
+
+      // ACT
+      await UserService.updateUserProfileData(profile);
+
+      // ASSERT
+      expect(Vue.http.post).to.have.been.calledWith(`${Vue.config.apiServer}/api/2.0/profiles/create`, { profile });
+    });
+  });
+
   describe('getCurrentUser()', () => {
     it('should return a promise that resolves with the currently logged in user', (done) => {
       // ARRANGE

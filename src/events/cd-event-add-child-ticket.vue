@@ -37,6 +37,8 @@
 </template>
 
 <script>
+  import UserUtils from '@/users/util';
+  import UserService from '@/users/service';
   import VueDobPicker from 'vue-dob-picker';
   import Multiselect from 'vue-multiselect';
   import GenderComponent from '@/common/cd-gender-component';
@@ -62,6 +64,7 @@
         gender: '',
         whyGender: false,
         tickets: [],
+        userId: null,
       };
     },
     methods: {
@@ -75,6 +78,12 @@
       },
       onFocus() {
         window.clearTimeout(this.blurTimeout);
+      },
+      async createChild() {
+        return UserService.addChild(this.child)
+        .then((response) => {
+          this.userId = response.body.id;
+        });
       },
     },
     watch: {
@@ -115,7 +124,16 @@
           created: new Date(),
           dojo_id: this.event.dojoId,
           ticket_id: ticket.id,
+          user_id: this.userId,
         }));
+      },
+      child() {
+        return {
+          name: this.name,
+          dob: this.dob,
+          gender: this.gender,
+          userTypes: [UserUtils.isUnderAge(this.dob) ? 'attendee-u13' : 'attendee-o13'],
+        };
       },
     },
   };

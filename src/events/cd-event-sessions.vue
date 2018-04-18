@@ -4,7 +4,7 @@
      <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
     {{ $t('Please contact the Dojo if you have any questions.') }}</p>
     <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="sessions" v-model="child.value" v-on:delete="deleteChildComponent(index)"></child-ticket>
-    <p v-show="errors.has('addChildFailed')" class="text-danger">There was a problem adding child: The above child is not valid/complete. Please correct this and try again.</p>
+    <p v-show="errors.has('addChildFailed') && totalBooked > 0" class="text-danger">There was a problem adding child: The above child is not valid/complete. Please correct this and try again.</p>
 
     <div class="cd-event-sessions__add-button">
       <button class="cd-event-sessions__add-youth btn btn-primary" tag="button" @click="addChildComponent"><i class="fa fa-plus" aria-hidden="true"></i> Add Youth Ticket</button>
@@ -12,32 +12,21 @@
 
     <div class="cd-event-sessions__phone-number" v-show="showPhone">
       <label>Phone Number</label>
-      <p>Since you are over 18, the Dojo needs your number in case of emergencys.</p>
+      <p>Since you are acting as a guardian, the Dojo needs your number in case of emergencies.</p>
       <div class="cd-event-sessions__phone-number-input">
         <input class="form-control" v-model="phone" ref="phone" type="text" placeholder="e.g. +353851234567" data-vv-name="phone" data-vv-validate-on="blur" v-validate="{ required: true, regex: /^\+[0-9\ \.\-]+$/ }"/>
       </div>
     </div>
-    <p class="text-danger" v-show="errors.has('phone:required')">{{ $t('Phone number is required') }}</p>
-    <p class="text-danger" v-show="errors.has('phone:regex')">* Please include the country code. For example, a phone number in Ireland should begin +353</p>
+    <p class="text-danger" v-show="showPhone && errors.has('phone:required')">{{ $t('Phone number is required') }}</p>
+    <p class="text-danger" v-show="showPhone && errors.has('phone:regex')">* Please include the country code. For example, a phone number in Ireland should begin +353</p>
 
     <div class="cd-event-sessions__next-block">
       <p v-show="totalBooked <= 0" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('Please select at least one ticket') }}</p>
       <p v-show="errors.has('submitChildComponentsFailed')" class="cd-event-sessions__next-child-error text-danger">There was a problem confirming tickets: A ticket is not valid/complete. Please correct this and try again.</p>
-      <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="next">Confirm booking for {{totalBooked}} tickets</button>
+      <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="next">Request booking for {{totalBooked}} tickets</button>
     </div>
-    <!--     <p>{{ $t('Select tickets for the sessions that you wish to attend.') }}</p> -->
-<!--     <div class="cd-event-sessions__session" v-for="session in sessions">
-      <h3 class="cd-event-sessions__name">{{ session.name }}</h3> -->
-<!--       <p class="cd-event-sessions__description">{{ session.description }}</p> -->
-<!--       <event-tickets :tickets="session.tickets" :session="session" :event-id="eventId" v-on:update="quantityBooked"></event-tickets>
-    </div> -->
-
-<!--     <div class="cd-event-sessions__next-block">
-      <label v-show="totalBooked <= 0 && submitted" class="cd-event-sessions__next-error text-danger">
-        {{ $t('Please select at least one ticket') }}</label>
-      <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="next()">
-        {{ $t('Next') }}
-      </button>
+    <!--     <div class="cd-event-sessions__session" v-for="session in sessions">
+    <p class="cd-event-sessions__description">{{ session.description }}</p> 
     </div> -->
   </div>
 </template>
@@ -62,12 +51,12 @@
         event: null,
         children: [{ value: {}, id: uuid() }],
         valid: true,
+        validPhone: true,
         user: {},
         phone: '',
         submitted: false,
       };
     },
-    // needs tests for these bois
     computed: {
       showPhone() {
         if (this.user.phone) {
@@ -78,22 +67,31 @@
       totalBooked() {
         return this.children.length;
       },
+      applications() {
+        return [].concat(...(this.children).map(child => child.value));
+      },
     },
     methods: {
-      // needs tests for these bois
       async validateAllChildComponents() {
         return Promise.all(this.$refs.allChildComponents.map(
           child => child.$validator.validateAll()));
       },
-      async addChildComponent() {
+      async checkValidatedChildComponents() {
         const validatedChildComponents = await this.validateAllChildComponents();
-        validatedChildComponents.forEach((childIsValid) => {
-          if (!childIsValid) {
-            this.valid = false;
-          } else {
-            this.valid = true;
-          }
-        });
+        if (validatedChildComponents.length > 0) {
+          validatedChildComponents.forEach((childIsValid) => {
+            if (!childIsValid) {
+              this.valid = false;
+            } else {
+              this.valid = true;
+            }
+          });
+        }
+      },
+      async addChildComponent() {
+        this.valid = true;
+        await this.checkValidatedChildComponents();
+
         if (this.valid === false) {
           this.errors.add('addChildFailed', 'Child not valid');
         } else {
@@ -104,45 +102,54 @@
       deleteChildComponent(index) {
         this.children.splice(index, 1);
       },
-      async loadCurrentUser() {
-        const response = await UserService.getCurrentUser();
-        this.user = response.body.user;
+      async addPhoneNumber() {
+        const userProfile = await UserService.userProfileData(this.user.id);
+        userProfile.phone = this.phone;
+        return UserService.updateUserProfileData(userProfile);
       },
-      //
-      // quantityBooked(val) {
-      //   this.totalBooked = 0;
-      //   Object.keys(tickets).forEach((session) => {
-      //     if (tickets[session].selectedTickets) {
-      //       this.totalBooked += tickets[session].selectedTickets.length;
-      //     }
-      //   });
-      //   this.submitted = false;
-      // },
-      async next() {
-        const validatedChildComponents = await this.validateAllChildComponents();
-        validatedChildComponents.forEach((childIsValid) => {
-          if (!childIsValid) {
-            this.valid = false;
-          } else {
-            this.valid = true;
-          }
+      async addNewChildren() {
+        let promiseChain = Promise.resolve();
+        (this.$refs.allChildComponents).forEach((child) => {
+          promiseChain = promiseChain.then(() => child.createChild());
         });
+        return promiseChain;
+      },
+      bookTickets() {
+        this.$ga.event(this.$route.name, 'click', 'book_tickets', this.totalBooked);
+        return service.manageTickets(this.applications);
+      },
+      async submitForm() {
+        this.errors.clear();
+        if (this.showPhone) {
+          await this.addPhoneNumber();
+        }
+        await this.addNewChildren();
+        this.bookTickets();
+        this.$router.push({ name: 'EventBookingConfirmation',
+          params: { eventId: this.eventId } });
+      },
+      async next() {
+        this.errors.clear();
+        this.valid = false;
+        await this.checkValidatedChildComponents();
 
-        const validPhone = await this.$validator.validateAll();
+        if (this.showPhone) {
+          this.validPhone = await this.$validator.validateAll();
+        }
 
         if (this.valid === false) {
           this.errors.add('submitChildComponentsFailed', 'Child not valid');
-        } else if (validPhone === false) {
-          this.errors.add('phone:required', 'Phone number is required');
+        } else if (this.validPhone === false) {
+          return false;
         } else {
-          this.errors.clear();
-        // if (this.totalBooked > 0) {
-        //   return this.$router.push({ name: 'EventBookingForm',
-        // params: { eventId: this.eventId } });
-        // }
-        // this.submitted = true;
-        // return false;
+          await this.submitForm();
+          return true;
         }
+        return false;
+      },
+      async loadCurrentUser() {
+        const response = await UserService.getCurrentUser();
+        this.user = response.body.user;
       },
       loadSessions() {
         service.loadSessions(this.eventId).then((response) => {
@@ -199,7 +206,6 @@
       padding: 0px 0px 8px;
     }
     &__add-youth {
-      font-family: FontAwesome;
       .primary-button;
       @blue-color: #0093D5;
       background-color: white;
