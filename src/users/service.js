@@ -20,6 +20,8 @@ const UserService = {
 
   userProfileData: userId => Vue.http.post(`${Vue.config.apiServer}/api/2.0/profiles/user-profile-data`, { query: { userId } }),
 
+  updateUserProfileData: profile => Vue.http.post(`${Vue.config.apiServer}/api/2.0/profiles/create`, { profile }),
+
   getCurrentUser: () => Vue.http.get(`${Vue.config.apiServer}/api/2.0/users/instance`),
 
   getChildren: userId => Vue.http.get(`${Vue.config.apiServer}/api/2.0/profiles/children-for-user/${userId}`),
