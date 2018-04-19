@@ -18,12 +18,12 @@
       </div>
     </div>
     <p class="text-danger" v-show="showPhone && errors.has('phone:required')">{{ $t('Phone number is required') }}</p>
-    <p class="text-danger" v-show="showPhone && errors.has('phone:regex')">* Please include the country code. For example, a phone number in Ireland should begin +353</p>
+    <p class="text-danger" v-show="showPhone && errors.has('phone:regex')">* Please include the plus symbol(+) and country code. For example, a phone number in Ireland should begin +353</p>
 
     <div class="cd-event-sessions__next-block">
       <p v-show="totalBooked <= 0" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('Please select at least one ticket') }}</p>
       <p v-show="errors.has('submitChildComponentsFailed')" class="cd-event-sessions__next-child-error text-danger">There was a problem confirming tickets: A ticket is not valid/complete. Please correct this and try again.</p>
-      <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="next">Request booking for {{totalBooked}} tickets</button>
+      <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="next">Request booking for {{totalBooked}} ticket(s)</button>
     </div>
     <!--     <div class="cd-event-sessions__session" v-for="session in sessions">
     <p class="cd-event-sessions__description">{{ session.description }}</p> 
