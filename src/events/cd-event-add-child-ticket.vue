@@ -185,6 +185,60 @@
     &__ticket-selector {
       max-width: 50%;
       padding: 8px 0px 24px;
-    }                   
+      min-height: 32px;
+    }
+     &__ticket-selector .multiselect {
+      font-family: Lato, Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      min-height: 32px;
+      border: 1px solid #ccc;
+      border-top-color: rgb(204, 204, 204);
+      border-top-style: solid;
+      border-right-color: rgb(204, 204, 204);
+      border-right-style: solid;
+      border-bottom-color: rgb(204, 204, 204);
+      border-bottom-style: solid;
+      border-left-color: rgb(204, 204, 204);
+      border-left-style: solid;
+      border-image-source: initial;
+      border-image-slice: initial;
+      border-image-width: initial;
+      border-image-outset: initial;
+      border-image-repeat: initial;
+      border-radius: 6px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+      border-bottom-left-radius: 6px;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+      transition-property: border-color, box-shadow;
+      transition-duration: 0.15s, 0.15s;
+      transition-timing-function: ease-in-out, ease-in-out;
+    }            
   }   
+</style>
+
+<style>
+.cd-child-ticket__ticket-selector .multiselect__tags {
+  min-height: 32px;
+  padding: 2px 40px 0 2px;
+}
+.cd-child-ticket__ticket-selector .multiselect__tags .multiselect__tags-wrap .multiselect__tag {
+  margin-bottom: 0px;
+  margin-top: 1px;
+}
+.cd-child-ticket__ticket-selector .multiselect__tags .multiselect__single{
+ font-size: 14px;
+ color: #555555;
+ vertical-align: middle;
+ margin-top: 1px;
+ margin-bottom: 0px;
+}   
+.cd-child-ticket__ticket-selector .multiselect__select {
+  height: 30px;
+}  
+.cd-child-ticket__dob-picker-wrapper .vue-dob-picker label select {
+  font: 14px Lato, Arial, Helvetica, sans-serif;
+}  
 </style>
