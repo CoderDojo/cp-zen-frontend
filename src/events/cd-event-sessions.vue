@@ -23,7 +23,7 @@
     <div class="cd-event-sessions__next-block">
       <p v-show="totalBooked <= 0" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('Please select at least one ticket') }}</p>
       <p v-show="errors.has('submitChildComponentsFailed')" class="cd-event-sessions__next-child-error text-danger">There was a problem confirming tickets: A ticket is not valid/complete. Please correct this and try again.</p>
-      <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="next">Request booking for {{totalBooked}} ticket(s)</button>
+      <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="submitBooking">Request booking for {{totalBooked}} ticket(s)</button>
     </div>
     <!--     <div class="cd-event-sessions__session" v-for="session in sessions">
     <p class="cd-event-sessions__description">{{ session.description }}</p> 
@@ -50,7 +50,7 @@
         sessions: [],
         event: null,
         children: [{ value: {}, id: uuid() }],
-        valid: true,
+        validChildren: null,
         validPhone: true,
         user: {},
         phone: '',
@@ -59,10 +59,7 @@
     },
     computed: {
       showPhone() {
-        if (this.user.phone) {
-          return false;
-        }
-        return true;
+        return !this.user.phone;
       },
       totalBooked() {
         return this.children.length;
@@ -79,20 +76,15 @@
       async checkValidatedChildComponents() {
         const validatedChildComponents = await this.validateAllChildComponents();
         if (validatedChildComponents.length > 0) {
-          validatedChildComponents.forEach((childIsValid) => {
-            if (!childIsValid) {
-              this.valid = false;
-            } else {
-              this.valid = true;
-            }
-          });
+          this.validChildren = (validatedChildComponents.map(child =>
+            child)).every(childIsValid => childIsValid === true);
         }
       },
       async addChildComponent() {
-        this.valid = true;
+        this.validChildren = true;
         await this.checkValidatedChildComponents();
 
-        if (this.valid === false) {
+        if (this.validChildren === false) {
           this.errors.add('addChildFailed', 'Child not valid');
         } else {
           this.errors.clear();
@@ -103,49 +95,44 @@
         this.children.splice(index, 1);
       },
       async addPhoneNumber() {
-        const userProfile = await UserService.userProfileData(this.user.id);
-        userProfile.phone = this.phone;
-        return UserService.updateUserProfileData(userProfile);
+        if (this.validPhone) {
+          const userProfile = await UserService.userProfileData(this.user.id);
+          userProfile.phone = this.phone;
+          return UserService.updateUserProfileData(userProfile);
+        }
+        return this.validPhone;
       },
       async addNewChildren() {
-        let promiseChain = Promise.resolve();
-        (this.$refs.allChildComponents).forEach((child) => {
-          promiseChain = promiseChain.then(() => child.createChild());
-        });
-        return promiseChain;
+        return Promise.all((this.$refs.allChildComponents).map(child =>
+          child.createChild()));
       },
       bookTickets() {
         this.$ga.event(this.$route.name, 'click', 'book_tickets', this.totalBooked);
         return service.manageTickets(this.applications);
       },
-      async submitForm() {
-        this.errors.clear();
+      async setupPrerequisites() {
         if (this.showPhone) {
-          await this.addPhoneNumber();
+          return Promise.all([this.addPhoneNumber(), this.addNewChildren()]);
         }
-        await this.addNewChildren();
-        this.bookTickets();
-        this.$router.push({ name: 'EventBookingConfirmation',
-          params: { eventId: this.eventId } });
+        return this.addNewChildren();
       },
-      async next() {
+      async submitBooking() {
         this.errors.clear();
-        this.valid = false;
-        await this.checkValidatedChildComponents();
-
         if (this.showPhone) {
           this.validPhone = await this.$validator.validateAll();
         }
+        this.validChildren = false;
+        await this.checkValidatedChildComponents();
 
-        if (this.valid === false) {
-          this.errors.add('submitChildComponentsFailed', 'Child not valid');
-        } else if (this.validPhone === false) {
-          return false;
+        if (this.validChildren) {
+          const setupSucceed = await this.setupPrerequisites();
+          if (setupSucceed) {
+            this.bookTickets();
+            this.$router.push({ name: 'EventBookingConfirmation', params: { eventId: this.eventId } });
+          }
         } else {
-          await this.submitForm();
-          return true;
+          this.errors.add('submitChildComponentsFailed', 'Child not valid');
         }
-        return false;
       },
       async loadCurrentUser() {
         const response = await UserService.getCurrentUser();
