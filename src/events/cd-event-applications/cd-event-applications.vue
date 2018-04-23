@@ -19,7 +19,7 @@
                 <a :href="`/api/2.0/events/export-guest-list/dojo/${dojoId}/event/${eventId}/waiting-export.csv`" target="_blank">Waiting list export</a>
               </li>
             </dropdown>
-            <button class="btn btn-default"><i class="fa fa-envelope-o"></i></button>
+            <!--<button class="btn btn-default"><i class="fa fa-envelope-o"></i></button> -->
           </div>
         </div>
       </header>
@@ -288,17 +288,20 @@
       }
       &-title {
         flex: 1;
-        padding: 6px;
+        padding: 6px 12px;
         font-weight: 800;
         &-actions {
           display: flex;
-          flex: 1;
           justify-content: flex-end;
           align-items: center;
+          /*flex: 1;
           padding: 8px;
           background-color: @cd-white;
           color: @cd-purple;
-          border-bottom: 8px solid @cd-purple;
+          padding: 16px;
+          border-bottom: 8px solid @cd-purple;*/
+          background-color: darken(@cd-purple, 20%);
+          color: @cd-white;
         }
       }
       &-old-interface {
@@ -327,16 +330,39 @@
 <style lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
   .cd-event-applications {
+    &__header {
+      .dropdown-toggle {
+        padding: 22px 28px;
+        border: none;
+        background-color: darken(@cd-purple, 20%);
+        color: @cd-white;
+        .fa {
+          font-size: 1.3em;
+          font-weight: 600;
+        }
+        &:active, &:hover {
+          border: none;
+          background-color: @cd-purple;
+        }
+        &:focus {
+          background-color: lighten(@cd-purple, 20%);
+        }
+      }
+    }
     &__table {
       .table {
+        &>thead tr:first-child {
+          background-color: lighten(@cd-purple, 20%);
+          color: @cd-white;
+        }
         &>tbody {
           &>tr {
             &.info {
               font-weight: bold;
               text-align: center;
               &>td {
-                color: @cd-white;
-                background-color: @cd-purple !important;
+                color: @cd-black;
+                background-color: lighten(@cd-orange, 30%) !important;
               }
             }
             &>td {
