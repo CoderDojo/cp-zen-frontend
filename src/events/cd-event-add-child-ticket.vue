@@ -25,8 +25,8 @@
       <label>{{ $t('Gender') }}</label>
       <gender-component class="cd-child-ticket__gender-selector" v-model="gender" data-vv-value-path="value" data-vv-name="gender" v-validate="'required'"></gender-component>
       <p class="gender-err text-danger" v-show="errors.has('gender:required')">{{ $t('Gender is required') }}<br/><a v-on:click="showWhy">{{ $t('Why is this required? Click here to find out more') }}</a></p>
-      <p class="gender-why" v-show="whyGender && errors.has('gender:required')">{{ $t(`We want to provide activities that appeal to people regardless of their gender.`) }}<br/>{{ $t(`To check how well we are succeeding, we'd like to find out whether or not people of different genders are equally likely to take part.`) }}</p>  
-      
+      <p class="gender-why" v-show="genderExplaination && errors.has('gender:required')">{{ $t(`We want to provide activities that appeal to people regardless of their gender.`) }}<br/>{{ $t(`To check how well we are succeeding, we'd like to find out whether or not people of different genders are equally likely to take part.`) }}</p>
+
       <label>{{ $t('Ticket') }}</label>
       <div class="cd-child-ticket__ticket-selector"> 
         <multiselect v-model="tickets" :options="childTickets" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select Event Tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" data-vv-name="tickets" v-validate="'required'"></multiselect>
@@ -62,14 +62,14 @@
         surname: '',
         dob: null,
         gender: '',
-        whyGender: false,
+        genderExplaination: false,
         tickets: [],
         userId: null,
       };
     },
     methods: {
       showWhy() {
-        this.whyGender = true;
+        this.genderExplaination = true;
       },
       onBlur() {
         this.blurTimeout = window.setTimeout(() => {
@@ -141,6 +141,7 @@
 
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
+  @import "../common/variables";
   .cd-child-ticket {
     &__ticket-box {
       border-style: solid;
@@ -188,38 +189,20 @@
       min-height: 32px;
     }
      &__ticket-selector .multiselect {
-      font-family: Lato, Arial, Helvetica, sans-serif;
-      font-size: 14px;
+      font-family: Lato, @font-family-sans-serif;
+      font-size: @font-size-base;
       min-height: 32px;
       border: 1px solid #ccc;
-      border-top-color: rgb(204, 204, 204);
-      border-top-style: solid;
-      border-right-color: rgb(204, 204, 204);
-      border-right-style: solid;
-      border-bottom-color: rgb(204, 204, 204);
-      border-bottom-style: solid;
-      border-left-color: rgb(204, 204, 204);
-      border-left-style: solid;
-      border-image-source: initial;
-      border-image-slice: initial;
-      border-image-width: initial;
-      border-image-outset: initial;
-      border-image-repeat: initial;
       border-radius: 6px;
-      border-top-left-radius: 6px;
-      border-top-right-radius: 6px;
-      border-bottom-right-radius: 6px;
-      border-bottom-left-radius: 6px;
       box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
       transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-      transition-property: border-color, box-shadow;
-      transition-duration: 0.15s, 0.15s;
-      transition-timing-function: ease-in-out, ease-in-out;
     }            
   }   
 </style>
 
-<style>
+<style lang="less">
+@import "../common/variables";
+@import "~bootstrap/less/variables";
 .cd-child-ticket__ticket-selector .multiselect__tags {
   min-height: 32px;
   padding: 2px 40px 0 2px;
@@ -229,7 +212,7 @@
   margin-top: 1px;
 }
 .cd-child-ticket__ticket-selector .multiselect__tags .multiselect__single{
- font-size: 14px;
+ font-size: @font-size-base;
  color: #555555;
  vertical-align: middle;
  margin-top: 1px;
@@ -239,6 +222,6 @@
   height: 30px;
 }  
 .cd-child-ticket__dob-picker-wrapper .vue-dob-picker label select {
-  font: 14px Lato, Arial, Helvetica, sans-serif;
+  font: @font-size-base Lato, @font-family-sans-serif;
 }  
 </style>
