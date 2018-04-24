@@ -111,6 +111,6 @@ describe('Login Page', () => {
     LoginPage.email.setValue('parent1@example.com');
     LoginPage.password.setValue('testparent1');
     LoginPage.login.click();
-    expect(browser.getUrl()).to.equal(browser.getUrl());
+    expect(browser.getUrl()).to.equal(browser.options.baseUrl);
   });
 });
