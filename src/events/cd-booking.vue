@@ -97,7 +97,7 @@
       margin-right: 33px;
     }
     &__submit-button {
-      .primary-button;
+      .primary-button-large;
     }
     &__header-container{
       display: flex;
