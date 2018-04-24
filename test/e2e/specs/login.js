@@ -100,7 +100,9 @@ describe('Login Page', () => {
     LoginPage.open({ referrer: '/dashboard/tickets' });
     LoginPage.email.setValue('parent1@example.com');
     LoginPage.password.setValue('testparent1');
+    const prevUrl = browser.getUrl();
     LoginPage.login.click();
+    expect(prevUrl).to.contain('%2Fdashboard%2Ftickets');
     expect(browser.getUrl()).to.contain('/dashboard/tickets');
   });
 
@@ -109,6 +111,6 @@ describe('Login Page', () => {
     LoginPage.email.setValue('parent1@example.com');
     LoginPage.password.setValue('testparent1');
     LoginPage.login.click();
-    expect(browser.getUrl()).to.equal(browser.options.baseUrl);
+    expect(browser.getUrl()).to.equal(browser.getUrl());
   });
 });

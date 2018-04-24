@@ -2,6 +2,7 @@ const FindDojoPage = require('../page-objects/find-dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
 const EventDobVerificationPage = require('../page-objects/event-dob-verification');
 const EventSessionsPage = require('../page-objects/event-sessions');
+const ChildTicket = require('../page-objects/child-ticket');
 const LoginPage = require('../page-objects/login');
 const currentYear = (new Date()).getFullYear();
 
@@ -100,49 +101,13 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.detailsLabel[1]).to.not.equal('Recent Events');
   });
 
-  it('should show event details after clicking on an event', () => {
-    FindDojoPage.openDojoWithQuery('dublin');
-    DojoDetailsPage.name.waitForVisible();
-    DojoDetailsPage.eventViewButtons[0].click();
-
-    EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
-    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('3');
-    EventDobVerificationPage.dateOfBirthYearInput.selectByValue('1980');
-    EventDobVerificationPage.verify.click();
-
-    expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
-    expect(EventSessionsPage.eventSessions[0].getText()).to.have.string('Scratch');
-    expect(EventSessionsPage.eventSessions[0].getText()).to.have.string('Beginners welcome');
-    expect(EventSessionsPage.eventTickets(0).getText()).to.have.string('Laptop Required');
-    expect(EventSessionsPage.eventTickets(1).getText()).to.have.string('Parent');
-    expect(EventSessionsPage.eventTickets(2).getText()).to.have.string('Mentor');
-    expect(EventSessionsPage.eventTickets(3).getText()).to.have.string('Bringing a laptop');
-
-    expect(EventSessionsPage.eventSessions[1].getText()).to.have.string('Arduino');
-    expect(EventSessionsPage.eventSessions[1].getText()).to.have.string('Intermediate');
-    expect(EventSessionsPage.eventTickets(4).getText()).to.have.string('Laptop required');
-
-    expect(EventSessionsPage.ticketCounterValues.length).to.equal(8);
-    EventSessionsPage.ticketCounterValues.forEach((counterValue) => {
-      expect(counterValue.getValue()).to.equal('0');
-    });
-
-    EventSessionsPage.ticketCounterIncrement(0).click();
-    expect(EventSessionsPage.ticketCounterValue(0).getValue()).to.equal('1');
-
-    EventSessionsPage.ticketCounterIncrement(2).click();
-    EventSessionsPage.ticketCounterIncrement(2).click();
-    expect(EventSessionsPage.ticketCounterValue(2).getValue()).to.equal('2');
-
-    EventSessionsPage.ticketCounterDecrement(2).click();
-    expect(EventSessionsPage.ticketCounterValue(2).getValue()).to.equal('1');
-
-    expect(EventSessionsPage.nextButton.isVisible()).to.equal(true);
-    EventSessionsPage.nextButton.click();
-    expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/book');
-  });
-
   it('should show an error if no tickets are selected', () => {
+    LoginPage.open();
+    LoginPage.email.waitForVisible();
+    LoginPage.email.setValue('parent1@example.com');
+    LoginPage.password.setValue('testparent1');
+    LoginPage.login.click();
+
     FindDojoPage.openDojoWithQuery('dublin');
     DojoDetailsPage.name.waitForVisible();
     DojoDetailsPage.eventViewButtons[0].click();
@@ -154,12 +119,11 @@ describe('Dojo details page', () => {
 
     expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
 
-    expect(EventSessionsPage.ticketCounterValues.length).to.equal(8);
-    EventSessionsPage.ticketCounterValues.forEach((counterValue) => {
-      expect(counterValue.getValue()).to.equal('0');
-    });
-
+    expect(ChildTicket.ticketBox.isVisible()).to.equal(true);
+    expect(ChildTicket.deleteTicket.isVisible()).to.equal(true);
     expect(EventSessionsPage.nextButton.isVisible()).to.equal(true);
+    ChildTicket.deleteTicket.click();
+    expect(ChildTicket.ticketBox.isVisible()).to.equal(false);
     EventSessionsPage.nextButton.click();
     expect(EventSessionsPage.noTicketSelectedError.getText()).to.equal('Please select at least one ticket');
   });
@@ -179,6 +143,7 @@ describe('Dojo details page', () => {
   });
 
   it('should hide book button on private dojos when not logged in', () => {
+    browser.deleteCookie();
     FindDojoPage.openDojoWithQuery('dublin', 3);
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(0);

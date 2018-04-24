@@ -47,7 +47,7 @@
         if (valid) {
           const response = await UserService.login(this.email, this.password);
           if (response.body.ok === false) {
-            this.$validator.errorBag.add('loginFailed', response.body.why);
+            this.errors.add('loginFailed', response.body.why);
           } else {
             this.$router.push(this.$route.query.referrer || '/');
           }

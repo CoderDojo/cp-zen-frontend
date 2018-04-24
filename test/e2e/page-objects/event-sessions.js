@@ -13,7 +13,7 @@ const EventSessionsPage = Object.create(EventDetails, {
   },
   noTicketSelectedError: {
     get() {
-      return $('.cd-event-sessions__next-error');
+      return $('.cd-event-sessions__next-ticket-select-error');
     },
   },
   eventSessions: {
