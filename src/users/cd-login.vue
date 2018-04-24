@@ -19,9 +19,9 @@
            <p class="cd-login__password-req-err text-danger" v-show="errors.has('password:required')">{{ $t('Password is required') }}</p>
           <input class="cd-login__button btn btn-primary" type="submit" value="Login" />
         </form>
-        <p v-show="errors.has('loginFailed')" class="cd-login__login-failed text-danger">{{ $t('There was a problem logging in: Invalid email or password') }}</p>
+        <p v-show="errors.has('loginFailed')" class="cd-login__login-failed text-danger">{{ $t('There was a problem logging in: {msg}', {msg: $t('Invalid email or password') }) }}</p>
         <p class="cd-login__forgot-password"><a href="/reset">{{ $t('Forgot password?') }}</a></p>
-        <p class="cd-login__register">{{ $t("Don't have an account?") }} <a href="/register">{{ $t('Register Here') }}</a></p>
+        <p class="cd-login__register">{{ $t("Don't have an account?") }} <a href="/register">{{ $t('Register here') }}</a></p>
       </div>
     </div>
   </div>
