@@ -39,16 +39,16 @@ describe('Add Child Ticket', () => {
 
   describe('methods', () => {
     describe('methods.showWhy()', () => {
-      it('should change the value of whyGender to true', () => {
+      it('should change the value of genderExplaination to true', () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.whyGender = false;
+        vm.genderExplaination = false;
 
         // ACT
         vm.showWhy();
 
         // ASSERT
-        expect(vm.whyGender).to.equal(true);
+        expect(vm.genderExplaination).to.equal(true);
       });
     });
 

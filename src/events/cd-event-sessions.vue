@@ -23,7 +23,7 @@
     <div class="cd-event-sessions__next-block">
       <p v-show="totalBooked <= 0" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('Please select at least one ticket') }}</p>
       <p v-show="errors.has('submitChildComponentsFailed')" class="cd-event-sessions__next-child-error text-danger">There was a problem confirming tickets: A ticket is not valid/complete. Please correct this and try again.</p>
-      <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="submitBooking">Request booking for {{totalBooked}} ticket(s)</button>
+      <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="submitBooking">{{ this.bookingType }} booking for {{totalBooked}} ticket(s)</button>
     </div>
     <!--     <div class="cd-event-sessions__session" v-for="session in sessions">
     <p class="cd-event-sessions__description">{{ session.description }}</p> 
@@ -66,6 +66,12 @@
       },
       applications() {
         return [].concat(...(this.children).map(child => child.value));
+      },
+      bookingType() {
+        if (this.event.ticketApproval) {
+          return 'Request';
+        }
+        return 'Confirm';
       },
     },
     methods: {
@@ -125,8 +131,8 @@
         await this.checkValidatedChildComponents();
 
         if (this.validChildren) {
-          const setupSucceed = await this.setupPrerequisites();
-          if (setupSucceed) {
+          const setupSucceeded = await this.setupPrerequisites();
+          if (setupSucceeded) {
             this.bookTickets();
             this.$router.push({ name: 'EventBookingConfirmation', params: { eventId: this.eventId } });
           }
@@ -167,21 +173,9 @@
       margin: 45px 0 16px 0;
       font-weight: bold;
     }
-    &__name {
-      margin: 0;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    &__description {
-      margin: 4px 0;
-    }
-    &__session {
-      border-style: solid;
-      border-color: @cd-orange;
-      border-width: 1px 1px 3px 1px;
-      padding: 16px;
-      margin-bottom: 24px;
-    }
+    // &__description {
+    //   margin: 4px 0;
+    // }
     &__next {
       .primary-button-large;
       margin-top: 24px;
