@@ -9,8 +9,10 @@ describe('Add Child Ticket', () => {
   let MockUserUtils;
   let MockUsersService;
   let ChildTicketWithMocks;
+  let clock;
 
   beforeEach(() => {
+    clock = sinon.useFakeTimers(new Date(2018, 3, 24, 0, 0, 0, 0));
     sandbox = sinon.sandbox.create();
     MockVueDobPicker = {
       dob: sandbox.stub(),
@@ -35,6 +37,7 @@ describe('Add Child Ticket', () => {
 
   afterEach(() => {
     sandbox.restore();
+    clock.restore();
   });
 
   describe('methods', () => {
