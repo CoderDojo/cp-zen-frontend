@@ -57,10 +57,8 @@ describe('Login', () => {
       vm = vueUnitHelper(LoginComponentWithMocks);
       vm.$router = { push: sandbox.stub() };
       vm.$route = { query: {} };
-      vm.$validator = {
-        errorBag: {
-          add: sandbox.stub(),
-        },
+      vm.errors = {
+        add: sandbox.stub(),
       };
     });
 
@@ -72,7 +70,7 @@ describe('Login', () => {
       await vm.login();
 
       // ASSERT
-      expect(vm.$validator.errorBag.add).to.not.have.been.called;
+      expect(vm.errors.add).to.not.have.been.called;
       expect(MockUserService.login).to.not.have.been.called;
       expect(vm.$router.push).to.not.have.been.called;
     });
@@ -86,7 +84,7 @@ describe('Login', () => {
       await vm.login();
 
       // ASSERT
-      expect(vm.$validator.errorBag.add).to.have.been.calledWith('loginFailed');
+      expect(vm.errors.add).to.have.been.calledWith('loginFailed');
       expect(vm.$router.push).to.not.have.been.called;
     });
 
@@ -99,7 +97,7 @@ describe('Login', () => {
       await vm.login();
 
       // ASSERT
-      expect(vm.$validator.errorBag.add).to.not.have.been.called;
+      expect(vm.errors.add).to.not.have.been.called;
       expect(vm.$router.push).to.have.been.calledOnce;
       expect(vm.$router.push).to.have.been.calledWith('/');
     });
@@ -114,7 +112,7 @@ describe('Login', () => {
       await vm.login();
 
       // ASSERT
-      expect(vm.$validator.errorBag.add).to.not.have.been.called;
+      expect(vm.errors.add).to.not.have.been.called;
       expect(vm.$router.push).to.have.been.calledOnce;
       expect(vm.$router.push).to.have.been.calledWith('/book');
     });
