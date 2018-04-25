@@ -107,7 +107,6 @@
     "vue-style-loader": "^2.0.5",
     "vue-template-compiler": "^2.2.6",
     "vue-unit-helper": "^1.0.7",
-    "wdio-allure-reporter": "^0.1.2",
     "wdio-mocha-framework": "^0.5.11",
     "wdio-phantomjs-service": "^0.2.2",
     "wdio-selenium-standalone-service": "^0.0.9",
