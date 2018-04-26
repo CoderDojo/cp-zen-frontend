@@ -37,7 +37,6 @@
       ticketsOptions() {
         return this.sessions.map(session => ({
           description: session.description,
-          entity: session.entity,
           eventId: session.eventId,
           id: session.id,
           name: session.name,
