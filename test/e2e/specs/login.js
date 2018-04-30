@@ -1,4 +1,5 @@
 const LoginPage = require('../page-objects/login');
+const MyTickets = require('../page-objects/my-tickets');
 
 describe('Login Page', () => {
   // beforeEach(() => {
@@ -103,6 +104,7 @@ describe('Login Page', () => {
     const prevUrl = browser.getUrl();
     LoginPage.login.click();
     expect(prevUrl).to.contain('%2Fdashboard%2Ftickets');
+    MyTickets.title.waitForVisible();
     expect(browser.getUrl()).to.contain('/dashboard/tickets');
   });
 
