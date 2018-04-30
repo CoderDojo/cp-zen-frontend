@@ -116,15 +116,15 @@ describe('Event ticket creation', () => {
       }];
       expect(vm.applications[0]).to.deep.equal({
         name: 'first last',
-        date_of_birth: '2014-08-08',
-        event_id: 'eventId',
+        dateOfBirth: '2014-08-08',
+        eventId: 'eventId',
         status: 'approved',
-        ticket_name: 'ticketName',
-        ticket_type: 'ticketType',
-        session_id: 'sessionId',
-        dojo_id: 'dojoId',
-        ticket_id: 'ticketId',
-        user_id: 'userId',
+        ticketName: 'ticketName',
+        ticketType: 'ticketType',
+        sessionId: 'sessionId',
+        dojoId: 'dojoId',
+        ticketId: 'ticketId',
+        userId: 'userId',
       });
     });
   });

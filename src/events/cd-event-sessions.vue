@@ -22,7 +22,7 @@
       </div>
     </div>
     <p class="text-danger" v-show="showPhone && errors.has('phone:required')">{{ $t('Phone number is required') }}</p>
-    <p class="text-danger" v-show="showPhone && errors.has('phone:regex')">{{ $('* Please include the plus symbol(+) and country code. For example, a phone number in Ireland should begin +353') }}</p>
+    <p class="text-danger" v-show="showPhone && errors.has('phone:regex')">{{ $t('* Please include the plus symbol(+) and country code. For example, a phone number in Ireland should begin +353') }}</p>
     <div class="cd-event-sessions__next-block">
       <p v-show="errors.has('submitApplications:required')" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('Please select at least one ticket') }}</p>
       <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="submitBooking" name="submitApplications" v-validate:applications="'required'" >
@@ -54,7 +54,6 @@
         event: null,
         usersTickets: [],
         children: [],
-        validChildren: null,
         validPhone: true,
         phone: '',
         user: {},

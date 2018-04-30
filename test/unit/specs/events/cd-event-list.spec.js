@@ -153,7 +153,7 @@ describe('Event list component', () => {
           params: {
             query: {
               afterDate: sinon.match.number,
-              utcOffset: -0,
+              utcOffset: -(new Date()).getTimezoneOffset(),
               status: 'published',
             },
             related: 'sessions.tickets',
@@ -178,7 +178,7 @@ describe('Event list component', () => {
             query: {
               beforeDate: sinon.match.number,
               afterDate: sinon.match.number,
-              utcOffset: -0,
+              utcOffset: -(new Date()).getTimezoneOffset(),
               status: 'published',
             },
             orderBy: 'startTime',

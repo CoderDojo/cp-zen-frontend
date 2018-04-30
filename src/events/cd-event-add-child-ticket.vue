@@ -116,16 +116,16 @@
       applications() {
         return this.tickets.map(ticket => ({
           name: this.name,
-          dob: this.dob,
-          event_id: this.eventId,
+          dateOfBirth: this.dob,
+          eventId: this.eventId,
           status: this.status,
-          ticket_name: ticket.name,
-          ticket_type: ticket.type,
-          session_id: ticket.sessionId,
+          ticketName: ticket.name,
+          ticketType: ticket.type,
+          sessionId: ticket.sessionId,
           created: new Date(),
-          dojo_id: this.event.dojoId,
-          ticket_id: ticket.id,
-          user_id: this.userId,
+          dojoId: this.event.dojoId,
+          ticketId: ticket.id,
+          userId: this.userId,
         }));
       },
       child() {

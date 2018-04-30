@@ -37,7 +37,7 @@ describe('Event sessions component', () => {
       it('should return false if the user has a phone in their profile', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.user = { phone: '353123456789' };
+        vm.profile = { phone: '353123456789' };
         // ACT
 
         // ASSERT
@@ -46,7 +46,7 @@ describe('Event sessions component', () => {
       it('should return true if the user does not have a phone in their profile', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.user = { phone: '' };
+        vm.profile = { phone: '' };
         // ACT
 
         // ASSERT
@@ -83,174 +83,32 @@ describe('Event sessions component', () => {
           }]);
       });
     });
-
-    describe('computed.bookingType', () => {
-      it('should return a bookingType of Request if the event ticketApproval is set to true', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.event = { ticketApproval: true };
-
-        // ACT
-
-        // ASSERT
-        expect(vm.bookingType).to.equal('Request');
-      });
-
-      it('should return a bookingType of Confirm if the event ticketApproval is set to false', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.event = { ticketApproval: false };
-
-        // ACT
-
-        // ASSERT
-        expect(vm.bookingType).to.equal('Confirm');
-      });
-    });
   });
-
   describe('methods', () => {
-    describe('methods.validateAllChildComponents()', () => {
-      it('should create an array value of true if the validation of the child component resolves to true', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.$refs = {
-          allChildComponents: [
-            {
-              $validator: {
-                validateAll: () => Promise.resolve(true),
-              },
-            },
-          ],
-        };
-        // ACT
-        const validatedChild = await vm.validateAllChildComponents();
-
-        // ASSERT
-        expect(validatedChild).to.deep.equal([true]);
-      });
-      it('should create an array value of false if the validation of the child component resolves to false', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.$refs = {
-          allChildComponents: [
-            {
-              $validator: {
-                validateAll: () => Promise.resolve(false),
-              },
-            },
-          ],
-        };
-        // ACT
-        const validatedChild = await vm.validateAllChildComponents();
-
-        // ASSERT
-        expect(validatedChild).to.deep.equal([false]);
-      });
-    });
-
-    describe('methods.checkValidatedChildComponents()', () => {
-      it('should set valid to true if validatedChildComponents are all true', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.validChildren = null;
-        sandbox.stub(vm, 'validateAllChildComponents').resolves([true]);
-
-        // ACT
-        await vm.checkValidatedChildComponents();
-
-        // ASSERT
-        expect(vm.validChildren).to.equal(true);
-      });
-
-      it('should set valid to false if all (or one of) validatedChildComponents are/is false', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.validChildren = null;
-        sandbox.stub(vm, 'validateAllChildComponents').resolves([false]);
-
-        // ACT
-        await vm.checkValidatedChildComponents();
-
-        // ASSERT
-        expect(vm.validChildren).to.equal(false);
-      });
-
-      it('should not change the value of valid if there are no child components', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.validChildren = null;
-        sandbox.stub(vm, 'validateAllChildComponents').resolves([]);
-
-        // ACT
-        await vm.checkValidatedChildComponents();
-
-        // ASSERT
-        expect(vm.validChildren).to.equal(null);
-      });
-    });
-
     describe('methods.addChildComponent()', () => {
       it('should add a new child component if all child components are valid', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.children = [{ value: { name: 'John Doe' }, id: '1' }];
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = true;
-        });
         uuidMock.returns('2');
-        vm.errors = {
-          clear: sandbox.stub(),
-        };
 
         // ACT
         await vm.addChildComponent();
 
         // ASSERT
-        expect(vm.checkValidatedChildComponents).to.have.been.called;
-        expect(vm.validChildren).to.equal(true);
-        expect(vm.errors.clear).to.have.been.called;
         expect(vm.children).to.deep.equal([{ value: { name: 'John Doe' }, id: '1' }, { value: {}, id: '2' }]);
-      });
-
-      it('should add error and not a child component if child components are invalid', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.children = [{ value: { name: '' }, id: '1' }];
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = false;
-        });
-        vm.errors = {
-          add: sandbox.stub(),
-        };
-
-        // ACT
-        await vm.addChildComponent();
-
-        // ASSERT
-        expect(vm.checkValidatedChildComponents).to.have.been.called;
-        expect(vm.validChildren).to.equal(false);
-        expect(vm.errors.add).to.have.been.calledWith('addChildFailed');
-        expect(vm.children).to.deep.equal([{ value: { name: '' }, id: '1' }]);
       });
 
       it('should add a new child component if there are no child components', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.children = [];
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = true;
-        });
         uuidMock.returns('1');
-        vm.errors = {
-          clear: sandbox.stub(),
-        };
 
         // ACT
         await vm.addChildComponent();
 
         // ASSERT
-        expect(vm.errors.clear).to.have.been.called;
         expect(vm.children).to.deep.equal([{ value: {}, id: '1' }]);
       });
     });
@@ -274,7 +132,7 @@ describe('Event sessions component', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.validPhone = false;
-        vm.user = { id: 'user1' };
+        vm.profile = { id: 'user1' };
 
         // ACT
         const result = await vm.addPhoneNumber();
@@ -286,7 +144,7 @@ describe('Event sessions component', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.validPhone = true;
-        vm.user = { id: 'user1' };
+        vm.profile = { id: 'user1' };
         MockUserService.userProfileData.withArgs(vm.user.id)
         .returns(Promise.resolve({ id: 'user1', phone: '' }));
         vm.phone = '+353123456789';
@@ -351,7 +209,7 @@ describe('Event sessions component', () => {
       it('should call addPhoneNumber and addNewChildren if showPhone is true', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.user = { phone: '' };
+        vm.profile = { phone: '' };
         sandbox.stub(vm, 'addPhoneNumber');
         sandbox.stub(vm, 'addNewChildren');
         // ACT
@@ -364,7 +222,7 @@ describe('Event sessions component', () => {
       it('should call only addNewChildren if showPhone is false', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.user = { phone: '123456789' };
+        vm.profile = { phone: '123456789' };
         sandbox.stub(vm, 'addPhoneNumber');
         sandbox.stub(vm, 'addNewChildren');
         // ACT
@@ -392,12 +250,8 @@ describe('Event sessions component', () => {
         vm.$route = { name: 'a' };
       });
 
-      it('should call bookTickets and router push when showPhone, validPhone, validChildren, and setupSucceeded are true ', async () => {
+      it('should call bookTickets and router push when setupSucceeded is true ', async () => {
         // ARRANGE
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = true;
-        });
-        vm.user = { phone: '' };
         vm.$validator = {
           validateAll: () => true,
         };
@@ -408,63 +262,16 @@ describe('Event sessions component', () => {
         await vm.submitBooking();
 
         // ASSERT
-        expect(vm.errors.clear).to.have.been.called;
-        expect(vm.showPhone).to.equal(true);
-        expect(vm.validPhone).to.equal(true);
-        expect(vm.validChildren).to.equal(true);
-        expect(vm.setupPrerequisites).to.have.been.called;
-        expect(vm.bookTickets).to.have.been.called;
+        expect(vm.setupPrerequisites).to.have.been.calledOnce;
+        expect(vm.bookTickets).to.have.been.calledOnce;
         expect(vm.$router.push).to.be.calledWith({ name: 'EventBookingConfirmation', params: { eventId: vm.eventId } });
       });
 
-      it('should call bookTickets and router push when validChildren and setupSucceeded are true. showPhone is false', async () => {
+      it('should do nothing when setupSucceeded is false', async () => {
         // ARRANGE
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = true;
-        });
-        vm.user = { phone: '123456789' };
-        sandbox.stub(vm, 'setupPrerequisites').resolves(true);
-        sandbox.stub(vm, 'bookTickets');
-
-        // ACT
-        await vm.submitBooking();
-
-        // ASSERT
-        expect(vm.errors.clear).to.have.been.called;
-        expect(vm.showPhone).to.equal(false);
-        expect(vm.validChildren).to.equal(true);
-        expect(vm.setupPrerequisites).to.have.been.called;
-        expect(vm.bookTickets).to.have.been.called;
-        expect(vm.$router.push).to.be.calledWith({ name: 'EventBookingConfirmation', params: { eventId: vm.eventId } });
-      });
-
-      it('should add submitChildComponentsFailed error when validChildren is false. showPhone is true', async () => {
-        // ARRANGE
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = false;
-        });
-        vm.user = { phone: '' };
         vm.$validator = {
           validateAll: () => true,
         };
-
-        // ACT
-        await vm.submitBooking();
-
-        // ASSERT
-        expect(vm.errors.clear).to.have.been.called;
-        expect(vm.showPhone).to.equal(true);
-        expect(vm.validPhone).to.equal(true);
-        expect(vm.validChildren).to.equal(false);
-        expect(vm.errors.add).to.have.been.calledWith('submitChildComponentsFailed');
-      });
-
-      it('should do nothing when setupSucceeded is false. showPhone is false and validChildren is true', async () => {
-        // ARRANGE
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = true;
-        });
-        vm.user = { phone: '123498566986' };
         sandbox.stub(vm, 'setupPrerequisites').resolves(false);
         sandbox.stub(vm, 'bookTickets');
 
@@ -472,11 +279,8 @@ describe('Event sessions component', () => {
         await vm.submitBooking();
 
         // ASSERT
-        expect(vm.errors.clear).to.have.been.called;
-        expect(vm.showPhone).to.equal(false);
-        expect(vm.validChildren).to.equal(true);
-        expect(vm.setupPrerequisites).to.have.been.called;
-        expect(vm.bookTickets).to.not.have.been.called;
+        expect(vm.setupPrerequisites).to.have.been.calledOnce;
+        expect(vm.bookTickets).to.not.have.been.calledOnce;
         expect(vm.$router.push).to.not.have.been.called;
       });
     });

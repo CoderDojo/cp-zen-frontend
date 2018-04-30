@@ -265,7 +265,6 @@ describe('Add Child Ticket', () => {
         vm.tickets = [{
           approvedApplications: 0,
           deleted: 0,
-          entity: 'ticketentity',
           id: 'ticketId2',
           invites: null,
           name: 'Ticket2',
@@ -280,16 +279,16 @@ describe('Add Child Ticket', () => {
         // ASSERT
         expect(vm.applications).to.deep.equal([{
           created: new Date(),
-          date_of_birth: new Date(1980, 10, 25, 0, 0, 0, 0),
-          dojo_id: 'dojoId',
-          event_id: 'eventId',
+          dateOfBirth: new Date(1980, 10, 25, 0, 0, 0, 0),
+          dojoId: 'dojoId',
+          eventId: 'eventId',
           name: 'Jane Doe',
-          session_id: 'sessionId',
+          sessionId: 'sessionId',
           status: 'pending',
-          ticket_id: 'ticketId2',
-          ticket_name: 'Ticket2',
-          ticket_type: 'ninja',
-          user_id: null,
+          ticketId: 'ticketId2',
+          ticketName: 'Ticket2',
+          ticketType: 'ninja',
+          userId: null,
         }]);
       });
     });
@@ -299,6 +298,8 @@ describe('Add Child Ticket', () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
         vm.name = 'Jane Doe';
+        vm.firstName = 'Jane';
+        vm.lastName = 'Doe';
         vm.dob = new Date(2010, 1, 1, 0, 0, 0, 0);
         vm.gender = 'female';
         MockUserUtils.isUnderAge.withArgs(vm.dob).returns(true);
@@ -307,6 +308,8 @@ describe('Add Child Ticket', () => {
         // ASSERT
         expect(vm.child).to.deep.equal({
           name: 'Jane Doe',
+          firstName: 'Jane',
+          lastName: 'Doe',
           dob: new Date(2010, 1, 1, 0, 0, 0, 0),
           gender: 'female',
           userTypes: ['attendee-u13'],
