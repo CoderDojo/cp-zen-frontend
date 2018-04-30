@@ -2,30 +2,45 @@ import vueUnitHelper from 'vue-unit-helper';
 import SessionList from '!!vue-loader?inject!@/events/cd-event-sessions';
 
 describe('Event sessions component', () => {
-  const sandbox = sinon.sandbox.create();
-  const mockService = {
-    loadSessions: sandbox.stub(),
-    manageTickets: sandbox.stub(),
-  };
-  const MockStoreService = {
-    load: sandbox.stub(),
-    save: sandbox.stub(),
-  };
-  const MockUserService = {
-    getCurrentUser: sandbox.stub(),
-    userProfileData: sandbox.stub(),
-    updateUserProfileData: sandbox.stub(),
-  };
-  const ChildTicket = {
-    createChild: sandbox.stub(),
-  };
-  const uuidMock = sandbox.stub();
-  const SessionListWithMocks = SessionList({
-    'uuid/v4': uuidMock,
-    './service': mockService,
-    '@/store/store-service': MockStoreService,
-    '@/users/service': MockUserService,
-    './cd-event-add-child-ticket': ChildTicket,
+  let sandbox;
+  let mockService;
+  let MockStoreService;
+  let MockUserService;
+  let MockUserUtils;
+  let ChildTicket;
+  let uuidMock;
+  let SessionListWithMocks;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    mockService = {
+      loadSessions: sandbox.stub(),
+      manageTickets: sandbox.stub(),
+    };
+    MockStoreService = {
+      load: sandbox.stub(),
+      save: sandbox.stub(),
+    };
+    MockUserService = {
+      getCurrentUser: sandbox.stub(),
+      userProfileData: sandbox.stub(),
+      updateUserProfileData: sandbox.stub(),
+    };
+    ChildTicket = {
+      createChild: sandbox.stub(),
+    };
+    MockUserUtils = {
+      isYouthOverThirteen: sandbox.stub(),
+    };
+    uuidMock = sandbox.stub();
+    SessionListWithMocks = SessionList({
+      'uuid/v4': uuidMock,
+      './service': mockService,
+      '@/store/store-service': MockStoreService,
+      '@/users/service': MockUserService,
+      '@/users/util': MockUserUtils,
+      './cd-event-add-child-ticket': ChildTicket,
+    });
   });
 
   afterEach(() => {
@@ -33,11 +48,12 @@ describe('Event sessions component', () => {
   });
 
   describe('computed', () => {
-    describe('computed.showPhone', () => {
+    describe.skip('computed.showPhone', () => {
       it('should return false if the user has a phone in their profile', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.profile = { phone: '353123456789' };
+        vm.isO13 = false;
         // ACT
 
         // ASSERT
@@ -47,10 +63,40 @@ describe('Event sessions component', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.profile = { phone: '' };
+        vm.isO13 = false;
         // ACT
 
         // ASSERT
         expect(vm.showPhone).to.equal(true);
+      });
+      it('should return false if the user isO13', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.profile = { phone: '' };
+        vm.isO13 = true;
+        // ACT
+
+        // ASSERT
+        expect(vm.showPhone).to.equal(false);
+      });
+    });
+
+    describe('computed.isO13', () => {
+      it('should return true if the user is o13', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.profile = { dob: (new Date()).setYear((new Date()).getFullYear() - 14) };
+        MockUserUtils.isYouthOverThirteen.returns(true);
+        expect(vm.isO13).to.equal(true);
+        expect(MockUserUtils.isYouthOverThirteen).to.have.been.calledOnce;
+        expect(MockUserUtils.isYouthOverThirteen).to.have.been.calledWith(vm.profile.dob);
+      });
+      it('should return false if the user is an adult', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.profile.dob = (new Date()).setYear((new Date()).getFullYear() - 20);
+        MockUserUtils.isYouthOverThirteen.returns(false);
+        expect(vm.isO13).to.equal(false);
+        expect(MockUserUtils.isYouthOverThirteen).to.have.been.calledOnce;
+        expect(MockUserUtils.isYouthOverThirteen).to.have.been.calledWith(vm.profile.dob);
       });
     });
 
@@ -58,7 +104,7 @@ describe('Event sessions component', () => {
       it('should return the length of the children array', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.children = [{ value: { name: 'John Doe' }, id: '1' }, { value: { name: 'Jane Doe' }, id: '2' }];
+        vm.applications = [1, 2];
         // ACT
 
         // ASSERT
@@ -81,6 +127,44 @@ describe('Event sessions component', () => {
           {
             name: 'Jane Doe',
           }]);
+      });
+      it('should return the existing users tickets', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.usersTickets = [{ name: 'John Doe', id: '1' }];
+        // ACT
+
+        // ASSERT
+        expect(vm.applications).to.deep.equal([{
+          name: 'John Doe',
+          id: '1',
+        }]);
+      });
+    });
+    describe('computed.isSingle', () => {
+      it('should return true if the user is o13', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.isO13 = true;
+        expect(vm.isSingle).to.be.true;
+      });
+      it('should return false if the user is not an adult with children', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.isO13 = false;
+        expect(vm.isSingle).to.be.false;
+      });
+    });
+    describe('computed.users', () => {
+      it('should return a list containing the current user if isSingle', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.user = { id: '1' };
+        vm.isSingle = true;
+        expect(vm.users).to.deep.equal([vm.user]);
+      });
+      it('should return a empty list if the current user is not isSingle', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.user = { id: '1' };
+        vm.isSingle = false;
+        expect(vm.users).to.deep.equal([]);
       });
     });
   });
@@ -206,31 +290,33 @@ describe('Event sessions component', () => {
     });
 
     describe('methods.setupPrerequisites()', () => {
-      it('should call addPhoneNumber and addNewChildren if showPhone is true', () => {
+      beforeEach(() => sandbox.restore());
+      it('should call addPhoneNumber and addNewChildren if showPhone is true', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.profile = { phone: '' };
+        vm.showPhone = true;
         sandbox.stub(vm, 'addPhoneNumber');
         sandbox.stub(vm, 'addNewChildren');
         // ACT
-        vm.setupPrerequisites();
+        await vm.setupPrerequisites();
 
         // ASSERT
-        expect(vm.addPhoneNumber).to.have.been.called;
-        expect(vm.addNewChildren).to.have.been.called;
+        expect(vm.addPhoneNumber).to.have.been.calledOnce;
+        expect(vm.addNewChildren).to.have.been.calledOnce;
       });
-      it('should call only addNewChildren if showPhone is false', () => {
+      it('PhoneNumberhould call only addNewChildren if showPhone is false', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.profile = { phone: '123456789' };
         sandbox.stub(vm, 'addPhoneNumber');
         sandbox.stub(vm, 'addNewChildren');
+        vm.profile = { phone: '01' };
+        vm.isO13 = false;
         // ACT
-        vm.setupPrerequisites();
+        await vm.setupPrerequisites();
 
         // ASSERT
         expect(vm.addPhoneNumber).to.not.have.been.called;
-        expect(vm.addNewChildren).to.have.been.called;
+        expect(vm.addNewChildren).to.have.been.calledOnce;
       });
     });
 
