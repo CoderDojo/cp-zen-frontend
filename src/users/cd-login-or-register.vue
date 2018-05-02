@@ -7,12 +7,10 @@
   </div>
 </template>
 <script>
-  import StoreService from '@/store/store-service';
   import EventService from '@/events/service';
   import DojoService from '@/dojos/service';
   import CreateAccount from '@/users/cd-create-account';
   import RedirectToLogin from '@/users/cd-redirect-to-login';
-
 
   export default {
     name: 'LoginOrRegister',
@@ -35,7 +33,6 @@
         this.dojoDetails = (await DojoService.getDojoById(this.eventDetails.dojoId)).body;
       },
       next() {
-        StoreService.save('selected-event', this.eventDetails);
         this.$router.push({ name: 'EventSessions', params: { eventId: this.eventId } });
       },
     },

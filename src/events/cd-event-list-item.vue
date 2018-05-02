@@ -74,7 +74,7 @@
         if (Vue.config.buildBranch === 'master') {
           return `/dojo/${this.dojo.id}/event/${this.event.id}`;
         }
-        return { name: 'EventDobVerification', params: { eventId: this.event.id } };
+        return { name: 'LoginOrRegister', params: { eventId: this.event.id } };
       },
     },
     filters: {

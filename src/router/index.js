@@ -6,7 +6,6 @@ import UserTickets from '@/users/cd-tickets';
 import EventDetails from '@/events/cd-event-details';
 import LoginOrRegister from '@/users/cd-login-or-register';
 import EventSessions from '@/events/cd-event-sessions';
-import Booking from '@/events/cd-booking';
 import BookingConfirmation from '@/events/cd-booking-confirmation';
 import Login from '@/users/cd-login';
 
@@ -65,7 +64,7 @@ export default new Router({
           children: [
             {
               path: '',
-              name: 'EventDobVerification',
+              name: 'LoginOrRegister',
               component: LoginOrRegister,
               props: true,
             },
@@ -73,12 +72,6 @@ export default new Router({
               path: 'sessions',
               name: 'EventSessions',
               component: EventSessions,
-              props: true,
-            },
-            {
-              path: 'book',
-              name: 'EventBookingForm',
-              component: Booking,
               props: true,
             },
           ],

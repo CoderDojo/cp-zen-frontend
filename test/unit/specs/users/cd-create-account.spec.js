@@ -1,7 +1,7 @@
 import vueUnitHelper from 'vue-unit-helper';
 import BookingCreateAccountComponent from '!!vue-loader?inject!@/users/cd-create-account';
 
-describe.only('Booking Create Account Form', () => {
+describe('Booking Create Account Form', () => {
   let sandbox;
   let MockUsersService;
   let MockUserUtils;
@@ -93,7 +93,7 @@ describe.only('Booking Create Account Form', () => {
       };
       vm.recaptchaResponse = false;
       const res = await vm.validateForm();
-      expect(vm.$validator.validateAll).to.have.been.calledOnce;
+      expect(vm.$validator.validateAll).to.not.have.been.called;
       expect(alerting).to.have.been.calledOnce;
       expect(res).to.be.false;
     });
@@ -183,8 +183,8 @@ describe.only('Booking Create Account Form', () => {
       await vm.register();
 
       expect(MockUserUtils.getAge).to.have.been.calledWith(sinon.match.date);
-      expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_kid');
       expect(MockUsersService.register).to.have.been.calledWith(vm.user, { firstName: 'bla', dob: '2017/03/01', country: { alpha2: 'FR' } });
+      expect(vm.$ga.event).to.not.have.been.called;
       expect(vm.$emit).to.not.have.been.called;
       expect(alerting).to.have.been.calledOnce;
       expect(alerting).to.have.been.calledWith(err);
@@ -220,8 +220,8 @@ describe.only('Booking Create Account Form', () => {
       await vm.register();
 
       expect(MockUserUtils.getAge).to.have.been.calledWith(sinon.match.date);
-      expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_kid');
       expect(MockUsersService.register).to.have.been.calledWith(vm.user, { firstName: 'bla', dob: '2017/03/01', country: { alpha2: 'FR' } });
+      expect(vm.$ga.event).to.not.have.been.called;
       expect(vm.$emit).to.not.have.been.called;
       expect(vm.$validator.errorBag.add).to.have.been.calledWith('registration', 'Nick exists', 'nick-exists');
     });

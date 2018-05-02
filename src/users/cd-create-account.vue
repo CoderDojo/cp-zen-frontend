@@ -5,8 +5,8 @@
       <div>
         <p>
           <i class="fa fa-info-circle"></i>
-          {{ $t('If you are a parent or a guardian booking tickets for a child, please still tell us your details here.')  }} <br/>
-          {{ $t('We collect this to help Dojos to contact them who\'s coming.') }}
+          {{ $t('If you are a parent or a guardian booking tickets for a child, or a child over 13 please still tell us your details here.')  }} <br/>
+          {{ $t('We collect these details to allow Dojos to contact attendees\' parents.') }}
         </p>
       </div>
       <div>
@@ -48,10 +48,16 @@
       <div>
         <label class="cd-create-account__label" for="password">{{ $t('Password') }}</label>
         <p class="cd-create-account__password-hint">
-          {{ $t('Password must be at least 8 characters with at least one numeric.') }}
+          {{ $t('Password must be at least 8 characters with at least one number.') }}
         </p>
-        <input :type="isPasswordVisible? 'text': 'password'" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
+        <span v-if="isPasswordVisible">
+          <input type="text" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
                v-validate="'required|cd-password'" v-model="password"/>
+        </span>
+        <span v-else>
+          <input type="password" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
+               v-validate="'required|cd-password'" v-model="password"/>
+        </span>
         <i class="fa cd-create-account__password-visibility" :class="isPasswordVisible ? 'fa-eye-slash': 'fa-eye' " @click="togglePasswordVisibility()"></i>
         <p class="text-danger cd-create-account__password-error"
                v-show="errors.has('password')">{{ $t(errors.first('password')) }}</p>
@@ -88,7 +94,7 @@
             {{ $t('You must accept the terms and conditions before proceeding.') }}
         </p>
         <button type="submit" name="registration" class="cd-create-account__submit" v-validate="'nick-exists'" >{{ $t('Next') }}</button>
-        <p class="cd-create-account__errors text-danger" v-show="errors.has('registration')">{{ $t('An user already exists for this email.') }} {{ $t('Login to your account to continue.') }}</p>
+        <p class="cd-create-account__errors text-danger" v-show="errors.has('registration')">{{ $t('A user already exists for this email.') }} {{ $t('Login to your account to continue.') }}</p>
       </div>
     </div>
   </form>
@@ -142,15 +148,15 @@
     },
     methods: {
       async validateForm() {
+        if (this.isUnderage) {
+          return false;
+        }
+        if (!this.recaptchaResponse) {
+          alert('Please complete the reCAPTCHA');
+          return false;
+        }
         try {
-          if (this.isUnderage) {
-            return false;
-          }
-          const res = await this.$validator.validateAll() && !!this.recaptchaResponse;
-          if (!this.recaptchaResponse) {
-            alert('Please complete the reCAPTCHA');
-            return false;
-          }
+          const res = await this.$validator.validateAll();
           return res;
         } catch (e) {
           return false;
@@ -161,7 +167,6 @@
         if (ready) {
           const isAdult = UserUtils.getAge(new Date(this.dob)) > 18;
           const context = this.context;
-          this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
           try {
             await UserService.register(
               this.user,
@@ -171,6 +176,7 @@
                   this.profile,
                   { dob: this.dob, ...context },
             )));
+            this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
             this.$emit('registered');
           } catch (err) {
             if (err.message === 'nick-exists') {
