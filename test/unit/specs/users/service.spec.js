@@ -46,7 +46,7 @@ describe('UserService', () => {
       sandbox.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/users/register`, {
         profile,
         user,
-      }).returns(Promise.resolve());
+      }).returns(Promise.resolve({ body: { user, profile, ok: true } }));
       sandbox.stub(UserService, 'login').returns(Promise.resolve());
 
       // ACT

@@ -8,6 +8,7 @@
 </template>
 <script>
   import EventService from '@/events/service';
+  import UserService from '@/users/service';
   import DojoService from '@/dojos/service';
   import CreateAccount from '@/users/cd-create-account';
   import RedirectToLogin from '@/users/cd-redirect-to-login';
@@ -21,6 +22,7 @@
     },
     data() {
       return {
+        currentUser: null,
         eventDetails: {},
         dojoDetails: {},
       };
@@ -32,13 +34,16 @@
       async loadDojo() {
         this.dojoDetails = (await DojoService.getDojoById(this.eventDetails.dojoId)).body;
       },
+      async loadCurrentUser() {
+        this.currentUser = (await UserService.getCurrentUser()).body;
+      },
       next() {
         this.$router.push({ name: 'EventSessions', params: { eventId: this.eventId } });
       },
     },
     computed: {
       redirectionUrl() {
-        return `/events/${this.eventId}`;
+        return this.$route.path;
       },
       context() {
         return {
@@ -47,6 +52,10 @@
       },
     },
     async created() {
+      await this.loadCurrentUser();
+      if (this.currentUser) {
+        return this.next();
+      }
       await this.loadEvent();
       this.loadDojo();
     },

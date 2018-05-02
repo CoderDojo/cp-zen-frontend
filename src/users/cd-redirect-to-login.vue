@@ -2,7 +2,7 @@
   <div class="cd-redirect-to-login">
     <p class="cd-redirect-to-login__heading">{{ $t('Have you booked an event before?') }}</p>
     <div>
-      <router-link :to="login" class="btn btn-secondary cd-redirect-to-login__button">{{ $t('Log into your account') }}</router-link>
+      <router-link :to="{ name: 'Login', query: { referrer: url } }" class="btn btn-secondary cd-redirect-to-login__button">{{ $t('Log into your account') }}</router-link>
     </div>
   </div>
 </template>
@@ -11,13 +11,6 @@
   export default {
     name: 'RedirectToLogin',
     props: ['url'],
-    computed: {
-      login() {
-        return {
-          path: `/login?next=${this.url}`,
-        };
-      },
-    },
   };
 </script>
 <style scoped lang="less">

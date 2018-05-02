@@ -3,17 +3,12 @@ import LoginOrRegisterComponent from '!!vue-loader?inject!@/users/cd-login-or-re
 
 describe('Login or register', () => {
   let sandbox;
-  let MockStoreService;
   let MockDojoService;
   let MockEventsService;
   let LoginOrRegisterComponentWithMocks;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    MockStoreService = {
-      save: sandbox.stub(),
-      load: sandbox.stub(),
-    };
     MockDojoService = {
       getDojoById: sandbox.stub(),
     };
@@ -22,7 +17,6 @@ describe('Login or register', () => {
     };
 
     LoginOrRegisterComponentWithMocks = LoginOrRegisterComponent({
-      '@/store/store-service': MockStoreService,
       '@/dojos/service': MockDojoService,
       '@/events/service': MockEventsService,
     });
@@ -75,15 +69,16 @@ describe('Login or register', () => {
         bananas: 1,
       };
       vm.next();
-      expect(MockStoreService.save).to.have.been.calledWith('selected-event', vm.eventDetails);
       expect(vm.$router.push).to.have.been.calledWith({ name: 'EventSessions', params: { eventId: vm.eventId } });
     });
   });
   describe('computed', () => {
     it('redirectionUrl', () => {
       const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
-      vm.eventId = 1;
-      expect(vm.redirectionUrl).to.equal('/events/1');
+      vm.$route = {
+        path: 'somewhere',
+      };
+      expect(vm.redirectionUrl).to.equal('somewhere');
     });
 
     it('context', () => {
@@ -97,13 +92,29 @@ describe('Login or register', () => {
     });
   });
   describe('created', () => {
-    it('should load the event and the dojo after the event', async () => {
+    it('should load the event and the dojo after the event if the user isnt connected', async () => {
       const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
       vm.loadEvent = sandbox.stub();
       vm.loadDojo = sandbox.stub();
+      vm.loadCurrentUser = sandbox.stub().resolves(false);
       await vm.$lifecycleMethods.created();
+      expect(vm.loadCurrentUser).to.have.been.calledOnce;
       expect(vm.loadEvent).to.have.been.calledOnce;
       expect(vm.loadDojo).to.have.been.calledOnce;
+    });
+    it('should redirect to the next page if the user is logged-in', async () => {
+      const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
+      vm.loadEvent = sandbox.stub();
+      vm.loadDojo = sandbox.stub();
+      vm.loadCurrentUser = sandbox.stub();
+      vm.currentUser = {};
+      vm.$router = {
+        push: sandbox.stub(),
+      };
+      await vm.$lifecycleMethods.created();
+      expect(vm.loadCurrentUser).to.have.been.calledOnce;
+      expect(vm.loadEvent).to.not.have.been.called;
+      expect(vm.loadDojo).to.not.have.been.called;
     });
   });
 });
