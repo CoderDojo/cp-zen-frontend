@@ -133,7 +133,6 @@ describe('Add Child Ticket', () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
         const mockApplication = {
-          created: new Date(),
           date_of_birth: new Date(1980, 10, 25, 0, 0, 0, 0),
           dojo_id: 'dojoId',
           event_id: 'eventId',
@@ -163,7 +162,6 @@ describe('Add Child Ticket', () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
         vm.sessions = [{ description: 'description1',
-          entity: 'sessionentity',
           eventId: 'some-eventId',
           id: 'sessionId',
           name: 'Session1',
@@ -171,7 +169,6 @@ describe('Add Child Ticket', () => {
           tickets: [
             { approvedApplications: 0,
               deleted: 0,
-              entity: 'ticketentity',
               id: 'ticketId1',
               invites: null,
               name: 'Ticket1',
@@ -181,7 +178,6 @@ describe('Add Child Ticket', () => {
               type: 'parent-guardian' },
             { approvedApplications: 0,
               deleted: 0,
-              entity: 'ticketentity',
               id: 'ticketId2',
               invites: null,
               name: 'Ticket2',
@@ -195,7 +191,6 @@ describe('Add Child Ticket', () => {
 
         // ASSERT
         expect(vm.childTickets).to.deep.equal([{ description: 'description1',
-          entity: 'sessionentity',
           eventId: 'some-eventId',
           id: 'sessionId',
           name: 'Session1',
@@ -203,7 +198,6 @@ describe('Add Child Ticket', () => {
           tickets: [
             { approvedApplications: 0,
               deleted: 0,
-              entity: 'ticketentity',
               id: 'ticketId2',
               invites: null,
               name: 'Ticket2',
@@ -278,7 +272,6 @@ describe('Add Child Ticket', () => {
 
         // ASSERT
         expect(vm.applications).to.deep.equal([{
-          created: new Date(),
           dateOfBirth: new Date(1980, 10, 25, 0, 0, 0, 0),
           dojoId: 'dojoId',
           eventId: 'eventId',
@@ -299,7 +292,7 @@ describe('Add Child Ticket', () => {
         const vm = vueUnitHelper(ChildTicketWithMocks);
         vm.name = 'Jane Doe';
         vm.firstName = 'Jane';
-        vm.lastName = 'Doe';
+        vm.surname = 'Doe';
         vm.dob = new Date(2010, 1, 1, 0, 0, 0, 0);
         vm.gender = 'female';
         MockUserUtils.isUnderAge.withArgs(vm.dob).returns(true);

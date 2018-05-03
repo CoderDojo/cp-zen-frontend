@@ -26,8 +26,8 @@
     <div class="cd-event-sessions__next-block">
       <p v-show="errors.has('submitApplications:required')" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('Please select at least one ticket') }}</p>
       <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="submitBooking" name="submitApplications" v-validate:applications="'required'" >
-      <span v-if="this.event.ticketApproval">{{ $t('Request booking for {totalBooked} ticket(s)', { totalBooked }) }}</span>
-      <span v-else>{{ $t('Confirm booking for {totalBooked} ticket(s)', { totalBooked }) }}</span>
+        <span v-if="this.event.ticketApproval">{{ $t('Request booking for {totalBooked} ticket(s)', { totalBooked }) }}</span>
+        <span v-else>{{ $t('Confirm booking for {totalBooked} ticket(s)', { totalBooked }) }}</span>
       </button>
     </div>
   </div>
@@ -53,12 +53,11 @@
         sessions: [],
         event: null,
         usersTickets: [],
+        parentTicket: null,
         children: [],
-        validPhone: true,
         phone: '',
         user: {},
         profile: {},
-        submitted: false,
       };
     },
     computed: {
@@ -66,7 +65,12 @@
         return !this.profile.phone && !this.isO13;
       },
       applications() {
-        return [].concat(...(this.children).map(child => child.value)).concat(...this.usersTickets);
+        const applications = [].concat(...(this.children).map(child => child.value))
+          .concat(...this.usersTickets);
+        if (this.parentTicket) {
+          applications.push(this.parentTicket);
+        }
+        return applications;
       },
       totalBooked() {
         return this.applications.length;
@@ -90,11 +94,8 @@
         this.children.splice(index, 1);
       },
       async addPhoneNumber() {
-        if (this.validPhone) {
-          this.profile.phone = this.phone;
-          return UserService.updateUserProfileData(this.profile);
-        }
-        return this.validPhone;
+        this.profile.phone = this.phone;
+        return UserService.updateUserProfileData(this.profile);
       },
       async addNewChildren() {
         if (this.$refs.allChildComponents) {
@@ -103,9 +104,32 @@
         }
         return true;
       },
-      bookTickets() {
+      createParentTicket() {
+        const sessionIds = this.applications.map(a => a.sessionId);
+        const bookedSessions = this.sessions.filter(s => sessionIds.includes(s.id));
+        const possibleTickets = bookedSessions.reduce((arr, s) => arr.concat(s.tickets), []);
+        const parentTickets = possibleTickets.filter(t => t.type === 'parent-guardian');
+        if (parentTickets.length > 0) {
+          this.parentTicket = {
+            name: this.profile.name,
+            dateOfBirth: this.profile.dob,
+            eventId: this.event.id,
+            status: this.status,
+            ticketName: parentTickets[0].name,
+            ticketType: parentTickets[0].type,
+            sessionId: parentTickets[0].sessionId,
+            dojoId: this.event.dojoId,
+            ticketId: parentTickets[0].id,
+            userId: this.profile.userId,
+          };
+        }
+      },
+      async bookTickets() {
+        if (!this.isSingle) {
+          this.createParentTicket();
+        }
+        await service.manageTickets(this.applications);
         this.$ga.event(this.$route.name, 'click', 'book_tickets', this.totalBooked);
-        return service.manageTickets(this.applications);
       },
       async setupPrerequisites() {
         if (this.showPhone) {

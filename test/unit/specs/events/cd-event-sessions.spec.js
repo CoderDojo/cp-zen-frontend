@@ -105,7 +105,6 @@ describe('Event sessions component', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.applications = [1, 2];
-        // ACT
 
         // ASSERT
         expect(vm.totalBooked).to.equal(2);
@@ -117,7 +116,6 @@ describe('Event sessions component', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.children = [{ value: { name: 'John Doe' }, id: '1' }, { value: { name: 'Jane Doe' }, id: '2' }];
-        // ACT
 
         // ASSERT
         expect(vm.applications).to.deep.equal([
@@ -132,7 +130,6 @@ describe('Event sessions component', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.usersTickets = [{ name: 'John Doe', id: '1' }];
-        // ACT
 
         // ASSERT
         expect(vm.applications).to.deep.equal([{
@@ -140,7 +137,23 @@ describe('Event sessions component', () => {
           id: '1',
         }]);
       });
+      it('should add the parentTicket if defined', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.usersTickets = [{ name: 'John Doe', id: '1' }];
+        vm.parentTicket = { name: 'parent1', id: '2' };
+
+        // ASSERT
+        expect(vm.applications).to.deep.equal([{
+          name: 'John Doe',
+          id: '1',
+        }, {
+          name: 'parent1',
+          id: '2',
+        }]);
+      });
     });
+
     describe('computed.isSingle', () => {
       it('should return true if the user is o13', () => {
         const vm = vueUnitHelper(SessionListWithMocks);
@@ -215,18 +228,6 @@ describe('Event sessions component', () => {
       it('should add users phone number to their profile', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.validPhone = false;
-        vm.profile = { id: 'user1' };
-
-        // ACT
-        const result = await vm.addPhoneNumber();
-
-        // ASSERT
-        expect(result).to.equal(false);
-      });
-      it('should add users phone number to their profile', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
         vm.validPhone = true;
         vm.profile = { id: 'user1' };
         MockUserService.userProfileData.withArgs(vm.user.id)
@@ -265,27 +266,59 @@ describe('Event sessions component', () => {
     });
 
     describe('methods.bookTickets()', () => {
-      it('should send applications to be booked with manageTickets', () => {
+      it('should send applications to be booked with manageTickets without extra ticket (isSingle = true)', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
+        mockService.manageTickets.resolves(true);
         vm.$ga = { event: sinon.stub() };
         vm.$route = { name: 'a' };
         vm.totalBooked = 1;
+        vm.isSingle = true;
         vm.applications = [{
-          event_id: 'eventId',
+          eventId: 'eventId',
           name: 'Jane Doe',
-          session_id: 'sessionId1',
+          sessionId: 'sessionId1',
         }, {
-          event_id: 'eventId',
+          eventId: 'eventId',
           name: 'John Doe',
-          session_id: 'sessionId2',
+          sessionId: 'sessionId2',
         }];
         // ACT
-        vm.bookTickets();
+        await vm.bookTickets();
 
         // ASSERT
-        expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'book_tickets', vm.totalBooked);
+        expect(mockService.manageTickets).to.have.been.calledOnce;
         expect(mockService.manageTickets).to.have.been.calledWith(vm.applications);
+        expect(vm.$ga.event).to.have.been.calledOnce;
+        expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'book_tickets', 1);
+      });
+      it('should send applications to be booked with manageTickets with extra ticket (isSingle = false)', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        mockService.manageTickets.resolves(true);
+        vm.$ga = { event: sinon.stub() };
+        vm.$route = { name: 'a' };
+        vm.totalBooked = 1;
+        vm.isSingle = false;
+        vm.createParentTicket = sandbox.stub();
+        vm.applications = [{
+          eventId: 'eventId',
+          name: 'Jane Doe',
+          sessionId: 'sessionId1',
+        }, {
+          eventId: 'eventId',
+          name: 'John Doe',
+          sessionId: 'sessionId2',
+        }];
+        // ACT
+        await vm.bookTickets();
+
+        // ASSERT
+        expect(mockService.manageTickets).to.have.been.calledOnce;
+        expect(mockService.manageTickets).to.have.been.calledWith(vm.applications);
+        expect(vm.$ga.event).to.have.been.calledOnce;
+        expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'book_tickets', 1);
+        expect(vm.createParentTicket).to.have.been.calledOnce;
       });
     });
 
@@ -368,6 +401,54 @@ describe('Event sessions component', () => {
         expect(vm.setupPrerequisites).to.have.been.calledOnce;
         expect(vm.bookTickets).to.not.have.been.calledOnce;
         expect(vm.$router.push).to.not.have.been.called;
+      });
+    });
+    describe('methods.createParentTicket', () => {
+      it('should create a parent ticket from the selected tickets', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.status = 'approved';
+        vm.profile = {
+          name: 'Jane Doe',
+          dob: '1975-05-08',
+          userId: 'user1',
+        };
+        vm.event = { id: 'event1', dojoId: 'dojo1' };
+        vm.applications = [{ sessionId: 'session2' }];
+        const mockTickets = (index, sessionId) => ([{ id: `ticket${index}1`, name: `ticket${index}1`, type: 'ninja', sessionId },
+          { id: `ticket${index}2`, name: `ticket${index}2`, type: 'parent-guardian', sessionId }]);
+        vm.sessions = [{ id: 'session1', tickets: mockTickets(1, 'session1') }, { id: 'session2', tickets: mockTickets(2, 'session2') }];
+
+        // ACT
+        vm.createParentTicket();
+
+        // ASSERT
+        expect(vm.parentTicket).to.deep.equal({
+          name: 'Jane Doe',
+          dateOfBirth: '1975-05-08',
+          eventId: 'event1',
+          status: 'approved',
+          ticketName: 'ticket22',
+          ticketType: 'parent-guardian',
+          sessionId: 'session2',
+          dojoId: 'dojo1',
+          ticketId: 'ticket22',
+          userId: 'user1',
+        });
+      });
+      it('should not create a ticket if there is no match', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.applications = [{ sessionId: 'session2' }];
+        const mockTickets = (index, sessionId) => ([{ id: `ticket${index}1`, name: `ticket${index}1`, type: 'ninja', sessionId },
+          { id: `ticket${index}2`, name: `ticket${index}2`, type: 'parent-guardian', sessionId }]);
+        vm.sessions = [{ id: 'session1', tickets: mockTickets(1, 'session1') }, { id: 'session2', tickets: [{ id: 'ticket21', name: 'ticket21', type: 'ninja', sessionId: 'session2' }] }];
+
+        // ACT
+        vm.createParentTicket();
+
+        // ASSERT
+        expect(vm.parentTicket).to.equal(null);
       });
     });
   });
