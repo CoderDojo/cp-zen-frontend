@@ -163,21 +163,36 @@ describe('Event sessions component', () => {
       it('should return false if the user is not an adult with children', () => {
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.isO13 = false;
+        vm.dojoRole = undefined;
         expect(vm.isSingle).to.be.false;
+      });
+      it('should return true if the user is an adult mentor', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.isO13 = false;
+        vm.dojoRole = { userTypes: ['mentor'] };
+        expect(vm.isSingle).to.be.true;
       });
     });
     describe('computed.users', () => {
       it('should return a list containing the current user if isSingle', () => {
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.user = { id: '1' };
+        vm.profile = { id: '1' };
         vm.isSingle = true;
-        expect(vm.users).to.deep.equal([vm.user]);
+        expect(vm.users).to.deep.equal([vm.profile]);
       });
       it('should return a empty list if the current user is not isSingle', () => {
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.user = { id: '1' };
+        vm.profile = { id: '1' };
         vm.isSingle = false;
         expect(vm.users).to.deep.equal([]);
+      });
+    });
+    describe('dojoRole', () => {
+      it('should return the roles for the current dojo', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.event = { dojoId: '1' };
+        vm.userDojos = [{ dojoId: '1', userTypes: ['mentor'] }, { dojoId: '2', userTypes: ['ninja'] }];
+        expect(vm.dojoRole).to.deep.equal({ dojoId: '1', userTypes: ['mentor'] });
       });
     });
   });

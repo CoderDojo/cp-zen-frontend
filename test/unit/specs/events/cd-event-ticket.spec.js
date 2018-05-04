@@ -26,12 +26,16 @@ describe('Event ticket creation', () => {
   describe('computed: isNinja', () => {
     it('should return true', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
-      vm.dob = new Date().setFullYear((new Date()).getFullYear() - 2);
+      vm.user = {
+        dob: new Date().setFullYear((new Date()).getFullYear() - 2),
+      };
       expect(vm.isNinja).to.equal(true);
     });
     it('should return true', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
-      vm.dob = new Date().setFullYear((new Date()).getFullYear() - 25);
+      vm.user = {
+        dob: new Date().setFullYear((new Date()).getFullYear() - 25),
+      };
       expect(vm.isNinja).to.equal(false);
     });
   });
@@ -98,7 +102,6 @@ describe('Event ticket creation', () => {
   describe('computed: applications', () => {
     it('should format the user\'s tickets', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
-      vm.dob = '2014-08-08';
       vm.status = 'approved';
       vm.event = {
         id: 'eventId',
@@ -106,7 +109,8 @@ describe('Event ticket creation', () => {
       };
       vm.user = {
         name: 'first last',
-        id: 'userId',
+        userId: 'userId',
+        dob: '2014-08-08',
       };
       vm.tickets = [{
         name: 'ticketName',
