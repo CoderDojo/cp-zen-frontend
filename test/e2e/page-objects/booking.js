@@ -62,6 +62,11 @@ const BookingParentData = Object.create(EventDetails, {
       return $('button.cd-event-sessions__add-youth');
     },
   },
+  childrenTickets: {
+    get() {
+      return $$('.cd-child-ticket__ticket-box');
+    },
+  },
   childTicketTitle: {
     get() {
       $('.cd-child-ticket__header').waitForVisible();

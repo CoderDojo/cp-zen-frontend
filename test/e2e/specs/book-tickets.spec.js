@@ -46,12 +46,11 @@ describe('Book event page', () => {
           LoginPage.email.setValue('child1o13@example.com');
           LoginPage.password.setValue('testchild1o13');
           LoginPage.login.click();
-        });
-        it('should display an individual ticket without options to add children', () => {
           // TODO : replace with startBooking once it's bypassing user creation
           browser.url('/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
-          // IT SHOULD HAVE 2 NATCHOES
           Booking.eventTitle.waitForVisible();
+        });
+        it('should display an individual ticket without options to add children', () => {
           expect(Booking.allTickets().length).to.equal(1);
           expect(Booking.addYouthButton.isVisible()).to.be.false;
         });
@@ -59,8 +58,6 @@ describe('Book event page', () => {
           expect(Booking.phoneNumber.isVisible()).to.be.false;
         });
         it('should let me select tickets for ninjas', () => {
-          // TODO : replace with startBooking once it's bypassing user creation
-          browser.url('/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
           expect(Booking.ticketName(0).getText()).to.equal('Name:child 1o13');
           expect(Booking.ticketSelector(0).isVisible()).to.be.true;
         });
@@ -81,9 +78,9 @@ describe('Book event page', () => {
           LoginPage.login.click();
           // TODO : replace with startBooking once it's bypassing user creation
           browser.url('/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+          Booking.eventTitle.waitForVisible();
         });
         it('should display an option to add children, with 1 by default open', () => {
-          Booking.eventTitle.waitForVisible();
           expect(Booking.ticketName(0)).to.be.undefined;
           expect(Booking.childTicketTitle.length).to.equal(1);
           expect(Booking.childTicketTitle[0].isVisible()).to.be.true;
@@ -92,7 +89,6 @@ describe('Book event page', () => {
         });
         it('should let me select tickets for ninjas')
         it('should let me add new tickets', () => {
-          Booking.eventTitle.waitForVisible();
           expect(Booking.ticketName(0)).to.be.undefined;
           expect(Booking.childTicketTitle.length).to.equal(1);
           Booking.addYouthButton.click();
@@ -111,7 +107,10 @@ describe('Book event page', () => {
           expect(Booking.childTicketGenderValidationError.isVisible()).to.be.true;
           expect(Booking.childTicketSelectorValidationError.isVisible()).to.be.true;
           expect(Booking.phoneNumberValidationError.isVisible()).to.be.true;
-        })
+        });
+        afterEach(() => {
+          browser.deleteCookie('seneca-login');
+        });
       });
       afterEach(() => browser.deleteCookie('seneca-login'));
     });
@@ -120,6 +119,29 @@ describe('Book event page', () => {
     describe('when single', () => {
       describe('when o13', () => {
         // Same as FTB; minus login/reg
+      });
+      describe('when mentor', () => {
+        beforeEach(() => {
+          LoginPage.open();
+          LoginPage.email.waitForVisible();
+          LoginPage.email.setValue('mentor1@example.com');
+          LoginPage.password.setValue('test');
+          LoginPage.login.click();
+          browser.url('/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+          Booking.eventTitle.waitForVisible();
+        });
+        it('should show a mentor ticket', () => {
+          expect(Booking.ticketName(0).getText()).to.equal('Name:mentor one');
+        });
+        it('should let me add a child', () => {
+          expect(Booking.addYouthButton.isVisible()).to.be.true;
+        });
+        it('should have the children creation closed by default', () => {
+          expect(Booking.childrenTickets.length).to.equal(0);
+        }); 
+        afterEach(() => {
+          browser.deleteCookie('seneca-login');
+        });
       });
       describe('when adult', () => {
         it('should display an option to add children, none open by default', () => {

@@ -6,7 +6,9 @@
     </h1>
      <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
     {{ $t('Please contact the Dojo if you have any questions.') }}</p>
-     <ticket v-for="(_user, index) in users" :user="_user" :event="event" :dob="profile.dob" v-model="usersTickets[index]" :key="_user.id"></ticket>
+    <div class="cd-event-sessions__tickets">
+      <ticket v-for="(_user, index) in users" :user="_user" :event="event" v-model="usersTickets[index]" :key="_user.id"></ticket>
+    </div>
     <!-- TODO : isn't the index enough rather than generating an uuid ? -->
     <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="sessions" :id="child.id" v-model="child.value" v-on:delete="deleteChildComponent(index)"></child-ticket>
 
@@ -36,6 +38,7 @@
   import uuid from 'uuid/v4';
   import StoreService from '@/store/store-service';
   import UserService from '@/users/service';
+  import DojoService from '@/dojos/service';
   import UserUtils from '@/users/util';
   import service from './service';
   import Ticket from './cd-event-ticket';
@@ -55,9 +58,11 @@
         usersTickets: [],
         parentTicket: null,
         children: [],
+        existingChildren: [],
         phone: '',
         user: {},
         profile: {},
+        userDojos: [],
       };
     },
     computed: {
@@ -78,12 +83,15 @@
       isO13() {
         return UserUtils.isYouthOverThirteen(this.profile.dob);
       },
+      dojoRole() {
+        return (this.userDojos.filter(ud => ud.dojoId === this.event.dojoId))[0];
+      },
       isSingle() {
-        return this.isO13; // || isMentor;
+        return this.isO13 || !!(this.dojoRole && this.dojoRole.userTypes.includes('mentor'));
       },
       users() {
         // TODO : use the proper children which are the existing one for returning flow
-        return this.isSingle ? [this.user] : [];
+        return this.isSingle ? [this.profile] : this.existingChildren;
       },
     },
     methods: {
@@ -176,8 +184,20 @@
         this.event = StoreService.load('selected-event');
         return Promise.resolve();
       },
+      async loadChildren() {
+        if (this.profile.children) {
+          this.existingChildren = (await Promise.all(
+            this.profile.children.map(
+              c => UserService.userProfileData(c))))
+            .map(res => res.body);
+        }
+      },
+      async loadDojoRelationship() {
+        this.userDojos = (await DojoService.getUsersDojos(this.user.id, this.event.dojoId)).body;
+      },
     },
     async created() {
+      // TODO : parallelize
       await Promise.all([
         this.loadEvent(),
         this.setEvent(),
@@ -185,6 +205,8 @@
       this.loadSessions();
       await this.loadCurrentUser();
       await this.loadProfile();
+      this.loadChildren();
+      await this.loadDojoRelationship();
       if (!this.isSingle) {
         this.children.push({ value: {}, id: uuid() });
       }
@@ -207,6 +229,11 @@
       &-ticket-error, &-child-error {
         display: block;
       }
+    }
+    &__tickets {
+      display: flex;
+      flex-direction: column;
+      align-items: self-end;
     }
     &__add-button {
       padding: 0px 0px 8px;

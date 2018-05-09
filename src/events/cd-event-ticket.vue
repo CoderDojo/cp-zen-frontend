@@ -20,7 +20,7 @@
   export default {
     name: 'TicketForUser',
     inject: ['$validator'],
-    props: ['event', 'user', 'dob'],
+    props: ['event', 'user'],
     data() {
       return {
         tickets: [],
@@ -32,7 +32,7 @@
     },
     computed: {
       isNinja() {
-        return UserUtils.isUnderAge(this.dob) || UserUtils.isYouthOverThirteen(this.dob);
+        return UserUtils.isUnderAge(this.user.dob) || UserUtils.isYouthOverThirteen(this.user.dob);
       },
       ticketsOptions() {
         return this.sessions.map(session => ({
@@ -50,7 +50,7 @@
       applications() {
         return this.tickets.map(ticket => ({
           name: this.user.name,
-          dateOfBirth: this.dob,
+          dateOfBirth: this.user.dob,
           eventId: this.event.id,
           status: this.status,
           ticketName: ticket.name,
@@ -58,7 +58,7 @@
           sessionId: ticket.sessionId,
           dojoId: this.event.dojoId,
           ticketId: ticket.id,
-          userId: this.user.id,
+          userId: this.user.userId,
         }));
       },
     },
@@ -91,6 +91,7 @@
   @import "~@coderdojo/cd-common/common/_colors";
   .cd-event-tickets {
     display: inline-flex;
+    flex-basis: 100%;
     margin-bottom: 24px;
     position: relative;
 
@@ -178,6 +179,9 @@
 <style lang="less">
 @import "../common/variables";
 @import "~bootstrap/less/variables";
+.cd-event-tickets__ticket-selector .multiselect--active {
+  z-index: 4;
+}
 .cd-event-tickets__ticket-selector .multiselect__tags {
   min-height: 32px;
   padding: 2px 40px 0 2px;
