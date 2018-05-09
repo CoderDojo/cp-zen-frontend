@@ -122,7 +122,30 @@ describe('Book event page', () => {
   describe('RBF', () => {
     describe('when single', () => {
       describe('when o13', () => {
-        // Same as FTB; minus login/reg
+        beforeEach(() => {
+          LoginPage.open();
+          LoginPage.email.waitForVisible();
+          LoginPage.email.setValue('child1o13@example.com');
+          LoginPage.password.setValue('testchild1o13');
+          LoginPage.login.click();
+        });
+        it('should display an individual ticket without options to add children', () => {
+          // TODO : replace with startBooking once it's bypassing user creation
+          browser.url('/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+          // IT SHOULD HAVE 2 NATCHOES
+          Booking.eventTitle.waitForVisible();
+          expect(Booking.allTickets().length).to.equal(1);
+          expect(Booking.addYouthButton.isVisible()).to.be.false;
+        });
+        it('should not display the phone number', () => {
+          expect(Booking.phoneNumber.isVisible()).to.be.false;
+        });
+        it('should let me select tickets for ninjas', () => {
+          // TODO : replace with startBooking once it's bypassing user creation
+          browser.url('/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+          expect(Booking.ticketName(0).getText()).to.equal('Name:child 1o13');
+          expect(Booking.ticketSelector(0).isVisible()).to.be.true;
+        });
       });
       describe('when mentor', () => {
         beforeEach(() => {
