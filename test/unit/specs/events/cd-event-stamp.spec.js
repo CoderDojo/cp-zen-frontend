@@ -63,7 +63,7 @@ describe('Event stamp component', () => {
               public: 1,
               status: 'published',
               afterDate: sinon.match.number,
-              utcOffset: -0,
+              utcOffset: -(new Date()).getTimezoneOffset(),
             },
           },
         });
@@ -89,7 +89,7 @@ describe('Event stamp component', () => {
               public: 1,
               status: 'published',
               afterDate: sinon.match.number,
-              utcOffset: -0,
+              utcOffset: -(new Date()).getTimezoneOffset(),
             },
           },
         });

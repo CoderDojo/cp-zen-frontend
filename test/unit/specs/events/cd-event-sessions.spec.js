@@ -2,30 +2,45 @@ import vueUnitHelper from 'vue-unit-helper';
 import SessionList from '!!vue-loader?inject!@/events/cd-event-sessions';
 
 describe('Event sessions component', () => {
-  const sandbox = sinon.sandbox.create();
-  const mockService = {
-    loadSessions: sandbox.stub(),
-    manageTickets: sandbox.stub(),
-  };
-  const MockStoreService = {
-    load: sandbox.stub(),
-    save: sandbox.stub(),
-  };
-  const MockUserService = {
-    getCurrentUser: sandbox.stub(),
-    userProfileData: sandbox.stub(),
-    updateUserProfileData: sandbox.stub(),
-  };
-  const ChildTicket = {
-    createChild: sandbox.stub(),
-  };
-  const uuidMock = sandbox.stub();
-  const SessionListWithMocks = SessionList({
-    'uuid/v4': uuidMock,
-    './service': mockService,
-    '@/store/store-service': MockStoreService,
-    '@/users/service': MockUserService,
-    './cd-event-add-child-ticket': ChildTicket,
+  let sandbox;
+  let mockService;
+  let MockStoreService;
+  let MockUserService;
+  let MockUserUtils;
+  let ChildTicket;
+  let uuidMock;
+  let SessionListWithMocks;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    mockService = {
+      loadSessions: sandbox.stub(),
+      manageTickets: sandbox.stub(),
+    };
+    MockStoreService = {
+      load: sandbox.stub(),
+      save: sandbox.stub(),
+    };
+    MockUserService = {
+      getCurrentUser: sandbox.stub(),
+      userProfileData: sandbox.stub(),
+      updateUserProfileData: sandbox.stub(),
+    };
+    ChildTicket = {
+      createChild: sandbox.stub(),
+    };
+    MockUserUtils = {
+      isYouthOverThirteen: sandbox.stub(),
+    };
+    uuidMock = sandbox.stub();
+    SessionListWithMocks = SessionList({
+      'uuid/v4': uuidMock,
+      './service': mockService,
+      '@/store/store-service': MockStoreService,
+      '@/users/service': MockUserService,
+      '@/users/util': MockUserUtils,
+      './cd-event-add-child-ticket': ChildTicket,
+    });
   });
 
   afterEach(() => {
@@ -33,11 +48,12 @@ describe('Event sessions component', () => {
   });
 
   describe('computed', () => {
-    describe('computed.showPhone', () => {
+    describe.skip('computed.showPhone', () => {
       it('should return false if the user has a phone in their profile', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.user = { phone: '353123456789' };
+        vm.profile = { phone: '353123456789' };
+        vm.isO13 = false;
         // ACT
 
         // ASSERT
@@ -46,11 +62,41 @@ describe('Event sessions component', () => {
       it('should return true if the user does not have a phone in their profile', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.user = { phone: '' };
+        vm.profile = { phone: '' };
+        vm.isO13 = false;
         // ACT
 
         // ASSERT
         expect(vm.showPhone).to.equal(true);
+      });
+      it('should return false if the user isO13', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.profile = { phone: '' };
+        vm.isO13 = true;
+        // ACT
+
+        // ASSERT
+        expect(vm.showPhone).to.equal(false);
+      });
+    });
+
+    describe('computed.isO13', () => {
+      it('should return true if the user is o13', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.profile = { dob: (new Date()).setYear((new Date()).getFullYear() - 14) };
+        MockUserUtils.isYouthOverThirteen.returns(true);
+        expect(vm.isO13).to.equal(true);
+        expect(MockUserUtils.isYouthOverThirteen).to.have.been.calledOnce;
+        expect(MockUserUtils.isYouthOverThirteen).to.have.been.calledWith(vm.profile.dob);
+      });
+      it('should return false if the user is an adult', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.profile.dob = (new Date()).setYear((new Date()).getFullYear() - 20);
+        MockUserUtils.isYouthOverThirteen.returns(false);
+        expect(vm.isO13).to.equal(false);
+        expect(MockUserUtils.isYouthOverThirteen).to.have.been.calledOnce;
+        expect(MockUserUtils.isYouthOverThirteen).to.have.been.calledWith(vm.profile.dob);
       });
     });
 
@@ -58,7 +104,7 @@ describe('Event sessions component', () => {
       it('should return the length of the children array', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.children = [{ value: { name: 'John Doe' }, id: '1' }, { value: { name: 'Jane Doe' }, id: '2' }];
+        vm.applications = [1, 2];
         // ACT
 
         // ASSERT
@@ -82,175 +128,71 @@ describe('Event sessions component', () => {
             name: 'Jane Doe',
           }]);
       });
-    });
-
-    describe('computed.bookingType', () => {
-      it('should return a bookingType of Request if the event ticketApproval is set to true', async () => {
+      it('should return the existing users tickets', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.event = { ticketApproval: true };
-
+        vm.usersTickets = [{ name: 'John Doe', id: '1' }];
         // ACT
 
         // ASSERT
-        expect(vm.bookingType).to.equal('Request');
+        expect(vm.applications).to.deep.equal([{
+          name: 'John Doe',
+          id: '1',
+        }]);
       });
-
-      it('should return a bookingType of Confirm if the event ticketApproval is set to false', async () => {
-        // ARRANGE
+    });
+    describe('computed.isSingle', () => {
+      it('should return true if the user is o13', () => {
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.event = { ticketApproval: false };
-
-        // ACT
-
-        // ASSERT
-        expect(vm.bookingType).to.equal('Confirm');
+        vm.isO13 = true;
+        expect(vm.isSingle).to.be.true;
+      });
+      it('should return false if the user is not an adult with children', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.isO13 = false;
+        expect(vm.isSingle).to.be.false;
+      });
+    });
+    describe('computed.users', () => {
+      it('should return a list containing the current user if isSingle', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.user = { id: '1' };
+        vm.isSingle = true;
+        expect(vm.users).to.deep.equal([vm.user]);
+      });
+      it('should return a empty list if the current user is not isSingle', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.user = { id: '1' };
+        vm.isSingle = false;
+        expect(vm.users).to.deep.equal([]);
       });
     });
   });
-
   describe('methods', () => {
-    describe('methods.validateAllChildComponents()', () => {
-      it('should create an array value of true if the validation of the child component resolves to true', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.$refs = {
-          allChildComponents: [
-            {
-              $validator: {
-                validateAll: () => Promise.resolve(true),
-              },
-            },
-          ],
-        };
-        // ACT
-        const validatedChild = await vm.validateAllChildComponents();
-
-        // ASSERT
-        expect(validatedChild).to.deep.equal([true]);
-      });
-      it('should create an array value of false if the validation of the child component resolves to false', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.$refs = {
-          allChildComponents: [
-            {
-              $validator: {
-                validateAll: () => Promise.resolve(false),
-              },
-            },
-          ],
-        };
-        // ACT
-        const validatedChild = await vm.validateAllChildComponents();
-
-        // ASSERT
-        expect(validatedChild).to.deep.equal([false]);
-      });
-    });
-
-    describe('methods.checkValidatedChildComponents()', () => {
-      it('should set valid to true if validatedChildComponents are all true', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.validChildren = null;
-        sandbox.stub(vm, 'validateAllChildComponents').resolves([true]);
-
-        // ACT
-        await vm.checkValidatedChildComponents();
-
-        // ASSERT
-        expect(vm.validChildren).to.equal(true);
-      });
-
-      it('should set valid to false if all (or one of) validatedChildComponents are/is false', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.validChildren = null;
-        sandbox.stub(vm, 'validateAllChildComponents').resolves([false]);
-
-        // ACT
-        await vm.checkValidatedChildComponents();
-
-        // ASSERT
-        expect(vm.validChildren).to.equal(false);
-      });
-
-      it('should not change the value of valid if there are no child components', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.validChildren = null;
-        sandbox.stub(vm, 'validateAllChildComponents').resolves([]);
-
-        // ACT
-        await vm.checkValidatedChildComponents();
-
-        // ASSERT
-        expect(vm.validChildren).to.equal(null);
-      });
-    });
-
     describe('methods.addChildComponent()', () => {
       it('should add a new child component if all child components are valid', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.children = [{ value: { name: 'John Doe' }, id: '1' }];
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = true;
-        });
         uuidMock.returns('2');
-        vm.errors = {
-          clear: sandbox.stub(),
-        };
 
         // ACT
         await vm.addChildComponent();
 
         // ASSERT
-        expect(vm.checkValidatedChildComponents).to.have.been.called;
-        expect(vm.validChildren).to.equal(true);
-        expect(vm.errors.clear).to.have.been.called;
         expect(vm.children).to.deep.equal([{ value: { name: 'John Doe' }, id: '1' }, { value: {}, id: '2' }]);
-      });
-
-      it('should add error and not a child component if child components are invalid', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.children = [{ value: { name: '' }, id: '1' }];
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = false;
-        });
-        vm.errors = {
-          add: sandbox.stub(),
-        };
-
-        // ACT
-        await vm.addChildComponent();
-
-        // ASSERT
-        expect(vm.checkValidatedChildComponents).to.have.been.called;
-        expect(vm.validChildren).to.equal(false);
-        expect(vm.errors.add).to.have.been.calledWith('addChildFailed');
-        expect(vm.children).to.deep.equal([{ value: { name: '' }, id: '1' }]);
       });
 
       it('should add a new child component if there are no child components', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.children = [];
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = true;
-        });
         uuidMock.returns('1');
-        vm.errors = {
-          clear: sandbox.stub(),
-        };
 
         // ACT
         await vm.addChildComponent();
 
         // ASSERT
-        expect(vm.errors.clear).to.have.been.called;
         expect(vm.children).to.deep.equal([{ value: {}, id: '1' }]);
       });
     });
@@ -274,7 +216,7 @@ describe('Event sessions component', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.validPhone = false;
-        vm.user = { id: 'user1' };
+        vm.profile = { id: 'user1' };
 
         // ACT
         const result = await vm.addPhoneNumber();
@@ -286,7 +228,7 @@ describe('Event sessions component', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.validPhone = true;
-        vm.user = { id: 'user1' };
+        vm.profile = { id: 'user1' };
         MockUserService.userProfileData.withArgs(vm.user.id)
         .returns(Promise.resolve({ id: 'user1', phone: '' }));
         vm.phone = '+353123456789';
@@ -348,31 +290,33 @@ describe('Event sessions component', () => {
     });
 
     describe('methods.setupPrerequisites()', () => {
-      it('should call addPhoneNumber and addNewChildren if showPhone is true', () => {
+      beforeEach(() => sandbox.restore());
+      it('should call addPhoneNumber and addNewChildren if showPhone is true', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.user = { phone: '' };
+        vm.showPhone = true;
         sandbox.stub(vm, 'addPhoneNumber');
         sandbox.stub(vm, 'addNewChildren');
         // ACT
-        vm.setupPrerequisites();
+        await vm.setupPrerequisites();
 
         // ASSERT
-        expect(vm.addPhoneNumber).to.have.been.called;
-        expect(vm.addNewChildren).to.have.been.called;
+        expect(vm.addPhoneNumber).to.have.been.calledOnce;
+        expect(vm.addNewChildren).to.have.been.calledOnce;
       });
-      it('should call only addNewChildren if showPhone is false', () => {
+      it('PhoneNumberhould call only addNewChildren if showPhone is false', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.user = { phone: '123456789' };
         sandbox.stub(vm, 'addPhoneNumber');
         sandbox.stub(vm, 'addNewChildren');
+        vm.profile = { phone: '01' };
+        vm.isO13 = false;
         // ACT
-        vm.setupPrerequisites();
+        await vm.setupPrerequisites();
 
         // ASSERT
         expect(vm.addPhoneNumber).to.not.have.been.called;
-        expect(vm.addNewChildren).to.have.been.called;
+        expect(vm.addNewChildren).to.have.been.calledOnce;
       });
     });
 
@@ -392,12 +336,8 @@ describe('Event sessions component', () => {
         vm.$route = { name: 'a' };
       });
 
-      it('should call bookTickets and router push when showPhone, validPhone, validChildren, and setupSucceeded are true ', async () => {
+      it('should call bookTickets and router push when setupSucceeded is true ', async () => {
         // ARRANGE
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = true;
-        });
-        vm.user = { phone: '' };
         vm.$validator = {
           validateAll: () => true,
         };
@@ -408,63 +348,16 @@ describe('Event sessions component', () => {
         await vm.submitBooking();
 
         // ASSERT
-        expect(vm.errors.clear).to.have.been.called;
-        expect(vm.showPhone).to.equal(true);
-        expect(vm.validPhone).to.equal(true);
-        expect(vm.validChildren).to.equal(true);
-        expect(vm.setupPrerequisites).to.have.been.called;
-        expect(vm.bookTickets).to.have.been.called;
+        expect(vm.setupPrerequisites).to.have.been.calledOnce;
+        expect(vm.bookTickets).to.have.been.calledOnce;
         expect(vm.$router.push).to.be.calledWith({ name: 'EventBookingConfirmation', params: { eventId: vm.eventId } });
       });
 
-      it('should call bookTickets and router push when validChildren and setupSucceeded are true. showPhone is false', async () => {
+      it('should do nothing when setupSucceeded is false', async () => {
         // ARRANGE
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = true;
-        });
-        vm.user = { phone: '123456789' };
-        sandbox.stub(vm, 'setupPrerequisites').resolves(true);
-        sandbox.stub(vm, 'bookTickets');
-
-        // ACT
-        await vm.submitBooking();
-
-        // ASSERT
-        expect(vm.errors.clear).to.have.been.called;
-        expect(vm.showPhone).to.equal(false);
-        expect(vm.validChildren).to.equal(true);
-        expect(vm.setupPrerequisites).to.have.been.called;
-        expect(vm.bookTickets).to.have.been.called;
-        expect(vm.$router.push).to.be.calledWith({ name: 'EventBookingConfirmation', params: { eventId: vm.eventId } });
-      });
-
-      it('should add submitChildComponentsFailed error when validChildren is false. showPhone is true', async () => {
-        // ARRANGE
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = false;
-        });
-        vm.user = { phone: '' };
         vm.$validator = {
           validateAll: () => true,
         };
-
-        // ACT
-        await vm.submitBooking();
-
-        // ASSERT
-        expect(vm.errors.clear).to.have.been.called;
-        expect(vm.showPhone).to.equal(true);
-        expect(vm.validPhone).to.equal(true);
-        expect(vm.validChildren).to.equal(false);
-        expect(vm.errors.add).to.have.been.calledWith('submitChildComponentsFailed');
-      });
-
-      it('should do nothing when setupSucceeded is false. showPhone is false and validChildren is true', async () => {
-        // ARRANGE
-        sandbox.stub(vm, 'checkValidatedChildComponents').callsFake(() => {
-          vm.validChildren = true;
-        });
-        vm.user = { phone: '123498566986' };
         sandbox.stub(vm, 'setupPrerequisites').resolves(false);
         sandbox.stub(vm, 'bookTickets');
 
@@ -472,11 +365,8 @@ describe('Event sessions component', () => {
         await vm.submitBooking();
 
         // ASSERT
-        expect(vm.errors.clear).to.have.been.called;
-        expect(vm.showPhone).to.equal(false);
-        expect(vm.validChildren).to.equal(true);
-        expect(vm.setupPrerequisites).to.have.been.called;
-        expect(vm.bookTickets).to.not.have.been.called;
+        expect(vm.setupPrerequisites).to.have.been.calledOnce;
+        expect(vm.bookTickets).to.not.have.been.calledOnce;
         expect(vm.$router.push).to.not.have.been.called;
       });
     });
