@@ -96,7 +96,6 @@
       childTickets() {
         return this.sessions.map(session => ({
           description: session.description,
-          entity: session.entity,
           eventId: session.eventId,
           id: session.id,
           name: session.name,
@@ -122,7 +121,6 @@
           ticketName: ticket.name,
           ticketType: ticket.type,
           sessionId: ticket.sessionId,
-          created: new Date(),
           dojoId: this.event.dojoId,
           ticketId: ticket.id,
           userId: this.userId,
@@ -132,7 +130,7 @@
         return {
           name: this.name,
           firstName: this.firstName,
-          lastName: this.lastName,
+          lastName: this.surname,
           dob: this.dob,
           gender: this.gender,
           userTypes: [UserUtils.isUnderAge(this.dob) ? 'attendee-u13' : 'attendee-o13'],

@@ -65,6 +65,7 @@ describe('Book event page', () => {
           expect(Booking.ticketSelector(0).isVisible()).to.be.true;
         });
       });
+      afterEach(() => browser.deleteCookie('seneca-login'));
     });
     describe('when parent', () => {
       it.skip('should let me login')
@@ -112,6 +113,7 @@ describe('Book event page', () => {
           expect(Booking.phoneNumberValidationError.isVisible()).to.be.true;
         })
       });
+      afterEach(() => browser.deleteCookie('seneca-login'));
     });
   });
   describe('RBF', () => {
