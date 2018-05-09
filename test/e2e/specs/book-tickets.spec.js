@@ -3,7 +3,7 @@ const Booking = require('../page-objects/booking');
 const BookingConfirmation = require('../page-objects/booking-confirmation');
 const DojoPage = require('../page-objects/find-dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
-const EventDobVerificationPage = require('../page-objects/event-dob-verification');
+const EventAccountCreation = require('../page-objects/event-dob-verification');
 const EventSessionsPage = require('../page-objects/event-sessions');
 const LoginPage = require('../page-objects/login');
 const currentYear = new Date().getFullYear();
@@ -21,15 +21,14 @@ describe('Book event page', () => {
   describe('Register page', () => {
     it('should display an error if underage', () => {
       startBooking();
-      expect(EventDobVerificationPage.verifyAgeMessage.getText()).to.equal('Please verify your age');
-      expect(EventDobVerificationPage.dobInputLabel.getText()).to.equal('Enter your Date of Birth');
+      expect(EventAccountCreation.dobInputLabel.getText()).to.equal('Enter your Date of Birth');
 
-      EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
-      EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('3');
-      EventDobVerificationPage.dateOfBirthYearInput.selectByValue(new Date(u13Year).getFullYear());
-      EventDobVerificationPage.verify.click();
-      expect(EventDobVerificationPage.dateOfBirthError.isVisible()).to.be.true;
-      expect(EventDobVerificationPage.dateOfBirthError.getText()).to.equal('You will need your parent to carry out the registration.');
+      EventAccountCreation.dateOfBirthDayInput.selectByValue('27');
+      EventAccountCreation.dateOfBirthMonthInput.selectByValue('3');
+      EventAccountCreation.dateOfBirthYearInput.selectByValue(new Date(u13Year).getFullYear());
+      EventAccountCreation.verify.click();
+      expect(EventAccountCreation.dateOfBirthError.isVisible()).to.be.true;
+      expect(EventAccountCreation.dateOfBirthError.getText()).to.equal('Sorry :( Children under 13 are note allowed to book events. You can ask your parent or guardian to bookfor you.');
     });
     it.skip('should display an error invalid email');
   });
@@ -51,18 +50,22 @@ describe('Book event page', () => {
           Booking.eventTitle.waitForVisible();
         });
         it('should display an individual ticket without options to add children', () => {
-          expect(Booking.allTickets().length).to.equal(1);
+          expect(Booking.tickets.length).to.equal(1);
           expect(Booking.addYouthButton.isVisible()).to.be.false;
         });
         it('should not display the phone number', () => {
           expect(Booking.phoneNumber.isVisible()).to.be.false;
         });
         it('should let me select tickets for ninjas', () => {
+          Booking.allTickets.waitForVisible();
           expect(Booking.ticketName(0).getText()).to.equal('Name:child 1o13');
           expect(Booking.ticketSelector(0).isVisible()).to.be.true;
         });
       });
-      afterEach(() => browser.deleteCookie('seneca-login'));
+      afterEach(() => {
+        browser.deleteCookie('seneca-login');
+        browser.deleteCookie('loggedIn');
+      });
     });
     describe('when parent', () => {
       it.skip('should let me login')
@@ -95,6 +98,7 @@ describe('Book event page', () => {
           expect(Booking.childTicketTitle.length).to.equal(2);
         });
         it('should let me fill the new user form', () => {
+          browser.waitUntil(() => Booking.childrenTickets.length > 0);
           Booking.childTicketFirstName[0].setValue('Babar');
           expect(Booking.childTicketTitle[0].getText()).to.equal('Ticket - Babar');
           // TODO
@@ -110,9 +114,9 @@ describe('Book event page', () => {
         });
         afterEach(() => {
           browser.deleteCookie('seneca-login');
+          browser.deleteCookie('loggedIn');
         });
       });
-      afterEach(() => browser.deleteCookie('seneca-login'));
     });
   });
   describe('RBF', () => {
@@ -131,6 +135,7 @@ describe('Book event page', () => {
           Booking.eventTitle.waitForVisible();
         });
         it('should show a mentor ticket', () => {
+          Booking.allTickets.waitForVisible();
           expect(Booking.ticketName(0).getText()).to.equal('Name:mentor one');
         });
         it('should let me add a child', () => {
@@ -141,6 +146,7 @@ describe('Book event page', () => {
         }); 
         afterEach(() => {
           browser.deleteCookie('seneca-login');
+          browser.deleteCookie('loggedIn');
         });
       });
       describe('when adult', () => {

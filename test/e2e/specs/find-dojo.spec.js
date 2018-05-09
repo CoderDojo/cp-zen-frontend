@@ -156,8 +156,7 @@ describe('Find Dojo page', () => {
       DojoPage.addressSearchInput.waitForVisible();
       DojoPage.addressSearchInput.setValue('CHQ');
       DojoPage.addressSearchButtonMobile.click();
-      DojoPage.startADojoMessage.waitForVisible();
-
+      DojoPage.startADojoMessageMobile.waitForVisible();
       expect(DojoPage.startADojoMessageMobile.getText()).to.equal('Don\'t see a Dojo in your area?');
       expect(DojoPage.startADojoButtonMobile.getText()).to.equal('Start a Dojo');
       expect(DojoPage.startADojoButtonMobile.getAttribute('href')).to.equal(`${browser.options.baseUrl}dashboard/start-dojo`);

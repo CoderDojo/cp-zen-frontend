@@ -107,7 +107,7 @@ describe('Login or register', () => {
       vm.loadEvent = sandbox.stub();
       vm.loadDojo = sandbox.stub();
       vm.loadCurrentUser = sandbox.stub();
-      vm.currentUser = {};
+      vm.currentUser = { ok: true };
       vm.$router = {
         push: sandbox.stub(),
       };
