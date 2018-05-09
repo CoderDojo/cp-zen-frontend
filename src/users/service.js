@@ -11,10 +11,13 @@ const UserService = {
   },
 
   async register(user, profile) {
-    await Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/register`, {
+    const res = await Vue.http.post(`${Vue.config.apiServer}/api/2.0/users/register`, {
       profile,
       user,
     });
+    if (res.body.error || !res.body.ok) {
+      throw new Error(res.body.error || res.body.why);
+    }
     return UserService.login(user.email, user.password);
   },
 

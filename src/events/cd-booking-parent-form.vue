@@ -1,16 +1,5 @@
 <template>
   <div class="cd-booking-parent-form">
-    <div class="cd-booking-parent-form__attendee-type-header">
-      {{ $t('Parent / Guardian') }}
-    </div>
-    <label class="cd-booking-parent-form__label" for="name">{{ $t('Name') }}</label>
-    <input type="text" class="form-control" name="firstName" :placeholder="$t('First Name')" id="name" data-vv-as="first name" v-validate="'required'" v-model="parentUserData.firstName">
-
-    <input type="text" class="form-control" name="lastName" :placeholder="$t('Last Name')" id="lastName" data-vv-as="last name" v-validate="'required'" v-model="parentUserData.lastName">
-    <p class="cd-booking-parent-form__first-name-error text-danger" v-show="errors.has('firstName:required')">{{ $t('First name is required') }}</p>
-    <p class="cd-booking-parent-form__last-name-error text-danger" v-show="errors.has('lastName:required')">{{ $t('Last name is required') }}</p>
-
-    <label class="cd-booking-parent-form__label cd-booking-parent-form__parent-dob-label">{{ $t('Date of Birth') }}</label>
     <vue-dob-picker v-model="parentUserData.dob"
                     v-validate="'required'"
                     data-vv-name="parentDob"
@@ -29,11 +18,6 @@
     <input type="text" class="form-control" placeholder="e.g. 35312345678" name="phoneNumber" id="phoneNumber" data-vv-as="phone number" v-validate="'required|numeric'" v-model="parentUserData.phone"><br/>
     <p class="cd-booking-parent-form__phone-error text-danger" v-show="errors.has('phoneNumber:required')">{{ $t('Phone number is required') }}</p>
     <p class="cd-booking-parent-form__phone-error text-danger" v-show="errors.has('phoneNumber:numeric')">{{ $t('Phone number is invalid') }}</p>
-
-    <label class="cd-booking-parent-form__label" for="email">{{ $t('Email Address') }}</label>
-    <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate="'required|email'" v-model="parentUserData.email">
-    <p class="cd-booking-parent-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</p>
-    <p class="cd-booking-parent-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</p>
 
     <div v-for="ticket in ninjaTickets">
       <div v-for="(selectedTicket, index) in ticket.selectedTickets">
