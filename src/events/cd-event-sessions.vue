@@ -105,7 +105,7 @@
       },
       bookTickets() {
         this.$ga.event(this.$route.name, 'click', 'book_tickets', this.totalBooked);
-        return service.manageTickets(this.applications);
+        return service.v3.createOrder(this.eventId, this.applications);
       },
       async setupPrerequisites() {
         if (this.showPhone) {

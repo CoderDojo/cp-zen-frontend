@@ -57,7 +57,7 @@
         return this.next();
       }
       await this.loadEvent();
-      this.loadDojo();
+      return this.loadDojo();
     },
   };
 </script>
