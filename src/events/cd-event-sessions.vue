@@ -136,8 +136,8 @@
         if (!this.isSingle) {
           this.createParentTicket();
         }
-        await service.manageTickets(this.applications);
         this.$ga.event(this.$route.name, 'click', 'book_tickets', this.totalBooked);
+        return service.v3.createOrder(this.eventId, this.applications);
       },
       async setupPrerequisites() {
         if (this.showPhone) {
