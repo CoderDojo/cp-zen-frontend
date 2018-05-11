@@ -3,49 +3,49 @@ const EventDetails = require('./event-details');
 const EventDobVerification = Object.create(EventDetails, {
   name: {
     get() {
-      return $('.cd-event-dob-verification__name');
+      return $('.cd-create-account__dob');
     },
   },
   verifyAgeMessage: {
     get() {
-      $('.cd-event-dob-verification__verify-age-message').waitForVisible();
-      return $('.cd-event-dob-verification__verify-age-message');
+      $('.cd-create-account__dob-error').waitForVisible();
+      return $('.cd-create-account__dob-error');
     },
   },
   dobInputLabel: {
     get() {
-      return $('.cd-event-dob-verification__dob-input-label');
+      return $('.cd-create-account__dob .cd-create-account__label');
     },
   },
   dateOfBirthDayInput: {
     get() {
-      const selector = '.cd-event-dob-verification__dob select';
+      const selector = '.cd-create-account__dob-picker select';
       $(selector).waitForVisible();
       return $$(selector)[0];
     },
   },
   dateOfBirthMonthInput: {
     get() {
-      const selector = '.cd-event-dob-verification__dob select';
+      const selector = '.cd-create-account__dob-picker select';
       $(selector).waitForVisible();
       return $$(selector)[1];
     },
   },
   dateOfBirthYearInput: {
     get() {
-      const selector = '.cd-event-dob-verification__dob select';
+      const selector = '.cd-create-account__dob-picker select';
       $(selector).waitForVisible();
       return $$(selector)[2];
     },
   },
   verify: {
     get() {
-      return $('.cd-event-dob-verification__verify');
+      return $('.cd-create-account__submit');
     },
   },
   dateOfBirthError: {
     get() {
-      return $('.cd-event-dob-verification__dob-error');
+      return $('.cd-create-account__dob-error');
     },
   },
   open: {

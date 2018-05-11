@@ -50,10 +50,10 @@
           country: this.dojoDetails.country,
         };
       },
-    },
+    }, // eslint-disable-next-line consistent-return
     async created() {
       await this.loadCurrentUser();
-      if (this.currentUser) {
+      if (this.currentUser && this.currentUser.ok) {
         return this.next();
       }
       await this.loadEvent();
