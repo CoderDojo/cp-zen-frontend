@@ -150,6 +150,9 @@ describe('Event ticket creation', () => {
     });
     it('should return true if the type("mentor") is included and the user is a mentor', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
+      vm.user = {
+        dob: new Date().setFullYear((new Date()).getFullYear() - 25),
+      };
       vm.isNinja = false;
       expect(vm.filterByTicketType('mentor')).to.be.true;
     });

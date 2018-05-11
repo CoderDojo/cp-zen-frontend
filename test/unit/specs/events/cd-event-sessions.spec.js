@@ -15,7 +15,9 @@ describe('Event sessions component', () => {
     sandbox = sinon.sandbox.create();
     mockService = {
       loadSessions: sandbox.stub(),
-      manageTickets: sandbox.stub(),
+      v3: {
+        createOrder: sandbox.stub(),
+      },
     };
     MockStoreService = {
       load: sandbox.stub(),
@@ -281,12 +283,13 @@ describe('Event sessions component', () => {
     });
 
     describe('methods.bookTickets()', () => {
-      it('should send applications to be booked with manageTickets without extra ticket (isSingle = true)', async () => {
+      it('should send applications to be booked with createOrder without extra ticket (isSingle = true)', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        mockService.manageTickets.resolves(true);
+        mockService.v3.createOrder.resolves(true);
         vm.$ga = { event: sinon.stub() };
         vm.$route = { name: 'a' };
+        vm.eventId = 'event1';
         vm.totalBooked = 1;
         vm.isSingle = true;
         vm.applications = [{
@@ -299,18 +302,19 @@ describe('Event sessions component', () => {
           sessionId: 'sessionId2',
         }];
         // ACT
-        await vm.bookTickets();
+        const result = await vm.bookTickets();
 
         // ASSERT
-        expect(mockService.manageTickets).to.have.been.calledOnce;
-        expect(mockService.manageTickets).to.have.been.calledWith(vm.applications);
+        expect(result).to.equal(true);
+        expect(mockService.v3.createOrder).to.have.been.calledOnce;
+        expect(mockService.v3.createOrder).to.have.been.calledWith(vm.eventId, vm.applications);
         expect(vm.$ga.event).to.have.been.calledOnce;
         expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'book_tickets', 1);
       });
-      it('should send applications to be booked with manageTickets with extra ticket (isSingle = false)', async () => {
+      it('should send applications to be booked with createOrder with extra ticket (isSingle = false)', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        mockService.manageTickets.resolves(true);
+        mockService.v3.createOrder.resolves(true);
         vm.$ga = { event: sinon.stub() };
         vm.$route = { name: 'a' };
         vm.totalBooked = 1;
@@ -326,11 +330,12 @@ describe('Event sessions component', () => {
           sessionId: 'sessionId2',
         }];
         // ACT
-        await vm.bookTickets();
+        const result = await vm.bookTickets();
 
         // ASSERT
-        expect(mockService.manageTickets).to.have.been.calledOnce;
-        expect(mockService.manageTickets).to.have.been.calledWith(vm.applications);
+        expect(result).to.equal(true);
+        expect(mockService.v3.createOrder).to.have.been.calledOnce;
+        expect(mockService.v3.createOrder).to.have.been.calledWith(vm.eventId, vm.applications);
         expect(vm.$ga.event).to.have.been.calledOnce;
         expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'book_tickets', 1);
         expect(vm.createParentTicket).to.have.been.calledOnce;
