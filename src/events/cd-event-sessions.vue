@@ -35,6 +35,7 @@
   </div>
 </template>
 <script>
+  import { omit } from 'lodash';
   import uuid from 'uuid/v4';
   import StoreService from '@/store/store-service';
   import UserService from '@/users/service';
@@ -103,7 +104,7 @@
       },
       async addPhoneNumber() {
         this.profile.phone = this.phone;
-        return UserService.updateUserProfileData(this.profile);
+        return UserService.updateUserProfileData(omit(this.profile, ['userTypes', 'dojos', 'children']));
       },
       async addNewChildren() {
         if (this.$refs.allChildComponents) {
@@ -158,11 +159,9 @@
       async loadCurrentUser() {
         const response = await UserService.getCurrentUser();
         this.user = response.body.user;
-        return Promise.resolve();
       },
       async loadProfile() {
         this.profile = (await UserService.userProfileData(this.user.id)).body;
-        return Promise.resolve();
       },
       loadSessions() {
         service.loadSessions(this.eventId).then((response) => {
