@@ -33,6 +33,23 @@ module.exports = {
       lastName: 'two',
     }}
   },
+  'parent3@example.com': {
+    id: 'parent3',
+    firstName: 'parent',
+    lastName: 'forty-three-and-two',
+    name: 'parent 3',
+    email: 'parent3@example.com',
+    phone: '',
+    initUserType: JSON.stringify({name: 'parent-guardian', title: 'Parent/Guardian'}),
+    roles: ['basic-user'],
+    children: {'child3': {
+      id: 'pchild3',
+      userId: 'child3',
+      name: 'child3 three',
+      firstName: 'child',
+      lastName: 'three',
+    }}
+  },
   'mentor1@example.com': {
     id: 'mentor1',
     firstName: 'mentor',

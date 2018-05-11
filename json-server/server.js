@@ -136,8 +136,14 @@ server.get('/api/2.0/users/instance', (req, res) => {
 });
 
 server.post('/api/2.0/profiles/user-profile-data', (req, res) => {
+  let profile;
   if (req.cookies.loggedIn) {
-    res.send(usersProfile[req.cookies.loggedIn]);
+    if (req.body.query && req.body.query.userId) {
+      profile = Object.values(usersProfile).find((p) => req.body.query.userId === p.userId);
+    } else {
+      profile = usersProfile[req.cookies.loggedIn];
+    }
+    res.send(profile);
   } else {
     res.send();
   }
