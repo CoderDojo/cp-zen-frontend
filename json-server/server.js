@@ -98,7 +98,7 @@ server.post('/api/2.0/users/register', (req, res) => {
   users[req.body.user.email].name = `${req.body.user.firstName} ${req.body.user.lastName}`;
   users[req.body.user.email].roles = ['basic-user'];
   users[req.body.user.email].initUserType = JSON.stringify(users[req.body.user.email].initUserType);
-  res.send();
+  res.send({ ok: true });
 });
 
 server.post('/api/2.0/users/login', (req, res) => {

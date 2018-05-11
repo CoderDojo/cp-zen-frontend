@@ -1,6 +1,7 @@
 module.exports = {
   'parent1@example.com': {
     dob: '1976-05-22T00:00:00.000Z',
+    children: ['child2'],
   },
   'parent2@example.com': {
     dob: '1969-11-26T00:00:00.000Z',
