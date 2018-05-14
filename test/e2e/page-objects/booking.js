@@ -33,13 +33,8 @@ const BookingParentData = Object.create(EventDetails, {
     },
   },
   tickets: {
-    value(index) {
-      return $$('.cd-event-tickets')[index];
-    },
-  },
-  allTickets: {
     get() {
-      return $$('.cd-event-sessions__tickets');
+      return $$('.cd-event-tickets');
     },
   },
   ticketName: {
