@@ -98,7 +98,7 @@ server.post('/api/2.0/users/register', (req, res) => {
   users[req.body.user.email].name = `${req.body.user.firstName} ${req.body.user.lastName}`;
   users[req.body.user.email].roles = ['basic-user'];
   users[req.body.user.email].initUserType = JSON.stringify(users[req.body.user.email].initUserType);
-  res.send();
+  res.send({ ok: true });
 });
 
 server.post('/api/2.0/users/login', (req, res) => {
@@ -136,8 +136,14 @@ server.get('/api/2.0/users/instance', (req, res) => {
 });
 
 server.post('/api/2.0/profiles/user-profile-data', (req, res) => {
+  let profile;
   if (req.cookies.loggedIn) {
-    res.send(usersProfile[req.cookies.loggedIn]);
+    if (req.body.query && req.body.query.userId) {
+      profile = Object.values(usersProfile).find((p) => req.body.query.userId === p.userId);
+    } else {
+      profile = usersProfile[req.cookies.loggedIn];
+    }
+    res.send(profile);
   } else {
     res.send();
   }

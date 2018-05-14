@@ -1,6 +1,5 @@
 const FindDojoPage = require('../page-objects/find-dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
-const EventDobVerificationPage = require('../page-objects/event-dob-verification');
 const EventSessionsPage = require('../page-objects/event-sessions');
 const ChildTicket = require('../page-objects/child-ticket');
 const LoginPage = require('../page-objects/login');
