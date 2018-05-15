@@ -89,7 +89,7 @@ describe('Book event page', () => {
           expect(Booking.phoneNumber.isVisible()).to.be.false;
         });
         it('should let me select tickets for ninjas', () => {
-          browser.waitUntil(() => Booking.allTickets.length > 0);
+          browser.waitUntil(() => Booking.tickets.length > 0);
           expect(Booking.ticketName(0).getText()).to.equal('Name:child 1o13');
           expect(Booking.ticketSelector(0).isVisible()).to.be.true;
         });
@@ -192,7 +192,7 @@ describe('Book event page', () => {
           expect(browser.getUrl()).to.equal('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
         });
         it('should display an individual ticket without options to add children', () => {
-          expect(Booking.allTickets.length).to.equal(1);
+          expect(Booking.tickets.length).to.equal(1);
           expect(Booking.addYouthButton.isVisible()).to.be.false;
         });
         it('should not display the phone number', () => {
@@ -217,7 +217,7 @@ describe('Book event page', () => {
           expect(browser.getUrl()).to.equal('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
         });
         it('should show a mentor ticket', () => {
-          browser.waitUntil(() => Booking.allTickets.length > 0);
+          browser.waitUntil(() => Booking.tickets.length > 0);
           expect(Booking.ticketName(0).getText()).to.equal('Name:mentor one');
         });
         it('should let me add a child', () => {
@@ -243,14 +243,34 @@ describe('Book event page', () => {
         Booking.eventTitle.waitForVisible();
       });
       it('should display as many indiviual tickets as many existing kids', () => {
-        browser.waitUntil(() => Booking.allTickets.length > 0);
+        browser.waitUntil(() => Booking.tickets.length > 0);
         expect(Booking.ticketName(0).getText()).to.equal('Name:child 3three');
       });
       it('should let me create new children', () => {
         expect(Booking.addYouthButton.isVisible()).to.be.true;
       });
-      it.skip('should have the children creation closed by default', () => {
+      it('should have the children creation closed by default', () => {
         expect(Booking.childrenTickets.length).to.equal(0);
+      });
+    });
+    describe('when adult without kids', () => {
+      beforeEach(() => {
+        LoginPage.open();
+        LoginPage.email.waitForVisible();
+        LoginPage.email.setValue('adult1@example.com');
+        LoginPage.password.setValue('test');
+        LoginPage.login.click();
+        startBooking();
+        Booking.eventTitle.waitForVisible();
+      });
+      it('should display no indiviual tickets as it has no kids', () => {
+        expect(Booking.tickets.length).to.equal(0);
+      });
+      it('should let me create new children', () => {
+        expect(Booking.addYouthButton.isVisible()).to.be.true;
+      });
+      it('should have the children creation opened by default', () => {
+        expect(Booking.childrenTickets.length).to.equal(1);
       });
     });
   });

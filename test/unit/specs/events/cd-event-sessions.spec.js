@@ -535,4 +535,53 @@ describe('Event sessions component', () => {
       done();
     });
   });
+
+  describe('created', () => {
+    it('should add a default child if the user is having no child and is not single', async () => {
+      const vm = vueUnitHelper(SessionListWithMocks);
+      vm.loadEvent = sinon.stub().resolves();
+      vm.setEvent = sinon.stub().resolves();
+      vm.loadSessions = sinon.stub().resolves();
+      vm.loadCurrentUser = sinon.stub().resolves();
+      vm.loadProfile = sinon.stub().resolves();
+      vm.loadChildren = sinon.stub().resolves();
+      vm.loadDojoRelationship = sinon.stub().resolves();
+      vm.profile.children = [];
+      vm.isSingle = false;
+      vm.children = [];
+
+      await vm.$lifecycleMethods.created();
+      expect(vm.children.length).to.equal(1);
+    });
+    it('should not add a default child if the user has children', async () => {
+      const vm = vueUnitHelper(SessionListWithMocks);
+      vm.loadEvent = sinon.stub().resolves();
+      vm.setEvent = sinon.stub().resolves();
+      vm.loadSessions = sinon.stub().resolves();
+      vm.loadCurrentUser = sinon.stub().resolves();
+      vm.loadProfile = sinon.stub().resolves();
+      vm.loadChildren = sinon.stub().resolves();
+      vm.loadDojoRelationship = sinon.stub().resolves();
+      vm.profile.children = [{ id: '1' }];
+      vm.isSingle = false;
+
+      await vm.$lifecycleMethods.created();
+      expect(vm.children.length).to.equal(0);
+    });
+    it('should not add a default child if the user is single', async () => {
+      const vm = vueUnitHelper(SessionListWithMocks);
+      vm.loadEvent = sinon.stub().resolves();
+      vm.setEvent = sinon.stub().resolves();
+      vm.loadSessions = sinon.stub().resolves();
+      vm.loadCurrentUser = sinon.stub().resolves();
+      vm.loadProfile = sinon.stub().resolves();
+      vm.loadChildren = sinon.stub().resolves();
+      vm.loadDojoRelationship = sinon.stub().resolves();
+      vm.profile.children = [];
+      vm.isSingle = true;
+
+      await vm.$lifecycleMethods.created();
+      expect(vm.children.length).to.equal(0);
+    });
+  });
 });

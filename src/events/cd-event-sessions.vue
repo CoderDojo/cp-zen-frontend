@@ -207,7 +207,8 @@
       await this.loadProfile();
       this.loadChildren();
       await this.loadDojoRelationship();
-      if (!this.isSingle) {
+      if (!(this.profile.children && this.profile.children.length > 0) &&
+        !this.isSingle) {
         this.children.push({ value: {}, id: uuid() });
       }
     },

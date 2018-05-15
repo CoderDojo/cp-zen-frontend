@@ -50,6 +50,16 @@ module.exports = {
       lastName: 'three',
     }}
   },
+  'adult1@example.com': {
+    id: 'adult1',
+    firstName: 'adult',
+    lastName: 'one',
+    name: 'adult one',
+    email: 'adult1@example.com',
+    phone: '',
+    initUserType: JSON.stringify({name: 'parent-guardian', title: 'Parent/Guardian'}),
+    roles: ['basic-user'],
+  },
   'mentor1@example.com': {
     id: 'mentor1',
     firstName: 'mentor',
