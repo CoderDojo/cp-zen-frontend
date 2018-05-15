@@ -53,7 +53,10 @@
     }, // eslint-disable-next-line consistent-return
     async created() {
       await this.loadCurrentUser();
-      if (this.currentUser && this.currentUser.ok) {
+      if (this.currentUser && 
+        this.currentUser.ok &&
+        this.currentUser.login &&
+        this.currentUser.login.id) {
         return this.next();
       }
       await this.loadEvent();

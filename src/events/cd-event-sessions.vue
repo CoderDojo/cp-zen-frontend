@@ -123,7 +123,6 @@
             name: this.profile.name,
             dateOfBirth: this.profile.dob,
             eventId: this.event.id,
-            status: this.status,
             ticketName: parentTickets[0].name,
             ticketType: parentTickets[0].type,
             sessionId: parentTickets[0].sessionId,
