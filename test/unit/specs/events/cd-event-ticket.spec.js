@@ -83,26 +83,9 @@ describe('Event ticket creation', () => {
       expect(vm.filterByTicketType).to.have.been.calledWith('ninja');
     });
   });
-  describe('computed: status', () => {
-    it('should return pending when the approval is set', () => {
-      const vm = vueUnitHelper(EventTicketWithMocks);
-      vm.event = {
-        ticketApproval: true,
-      };
-      expect(vm.status).to.equal('pending');
-    });
-    it('should return approved when the approval is not set', () => {
-      const vm = vueUnitHelper(EventTicketWithMocks);
-      vm.event = {
-        ticketApproval: false,
-      };
-      expect(vm.status).to.equal('approved');
-    });
-  });
   describe('computed: applications', () => {
     it('should format the user\'s tickets', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
-      vm.status = 'approved';
       vm.event = {
         id: 'eventId',
         dojoId: 'dojoId',
@@ -122,7 +105,6 @@ describe('Event ticket creation', () => {
         name: 'first last',
         dateOfBirth: '2014-08-08',
         eventId: 'eventId',
-        status: 'approved',
         ticketName: 'ticketName',
         ticketType: 'ticketType',
         sessionId: 'sessionId',

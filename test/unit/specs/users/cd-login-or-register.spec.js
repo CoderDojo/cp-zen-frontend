@@ -92,11 +92,23 @@ describe('Login or register', () => {
     });
   });
   describe('created', () => {
-    it('should load the event and the dojo after the event if the user isnt connected', async () => {
+    it('should load the event and the dojo after the event if the user isnt fully connected', async () => {
       const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
       vm.loadEvent = sandbox.stub();
       vm.loadDojo = sandbox.stub();
-      vm.loadCurrentUser = sandbox.stub().resolves(false);
+      vm.loadCurrentUser = sandbox.stub();
+      vm.currentUser = { ok: true };
+      await vm.$lifecycleMethods.created();
+      expect(vm.loadCurrentUser).to.have.been.calledOnce;
+      expect(vm.loadEvent).to.have.been.calledOnce;
+      expect(vm.loadDojo).to.have.been.calledOnce;
+    });
+    it('should load the event and the dojo after the event if the user login is wrong', async () => {
+      const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
+      vm.loadEvent = sandbox.stub();
+      vm.loadDojo = sandbox.stub();
+      vm.loadCurrentUser = sandbox.stub();
+      vm.currentUser = { ok: false };
       await vm.$lifecycleMethods.created();
       expect(vm.loadCurrentUser).to.have.been.calledOnce;
       expect(vm.loadEvent).to.have.been.calledOnce;
@@ -107,7 +119,7 @@ describe('Login or register', () => {
       vm.loadEvent = sandbox.stub();
       vm.loadDojo = sandbox.stub();
       vm.loadCurrentUser = sandbox.stub();
-      vm.currentUser = { ok: true };
+      vm.currentUser = { ok: true, login: { id: '1' } };
       vm.$router = {
         push: sandbox.stub(),
       };

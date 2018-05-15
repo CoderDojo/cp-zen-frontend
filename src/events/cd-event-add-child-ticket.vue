@@ -99,6 +99,7 @@
           eventId: session.eventId,
           id: session.id,
           name: session.name,
+          status: session.status,
           tickets: session.tickets.filter(ticket => ticket.type === 'ninja' && 'others'),
         }));
       },

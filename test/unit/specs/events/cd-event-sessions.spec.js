@@ -427,7 +427,6 @@ describe('Event sessions component', () => {
       it('should create a parent ticket from the selected tickets', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.status = 'approved';
         vm.profile = {
           name: 'Jane Doe',
           dob: '1975-05-08',
@@ -447,7 +446,6 @@ describe('Event sessions component', () => {
           name: 'Jane Doe',
           dateOfBirth: '1975-05-08',
           eventId: 'event1',
-          status: 'approved',
           ticketName: 'ticket22',
           ticketType: 'parent-guardian',
           sessionId: 'session2',
