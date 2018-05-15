@@ -206,10 +206,8 @@ describe('Booking Create Account Form', () => {
       vm.$ga = {
         event: sandbox.stub(),
       };
-      vm.$validator = {
-        errorBag: {
-          add: sandbox.stub(),
-        },
+      vm.errors = {
+        add: sandbox.stub(),
       };
       vm.$route = {
         name: 'Highway2L',
@@ -223,7 +221,7 @@ describe('Booking Create Account Form', () => {
       expect(MockUsersService.register).to.have.been.calledWith(vm.user, { firstName: 'bla', dob: '2017/03/01', country: { alpha2: 'FR' } });
       expect(vm.$ga.event).to.not.have.been.called;
       expect(vm.$emit).to.not.have.been.called;
-      expect(vm.$validator.errorBag.add).to.have.been.calledWith('registration', 'Nick exists', 'nick-exists');
+      expect(vm.errors.add).to.have.been.calledWith('registration', 'Nick exists', 'nick-exists');
     });
     it('onRecaptchaVerify should set the recaptcha response', () => {
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
