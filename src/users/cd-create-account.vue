@@ -180,7 +180,7 @@
             this.$emit('registered');
           } catch (err) {
             if (err.message === 'nick-exists') {
-              this.$validator.errorBag.add('registration', 'Nick exists', 'nick-exists');
+              this.errors.add('registration', 'Nick exists', 'nick-exists');
               return;
             }
             alert(err);
