@@ -24,7 +24,7 @@ const BookingParentData = Object.create(EventDetails, {
   },
   phoneNumber: {
     get() {
-      return $('input[name=phoneNumber]');
+      return $('.cd-event-sessions__phone-number-input input');
     },
   },
   phoneNumberValidationError: {
@@ -75,7 +75,7 @@ const BookingParentData = Object.create(EventDetails, {
   },
   childTicketLastName: {
     get() {
-      return $$('.cd-child-ticket__last-name');
+      return $$('.cd-child-ticket__surname');
     },
   },
   childTicketFirstNameValidationError: {
@@ -100,7 +100,7 @@ const BookingParentData = Object.create(EventDetails, {
       return datePicker.$$('select')[1];
     },
   },
-  childTicketMonthOfBirth: {
+  childTicketYearOfBirth: {
     value(index) {
       let datePicker = $$('.cd-child-ticket__dob-picker-wrapper')[index];
       return datePicker.$$('select')[2];
@@ -112,8 +112,8 @@ const BookingParentData = Object.create(EventDetails, {
     },
   },
   childTicketGender: {
-    value(gender) {
-      return $('.cd-child-ticket__gender-selector select');
+    value(index) {
+      return $$('.cd-child-ticket__gender-selector select')[index];
     },
   },
   childOtherGender: {
@@ -124,6 +124,12 @@ const BookingParentData = Object.create(EventDetails, {
   childTicketGenderValidationError: {
     get() {
       return $('.gender-err');
+    },
+  },
+  childTicketSelector: {
+    value(selected) {
+      $('.cd-child-ticket__ticket-selector .multiselect').click();
+      $(`//li[@class="multiselect__element"]/span[.="${selected}"]`).click();
     },
   },
   childTicketSelectorValidationError: {

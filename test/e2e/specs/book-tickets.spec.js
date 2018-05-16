@@ -169,6 +169,18 @@ describe('Book event page', () => {
           expect(Booking.childTicketSelectorValidationError.isVisible()).to.be.true;
           expect(Booking.phoneNumberValidationError.isVisible()).to.be.true;
         });
+        it.only('should display the confirmation page', () => {
+          Booking.childTicketFirstName[0].setValue('Babar');
+          Booking.childTicketLastName[0].setValue('Babar');
+          Booking.childTicketDayOfBirth(0).selectByValue(20);
+          Booking.childTicketMonthOfBirth(0).selectByValue(1);
+          Booking.childTicketYearOfBirth(0).selectByValue(2002);
+          Booking.childTicketGender(0).selectByValue('male');
+          Booking.childTicketSelector('Laptop required');
+          Booking.phoneNumber.setValue('+0');
+          Booking.submitBookingButton.click();
+          BookingConfirmation.eventName.waitForVisible();
+        });
       });
       afterEach(() => {
         browser.deleteCookie('seneca-login');
