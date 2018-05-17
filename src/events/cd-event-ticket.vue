@@ -44,15 +44,11 @@
           tickets: session.tickets.filter(ticket => this.filterByTicketType(ticket.type)),
         }));
       },
-      status() {
-        return this.event.ticketApproval ? 'pending' : 'approved';
-      },
       applications() {
         return this.tickets.map(ticket => ({
           name: this.user.name,
           dateOfBirth: this.user.dob,
           eventId: this.event.id,
-          status: this.status,
           ticketName: ticket.name,
           ticketType: ticket.type,
           sessionId: ticket.sessionId,

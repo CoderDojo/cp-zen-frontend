@@ -35,6 +35,7 @@
   </div>
 </template>
 <script>
+  import { omit } from 'lodash';
   import uuid from 'uuid/v4';
   import StoreService from '@/store/store-service';
   import UserService from '@/users/service';
@@ -103,7 +104,7 @@
       },
       async addPhoneNumber() {
         this.profile.phone = this.phone;
-        return UserService.updateUserProfileData(this.profile);
+        return UserService.updateUserProfileData(omit(this.profile, ['userTypes', 'dojos', 'children']));
       },
       async addNewChildren() {
         if (this.$refs.allChildComponents) {
@@ -122,7 +123,6 @@
             name: this.profile.name,
             dateOfBirth: this.profile.dob,
             eventId: this.event.id,
-            status: this.status,
             ticketName: parentTickets[0].name,
             ticketType: parentTickets[0].type,
             sessionId: parentTickets[0].sessionId,
@@ -136,8 +136,8 @@
         if (!this.isSingle) {
           this.createParentTicket();
         }
-        await service.manageTickets(this.applications);
         this.$ga.event(this.$route.name, 'click', 'book_tickets', this.totalBooked);
+        return service.v3.createOrder(this.eventId, this.applications);
       },
       async setupPrerequisites() {
         if (this.showPhone) {
@@ -158,11 +158,9 @@
       async loadCurrentUser() {
         const response = await UserService.getCurrentUser();
         this.user = response.body.user;
-        return Promise.resolve();
       },
       async loadProfile() {
         this.profile = (await UserService.userProfileData(this.user.id)).body;
-        return Promise.resolve();
       },
       loadSessions() {
         service.loadSessions(this.eventId).then((response) => {

@@ -82,6 +82,19 @@ server.post('/api/2.0/profiles/youth/create', (req, res) => {
   res.send(child);
 });
 
+server.post('/api/2.0/profiles/create', (req, res) => {
+  const profile = req.body.profile;
+  profile.id = uuidv1();
+  profile.userId = uuidv1();
+  res.send(profile);
+});
+
+server.post('/api/3.0/events/:eventId/orders', (req, res) => {
+  const order = req.body;
+  order.id = uuidv1();
+  res.send(order);
+});
+
 server.get('/api/2.0/profiles/children-for-user/:parentId', (req, res) => {
   const children = users[req.cookies.loggedIn].children;
   Object.keys(children).forEach((key) => {
@@ -123,7 +136,7 @@ server.get('/api/2.0/user/events/:id/applications', (req, res) => {
 server.get('/api/2.0/users/instance', (req, res) => {
   if (req.cookies.loggedIn) {
     res.send({
-      login: {},
+      login: { id: 'user' },
       ok: true,
       user: users[req.cookies.loggedIn],
     });

@@ -122,7 +122,7 @@ describe('Add Child Ticket', () => {
           gender: 'male',
           userTypes: ['attendee-u13'],
         });
-        expect(vm.userId).to.equal(1);
+        expect(vm.userId).to.equal(1001);
       });
     });
   });
@@ -138,7 +138,6 @@ describe('Add Child Ticket', () => {
           event_id: 'eventId',
           name: 'Jane Doe',
           session_id: 'sessionId',
-          status: 'pending',
           ticket_id: 'ticketId2',
           ticket_name: 'Ticket2',
           ticket_type: 'ninja',
@@ -223,30 +222,6 @@ describe('Add Child Ticket', () => {
       });
     });
 
-    describe('computed.status', () => {
-      it('should return a status of pending if the event ticketApproval is set to true', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.event = { ticketApproval: true };
-
-        // ACT
-
-        // ASSERT
-        expect(vm.status).to.equal('pending');
-      });
-
-      it('should return a status of approved if the event ticketApproval is set to false', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.event = { ticketApproval: false };
-
-        // ACT
-
-        // ASSERT
-        expect(vm.status).to.equal('approved');
-      });
-    });
-
     describe('computed.applications', () => {
       it('should return full application when form is filled out', async () => {
         // ARRANGE
@@ -254,7 +229,6 @@ describe('Add Child Ticket', () => {
         vm.name = 'Jane Doe';
         vm.dob = new Date(1980, 10, 25, 0, 0, 0, 0);
         vm.eventId = 'eventId';
-        vm.status = 'pending';
         vm.userId = null;
         vm.tickets = [{
           approvedApplications: 0,
@@ -277,7 +251,6 @@ describe('Add Child Ticket', () => {
           eventId: 'eventId',
           name: 'Jane Doe',
           sessionId: 'sessionId',
-          status: 'pending',
           ticketId: 'ticketId2',
           ticketName: 'Ticket2',
           ticketType: 'ninja',

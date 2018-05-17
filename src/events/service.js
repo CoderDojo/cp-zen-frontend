@@ -34,6 +34,9 @@ const EventsService = {
     get(dojoId, options) {
       return Vue.http.get(`${Vue.config.apiServer}/api/3.0/dojos/${dojoId}/events`, options);
     },
+    createOrder(eventId, applications) {
+      return Vue.http.post(`${Vue.config.apiServer}/api/3.0/events/${eventId}/orders`, { applications });
+    },
   },
 };
 

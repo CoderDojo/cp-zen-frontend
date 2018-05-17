@@ -83,7 +83,7 @@
       async createChild() {
         return UserService.addChild(this.child)
         .then((response) => {
-          this.userId = response.body.id;
+          this.userId = response.body.userId;
         });
       },
     },
@@ -106,18 +106,11 @@
       name() {
         return `${this.firstName} ${this.surname}`;
       },
-      status() {
-        if (this.event.ticketApproval) {
-          return 'pending';
-        }
-        return 'approved';
-      },
       applications() {
         return this.tickets.map(ticket => ({
           name: this.name,
           dateOfBirth: this.dob,
           eventId: this.eventId,
-          status: this.status,
           ticketName: ticket.name,
           ticketType: ticket.type,
           sessionId: ticket.sessionId,
