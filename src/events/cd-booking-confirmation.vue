@@ -159,7 +159,7 @@
         // TODO : define v3 event loading to save an HTTP call
         this.event = (await EventService.loadEvent(this.eventId)).body;
         this.sessions = (await EventService.loadSessions(this.eventId)).body;
-        this.order = (await EventService.v3.getOrder(this.eventId)).body.results[0];
+        this.order = (await EventService.v3.getOrder(this.user.id, { params: { 'query[eventId]': this.event.id } })).body.results[0];
         this.dojo = (await DojosService.getDojoById(this.event.dojoId)).body;
       },
       getSessionName(sessionId) {
