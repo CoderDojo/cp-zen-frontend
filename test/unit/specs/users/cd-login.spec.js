@@ -133,5 +133,19 @@ describe('Login', () => {
       expect(vm.$router.push).to.have.been.calledOnce;
       expect(vm.$router.push).to.have.been.calledWith('/dojos');
     });
+    it('should redirect to the referer when login succeeds and referer is set', async () => {
+      // ARRANGE
+      sandbox.stub(vm, 'validateForm').resolves(true);
+      MockUserService.login.resolves({ body: {} });
+      vm.$route.query.referer = '/library';
+
+      // ACT
+      await vm.login();
+
+      // ASSERT
+      expect(vm.errors.add).to.not.have.been.called;
+      expect(vm.$router.push).to.have.been.calledOnce;
+      expect(vm.$router.push).to.have.been.calledWith('/library');
+    });
   });
 });
