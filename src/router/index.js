@@ -55,6 +55,11 @@ export default new Router({
       beforeEnter: loggedInNavGuard,
     },
     {
+      path: '/login',
+      name: 'Login',
+      component: Login,
+    },
+    {
       path: '/v2',
       component: {
         template: '<router-view></router-view>',
@@ -88,9 +93,10 @@ export default new Router({
           ],
         },
         {
-          path: 'login',
-          name: 'Login',
-          component: Login,
+          path: 'events/:eventId/confirmation',
+          name: 'EventBookingConfirmation',
+          component: BookingConfirmation,
+          props: true,
         },
       ],
     },
