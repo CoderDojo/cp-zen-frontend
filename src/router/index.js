@@ -8,6 +8,7 @@ import LoginOrRegister from '@/users/cd-login-or-register';
 import EventSessions from '@/events/cd-event-sessions';
 import BookingConfirmation from '@/events/cd-booking-confirmation';
 import Login from '@/users/cd-login';
+import loggedInNavGuard from './loggedInNavGuard';
 
 Vue.use(Router);
 
@@ -45,11 +46,13 @@ export default new Router({
       path: '/dashboard/dojos/events/user-events',
       redirect: '/dashboard/tickets',
       name: 'NgMyTickets',
+      beforeEnter: loggedInNavGuard,
     },
     {
       path: '/dashboard/tickets',
       name: 'MyTickets',
       component: UserTickets,
+      beforeEnter: loggedInNavGuard,
     },
     {
       path: '/v2',
@@ -73,14 +76,16 @@ export default new Router({
               name: 'EventSessions',
               component: EventSessions,
               props: true,
+              beforeEnter: loggedInNavGuard,
+            },
+            {
+              path: 'confirmation',
+              name: 'EventBookingConfirmation',
+              component: BookingConfirmation,
+              props: true,
+              beforeEnter: loggedInNavGuard,
             },
           ],
-        },
-        {
-          path: 'events/:eventId/confirmation',
-          name: 'EventBookingConfirmation',
-          component: BookingConfirmation,
-          props: true,
         },
         {
           path: 'login',

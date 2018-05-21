@@ -11,7 +11,7 @@
             <input class="form-control" data-vv-name="email" data-vv-validate-on="blur" type="email" v-model="email" v-validate="'required|email'" novalidate/>
           </div>
           <p class="cd-login__email-req-err text-danger" v-show="errors.has('email:required')">{{ $t('Email is required') }}</p>
-          <p class="cd-login__email-format-err text-danger" v-show="errors.has('email:email')">{{ $t('Email should be in the format: janedoe@example.com') }}</p>      
+          <p class="cd-login__email-format-err text-danger" v-show="errors.has('email:email')">{{ $t('Email should be in the format: janedoe@example.com') }}</p>
           <div class="form-group">
             <label>Password</label>
             <input class="form-control" data-vv-name="password" data-vv-validate-on="blur" type="password" v-model="password" v-validate="'required'" />
@@ -38,6 +38,11 @@
         password: '',
       };
     },
+    computed: {
+      redirectUrl() {
+        return this.$route.query.referer || this.$route.query.referrer || '/';
+      },
+    },
     methods: {
       async validateForm() {
         return this.$validator.validateAll();
@@ -49,7 +54,7 @@
           if (response.body.ok === false) {
             this.errors.add('loginFailed', response.body.why);
           } else {
-            this.$router.push(this.$route.query.referrer || '/');
+            this.$router.push(this.redirectUrl);
           }
         }
       },

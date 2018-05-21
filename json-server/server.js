@@ -142,8 +142,9 @@ server.get('/api/2.0/users/instance', (req, res) => {
     });
   } else {
     res.send({
-      login: {},
-      ok: false,
+      login: null,
+      ok: true,
+      user: null,
     });
   }
 });
@@ -197,20 +198,20 @@ server.get('/locale/data', (req, res) => {
 
 server.get('/locale/languages', (req, res) => {
   res.send([
-    { 
-      name: 'pt', 
+    {
+      name: 'pt',
       code: 'pt_PT'
     },
-    { 
-      name: 'de', 
+    {
+      name: 'de',
       code: 'de_DE'
     },
-    { 
-      name: 'es', 
+    {
+      name: 'es',
       code: 'es_ES'
     },
-    { 
-      name: 'en', 
+    {
+      name: 'en',
       code: 'en_US'
     },
   ]);

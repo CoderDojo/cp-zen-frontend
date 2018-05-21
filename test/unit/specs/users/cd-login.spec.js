@@ -20,6 +20,37 @@ describe('Login', () => {
     sandbox.restore();
   });
 
+  describe('computed', () => {
+    describe('redirectUrl', () => {
+      it('should use the referer query param if set', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(LoginComponentWithMocks);
+        vm.$route = { query: { referer: '/test1' } };
+
+        // ASSERT
+        expect(vm.redirectUrl).to.equal('/test1');
+      });
+
+      it('should use the referrer query param if referer is not set', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(LoginComponentWithMocks);
+        vm.$route = { query: { referrer: '/test2' } };
+
+        // ASSERT
+        expect(vm.redirectUrl).to.equal('/test2');
+      });
+
+      it('should use / if neither referer or referrer are set', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(LoginComponentWithMocks);
+        vm.$route = { query: {} };
+
+        // ASSERT
+        expect(vm.redirectUrl).to.equal('/');
+      });
+    });
+  });
+
   describe('validateForm()', () => {
     it('should return true when form is valid', async () => {
       // ARRANGE
@@ -88,10 +119,11 @@ describe('Login', () => {
       expect(vm.$router.push).to.not.have.been.called;
     });
 
-    it('should redirect to the homepage when login succeeds and no referer is set', async () => {
+    it('should redirect to the redirectUrl when login succeeds', async () => {
       // ARRANGE
       sandbox.stub(vm, 'validateForm').resolves(true);
       MockUserService.login.resolves({ body: {} });
+      vm.redirectUrl = '/dojos';
 
       // ACT
       await vm.login();
@@ -99,22 +131,7 @@ describe('Login', () => {
       // ASSERT
       expect(vm.errors.add).to.not.have.been.called;
       expect(vm.$router.push).to.have.been.calledOnce;
-      expect(vm.$router.push).to.have.been.calledWith('/');
-    });
-
-    it('should redirect to the referer when login succeeds and referer is set', async () => {
-      // ARRANGE
-      sandbox.stub(vm, 'validateForm').resolves(true);
-      MockUserService.login.resolves({ body: {} });
-      vm.$route.query.referrer = '/book';
-
-      // ACT
-      await vm.login();
-
-      // ASSERT
-      expect(vm.errors.add).to.not.have.been.called;
-      expect(vm.$router.push).to.have.been.calledOnce;
-      expect(vm.$router.push).to.have.been.calledWith('/book');
+      expect(vm.$router.push).to.have.been.calledWith('/dojos');
     });
   });
 });
