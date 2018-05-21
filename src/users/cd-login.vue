@@ -40,7 +40,7 @@
     },
     computed: {
       redirectUrl() {
-        return this.$route.query.referer || this.$route.query.referrer || this.$route.query.next || '/';
+        return this.$route.query.referer || this.$route.query.referrer || '/';
       },
     },
     methods: {

@@ -40,16 +40,7 @@ describe('Login', () => {
         expect(vm.redirectUrl).to.equal('/test2');
       });
 
-      it('should use the next query param if referer and referrer are not set', () => {
-        // ARRANGE
-        const vm = vueUnitHelper(LoginComponentWithMocks);
-        vm.$route = { query: { next: '/test3' } };
-
-        // ASSERT
-        expect(vm.redirectUrl).to.equal('/test3');
-      });
-
-      it('should use / if referer, referrer and next are not set', () => {
+      it('should use / if neither referer or referrer are set', () => {
         // ARRANGE
         const vm = vueUnitHelper(LoginComponentWithMocks);
         vm.$route = { query: {} };
