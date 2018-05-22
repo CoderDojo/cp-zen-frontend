@@ -173,7 +173,7 @@
       loadSessions() {
         service.loadSessions(this.eventId).then((response) => {
           this.sessions = response.body;
-          this.event.sessions = this.sessions;
+          this.event = { ...event, sessions: this.sessions };
         });
       },
       async setEvent() {
