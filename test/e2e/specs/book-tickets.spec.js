@@ -155,7 +155,11 @@ describe('Book event page', () => {
           Booking.addYouthButton.click();
           expect(Booking.childTicketTitle.length).to.equal(2);
         });
-        it('should stop me from booking a ticket that has no space for me')
+        it('should stop me from booking a ticket that has no space for me', () => {
+          browser.url('http://localhost:8080/v2/events/34174952-8ca4-4189-b8cb-d383e3fde992/sessions');
+          Booking.eventTitle.waitForVisible();
+          expect(Booking.childTicketSelector('With Pi [ this ticket is fully booked ]').isVisible()).to.be.true;
+        });
         it('should stop me from booking an event that has no space', () => {
           browser.url('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1a/sessions');
           Booking.eventIsFullEmoji.waitForVisible();
@@ -186,7 +190,7 @@ describe('Book event page', () => {
           Booking.childTicketMonthOfBirth(0).selectByValue(1);
           Booking.childTicketYearOfBirth(0).selectByValue(2002);
           Booking.childTicketGender(0).selectByValue('male');
-          Booking.childTicketSelector('Laptop required');
+          Booking.childTicketSelector('Laptop required').click();
           Booking.phoneNumber.setValue('+0');
           Booking.submitBookingButton.click();
           BookingConfirmation.eventName.waitForVisible();

@@ -12,7 +12,9 @@
       ticketIsFull(ticket) {
         // When it's already full before the user's booking
         // TODO : take into account current booking
-        return ticket.approvedApplications >= ticket.quantity;
+        const sameTicketApplications = (this.applications || [])
+          .filter(t => t.ticketId === ticket.id);
+        return (ticket.approvedApplications + sameTicketApplications.length) >= ticket.quantity;
       },
       ticketsAreFull(tickets) {
         return tickets.every(t => this.ticketIsFull(t));

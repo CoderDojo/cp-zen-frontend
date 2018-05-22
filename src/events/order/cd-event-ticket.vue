@@ -60,7 +60,7 @@
             .map(t => ({
               ...t,
               $isDisabled: this.ticketIsFull(t),
-              name: `${t.name} ${this.ticketIsFull(t) ? this.$t('[ this ticket is fully booked ]') : ''}`,
+              name: this.ticketIsFull(t) ? `${t.name} ${this.$t('[ this ticket is fully booked ]')}` : `${t.name}`,
             })),
         }));
       },

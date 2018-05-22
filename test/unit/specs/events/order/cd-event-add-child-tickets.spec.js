@@ -160,6 +160,7 @@ describe('Add Child Ticket', () => {
       it('should filter out only child tickets from each sessions tickets', async () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
+        vm.ticketIsFull = sandbox.stub().returns(false);
         vm.sessions = [{ description: 'description1',
           eventId: 'some-eventId',
           id: 'sessionId',
@@ -186,8 +187,6 @@ describe('Add Child Ticket', () => {
               type: 'ninja' }],
         }];
 
-        // ACT
-
         // ASSERT
         expect(vm.childTickets).to.deep.equal([{ description: 'description1',
           eventId: 'some-eventId',
@@ -202,6 +201,57 @@ describe('Add Child Ticket', () => {
               name: 'Ticket2',
               quantity: 1,
               sessionId: 'sessionId',
+              $isDisabled: false,
+              totalApplications: 0,
+              type: 'ninja' }],
+        }]);
+      });
+      it('should set the ticket as disabled', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(ChildTicketWithMocks);
+        vm.ticketIsFull = sandbox.stub().returns(true);
+        vm.$t = sandbox.stub().returnsArg(0);
+        vm.sessions = [{ description: 'description1',
+          eventId: 'some-eventId',
+          id: 'sessionId',
+          name: 'Session1',
+          status: 'status1',
+          tickets: [
+            { approvedApplications: 0,
+              deleted: 0,
+              id: 'ticketId1',
+              invites: null,
+              name: 'Ticket1',
+              quantity: 1,
+              sessionId: 'sessionId',
+              totalApplications: 0,
+              type: 'parent-guardian' },
+            { approvedApplications: 0,
+              deleted: 0,
+              id: 'ticketId2',
+              invites: null,
+              name: 'Ticket2',
+              quantity: 1,
+              sessionId: 'sessionId',
+              totalApplications: 0,
+              type: 'ninja' }],
+        }];
+
+        // ASSERT
+        expect(vm.childTickets).to.deep.equal([{ description: 'description1',
+          eventId: 'some-eventId',
+          id: 'sessionId',
+          name: 'Session1',
+          status: 'status1',
+          tickets: [
+            { approvedApplications: 0,
+              deleted: 0,
+              id: 'ticketId2',
+              invites: null,
+              name: 'Ticket2 [ this ticket is fully booked ]',
+              quantity: 1,
+              sessionId: 'sessionId',
+              $isDisabled: true,
               totalApplications: 0,
               type: 'ninja' }],
         }]);
@@ -230,7 +280,7 @@ describe('Add Child Ticket', () => {
         vm.dob = new Date(1980, 10, 25, 0, 0, 0, 0);
         vm.eventId = 'eventId';
         vm.userId = null;
-        vm.tickets = [{
+        vm.selectedTickets = [{
           approvedApplications: 0,
           deleted: 0,
           id: 'ticketId2',
