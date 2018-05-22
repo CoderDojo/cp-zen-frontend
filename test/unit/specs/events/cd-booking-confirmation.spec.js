@@ -3,21 +3,30 @@ import BookingConfirmationComponent from '!!vue-loader?inject!@/events/cd-bookin
 
 describe('Booking Confirmation Component', () => {
   let sandbox;
-  let MockStoreService;
   let MockDojoService;
+  let MockUserService;
+  let MockEventService;
   let BookingConfirmationComponentWithMocks;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    MockStoreService = {
-      load: sandbox.stub(),
-    };
     MockDojoService = {
       getDojoById: sandbox.stub(),
     };
+    MockEventService = {
+      loadEvent: sandbox.stub(),
+      loadSessions: sandbox.stub(),
+      v3: {
+        getOrder: sandbox.stub(),
+      },
+    };
+    MockUserService = {
+      getCurrentUser: sandbox.stub(),
+    };
     BookingConfirmationComponentWithMocks = BookingConfirmationComponent({
-      '@/store/store-service': MockStoreService,
       '@/dojos/service': MockDojoService,
+      '@/users/service': MockUserService,
+      '@/events/service': MockEventService,
     });
   });
 
@@ -25,198 +34,51 @@ describe('Booking Confirmation Component', () => {
     sandbox.restore();
   });
 
-  describe('methods.getDojo', () => {
-    it('should load dojo', (done) => {
+  describe('methods.loadData()', () => {
+    it('should load create user and booking data from the store', async () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingConfirmationComponentWithMocks);
-      vm.selectedEvent = { dojoId: '1' };
-      vm.dojo = '';
-      const expectedDojo = { name: 'foo' };
-
-      MockDojoService.getDojoById.withArgs('1').returns(
-        Promise.resolve(
-          {
-            body: expectedDojo,
-          },
-        ),
-      );
+      MockDojoService.getDojoById.resolves({ body: {} });
+      MockEventService.loadEvent.resolves({ body: {} });
+      MockEventService.loadSessions.resolves({ body: {} });
+      MockEventService.v3.getOrder.resolves({ body: { results: [] } });
+      MockUserService.getCurrentUser.resolves({ body: { user: {} } });
 
       // ACT
-      vm.getDojo();
+      await vm.loadData();
 
       // ASSERT
-      requestAnimationFrame(() => {
-        expect(vm.dojo).to.equal(expectedDojo);
-        done();
-      });
-    });
-  });
-
-  describe('methods.loadBookingData()', () => {
-    it('should load create user and booking data from the store', () => {
-      // ARRANGE
-      const vm = vueUnitHelper(BookingConfirmationComponentWithMocks);
-      vm.eventId = 1;
-      MockStoreService.load.withArgs(`booking-${vm.eventId}-user`).returns('user');
-      MockStoreService.load.withArgs(`booking-${vm.eventId}-sessions`).returns('sessions');
-      MockStoreService.load.withArgs('selected-event').returns('event');
-
-      // ACT
-      vm.loadBookingData();
-
-      // ASSERT
-      expect(vm.createdUser).to.equal('user');
-      expect(vm.bookingData).to.equal('sessions');
-      expect(vm.selectedEvent).to.equal('event');
+      expect(MockDojoService.getDojoById).to.have.been.calledOnce;
+      expect(MockUserService.getCurrentUser).to.have.been.calledOnce;
+      expect(MockEventService.loadEvent).to.have.been.calledOnce;
+      expect(MockEventService.loadSessions).to.have.been.calledOnce;
+      expect(MockEventService.v3.getOrder).to.have.been.calledOnce;
     });
   });
 
   describe('methods.getSessionName', () => {
-    it('should get the session name for the ticket.id', () => {
+    it('should get the session name for the session.id', () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingConfirmationComponentWithMocks);
-      const ticketId = 'foo';
-      vm.bookingData = {
-        foo: {
-          session: {
-            id: 'bar',
-            name: 'Bar Session',
-          },
-          selectedTickets: [
-            {
-              ticket: {
-                id: 'foo',
-                name: 'Foo',
-                sessionId: 'bar',
-              },
-              user: {
-                id: 1,
-              },
-            },
-            {
-              ticket: {
-                id: 'foo',
-                name: 'Foo',
-                sessionId: 'bar',
-              },
-              user: {
-                id: 2,
-              },
-            },
-          ],
-        },
-        abc: {
-          session: 'xyz',
-          selectedTickets: [
-            {
-              ticket: {
-                id: 'abc',
-                name: 'ABC',
-                sessionId: 'xyz',
-              },
-              user: {
-                id: 3,
-              },
-            },
-          ],
-        },
-      };
+      const sessionId = '1';
+      vm.sessions = [{
+        id: '1',
+        name: 'banana',
+      }];
 
       // ACT
-      const sessionName = vm.getSessionName(ticketId);
+      const sessionName = vm.getSessionName(sessionId);
 
       // ASSERT
-      expect(sessionName).to.equal('Bar Session');
+      expect(sessionName).to.equal('banana');
     });
   });
   describe('computed', () => {
-    describe('computed.bookings', () => {
-      it('should return an array of booked tickets', () => {
-        // ARRANGE
-        const vm = vueUnitHelper(BookingConfirmationComponentWithMocks);
-        vm.bookingData = {
-          foo: {
-            session: 'bar',
-            selectedTickets: [
-              {
-                ticket: {
-                  id: 'foo',
-                  name: 'Foo',
-                  sessionId: 'bar',
-                },
-                user: {
-                  id: 1,
-                },
-              },
-              {
-                ticket: {
-                  id: 'foo',
-                  name: 'Foo',
-                  sessionId: 'bar',
-                },
-                user: {
-                  id: 2,
-                },
-              },
-            ],
-          },
-          abc: {
-            session: 'xyz',
-            selectedTickets: [
-              {
-                ticket: {
-                  id: 'abc',
-                  name: 'ABC',
-                  sessionId: 'xyz',
-                },
-                user: {
-                  id: 3,
-                },
-              },
-            ],
-          },
-        };
-
-        // ASSERT
-        expect(vm.bookings).to.deep.equal([
-          {
-            ticket: {
-              id: 'foo',
-              name: 'Foo',
-              sessionId: 'bar',
-            },
-            user: {
-              id: 1,
-            },
-          },
-          {
-            ticket: {
-              id: 'foo',
-              name: 'Foo',
-              sessionId: 'bar',
-            },
-            user: {
-              id: 2,
-            },
-          },
-          {
-            ticket: {
-              id: 'abc',
-              name: 'ABC',
-              sessionId: 'xyz',
-            },
-            user: {
-              id: 3,
-            },
-          },
-        ]);
-      });
-    });
     describe('computed.title', () => {
       it('should return the proper title when the event requires ticket approval', () => {
         const vm = vueUnitHelper(BookingConfirmationComponentWithMocks);
         vm.$t = sinon.stub().returnsArg(0);
-        vm.selectedEvent = {
+        vm.event = {
           ticketApproval: true,
         };
         expect(vm.title).to.equal('Booking Request Sent');
@@ -224,7 +86,7 @@ describe('Booking Confirmation Component', () => {
       it('should return the proper title when the event doesnt require ticket approval', () => {
         const vm = vueUnitHelper(BookingConfirmationComponentWithMocks);
         vm.$t = sinon.stub().returnsArg(0);
-        vm.selectedEvent = {
+        vm.event = {
           ticketApproval: false,
         };
         expect(vm.title).to.equal('Booking Complete');
@@ -234,7 +96,7 @@ describe('Booking Confirmation Component', () => {
       it('should return the proper subtitle when the event requires ticket approval', () => {
         const vm = vueUnitHelper(BookingConfirmationComponentWithMocks);
         vm.$t = sinon.stub().returnsArg(0);
-        vm.selectedEvent = {
+        vm.event = {
           ticketApproval: true,
         };
         expect(vm.subtitle).to.equal('You will be notified when the organizer approves your request.');
@@ -242,9 +104,9 @@ describe('Booking Confirmation Component', () => {
       it('should return the proper subtitle when the event doesnt require ticket approval', () => {
         const vm = vueUnitHelper(BookingConfirmationComponentWithMocks);
         vm.$t = sinon.stub().returnsArg(0);
-        vm.selectedEvent = {
+        vm.event = {
           ticketApproval: false,
-          createdUser: {
+          user: {
             email: 'doo@do.do',
           },
         };
@@ -257,15 +119,13 @@ describe('Booking Confirmation Component', () => {
     it('should load booking data', () => {
       // ARRANGE
       const vm = vueUnitHelper(BookingConfirmationComponentWithMocks);
-      sandbox.stub(vm, 'loadBookingData');
-      sandbox.stub(vm, 'getDojo');
+      sandbox.stub(vm, 'loadData');
 
       // ACT
       vm.$lifecycleMethods.created();
 
       // ASSERT
-      expect(vm.loadBookingData).to.have.been.calledOnce;
-      expect(vm.getDojo).to.have.been.calledOnce;
+      expect(vm.loadData).to.have.been.calledOnce;
     });
   });
 });

@@ -1,5 +1,6 @@
 module.exports = {
   'parent1@example.com': {
+    name: 'parent 1one',
     userId: 'parent1',
     dob: '1976-05-22T00:00:00.000Z',
   },

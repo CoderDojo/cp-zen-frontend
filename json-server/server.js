@@ -8,6 +8,7 @@ const usersProfile = require('./users-profile');
 const usersDojos = require('./users-dojos');
 const applications = require('./applications');
 const events = require('./events');
+const orders = {};
 
 const server = jsonServer.create();
 const router = jsonServer.router(require('./db'));
@@ -91,8 +92,17 @@ server.post('/api/2.0/profiles/create', (req, res) => {
 
 server.post('/api/3.0/events/:eventId/orders', (req, res) => {
   const order = req.body;
+  const userId = (req.body.applications.filter(a => a.ticketType === 'parent-guardian'))[0].userId ||
+    req.body.applications[0].userId;
   order.id = uuidv1();
+  orders[userId] = orders[userId] || [];
+  orders[userId].push(order);
   res.send(order);
+});
+
+server.get('/api/3.0/users/:userId/orders', (req, res) => {
+  const userId = req.params.userId;
+  res.send({ results: orders[userId] });
 });
 
 server.get('/api/2.0/profiles/children-for-user/:parentId', (req, res) => {

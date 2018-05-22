@@ -9,7 +9,7 @@
       <img class="cd-booking-confirmation__banner-illustration" src="../assets/characters/ninjas/ninja-female-2-ok-hand.svg"></img>
     </div>
 
-    <div class="cd-booking-confirmation__event-name">{{ selectedEvent.name }}</div>
+    <div class="cd-booking-confirmation__event-name">{{ event.name }}</div>
     <div class="cd-booking-confirmation__hosted-by-message">
       <hosted-by :props="{ dojoName: dojo.name, dojoRoute: getDojoUrl(dojo) }"></hosted-by>
     </div>
@@ -21,11 +21,11 @@
           <span class="fa fa-clock-o cd-booking-confirmation__booking-details-box-icon"></span>
           <span class="cd-booking-confirmation__booking-details-box-title">{{ $t('Time') }}</span>
         </div>
-        <div class="cd-booking-confirmation__booking-details-box-content">
-          <span class="cd-booking-confirmation__event-date">{{selectedEvent.dates[0].startTime | cdDateFormatter}}</span>&nbsp;|&nbsp;
-          <span class="cd-booking-confirmation__event-times">{{selectedEvent.dates[0].startTime | cdTimeFormatter}} - {{selectedEvent.dates[0].endTime | cdTimeFormatter}}</span>
-          <div class="cd-booking-confirmation__recurring-frequency-info" v-if="selectedEvent.type === 'recurring'">
-            {{ buildRecurringFrequencyInfo(selectedEvent) }}
+        <div class="cd-booking-confirmation__booking-details-box-content" v-if="event.dates">
+          <span class="cd-booking-confirmation__event-date">{{event.dates[0].startTime | cdDateFormatter}}</span>&nbsp;|&nbsp;
+          <span class="cd-booking-confirmation__event-times">{{event.dates[0].startTime | cdTimeFormatter}} - {{event.dates[0].endTime | cdTimeFormatter}}</span>
+          <div class="cd-booking-confirmation__recurring-frequency-info" v-if="event.type === 'recurring'">
+            {{ buildRecurringFrequencyInfo(event) }}
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@
         </div>
         <div class="cd-booking-confirmation__booking-details-box-content">
           <div class="cd-booking-confirmation__event-location">
-            {{ `${selectedEvent.address}, ${selectedEvent.city.nameWithHierarchy}, ${selectedEvent.country.countryName}` }}
+            {{ `${event.address}, ${event.city.nameWithHierarchy}, ${event.country.countryName}` }}
           </div>
         </div>
       </div>
@@ -48,9 +48,9 @@
           <span class="cd-booking-confirmation__booking-details-box-title">{{ $t('Attendees') }}</span>
         </div>
         <div class="cd-booking-confirmation__booking-details-box-content">
-          <div v-for="booking in bookings">
-            <div class="cd-booking-confirmation__booking-name">{{ booking.user.firstName }} {{ booking.user.lastName }}</div>
-            <div class="cd-booking-confirmation__booking-session-ticket">{{ booking.ticket.name }} / {{ getSessionName(booking.ticket.id) }}</div>
+          <div v-for="application in order.applications">
+            <div class="cd-booking-confirmation__booking-name">{{ application.name }}</div>
+            <div class="cd-booking-confirmation__booking-session-ticket">{{ application.ticketName }} / {{ getSessionName(application.sessionId) }}</div>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@
         </div>
       </div>
 
-      <div class="cd-booking-confirmation__account-confirmation cd-booking-confirmation__account-confirmation-approval" v-show="selectedEvent.ticketApproval">
+      <div class="cd-booking-confirmation__account-confirmation cd-booking-confirmation__account-confirmation-approval" v-show="event.ticketApproval">
         <div class="fa-stack fa-lg color-warning cd-booking-confirmation__account-confirmation-icon">
           <i class="fa fa-circle-o fa-stack-2x"></i>
           <i class="fa fa-hourglass-half fa-stack-1x"></i>
@@ -98,14 +98,15 @@
     <div class="cd-booking-confirmation__event-details-section">
 
       <div class="cd-booking-confirmation__event-details-header">{{ $t('Event Details') }}</div>
-      <div v-html="selectedEvent.description" class="cd-booking-confirmation__event-description"></div>
+      <div v-html="event.description" class="cd-booking-confirmation__event-description"></div>
 
     </div>
   </div>
 </template>
 <script>
-  import StoreService from '@/store/store-service';
   import DojosService from '@/dojos/service';
+  import EventService from '@/events/service';
+  import UserService from '@/users/service';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import TranslationComponentGenerator from '@/common/cd-translation-component-generator';
@@ -128,9 +129,10 @@
     },
     data() {
       return {
-        createdUser: {},
-        bookingData: {},
-        selectedEvent: {},
+        user: {},
+        order: {},
+        event: {},
+        sessions: [],
         dojo: {},
       };
     },
@@ -139,45 +141,34 @@
       cdTimeFormatter,
     },
     computed: {
-      bookings() {
-        let bookings = [];
-        Object.keys(this.bookingData).forEach((ticketId) => {
-          const booking = this.bookingData[ticketId];
-          bookings = bookings.concat(booking.selectedTickets);
-        });
-        return bookings;
-      },
       subtitle() {
-        return this.selectedEvent.ticketApproval ?
+        return this.event.ticketApproval ?
           this.$t('You will be notified when the organizer approves your request.') :
-          this.$t('A confirmation email has been sent to {email}', { email: `<strong>${this.createdUser.email}</strong>` });
+          this.$t('A confirmation email has been sent to {email}', { email: `<strong>${this.user.email}</strong>` });
       },
       title() {
-        return this.selectedEvent.ticketApproval ?
+        return this.event.ticketApproval ?
           this.$t('Booking Request Sent') :
           this.$t('Booking Complete');
       },
     },
     methods: {
       getDojoUrl: DojosUtil.getDojoUrl,
-      loadBookingData() {
-        this.createdUser = StoreService.load(`booking-${this.eventId}-user`);
-        this.bookingData = StoreService.load(`booking-${this.eventId}-sessions`);
-        this.selectedEvent = StoreService.load('selected-event');
+      async loadData() {
+        this.user = (await UserService.getCurrentUser()).body.user;
+        // TODO : define v3 event loading to save an HTTP call
+        this.event = (await EventService.loadEvent(this.eventId)).body;
+        this.sessions = (await EventService.loadSessions(this.eventId)).body;
+        this.order = (await EventService.v3.getOrder(this.user.id, { params: { 'query[eventId]': this.event.id } })).body.results[0];
+        this.dojo = (await DojosService.getDojoById(this.event.dojoId)).body;
       },
-      getSessionName(ticketId) {
-        return this.bookingData[ticketId].session.name;
-      },
-      getDojo() {
-        DojosService.getDojoById(this.selectedEvent.dojoId).then((res) => {
-          this.dojo = res.body;
-        });
+      getSessionName(sessionId) {
+        return (this.sessions.find(s => s.id === sessionId)).name;
       },
       buildRecurringFrequencyInfo: EventsUtil.buildRecurringFrequencyInfo,
     },
     created() {
-      this.loadBookingData();
-      this.getDojo();
+      this.loadData();
     },
   };
 </script>
