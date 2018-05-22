@@ -8,10 +8,6 @@ describe('Event ticket creation', () => {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    MockStoreService = {
-      save: sandbox.stub(),
-      load: sandbox.stub(),
-    };
     EventTicketWithMocks = EventTicket({
       '@/store/store-service': MockStoreService,
     });
@@ -42,14 +38,16 @@ describe('Event ticket creation', () => {
   describe('computed: ticketsOptions', () => {
     it('should return an array of sessions provided an event', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
-      vm.sessions = [{
-        description: 'desc',
-        eventId: 'id',
-        id: 'sessionId',
-        status: 'active',
-        name: 'session1',
-        tickets: [],
-      }];
+      vm.event = {
+        sessions: [{
+          description: 'desc',
+          eventId: 'id',
+          id: 'sessionId',
+          status: 'active',
+          name: 'session1',
+          tickets: [],
+        }],
+      };
       expect(vm.ticketsOptions[0]).to.deep.equal({
         description: 'desc',
         eventId: 'id',
@@ -62,16 +60,18 @@ describe('Event ticket creation', () => {
     it('should filter the tickets', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
       vm.filterByTicketType = sandbox.stub().returns(false);
-      vm.sessions = [{
-        description: 'desc',
-        eventId: 'id',
-        id: 'sessionId',
-        name: 'session1',
-        status: 'active',
-        tickets: [{
-          type: 'ninja',
+      vm.event = {
+        sessions: [{
+          description: 'desc',
+          eventId: 'id',
+          id: 'sessionId',
+          name: 'session1',
+          status: 'active',
+          tickets: [{
+            type: 'ninja',
+          }],
         }],
-      }];
+      };
       expect(vm.ticketsOptions[0]).to.deep.equal({
         description: 'desc',
         eventId: 'id',
@@ -79,6 +79,38 @@ describe('Event ticket creation', () => {
         name: 'session1',
         status: 'active',
         tickets: [],
+      });
+      expect(vm.filterByTicketType).to.have.been.calledWith('ninja');
+    });
+    it('should set if the ticket is disabled', () => {
+      const vm = vueUnitHelper(EventTicketWithMocks);
+      vm.$t = sandbox.stub().returnsArg(0);
+      vm.filterByTicketType = sandbox.stub().returns(true);
+      vm.ticketIsFull = sandbox.stub().returns(true);
+      vm.event = {
+        sessions: [{
+          description: 'desc',
+          eventId: 'id',
+          id: 'sessionId',
+          name: 'session1',
+          status: 'active',
+          tickets: [{
+            name: 'ninjaTicket',
+            type: 'ninja',
+          }],
+        }],
+      };
+      expect(vm.ticketsOptions[0]).to.deep.equal({
+        description: 'desc',
+        eventId: 'id',
+        id: 'sessionId',
+        name: 'session1',
+        status: 'active',
+        tickets: [{
+          name: 'ninjaTicket [ this ticket is fully booked ]',
+          type: 'ninja',
+          $isDisabled: true,
+        }],
       });
       expect(vm.filterByTicketType).to.have.been.calledWith('ninja');
     });
@@ -95,7 +127,7 @@ describe('Event ticket creation', () => {
         userId: 'userId',
         dob: '2014-08-08',
       };
-      vm.tickets = [{
+      vm.selectedTickets = [{
         name: 'ticketName',
         type: 'ticketType',
         sessionId: 'sessionId',

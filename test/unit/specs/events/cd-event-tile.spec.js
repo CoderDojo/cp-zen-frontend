@@ -17,70 +17,19 @@ describe('Event list item component', () => {
 
   describe('computed', () => {
     describe('isFull', () => {
-      it('should return true for an event which is full and false for one which is not full', () => {
+      it('should return true for an event which is full', () => {
         const vm = vueUnitHelper(EventListItem);
-        vm.event = {
-          id: 1,
-          sessions: [
-            {
-              tickets: [
-                {
-                  quantity: 3,
-                  approvedApplications: 3,
-                },
-                {
-                  quantity: 4,
-                  approvedApplications: 4,
-                },
-              ],
-            },
-            {
-              tickets: [
-                {
-                  quantity: 2,
-                  approvedApplications: 2,
-                },
-                {
-                  quantity: 5,
-                  approvedApplications: 5,
-                },
-              ],
-            },
-          ],
-        };
-
+        vm.tickets = [];
+        vm.ticketsAreFull = sandbox.stub().returns(true);
         expect(vm.isFull).to.equal(true);
-
-        vm.event = {
-          id: 2,
-          sessions: [
-            {
-              tickets: [
-                {
-                  quantity: 3,
-                  approvedApplications: 2,
-                },
-                {
-                  quantity: 4,
-                  approvedApplications: 3,
-                },
-              ],
-            },
-            {
-              tickets: [
-                {
-                  quantity: 2,
-                  approvedApplications: 1,
-                },
-                {
-                  quantity: 5,
-                  approvedApplications: 4,
-                },
-              ],
-            },
-          ],
-        };
+        expect(vm.ticketsAreFull).to.have.been.calledWith([]);
+      });
+      it('should return false for an event which still has room', () => {
+        const vm = vueUnitHelper(EventListItem);
+        vm.tickets = [];
+        vm.ticketsAreFull = sandbox.stub().returns(false);
         expect(vm.isFull).to.equal(false);
+        expect(vm.ticketsAreFull).to.have.been.calledWith([]);
       });
     });
 

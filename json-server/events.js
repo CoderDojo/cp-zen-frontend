@@ -242,7 +242,7 @@ module.exports = [
             deleted: 0,
             invites: null,
             totalApplications: 0,
-            approvedApplications: 0
+            approvedApplications: 5
           },
           {
             entity$: '-/cd/tickets',

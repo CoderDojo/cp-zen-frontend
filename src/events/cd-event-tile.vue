@@ -1,6 +1,7 @@
 <script>
   import moment from 'moment';
   import { sortBy } from 'lodash';
+  import TicketMixin from '@/events/cd-event-ticket-mixin';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import cdUrlFormatter from '@/common/filters/cd-url-formatter';
@@ -8,18 +9,10 @@
 
   export default {
     name: 'event-tile',
-    props: ['event', 'dojo', 'usersDojos', 'users'],
+    mixins: [TicketMixin],
     computed: {
       isFull() {
-        let totalEventCapacity = 0;
-        let totalTicketsBooked = 0;
-        this.event.sessions.forEach((session) => {
-          session.tickets.forEach((ticket) => {
-            totalEventCapacity += ticket.quantity;
-            totalTicketsBooked += ticket.approvedApplications;
-          });
-        });
-        return totalEventCapacity <= totalTicketsBooked;
+        return this.ticketsAreFull(this.tickets);
       },
       nextStartTime() {
         return EventsUtil.getNextStartTime(this.event);

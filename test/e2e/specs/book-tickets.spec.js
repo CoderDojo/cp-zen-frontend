@@ -52,7 +52,7 @@ describe('Book event page', () => {
         LoginPage.login.click();
         Booking.eventTitle.waitForVisible();
         expect(browser.getUrl()).to.equal('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
-      })
+      });
       it('should let me register as an o13', () => {
         startBooking();
         EventAccountCreation.dateOfBirthDayInput.selectByValue('27');
@@ -154,6 +154,15 @@ describe('Book event page', () => {
           expect(Booking.childTicketTitle.length).to.equal(1);
           Booking.addYouthButton.click();
           expect(Booking.childTicketTitle.length).to.equal(2);
+        });
+        it('should stop me from booking a ticket that has no space for me')
+        it('should stop me from booking an event that has no space', () => {
+          browser.url('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1a/sessions');
+          Booking.eventIsFullEmoji.waitForVisible();
+          expect(Booking.ticketName(0)).to.be.undefined;
+          expect(Booking.eventIsFullEmoji.isVisible()).to.be.true; 
+          expect(Booking.eventIsFullHeader.isVisible()).to.be.true; 
+          expect(Booking.eventIsFullSubheader.isVisible()).to.be.true;
         });
         it('should let me fill the new user form', () => {
           browser.waitUntil(() => Booking.childrenTickets.length > 0);

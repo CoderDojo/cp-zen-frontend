@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isSingle || (children.length > 0 || existingChildren.length > 0)" class="cd-event-sessions">
+  <div v-if="isSingle || (children.length > 0 || existingChildren.length > 0) && !isFull" class="cd-event-sessions">
     <h1 class="cd-event-sessions__header">
       <span v-if="isSingle">{{ $t('Select Your Tickets') }}</span>
       <span v-else>{{ $t('Select Youth Tickets') }}</span>
@@ -25,7 +25,7 @@
       <p class="cd-event-session__phone-number-err-required text-danger" v-show="showPhone && errors.has('phone:required')">{{ $t('Phone number is required') }}</p>
       <p class="cd-event-session__phone-number-err-regex text-danger" v-show="showPhone && errors.has('phone:regex')">{{ $t('* Please include the plus symbol(+) and country code. For example, a phone number in Ireland should begin +353') }}</p>
     </div>
-    <div class="cd-event-sessions__next-block">
+    <div class="cd-event-sessions__next-block" >
       <p v-show="errors.has('submitApplications:required')" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('Please select at least one ticket') }}</p>
       <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="submitBooking" name="submitApplications" v-validate:applications="'required'" >
         <span v-if="this.event.ticketApproval">{{ $t('Request booking for {totalBooked} ticket(s)', { totalBooked }) }}</span>
@@ -33,29 +33,37 @@
       </button>
     </div>
   </div>
+  <div v-else>
+    <div class="cd-event-sessions__no-tickets">
+      <div class="cd-event-sessions__no-tickets-emoji">:(</div>
+      <h3>{{ $t('We\'re sorry, it seems there are no tickets left.') }}</h3>
+      <h4>{{ $t('Next time?') }}</h4>
+    </div>
+  </div>
 </template>
 <script>
   import { omit } from 'lodash';
   import uuid from 'uuid/v4';
-  import StoreService from '@/store/store-service';
   import UserService from '@/users/service';
   import DojoService from '@/dojos/service';
   import UserUtils from '@/users/util';
   import service from '../service';
   import Ticket from './cd-event-ticket';
+  import EventMixin from './cd-event-tile';
   import ChildTicket from './cd-event-add-child-ticket';
 
   export default {
     name: 'sessions',
     props: ['eventId'],
+    mixins: [EventMixin],
     components: {
       Ticket,
       ChildTicket,
     },
     data() {
       return {
+        event: {},
         sessions: [],
-        event: null,
         usersTickets: [],
         parentTicket: null,
         children: [],
@@ -166,21 +174,10 @@
         service.loadSessions(this.eventId).then((response) => {
           this.sessions = response.body;
           this.event.sessions = this.sessions;
-          StoreService.save('selected-event', this.event);
         });
       },
       async setEvent() {
-        if (!this.event) {
-          this.event = (await service.loadEvent(this.eventId)).body;
-          StoreService.save('selected-event', this.event);
-          return Promise.resolve();
-        }
-        return Promise.resolve();
-      },
-      async loadEvent() {
-        StoreService.save(`booking-${this.eventId}-sessions`, {});
-        this.event = StoreService.load('selected-event');
-        return Promise.resolve();
+        this.event = (await service.loadEvent(this.eventId)).body;
       },
       async loadChildren() {
         if (this.profile.children) {
@@ -196,10 +193,7 @@
     },
     async created() {
       // TODO : parallelize
-      await Promise.all([
-        this.loadEvent(),
-        this.setEvent(),
-      ]);
+      await this.setEvent();
       this.loadSessions();
       await this.loadCurrentUser();
       await this.loadProfile();
@@ -251,6 +245,16 @@
     }
     &__phone-number-input{
       max-width: 25%;
+    }
+    &__no-tickets {
+      text-align: center;
+      &-emoji {
+        font-size: 15em;
+        max-width: 80%;
+        max-height: 250px;
+        transform: rotate(90deg);
+        margin-left: 15%;
+      }
     }
   }
 </style>

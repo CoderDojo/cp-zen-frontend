@@ -1,19 +1,22 @@
 <template>
   <div class="cd-event-tickets" :class="{ 'cd-event-tickets--disabled': notAttending }">
     <div class="cd-event-tickets__head"></div>
-    <div class="cd-event-tickets__ticket" >
+    <div class="cd-event-tickets__ticket">
       <div class="cd-event-tickets__ticket-header">
         <span class="cd-event-tickets__name"><span class="cd-event-tickets__name-for">Name:</span>{{ user.firstName }} {{ user.lastName }}</span>
         <span>
-          <input type="checkbox" v-model="notAttending">
+          <input type="checkbox" v-model="notAttending" v-if="!ticketsAreFull(tickets)">
           <span for="checkbox">{{ $t('Not attending') }}</span>
         </span>
       </div>
-        <div class="cd-event-tickets__ticket-selector" v-show="!notAttending">
-          <multiselect v-model="tickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.id}`" v-validate="'required'"></multiselect>
-        </div>
-        <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`) && !notAttending">{{ $t('Ticket selection is required') }}</p>
-        <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement" v-show="!notAttending"></special-req-component>
+      <div class="cd-event-tickets__ticket-selector" v-show="!notAttending" v-if="!ticketsAreFull(tickets)">
+        <multiselect v-model="selectedTickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.userId}`" v-validate="'required'"></multiselect>
+        <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`)">{{ $t('Ticket selection is required') }}</p>
+        <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement"></special-req-component>
+      </div>
+      <div v-else>
+        {{ $t('Whoopsies, no more tickets available for you :( ') }}
+      </div>
     </div>
     <div class='cd-event-tickets__ticket-corner'></div>
   </div>
@@ -21,20 +24,20 @@
 
 <script>
   import UserUtils from '@/users/util';
-  import StoreService from '@/store/store-service';
   import Multiselect from 'vue-multiselect';
   import SpecialReqComponent from '@/common/cd-special-req-component';
+  import Ticket from './cd-event-ticket-mixin';
 
   export default {
     name: 'TicketForUser',
     inject: ['$validator'],
+    mixins: [Ticket],
     props: ['event', 'user'],
     data() {
       return {
-        tickets: [],
-        sessions: [],
         specialRequirement: '',
         notAttending: false,
+        selectedTickets: [],
       };
     },
     components: {
@@ -46,17 +49,23 @@
         return UserUtils.isUnderAge(this.user.dob) || UserUtils.isYouthOverThirteen(this.user.dob);
       },
       ticketsOptions() {
-        return this.sessions.map(session => ({
+        return this.event.sessions.map(session => ({
           description: session.description,
           eventId: session.eventId,
           id: session.id,
           name: session.name,
           status: session.status,
-          tickets: session.tickets.filter(ticket => this.filterByTicketType(ticket.type)),
+          tickets: session.tickets
+            .filter(ticket => this.filterByTicketType(ticket.type))
+            .map(t => ({
+              ...t,
+              $isDisabled: this.ticketIsFull(t),
+              name: `${t.name} ${this.ticketIsFull(t) ? this.$t('[ this ticket is fully booked ]') : ''}`,
+            })),
         }));
       },
       applications() {
-        return this.tickets.map(ticket => (Object.assign({
+        return this.selectedTickets.map(ticket => (Object.assign({
           name: this.user.name,
           dateOfBirth: this.user.dob,
           eventId: this.event.id,
@@ -70,7 +79,7 @@
       },
     },
     watch: {
-      applications() {
+      selectedTickets() {
         this.$emit('input', this.applications);
       },
     },
@@ -87,10 +96,6 @@
       onFocus() {
         window.clearTimeout(this.blurTimeout);
       },
-    },
-    created() {
-      const event = StoreService.load('selected-event');
-      this.sessions = event.sessions;
     },
   };
 </script>

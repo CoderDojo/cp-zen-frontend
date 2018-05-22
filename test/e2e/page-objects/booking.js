@@ -6,6 +6,21 @@ const BookingParentData = Object.create(EventDetails, {
       return this.open.call(this, `/v2/events/${eventId}/book`);
     },
   },
+  eventIsFullEmoji: {
+    get() {
+      return $('.cd-event-sessions__no-tickets-emoji');
+    },
+  },
+  eventIsFullHeader: {
+    get() {
+      return $('.cd-event-sessions__no-tickets h3');
+    },
+  },
+  eventIsFullSubheader: {
+    get() {
+      return $('.cd-event-sessions__no-tickets h4');
+    },
+  },
   attendeeTypeHeader: {
     get() {
       $('.cd-booking-parent-form__attendee-type-header').waitForVisible();
