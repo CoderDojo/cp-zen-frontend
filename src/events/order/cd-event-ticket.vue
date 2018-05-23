@@ -84,7 +84,7 @@
     },
     watch: {
       selectedTickets() {
-        OrderStore.commit('setApplications', this.applications);
+        OrderStore.commit('setApplications', { id: this.user.userId, applications: this.applications });
       },
     },
     methods: {

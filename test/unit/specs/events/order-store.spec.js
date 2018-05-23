@@ -1,7 +1,6 @@
 import OrderStore from '@/events/order-store';
 
 describe('Order Store', () => {
-  let OrderStoreWithMocks;
   let sandbox;
 
   beforeEach(() => {
@@ -14,15 +13,25 @@ describe('Order Store', () => {
 
   describe('mutations', () => {
     describe('mutations.setApplications', () => {
-      it('should set the application based on their id', () => {
+      it('should set the applications based on their id', () => {
         // ARRANGE
-        const applications = [{ id: '1', name: 'Jane Doe' }];
+        const applications = [{ userId: 1, name: 'Jane Doe' }];
 
         // ACT
-        OrderStore.commit('setApplications', applications);
+        OrderStore.commit('setApplications', { id: 'user1', applications });
+        expect(OrderStore.state.applications).to.deep.equal({
+          user1: applications,
+        });
+      });
+    });
+    describe('mutations.removeApplications', () => {
+      it('should remove the applications based on their id', () => {
+        // ARRANGE
+        OrderStore.state.applications = { 1: [{ userId: 1, name: 'Jane Doe' }] };
 
-        // ASSERT
-        //expect(Vue.set).to.have.been.calledWith(vm.state.applications, '1', applications);
+        // ACT
+        OrderStore.commit('removeApplications', 1);
+        expect(OrderStore.state.applications).to.deep.equal({});
       });
     });
   });
@@ -31,7 +40,7 @@ describe('Order Store', () => {
     describe('getters.applications', () => {
       it('should emit an "input" event with the entering of application details', () => {
         // ARRANGE
-        OrderStore.state.applications = { '1': [{ name: 'Jane Doe'}], '2': [{ name: 'Babar' }]};
+        OrderStore.state.applications = { 1: [{ name: 'Jane Doe' }], 2: [{ name: 'Babar' }] };
 
         // ASSERT
         expect(OrderStore.getters.applications).to.deep.equal([

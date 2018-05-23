@@ -158,7 +158,9 @@ describe('Book event page', () => {
         it('should stop me from booking a ticket that has no space for me', () => {
           browser.url('http://localhost:8080/v2/events/34174952-8ca4-4189-b8cb-d383e3fde992/sessions');
           Booking.eventTitle.waitForVisible();
-          expect(Booking.childTicketSelector('With Pi [ this ticket is fully booked ]')[0].isVisible()).to.be.true;
+          const ticket = Booking.childTicketSelector('With Pi [ this ticket is fully booked ]')[0];
+          ticket.waitForVisible();
+          expect(ticket.isVisible()).to.be.true;
         });
         it('should stop me from booking an event that has no space', () => {
           browser.url('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1a/sessions');
@@ -173,7 +175,9 @@ describe('Book event page', () => {
           Booking.eventTitle.waitForVisible();
           Booking.childTicketSelector('Lacking Pi')[0].click()
           Booking.addYouthButton.click();
-          expect(Booking.childTicketSelector('Lacking Pi [ this ticket is fully booked ]')[0].isVisible()).to.be.true;
+          const ticket = Booking.childTicketSelector('Lacking Pi [ this ticket is fully booked ]')[0];
+          ticket.waitForVisible();
+          expect(ticket.isVisible()).to.be.true;
         });
         it('should let me fill the new user form', () => {
           browser.waitUntil(() => Booking.childrenTickets.length > 0);
@@ -190,6 +194,52 @@ describe('Book event page', () => {
           expect(Booking.childTicketSelectorValidationError.isVisible()).to.be.true;
           expect(Booking.phoneNumberValidationError.isVisible()).to.be.true;
         });
+        it('should not send a deleted child', () => {
+          // Fill first kid
+          Booking.childTicketFirstName[0].waitForVisible();
+          Booking.childTicketFirstName[0].setValue('Babar');
+          Booking.childTicketLastName[0].setValue('Le roi des ephelants');
+          Booking.childTicketDayOfBirth(0).selectByValue(20);
+          Booking.childTicketMonthOfBirth(0).selectByValue(1);
+          Booking.childTicketYearOfBirth(0).selectByValue(2002);
+          Booking.childTicketGender(0).selectByValue('male');
+          Booking.childTicketSelector('Laptop required')[0].click();
+          // Fill 2nd kid
+          Booking.addYouthButton.click();
+          Booking.childTicketFirstName[1].waitForVisible();
+          Booking.childTicketFirstName[1].setValue('Babou');
+          Booking.childTicketLastName[1].setValue('Le roi des riens');
+          Booking.childTicketDayOfBirth(1).selectByValue(20);
+          Booking.childTicketMonthOfBirth(1).selectByValue(1);
+          Booking.childTicketYearOfBirth(1).selectByValue(2002);
+          Booking.childTicketGender(1).selectByValue('female');
+          
+          Booking.childTicketSelector('Bringing a laptop', 1)[3].click();
+          Booking.removeChildTicket[1].click();
+          Booking.phoneNumber.setValue('+0');
+          Booking.submitBookingButton.click();
+          BookingConfirmation.eventName.waitForVisible();
+          expect(BookingConfirmation.bookingConfirmationMessage.getText()).to.equal('Booking Request Sent');
+          expect(BookingConfirmation.emailMessage.getText()).to.equal('You will be notified when the organizer approves your request.');
+
+          expect(BookingConfirmation.eventName.getText()).to.equal('My First Amazing Event');
+          expect(BookingConfirmation.hostedByMessage.getText()).to.equal('Event hosted by Dublin Ninja Kids');
+
+          expect(BookingConfirmation.detailsBoxTitle(0).getText()).to.equal('TIME');
+          expect(BookingConfirmation.eventDate.getText()).to.equal(`September 6, ${currentYear + 1}`);
+          expect(BookingConfirmation.eventTimes.getText()).to.equal('4:30pm - 6pm');
+          expect(BookingConfirmation.recurringFrequencyInfo.isVisible()).to.equal(false);
+
+          expect(BookingConfirmation.detailsBoxTitle(1).getText()).to.equal('LOCATION');
+          expect(BookingConfirmation.eventLocation.getText()).to.equal('CHQ, Dublin, Ireland');
+
+          expect(BookingConfirmation.detailsBoxTitle(2).getText()).to.equal('ATTENDEES');
+          expect(BookingConfirmation.bookingName(0).getText()).to.equal('Babar Le roi des ephelants');
+          expect(BookingConfirmation.bookingSessionTicket(0).getText()).to.equal('Laptop required / Arduino');
+          expect(BookingConfirmation.bookingName(1).getText()).to.equal('parent 1one');
+          expect(BookingConfirmation.bookingSessionTicket(1).getText()).to.equal('Parent / Arduino');
+
+        })
         it('should display the confirmation page', () => {
           Booking.childTicketFirstName[0].setValue('Babar');
           Booking.childTicketLastName[0].setValue('Le roi des ephelants');

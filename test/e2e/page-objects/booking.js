@@ -77,6 +77,11 @@ const BookingParentData = Object.create(EventDetails, {
       return $$('.cd-child-ticket__ticket-box');
     },
   },
+  removeChildTicket: {
+    get() {
+      return $$('.cd-child-ticket__delete-ticket i');
+    },
+  },
   childTicketTitle: {
     get() {
       $('.cd-child-ticket__header').waitForVisible();
@@ -142,8 +147,8 @@ const BookingParentData = Object.create(EventDetails, {
     },
   },
   childTicketSelector: {
-    value(selected) {
-      $('.cd-child-ticket__ticket-selector .multiselect').click();
+    value(selected, index = 0) {
+      $$('.cd-child-ticket__ticket-selector .multiselect')[index].click();
       return $$(`//li[@class="multiselect__element"]/span[.="${selected}"]`);
     },
   },

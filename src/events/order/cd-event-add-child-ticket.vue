@@ -94,9 +94,12 @@
         });
       },
     },
+    destroyed() {
+      OrderStore.commit('removeApplications', this.id);
+    },
     watch: {
       applications() {
-        OrderStore.commit('setApplications', this.applications);
+        OrderStore.commit('setApplications', { id: this.id, applications: this.applications });
       },
     },
     computed: {

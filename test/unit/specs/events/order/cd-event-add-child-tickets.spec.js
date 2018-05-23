@@ -133,6 +133,14 @@ describe('Add Child Ticket', () => {
     });
   });
 
+  describe('destroyed', () => {
+    it('should remove the application when the component is destroyed', () => {
+      const vm = vueUnitHelper(ChildTicketWithMocks);
+      vm.id = 'user1';
+      vm.$lifecycleMethods.destroyed();
+      expect(OrderStore.commit).to.have.been.calledWith('removeApplications', vm.id);
+    });
+  });
   describe('watch', () => {
     describe('watch.applications()', () => {
       it('should emit an "input" event with the entering of application details', () => {
@@ -148,13 +156,14 @@ describe('Add Child Ticket', () => {
           ticket_name: 'Ticket2',
           ticket_type: 'ninja',
         };
+        vm.id = 'application1';
         vm.applications = mockApplication;
 
         // ACT
         vm.$watchers.applications();
 
         // ASSERT
-        expect(OrderStore.commit).to.have.been.calledWith('setApplications', vm.applications);
+        expect(OrderStore.commit).to.have.been.calledWith('setApplications', { id: vm.id, applications: vm.applications });
       });
     });
   });
