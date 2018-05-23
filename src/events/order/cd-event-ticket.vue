@@ -24,6 +24,7 @@
 
 <script>
   import UserUtils from '@/users/util';
+  import OrderStore from '@/events/order-store';
   import Multiselect from 'vue-multiselect';
   import SpecialReqComponent from '@/common/cd-special-req-component';
   import Ticket from './cd-event-ticket-mixin';
@@ -57,11 +58,14 @@
           status: session.status,
           tickets: session.tickets
             .filter(ticket => this.filterByTicketType(ticket.type))
-            .map(t => ({
-              ...t,
-              $isDisabled: this.ticketIsFull(t),
-              name: this.ticketIsFull(t) ? `${t.name} ${this.$t('[ this ticket is fully booked ]')}` : `${t.name}`,
-            })),
+            .map((t) => {
+              const isFull = this.ticketIsFull(t, OrderStore.getters.applications);
+              return {
+                ...t,
+                $isDisabled: isFull,
+                name: isFull ? `${t.name} ${this.$t('[ this ticket is fully booked ]')}` : `${t.name}`,
+              };
+            }),
         }));
       },
       applications() {
@@ -80,7 +84,7 @@
     },
     watch: {
       selectedTickets() {
-        this.$emit('input', this.applications);
+        OrderStore.commit('setApplications', this.applications);
       },
     },
     methods: {

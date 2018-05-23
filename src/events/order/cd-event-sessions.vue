@@ -7,10 +7,10 @@
      <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
     {{ $t('Please contact the Dojo if you have any questions.') }}</p>
     <div class="cd-event-sessions__tickets">
-      <ticket v-for="(_user, index) in users" :user="_user" :event="event" v-model="usersTickets[index]" :key="_user.id"></ticket>
+      <ticket v-for="(_user, index) in users" :user="_user" :event="event" :key="_user.id"></ticket>
     </div>
     <!-- TODO : isn't the index enough rather than generating an uuid ? -->
-    <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="sessions" :id="child.id" v-model="child.value" v-on:delete="deleteChildComponent(index)"></child-ticket>
+    <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="sessions" :id="child.id" v-on:delete="deleteChildComponent(index)"></child-ticket>
 
     <div class="cd-event-sessions__add-button" v-if="!isO13">
       <button class="cd-event-sessions__add-youth btn btn-primary" tag="button" @click="addChildComponent"><i class="fa fa-plus" aria-hidden="true"></i> {{ $t('Add another youth ticket') }}</button>
@@ -47,6 +47,7 @@
   import UserService from '@/users/service';
   import DojoService from '@/dojos/service';
   import UserUtils from '@/users/util';
+  import OrderStore from '@/events/order-store';
   import service from '../service';
   import Ticket from './cd-event-ticket';
   import EventMixin from './cd-event-tile';
@@ -64,7 +65,6 @@
       return {
         event: {},
         sessions: [],
-        usersTickets: [],
         parentTicket: null,
         children: [],
         existingChildren: [],
@@ -79,8 +79,7 @@
         return !this.profile.phone && !this.isO13;
       },
       applications() {
-        const applications = [].concat(...(this.children).map(child => child.value))
-          .concat(...this.usersTickets);
+        const applications = OrderStore.getters.applications;
         if (this.parentTicket) {
           applications.push(this.parentTicket);
         }
@@ -173,7 +172,7 @@
       loadSessions() {
         service.loadSessions(this.eventId).then((response) => {
           this.sessions = response.body;
-          this.event = { ...event, sessions: this.sessions };
+          this.event = { ...this.event, sessions: this.sessions };
         });
       },
       async setEvent() {

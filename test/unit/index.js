@@ -15,6 +15,7 @@ if (!String.prototype.endsWith) {
   };
 }
 
+Vue.use(Vuex); 
 Vue.use(VueResource);
 Vue.use(Vuex);
 

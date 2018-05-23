@@ -144,7 +144,7 @@ const BookingParentData = Object.create(EventDetails, {
   childTicketSelector: {
     value(selected) {
       $('.cd-child-ticket__ticket-selector .multiselect').click();
-      return $(`//li[@class="multiselect__element"]/span[.="${selected}"]`);
+      return $$(`//li[@class="multiselect__element"]/span[.="${selected}"]`);
     },
   },
   childTicketSelectorValidationError: {

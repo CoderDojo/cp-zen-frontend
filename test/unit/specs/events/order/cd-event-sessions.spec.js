@@ -6,6 +6,7 @@ describe('Event sessions component', () => {
   let mockService;
   let MockUserService;
   let MockUserUtils;
+  let OrderStore;
   let ChildTicket;
   let uuidMock;
   let SessionListWithMocks;
@@ -29,12 +30,16 @@ describe('Event sessions component', () => {
     MockUserUtils = {
       isYouthOverThirteen: sandbox.stub(),
     };
+    OrderStore = {
+      getters: {},
+    };
     uuidMock = sandbox.stub();
     SessionListWithMocks = SessionList({
       'uuid/v4': uuidMock,
       './service': mockService,
       '@/users/service': MockUserService,
       '@/users/util': MockUserUtils,
+      '@/events/order-store': OrderStore,
       './cd-event-add-child-ticket': ChildTicket,
     });
   });
@@ -108,35 +113,19 @@ describe('Event sessions component', () => {
     });
 
     describe('computed.applications', () => {
-      it('should return the value of each object in the children array', () => {
+      it('should return the value of the store without adult ticket', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.children = [{ value: { name: 'John Doe' }, id: '1' }, { value: { name: 'Jane Doe' }, id: '2' }];
 
+        OrderStore.getters.applications = [{ name: 'John Doe' }, { name: 'Jane Doe' }];
         // ASSERT
-        expect(vm.applications).to.deep.equal([
-          {
-            name: 'John Doe',
-          },
-          {
-            name: 'Jane Doe',
-          }]);
-      });
-      it('should return the existing users tickets', () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.usersTickets = [{ name: 'John Doe', id: '1' }];
-
-        // ASSERT
-        expect(vm.applications).to.deep.equal([{
-          name: 'John Doe',
-          id: '1',
-        }]);
+        expect(vm.applications).to.deep.equal(OrderStore.getters.applications);
       });
       it('should add the parentTicket if defined', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.usersTickets = [{ name: 'John Doe', id: '1' }];
+        OrderStore.getters.applications = [{ id: '1', name: 'John Doe' }];
         vm.parentTicket = { name: 'parent1', id: '2' };
 
         // ASSERT

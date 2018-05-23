@@ -47,7 +47,7 @@
   import SpecialReqComponent from '@/common/cd-special-req-component';
   import addPossession from '@/common/filters/cd-add-possession';
   import TicketMixin from '@/events/cd-event-ticket-mixin';
-
+  import OrderStore from '@/events/order-store';
 
   export default {
     name: 'ChildTicket',
@@ -96,7 +96,7 @@
     },
     watch: {
       applications() {
-        this.$emit('input', this.applications);
+        OrderStore.commit('setApplications', this.applications);
       },
     },
     computed: {
@@ -109,11 +109,14 @@
           status: session.status,
           tickets: session.tickets
             .filter(ticket => ticket.type === 'ninja' && 'others')
-            .map(t => ({
-              ...t,
-              $isDisabled: this.ticketIsFull(t),
-              name: this.ticketIsFull(t) ? `${t.name} ${this.$t('[ this ticket is fully booked ]')}` : `${t.name}`,
-            })),
+            .map((t) => {
+              const isFull = this.ticketIsFull(t, OrderStore.getters.applications);
+              return {
+                ...t,
+                $isDisabled: isFull,
+                name: isFull ? `${t.name} ${this.$t('[ this ticket is fully booked ]')}` : `${t.name}`,
+              };
+            }),
         }));
       },
       name() {

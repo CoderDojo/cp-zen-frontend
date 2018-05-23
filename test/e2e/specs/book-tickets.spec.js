@@ -158,7 +158,7 @@ describe('Book event page', () => {
         it('should stop me from booking a ticket that has no space for me', () => {
           browser.url('http://localhost:8080/v2/events/34174952-8ca4-4189-b8cb-d383e3fde992/sessions');
           Booking.eventTitle.waitForVisible();
-          expect(Booking.childTicketSelector('With Pi [ this ticket is fully booked ]').isVisible()).to.be.true;
+          expect(Booking.childTicketSelector('With Pi [ this ticket is fully booked ]')[0].isVisible()).to.be.true;
         });
         it('should stop me from booking an event that has no space', () => {
           browser.url('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1a/sessions');
@@ -167,6 +167,13 @@ describe('Book event page', () => {
           expect(Booking.eventIsFullEmoji.isVisible()).to.be.true; 
           expect(Booking.eventIsFullHeader.isVisible()).to.be.true; 
           expect(Booking.eventIsFullSubheader.isVisible()).to.be.true;
+        });
+        it('should stop me from booking a ticket that has less than the sum of possible tickets', () => {
+          browser.url('http://localhost:8080/v2/events/34174952-8ca4-4189-b8cb-d383e3fde992/sessions');
+          Booking.eventTitle.waitForVisible();
+          Booking.childTicketSelector('Lacking Pi')[0].click()
+          Booking.addYouthButton.click();
+          expect(Booking.childTicketSelector('Lacking Pi [ this ticket is fully booked ]')[0].isVisible()).to.be.true;
         });
         it('should let me fill the new user form', () => {
           browser.waitUntil(() => Booking.childrenTickets.length > 0);
@@ -190,7 +197,7 @@ describe('Book event page', () => {
           Booking.childTicketMonthOfBirth(0).selectByValue(1);
           Booking.childTicketYearOfBirth(0).selectByValue(2002);
           Booking.childTicketGender(0).selectByValue('male');
-          Booking.childTicketSelector('Laptop required').click();
+          Booking.childTicketSelector('Laptop required')[0].click();
           Booking.phoneNumber.setValue('+0');
           Booking.submitBookingButton.click();
           BookingConfirmation.eventName.waitForVisible();

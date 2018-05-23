@@ -9,15 +9,13 @@
       },
     },
     methods: {
-      ticketIsFull(ticket) {
-        // When it's already full before the user's booking
-        // TODO : take into account current booking
-        const sameTicketApplications = (this.applications || [])
+      ticketIsFull(ticket, applications = []) {
+        const sameTicketApplications = applications
           .filter(t => t.ticketId === ticket.id);
         return (ticket.approvedApplications + sameTicketApplications.length) >= ticket.quantity;
       },
-      ticketsAreFull(tickets) {
-        return tickets.every(t => this.ticketIsFull(t));
+      ticketsAreFull(tickets, applications = []) {
+        return tickets.every(t => this.ticketIsFull(t, applications));
       },
     },
   };

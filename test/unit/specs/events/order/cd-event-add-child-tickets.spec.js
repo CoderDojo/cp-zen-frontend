@@ -8,6 +8,7 @@ describe('Add Child Ticket', () => {
   let MockVueMultiselect;
   let MockUserUtils;
   let MockUsersService;
+  let OrderStore;
   let ChildTicketWithMocks;
   let clock;
 
@@ -27,11 +28,16 @@ describe('Add Child Ticket', () => {
     MockUsersService = {
       addChild: sandbox.stub(),
     };
+    OrderStore = {
+      getters: {},
+      commit: sandbox.stub(),
+    };
     ChildTicketWithMocks = ChildTicket({
       'vue-dob-picker': MockVueDobPicker,
       'vue-multiselect': MockVueMultiselect,
       '@/users/util': MockUserUtils,
       '@/users/service': MockUsersService,
+      '@/events/order-store': OrderStore,
     });
   });
 
@@ -142,15 +148,13 @@ describe('Add Child Ticket', () => {
           ticket_name: 'Ticket2',
           ticket_type: 'ninja',
         };
-        const emitStub = sandbox.stub();
-        vm.$emit = emitStub;
         vm.applications = mockApplication;
 
         // ACT
         vm.$watchers.applications();
 
         // ASSERT
-        expect(emitStub).to.have.been.calledWith('input', mockApplication);
+        expect(OrderStore.commit).to.have.been.calledWith('setApplications', vm.applications);
       });
     });
   });
@@ -161,6 +165,7 @@ describe('Add Child Ticket', () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
         vm.ticketIsFull = sandbox.stub().returns(false);
+        OrderStore.getters.applications = [];
         vm.sessions = [{ description: 'description1',
           eventId: 'some-eventId',
           id: 'sessionId',
@@ -211,6 +216,7 @@ describe('Add Child Ticket', () => {
         const vm = vueUnitHelper(ChildTicketWithMocks);
         vm.ticketIsFull = sandbox.stub().returns(true);
         vm.$t = sandbox.stub().returnsArg(0);
+        OrderStore.getters.applications = [];
         vm.sessions = [{ description: 'description1',
           eventId: 'some-eventId',
           id: 'sessionId',
