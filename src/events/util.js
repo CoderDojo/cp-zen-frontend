@@ -20,7 +20,7 @@ export default {
       dateMoment.subtract(dateMoment.utcOffset(), 'minutes');
       return dateMoment.isAfter(now);
     });
-    return nextDateInfo.startTime;
+    return nextDateInfo ? nextDateInfo.startTime : event.dates[event.dates.length - 1].startTime;
   },
   isRecurring(event) {
     return event.type === 'recurring';

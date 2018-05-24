@@ -107,6 +107,14 @@ describe('Events Util', () => {
   describe('getNextStartTime', () => {
     it('should return the first event startTime date after now', () => {
       // ARRANGE
+      const event = { ...mockRecurringEventData, dates: mockRecurringEventData.dates.slice(0, -2) };
+      // ACT
+      const nextStartTime = EventsUtilWithMock.getNextStartTime(event);
+      // ASSERT
+      expect(nextStartTime).to.deep.equal('2017-07-01T10:00:00.000Z');
+    });
+    it('should return the last date if the event is past', () => {
+      // ARRANGE
       const event = mockRecurringEventData;
       // ACT
       const nextStartTime = EventsUtilWithMock.getNextStartTime(event);
