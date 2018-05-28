@@ -40,14 +40,16 @@
         return UserUtils.isUnderAge(this.user.dob) || UserUtils.isYouthOverThirteen(this.user.dob);
       },
       ticketsOptions() {
-        return this.sessions.map(session => ({
+        return (this.sessions.map(session => ({
           description: session.description,
           eventId: session.eventId,
           id: session.id,
           name: session.name,
           status: session.status,
           tickets: session.tickets.filter(ticket => this.filterByTicketType(ticket.type)),
-        }));
+        }))).concat({
+          name: 'No Ticket',
+          tickets: [{ name: 'Not Attending', type: 'noTicket' }] });
       },
       applications() {
         return this.tickets.map(ticket => (Object.assign({

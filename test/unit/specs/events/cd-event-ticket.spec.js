@@ -58,6 +58,10 @@ describe('Event ticket creation', () => {
         status: 'active',
         tickets: [],
       });
+      expect(vm.ticketsOptions[1]).to.deep.equal({
+        name: 'No Ticket',
+        tickets: [{ name: 'Not Attending', type: 'noTicket' }],
+      });
     });
     it('should filter the tickets', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
@@ -80,6 +84,10 @@ describe('Event ticket creation', () => {
         status: 'active',
         tickets: [],
       });
+      expect(vm.ticketsOptions[1]).to.deep.equal({
+        name: 'No Ticket',
+        tickets: [{ name: 'Not Attending', type: 'noTicket' }],
+      });
       expect(vm.filterByTicketType).to.have.been.calledWith('ninja');
     });
   });
@@ -100,8 +108,12 @@ describe('Event ticket creation', () => {
         type: 'ticketType',
         sessionId: 'sessionId',
         id: 'ticketId',
+      },
+      {
+        name: 'Not Attending',
+        type: 'noTicket',
       }];
-      expect(vm.applications[0]).to.deep.equal({
+      expect(vm.applications).to.deep.equal([{
         name: 'first last',
         dateOfBirth: '2014-08-08',
         eventId: 'eventId',
@@ -111,7 +123,24 @@ describe('Event ticket creation', () => {
         dojoId: 'dojoId',
         ticketId: 'ticketId',
         userId: 'userId',
-      });
+      }]);
+    });
+    it('should return an empty applications array', () => {
+      const vm = vueUnitHelper(EventTicketWithMocks);
+      vm.event = {
+        id: 'eventId',
+        dojoId: 'dojoId',
+      };
+      vm.user = {
+        name: 'first last',
+        userId: 'userId',
+        dob: '2014-08-08',
+      };
+      vm.tickets = [{
+        name: 'Not Attending',
+        type: 'noTicket',
+      }];
+      expect(vm.applications).to.deep.equal([]);
     });
 
     it('should format the user\'s tickets WITH a specialRequirement', () => {
