@@ -2,7 +2,7 @@
   <div class="cd-child-ticket__ticket-box">
     <div class="cd-child-ticket__header">
        <h3 class="cd-child-ticket__ticket-name">{{ $t('Ticket')}} {{firstName|addPossession}}</h3>
-       <button class="cd-child-ticket__delete-ticket"><i class="fa fa-trash" aria-hidden="true" @click="$emit('delete')"></i></button>
+       <button class="cd-child-ticket__delete-ticket" @click="$emit('delete')"><i class="fa fa-trash" aria-hidden="true" ></i></button>
     </div>
     <form class="cd-child-ticket__body">
       <label>{{ $t('Name')}}</label>
