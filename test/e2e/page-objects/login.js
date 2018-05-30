@@ -73,7 +73,7 @@ const LoginPage = Object.create(BasePage, {
   },
   open: {
     value(query) {
-      return BasePage.open.call(this, url.format({ pathname: '/v2/login', query }));
+      return BasePage.open.call(this, url.format({ pathname: '/login', query }));
     },
   },
 });
