@@ -64,7 +64,7 @@
       <div class="cd-booking-confirmation__account-confirmation">
         <div class="fa fa-check-circle-o cd-booking-confirmation__account-confirmation-icon"></div>
         <div>
-          {{ $t('Your CoderDojo Account has been created') }}
+          {{ $t('Your CoderDojo account has been created') }}
           <div class="cd-booking-confirmation__account-confirmation-help-message" v-html="$t('You can log in and find events hosted by this dojo in {openLink}My Dojos{closeLink}', { openLink: '<strong><a href=\'/dashboard/my-dojos\'>', closeLink: '</a></strong>' })">
           </div>
         </div>
