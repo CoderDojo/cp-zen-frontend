@@ -32,6 +32,10 @@
         <multiselect v-model="tickets" :options="childTickets" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select Event Tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${id}`" v-validate="'required'"></multiselect>
       </div>
       <p class="cd-child-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${id}:required`)">{{ $t('Ticket selection is required') }}</p>  
+
+      <label>{{ $t('Special Requirements') }}</label>
+      <special-req-component class="cd-child-ticket__gender-selector" v-model="specialRequirement" data-vv-value-path="value" data-vv-name="specialRequirement" v-validate="'required'"></special-req-component>
+      <p class="cd-event-ticket__special-req-err text-danger" v-show="errors.has('specialRequirement:required')">{{ $t('Special requirements is required') }}</p>
     </form>
   </div>
 </template>
@@ -42,6 +46,7 @@
   import VueDobPicker from 'vue-dob-picker';
   import Multiselect from 'vue-multiselect';
   import GenderComponent from '@/common/cd-gender-component';
+  import SpecialReqComponent from '@/common/cd-special-req-component';
   import addPossession from '@/common/filters/cd-add-possession';
 
 
@@ -56,6 +61,7 @@
       VueDobPicker,
       Multiselect,
       GenderComponent,
+      SpecialReqComponent,
     },
     data() {
       return {
@@ -66,6 +72,7 @@
         genderExplaination: false,
         tickets: [],
         userId: null,
+        specialRequirement: '',
       };
     },
     methods: {
@@ -107,7 +114,7 @@
         return `${this.firstName} ${this.surname}`;
       },
       applications() {
-        return this.tickets.map(ticket => ({
+        return this.tickets.map(ticket => (Object.assign({
           name: this.name,
           dateOfBirth: this.dob,
           eventId: this.eventId,
@@ -117,7 +124,7 @@
           dojoId: this.event.dojoId,
           ticketId: ticket.id,
           userId: this.userId,
-        }));
+        }, this.specialRequirement === 'no' ? '' : { specialRequirement: this.specialRequirement })));
       },
       child() {
         return {
