@@ -14,7 +14,7 @@
           {{ event.dates[0].startTime | cdDateFormatter }}
         </div>
         <div v-else>
-          <div class="cd-event-list-item__date-series">{{ $t('Next in series:') }}</div>
+          <div class="cd-event-list-item__date-series" v-if="!past">{{ $t('Next in series:') }}</div>
           <span class="cd-event-list-item__date-timestamp">{{ nextStartTime |  cdDateFormatter }}</span>
         </div>
         <div class="cd-event-list-item__times-timestamp">
