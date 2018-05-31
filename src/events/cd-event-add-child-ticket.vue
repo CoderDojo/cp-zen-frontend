@@ -34,7 +34,7 @@
       <p class="cd-child-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${id}:required`)">{{ $t('Ticket selection is required') }}</p>  
 
       <label>{{ $t('Special requirements') }}</label>
-      <special-req-component class="cd-child-ticket__special-req" v-model="specialRequirement"></special-req-component>
+      <special-req-component class="cd-child-ticket__special-req-selector" v-model="specialRequirement"></special-req-component>
     </form>
   </div>
 </template>
