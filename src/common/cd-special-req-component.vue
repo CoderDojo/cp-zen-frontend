@@ -4,7 +4,7 @@
     <option value="" selected data-default>{{ $t('No') }}</option>
     <option value="yes">{{ $t('Yes') }}</option>
   </select>
-  <input v-show="hasSpecialReq" class="form-control" v-model="specialReqInput" :placeholder="$t('Please type any special requirements you have here (ex. need wheelchair access)')" @blur="onBlur" @focus="onFocus"/>
+  <input v-show="hasSpecialReq" class="form-control" v-model="specialReqInput" :placeholder="$t('Please tell us about any special requirements that we might need to know of here (eg. need wheelchair access)')" @blur="onBlur" @focus="onFocus"/>
 </div> 
 </template>
 
