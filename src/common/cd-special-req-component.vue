@@ -40,7 +40,7 @@
           return this.specialReqSelect;
         },
         set(specialReqVal) {
-          if (!specialReqVal) {
+          if (specialReqVal) {
             this.specialReqSelect = 'yes';
             this.specialReqInput = specialReqVal;
           } else {
