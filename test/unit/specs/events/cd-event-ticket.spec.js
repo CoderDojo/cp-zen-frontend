@@ -113,6 +113,39 @@ describe('Event ticket creation', () => {
         userId: 'userId',
       });
     });
+
+    it('should format the user\'s tickets WITH a specialRequirement', () => {
+      const vm = vueUnitHelper(EventTicketWithMocks);
+      vm.event = {
+        id: 'eventId',
+        dojoId: 'dojoId',
+      };
+      vm.user = {
+        name: 'first last',
+        userId: 'userId',
+        dob: '2014-08-08',
+      };
+      vm.tickets = [{
+        name: 'ticketName',
+        type: 'ticketType',
+        sessionId: 'sessionId',
+        id: 'ticketId',
+      }];
+      vm.specialRequirement = 'Need wheelchair access';
+
+      expect(vm.applications[0]).to.deep.equal({
+        name: 'first last',
+        dateOfBirth: '2014-08-08',
+        eventId: 'eventId',
+        ticketName: 'ticketName',
+        ticketType: 'ticketType',
+        sessionId: 'sessionId',
+        specialRequirement: 'Need wheelchair access',
+        dojoId: 'dojoId',
+        ticketId: 'ticketId',
+        userId: 'userId',
+      });
+    });
   });
   describe('methods: filterByTicketType', () => {
     it('should return true if the type("ninja") is included and the user is a ninja', () => {
