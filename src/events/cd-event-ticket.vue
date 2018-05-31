@@ -9,8 +9,7 @@
       <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`)">{{ $t('Ticket selection is required') }}</p>
 
       <label class="cd-event-tickets__name">{{ $t('Special Requirements') }}</label>
-      <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement" data-vv-value-path="value" data-vv-name="specialRequirement" v-validate="'required'"></special-req-component>
-      <p class="cd-event-ticket__special-req-err text-danger" v-show="errors.has('specialRequirement:required')">{{ $t('Special requirements is required') }}</p>
+      <special-req-component class="cd-event-tickets__special-req" v-model="specialRequirement"></special-req-component>
     </div>
     <div class='cd-event-tickets__ticket-corner'></div>
   </div>
@@ -62,7 +61,7 @@
           dojoId: this.event.dojoId,
           ticketId: ticket.id,
           userId: this.user.userId,
-        }, this.specialRequirement === 'no' ? '' : { specialRequirement: this.specialRequirement })));
+        }, !this.specialRequirement ? '' : { specialRequirement: this.specialRequirement })));
       },
     },
     watch: {

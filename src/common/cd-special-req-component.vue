@@ -1,11 +1,10 @@
 <template>
 <div>
   <select class="select-box form-control" v-model="specialReqSelect" @blur="onBlur" @focus="onFocus">
-    <option value="" selected data-default disabled>{{ $t('Select an option') }}</option>
-    <option value="no">{{ $t('No') }}</option>
+    <option value="" selected data-default>{{ $t('No') }}</option>
     <option value="yes">{{ $t('Yes') }}</option>
   </select>
-  <input v-show="selectYes" class="form-control" v-model="specialReqInput" :placeholder="$t('Type here')" @blur="onBlur" @focus="onFocus"/>
+  <input v-show="hasSpecialReq" class="form-control" v-model="specialReqInput" :placeholder="$t('Please type any special requirements you have here (ex. Need wheelchair access)')" @blur="onBlur" @focus="onFocus"/>
 </div> 
 </template>
 
@@ -30,18 +29,18 @@
       },
     },
     computed: {
-      selectYes() {
+      hasSpecialReq() {
         return this.specialReqSelect === 'yes';
       },
       specialRequirement: {
         get() {
-          if (this.specialReqSelect === 'yes') {
+          if (this.hasSpecialReq) {
             return this.specialReqInput;
           }
           return this.specialReqSelect;
         },
         set(specialReqVal) {
-          if (specialReqVal === 'yes') {
+          if (!specialReqVal) {
             this.specialReqSelect = 'yes';
             this.specialReqInput = specialReqVal;
           } else {
@@ -52,9 +51,7 @@
     },
     watch: {
       specialRequirement() {
-        if (this.specialRequirement) {
-          this.$emit('input', this.specialRequirement);
-        }
+        this.$emit('input', this.specialRequirement);
       },
     },
   };

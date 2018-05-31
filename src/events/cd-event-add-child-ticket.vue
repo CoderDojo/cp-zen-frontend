@@ -34,8 +34,7 @@
       <p class="cd-child-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${id}:required`)">{{ $t('Ticket selection is required') }}</p>  
 
       <label>{{ $t('Special Requirements') }}</label>
-      <special-req-component class="cd-child-ticket__gender-selector" v-model="specialRequirement" data-vv-value-path="value" data-vv-name="specialRequirement" v-validate="'required'"></special-req-component>
-      <p class="cd-event-ticket__special-req-err text-danger" v-show="errors.has('specialRequirement:required')">{{ $t('Special requirements is required') }}</p>
+      <special-req-component class="cd-child-ticket__special-req" v-model="specialRequirement"></special-req-component>
     </form>
   </div>
 </template>
@@ -124,7 +123,7 @@
           dojoId: this.event.dojoId,
           ticketId: ticket.id,
           userId: this.userId,
-        }, this.specialRequirement === 'no' ? '' : { specialRequirement: this.specialRequirement })));
+        }, !this.specialRequirement ? '' : { specialRequirement: this.specialRequirement })));
       },
       child() {
         return {
@@ -180,7 +179,7 @@
       max-width: 50%;
       padding: 8px 0px 24px;
     }
-    &__gender-selector {
+    &__gender-selector, &__special-req-selector {
       max-width: 50%;
       padding: 8px 0px 24px;
     }         
