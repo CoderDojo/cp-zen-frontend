@@ -1,5 +1,5 @@
 import vueUnitHelper from 'vue-unit-helper';
-import EventDetails from '!!vue-loader?inject!@/events/cd-event-details';
+import EventDetails from '!!vue-loader?inject!@/events/order/cd-event-details';
 
 describe('Event Details', () => {
   let vm;
@@ -11,19 +11,11 @@ describe('Event Details', () => {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    MockEventService = {
-      loadEvent: sandbox.stub(),
-    };
-    MockDojoService = {
-      getDojoById: sandbox.stub(),
-    };
     MockDojoUtils = {
       imageUrl: sandbox.stub(),
       fallbackImage: sandbox.stub(),
     };
     EventDetailsWithMocks = EventDetails({
-      './service': MockEventService,
-      '@/dojos/service': MockDojoService,
       '@/dojos/util': MockDojoUtils,
     });
     vm = vueUnitHelper(EventDetailsWithMocks);
@@ -34,17 +26,6 @@ describe('Event Details', () => {
 
   afterEach(() => {
     sandbox.restore();
-  });
-
-  it('should display Event details', async () => {
-    // ARRANGE
-    vm.eventId = 1;
-
-    // ACT
-    await vm.loadEvent();
-
-    // ASSERT
-    expect(MockEventService.loadEvent).have.been.calledWith(vm.eventId);
   });
 
   describe('computed', () => {
@@ -75,19 +56,6 @@ describe('Event Details', () => {
       const url = vm.dojoFallbackImage;
       expect(MockDojoUtils.fallbackImage).to.have.been.calledOnce;
       expect(url).to.equal('http://google.com');
-    });
-  });
-
-  describe('created', () => {
-    it('should load the dojo and the event on creation', async () => {
-      vm.loadEvent = sandbox.stub().resolves({ body: { apple: 1 } });
-      vm.loadDojo = sandbox.stub().resolves({ body: { banana: 1 } });
-
-      await vm.$lifecycleMethods.created();
-      expect(vm.loadEvent).to.have.been.calledOnce;
-      expect(vm.eventDetails).to.deep.equal({ apple: 1 });
-      expect(vm.loadDojo).to.have.been.calledOnce;
-      expect(vm.dojo).to.deep.equal({ banana: 1 });
     });
   });
 });

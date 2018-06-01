@@ -1,6 +1,6 @@
 import vueUnitHelper from 'vue-unit-helper';
 import { clone } from 'lodash';
-import ChildTicket from '!!vue-loader?inject!@/events/cd-event-add-child-ticket';
+import ChildTicket from '!!vue-loader?inject!@/events/order/cd-event-add-child-ticket';
 
 describe('Add Child Ticket', () => {
   let sandbox;

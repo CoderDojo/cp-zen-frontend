@@ -1,5 +1,5 @@
 <template>
-  <div class="cd-event-sessions">
+  <div v-if="isSingle || children.length > 0" class="cd-event-sessions">
     <h1 class="cd-event-sessions__header">
       <span v-if="isSingle">{{ $t('Select Your Tickets') }}</span>
       <span v-else>{{ $t('Select Youth Tickets') }}</span>
@@ -41,7 +41,7 @@
   import UserService from '@/users/service';
   import DojoService from '@/dojos/service';
   import UserUtils from '@/users/util';
-  import service from './service';
+  import service from '../service';
   import Ticket from './cd-event-ticket';
   import ChildTicket from './cd-event-add-child-ticket';
 
@@ -214,7 +214,7 @@
 </script>
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
-  @import "../common/styles/cd-primary-button";
+  @import "../../common/styles/cd-primary-button";
 
   .cd-event-sessions {
     &__header {

@@ -3,7 +3,7 @@
     <div class="cd-event-tickets__head"></div>
     <div class="cd-event-tickets__ticket">
       <span class="cd-event-tickets__name"><span class="cd-event-tickets__name-for">Name:</span>{{ user.firstName }} {{ user.lastName }}</span>
-      <div class="cd-event-tickets__ticket-selector"> 
+      <div class="cd-event-tickets__ticket-selector">
         <multiselect v-model="tickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.id}`" v-validate="'required'"></multiselect>
       </div>
       <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`)">{{ $t('Ticket selection is required') }}</p>
@@ -157,7 +157,7 @@
         border-radius: 7px;
         box-sizing: border-box;
       }
-     
+
       &-corner {
         width: 18px;
         position: absolute;
@@ -183,7 +183,7 @@
   }
 </style>
 <style lang="less">
-@import "../common/variables";
+@import "../../common/variables";
 @import "~bootstrap/less/variables";
 .cd-event-tickets__ticket-selector .multiselect--active {
   z-index: 4;

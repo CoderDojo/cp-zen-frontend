@@ -3,11 +3,12 @@ import Router from 'vue-router';
 import DojoDetails from '@/dojos/cd-dojo-details';
 import FindDojo from '@/dojos/cd-find-dojo';
 import UserTickets from '@/users/cd-tickets';
-import EventDetails from '@/events/cd-event-details';
+import EventDetails from '@/events/order/cd-event-details';
 import LoginOrRegister from '@/users/cd-login-or-register';
-import EventSessions from '@/events/cd-event-sessions';
-import BookingConfirmation from '@/events/cd-booking-confirmation';
+import EventSessions from '@/events/order/cd-event-sessions';
+import BookingConfirmation from '@/events/order/cd-booking-confirmation';
 import Login from '@/users/cd-login';
+import orderWrapper from '@/events/order/wrapper';
 import loggedInNavGuard from './loggedInNavGuard';
 
 Vue.use(Router);
@@ -67,21 +68,28 @@ export default new Router({
       children: [
         {
           path: 'events/:eventId',
-          component: EventDetails,
+          component: orderWrapper,
           props: true,
           children: [
             {
               path: '',
-              name: 'LoginOrRegister',
-              component: LoginOrRegister,
+              component: EventDetails,
               props: true,
-            },
-            {
-              path: 'sessions',
-              name: 'EventSessions',
-              component: EventSessions,
-              props: true,
-              beforeEnter: loggedInNavGuard,
+              children: [
+                {
+                  path: '',
+                  name: 'LoginOrRegister',
+                  component: LoginOrRegister,
+                  props: true,
+                },
+                {
+                  path: 'sessions',
+                  name: 'EventSessions',
+                  component: EventSessions,
+                  props: true,
+                  beforeEnter: loggedInNavGuard,
+                },
+              ],
             },
             {
               path: 'confirmation',
