@@ -3,10 +3,11 @@
 .cd-event-tile() {
   &__details {
     display: flex;
+    flex-wrap: wrap;
   }
 
   &__header {
-    flex: 4;
+    flex: 3.5;
   }
 
   &__name {
@@ -74,7 +75,6 @@
   }
 
   &__datetime {
-    margin-right: 27px;
     flex: 1;
   }
   }
@@ -98,6 +98,7 @@
       width: auto;
     }
     &__datetime {
+      flex-basis: 150px;
       margin-right: 0;
       margin-top: 16px;
       text-align: center;

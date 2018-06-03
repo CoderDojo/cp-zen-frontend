@@ -40,6 +40,9 @@ const EventsService = {
     getOrder(userId, options) {
       return Vue.http.get(`${Vue.config.apiServer}/api/3.0/users/${userId}/orders`, options);
     },
+    checkin(eventId, orderId) {
+      return Vue.http.patch(`${Vue.config.apiServer}/api/3.0/events/${eventId}/orders/${orderId}/attendance`);
+    },
   },
 };
 

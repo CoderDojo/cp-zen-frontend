@@ -70,6 +70,16 @@ exports.register = function (server, options, next) {
       }
     }
   });
+  
+  server.route({
+    method: 'GET',
+    path: '/dashboard/events/{eventId}/orders/{orderId}/checkin',
+    handler :{
+      file: {
+        path: 'index.html'
+      }
+    }
+  });
 
   server.route({
     method: 'GET',

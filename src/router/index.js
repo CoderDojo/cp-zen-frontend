@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import DojoDetails from '@/dojos/cd-dojo-details';
 import FindDojo from '@/dojos/cd-find-dojo';
 import UserTickets from '@/users/cd-tickets';
+import OrderCheckin from '@/events/cd-order-checkin';
 import EventDetails from '@/events/cd-event-details';
 import LoginOrRegister from '@/users/cd-login-or-register';
 import EventSessions from '@/events/cd-event-sessions';
@@ -52,6 +53,12 @@ export default new Router({
       path: '/dashboard/tickets',
       name: 'MyTickets',
       component: UserTickets,
+      beforeEnter: loggedInNavGuard,
+    },
+    {
+      path: '/dashboard/events/:eventId/orders/:orderId/checkin',
+      name: 'OrderCheckin',
+      component: OrderCheckin,
       beforeEnter: loggedInNavGuard,
     },
     {

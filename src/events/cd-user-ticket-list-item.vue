@@ -25,13 +25,21 @@
       </div>
       <div v-if="hasApplications" class="cd-user-ticket-list-item__view-applications">
         <h4 class="cd-user-ticket-list-item__view-application-title"><i class="fa fa-ticket"></i>{{ $t('Tickets') }}</h4>
-        <div v-for="application in applications">
-          <cd-attendee :application="application" :session="sessions[application.sessionId]" :ticket="tickets[application.ticketId]" :user="users[application.userId]"></cd-attendee>
+        <div class="cd-user-ticket-list-item__view-applications-order">
+          <div class="cd-user-ticket-list-item__view-applications-order-applicants">
+            <div v-for="application in applications">
+              <cd-attendee :application="application" :session="sessions[application.sessionId]" :ticket="tickets[application.ticketId]" :user="users[application.userId]"></cd-attendee>
+            </div>
+            <button tag="button"
+              @click="cancel()"
+              class="btn btn-lg cd-user-ticket-list-item__view-cancel-button">
+              {{ $t('Cancel ticket', applications.length) }}</button>
+          </div>
+          <div class="cd-user-ticket-list-item__view-applications-order-qrcode">
+            <img v-if="hasApplications && applications[0].orderId" :src="qrCodeUrl" alt="qrcode-checkin"/>
+            <small> {{ $t('Get this image scanned by your champion to be checked-in!') }} </small>
+          </div>
         </div>
-        <button tag="button"
-          @click="cancel()"
-          class="btn btn-lg cd-user-ticket-list-item__view-cancel-button">
-          {{ $t('Cancel ticket', applications.length) }}</button>
       </div>
       <!-- NOTE : What about awaiting approval tickets ?-->
       <div v-if="!hasApplications && !event.eventbriteId">
@@ -73,6 +81,11 @@
       };
     },
     computed: {
+      qrCodeUrl() {
+        const baseUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=';
+        const redirUrl = encodeURIComponent(`https://localhost:8000/dashboard/tickets/${this.applications[0].orderId}`);
+        return `${baseUrl}${redirUrl}`;
+      },
       hasApplications() {
         return this.applications.length > 0;
       },
@@ -128,6 +141,26 @@
 
     &__view-application {
       font-size: @font-size-large;
+      &s-order {
+        display: flex;
+        flex-wrap: wrap;
+        &-applicants {
+          flex: 3.5;
+        }
+        &-qrcode {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          & img {
+            max-width: 150px;
+            min-width: 150px;
+          }
+          & small {
+            text-align: center;
+            max-width: 150px;
+          }
+        }
+      }
     }
 
     &__view-application-title {
@@ -158,6 +191,10 @@
     .cd-user-ticket-list-item {
       &__view-applications {
         font-size: @font-size-base;
+        &-order-qrcode {
+          flex-basis: 200px;
+          align-items: center;
+        }
       }
     }
   }
