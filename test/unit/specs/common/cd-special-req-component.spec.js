@@ -51,56 +51,42 @@ describe('Special Requirement Component', () => {
         expect(window.clearTimeout).to.have.been.calledWith('foo');
       });
     });
-  });
 
-  describe('computed', () => {
-    describe('computed.hasSpecialReq', () => {
-      it('should return true if yes is selected', async () => {
+    describe('methods.showSpecialReq()', () => {
+      it('should change hasSpecialReq to be true when it is called', () => {
         // ARRANGE
         const vm = vueUnitHelper(SpecialReqComponent);
-        vm.specialReqSelect = 'yes';
+        vm.hasSpecialReq = false;
 
         // ACT
-
+        vm.showSpecialReq();
         // ASSERT
         expect(vm.hasSpecialReq).to.equal(true);
       });
+    });
+  });
 
-      it('should return false if no is selected', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SpecialReqComponent);
-        vm.specialReqSelect = '';
+  describe('computed.specialRequirement', () => {
+    it('should return the input requirement value', async () => {
+      // ARRANGE
+      const vm = vueUnitHelper(SpecialReqComponent);
+      vm.specialReqInput = 'Need wheelchair access';
 
-        // ACT
+      // ACT
 
-        // ASSERT
-        expect(vm.hasSpecialReq).to.equal(false);
-      });
+      // ASSERT
+      expect(vm.specialRequirement).to.equal('Need wheelchair access');
     });
 
-    describe('computed.specialRequirement', () => {
-      it('should return the input requirement value if the if yes was selected', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SpecialReqComponent);
-        vm.specialReqSelect = 'yes';
-        vm.specialReqInput = 'Need wheelchair access';
+    it('should return the undefined value if there is no input', async () => {
+      // ARRANGE
+      const vm = vueUnitHelper(SpecialReqComponent);
+      vm.specialReqSelect = '';
 
-        // ACT
+      // ACT
 
-        // ASSERT
-        expect(vm.specialRequirement).to.equal('Need wheelchair access');
-      });
-
-      it('should return the undefined value if no is the selected option', async () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SpecialReqComponent);
-        vm.specialReqSelect = '';
-
-        // ACT
-
-        // ASSERT
-        expect(vm.specialRequirement).to.equal('');
-      });
+      // ASSERT
+      expect(vm.specialRequirement).to.equal('');
     });
   });
 
