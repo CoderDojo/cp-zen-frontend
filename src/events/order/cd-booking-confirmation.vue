@@ -36,7 +36,7 @@
           <span class="cd-booking-confirmation__booking-details-box-title">{{ $t('Location') }}</span>
         </div>
         <div class="cd-booking-confirmation__booking-details-box-content">
-          <div class="cd-booking-confirmation__event-location">
+          <div class="cd-booking-confirmation__event-location" v-if="event.city && event.country">
             {{ `${event.address}, ${event.city.nameWithHierarchy}, ${event.country.countryName}` }}
           </div>
         </div>
@@ -59,9 +59,9 @@
 
     <div class="cd-booking-confirmation__line-page-splitter"></div>
 
-    <div class="cd-booking-confirmation__account-confirmation-wrapper">
+    <div class="cd-booking-confirmation__account-confirmation-wrapper" v-if="isNewUser || isNewDojoMember || event.ticketApproval">
 
-      <div class="cd-booking-confirmation__account-confirmation">
+      <div class="cd-booking-confirmation__account-confirmation cd-booking-confirmation__acount-confirmation-created" v-if="isNewUser">
         <div class="fa fa-check-circle-o cd-booking-confirmation__account-confirmation-icon"></div>
         <div>
           {{ $t('Your CoderDojo account has been created') }}
@@ -70,7 +70,7 @@
         </div>
       </div>
 
-      <div class="cd-booking-confirmation__account-confirmation">
+      <div class="cd-booking-confirmation__account-confirmation cd-booking-confirmation__account-confirmation-joined" v-if="isNewDojoMember">
         <div class="fa fa-check-circle-o cd-booking-confirmation__account-confirmation-icon"></div>
         <div>
           <span v-html="$t('You are now subscribed to {dojoName} dojo', {dojoName: `<strong>${dojo.name}</strong>`})"></span>
@@ -112,6 +112,7 @@
   import EventsUtil from '@/events/util';
   import store from '@/store';
   import { mapGetters } from 'vuex';
+  import OrderStore from '@/events/order/order-store';
 
   const HostedBy = TranslationComponentGenerator('Event hosted by {dojoName}', {
     dojoName: `
@@ -141,6 +142,12 @@
     computed: {
       ...mapGetters('order', ['event']),
       ...mapGetters(['loggedInUser', 'dojo']),
+      isNewUser() {
+        return OrderStore.state.isNewUser;
+      },
+      isNewDojoMember() {
+        return OrderStore.state.isNewDojoMember;
+      },
       subtitle() {
         return this.event.ticketApproval ?
           this.$t('You will be notified when the organizer approves your request.') :

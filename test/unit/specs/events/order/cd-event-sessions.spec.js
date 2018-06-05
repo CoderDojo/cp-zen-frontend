@@ -5,6 +5,7 @@ describe('Event sessions component', () => {
   let sandbox;
   let mockService;
   let MockUserService;
+  let MockDojoService;
   let MockUserUtils;
   let OrderStore;
   let ChildTicket;
@@ -24,6 +25,9 @@ describe('Event sessions component', () => {
       userProfileData: sandbox.stub(),
       updateUserProfileData: sandbox.stub(),
     };
+    MockDojoService = {
+      joinDojo: sandbox.stub(),
+    };
     ChildTicket = {
       createChild: sandbox.stub(),
     };
@@ -32,12 +36,15 @@ describe('Event sessions component', () => {
     };
     OrderStore = {
       getters: {},
+      state: {},
+      commit: sandbox.stub(),
     };
     uuidMock = sandbox.stub();
     SessionListWithMocks = SessionList({
       'uuid/v4': uuidMock,
       '../service': mockService,
       '@/users/service': MockUserService,
+      '@/dojos/service': MockDojoService,
       '@/users/util': MockUserUtils,
       '@/events/order/order-store': OrderStore,
       './cd-event-add-child-ticket': ChildTicket,
@@ -324,6 +331,39 @@ describe('Event sessions component', () => {
         expect(vm.createParentTicket).to.have.been.calledOnce;
       });
     });
+    describe('methods.joinDojo()', () => {
+      beforeEach(() => sandbox.restore());
+      it('should call joinDojo with the right userType (parent)', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.profile = {
+          userId: 'user1',
+        };
+        vm.event = {
+          dojoId: 'dojo1',
+        };
+        vm.isO13 = false;
+        vm.joinDojo();
+        expect(MockDojoService.joinDojo).to.have.been.calledOnce;
+        expect(MockDojoService.joinDojo).to.have.been.calledWith('user1', 'dojo1', ['parent-guardian']);
+        expect(OrderStore.commit).to.have.been.calledWith('setIsNewDojoMember', true);
+      });
+      it('should call joinDojo with the right userType (attendee-o13)', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.profile = {
+          userId: 'user1',
+        };
+        vm.event = {
+          dojoId: 'dojo1',
+        };
+        vm.isO13 = true;
+        vm.joinDojo();
+        expect(MockDojoService.joinDojo).to.have.been.calledOnce;
+        expect(MockDojoService.joinDojo).to.have.been.calledWith('user1', 'dojo1', ['attendee-o13']);
+        expect(OrderStore.commit).to.have.been.calledWith('setIsNewDojoMember', true);
+      });
+    });
 
     describe('methods.setupPrerequisites()', () => {
       beforeEach(() => sandbox.restore());
@@ -331,28 +371,51 @@ describe('Event sessions component', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.showPhone = true;
+        vm.dojoRole = {};
         sandbox.stub(vm, 'addPhoneNumber');
         sandbox.stub(vm, 'addNewChildren');
+        sandbox.stub(vm, 'joinDojo');
         // ACT
         await vm.setupPrerequisites();
 
         // ASSERT
         expect(vm.addPhoneNumber).to.have.been.calledOnce;
         expect(vm.addNewChildren).to.have.been.calledOnce;
+        expect(vm.joinDojo).to.not.have.been.called;
       });
-      it('PhoneNumberhould call only addNewChildren if showPhone is false', async () => {
+      it('should call only addNewChildren if showPhone is false and dojoRole is defined', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         sandbox.stub(vm, 'addPhoneNumber');
         sandbox.stub(vm, 'addNewChildren');
+        sandbox.stub(vm, 'joinDojo');
         vm.profile = { phone: '01' };
         vm.isO13 = false;
+        vm.dojoRole = {};
         // ACT
         await vm.setupPrerequisites();
 
         // ASSERT
         expect(vm.addPhoneNumber).to.not.have.been.called;
         expect(vm.addNewChildren).to.have.been.calledOnce;
+        expect(vm.joinDojo).to.not.have.been.called;
+      });
+      it('should call joinDojo if dojoRole is falsy', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        sandbox.stub(vm, 'addPhoneNumber');
+        sandbox.stub(vm, 'addNewChildren');
+        sandbox.stub(vm, 'joinDojo');
+        vm.profile = { phone: '01' };
+        vm.isO13 = false;
+        vm.dojoRole = undefined;
+        // ACT
+        await vm.setupPrerequisites();
+
+        // ASSERT
+        expect(vm.addPhoneNumber).to.not.have.been.called;
+        expect(vm.addNewChildren).to.have.been.calledOnce;
+        expect(vm.joinDojo).to.have.been.calledOnce;
       });
     });
 

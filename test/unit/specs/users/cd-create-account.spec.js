@@ -5,6 +5,7 @@ describe('Booking Create Account Form', () => {
   let sandbox;
   let MockUsersService;
   let MockUserUtils;
+  let OrderStore;
   let BookingCreateAccountComponentWithMocks;
 
   beforeEach(() => {
@@ -17,10 +18,14 @@ describe('Booking Create Account Form', () => {
       getAge: sandbox.stub(),
       profileToJSON: sandbox.stub(),
     };
+    OrderStore = {
+      commit: sandbox.stub(),
+    };
 
     BookingCreateAccountComponentWithMocks = BookingCreateAccountComponent({
       '@/users/service': MockUsersService,
       '@/users/util': MockUserUtils,
+      '@/events/order/order-store': OrderStore,
     });
   });
 
@@ -125,6 +130,7 @@ describe('Booking Create Account Form', () => {
       expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_adult');
       expect(MockUsersService.register).to.have.been.calledWith(vm.user, { firstName: 'bla', dob: '2017/03/01', country: { alpha2: 'FR' } });
       expect(vm.$emit).to.have.been.calledWith('registered');
+      expect(OrderStore.commit).to.have.been.calledWith('setIsNewUser', true);
     });
 
     it('shoud differenciate the ga code for o13 registration', async () => {
