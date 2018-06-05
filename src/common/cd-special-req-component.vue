@@ -1,10 +1,8 @@
 <template>
 <div>
-  <select class="select-box form-control" v-model="specialReqSelect" @blur="onBlur" @focus="onFocus">
-    <option value="" selected data-default>{{ $t('No') }}</option>
-    <option value="yes">{{ $t('Yes') }}</option>
-  </select>
-  <input v-show="hasSpecialReq" class="form-control" v-model="specialReqInput" :placeholder="$t('Please tell us about any special requirements that we might need to know of here (eg. need wheelchair access)')" @blur="onBlur" @focus="onFocus"/>
+  <a v-show="!this.hasSpecialReq" class="cd-special-req-component_add" @click="showSpecialReq"> <span><i class="fa fa-plus-circle" aria-hidden="true"></i></span> <span>{{ $t('Add Special Requirements') }}</span></a>
+  <label v-show="this.hasSpecialReq">{{ $t('Special requirements') }}</label>
+  <textarea v-cols="50" v-show="this.hasSpecialReq" class="form-control" v-model="specialReqInput" :placeholder="$t('Please tell us about any special requirements that we might need to know of here (eg. need wheelchair access)')" @blur="onBlur" @focus="onFocus"/>
 </div> 
 </template>
 
@@ -16,6 +14,7 @@
       return {
         specialReqSelect: '',
         specialReqInput: '',
+        hasSpecialReq: false,
       };
     },
     methods: {
@@ -27,25 +26,19 @@
       onFocus() {
         window.clearTimeout(this.blurTimeout);
       },
+      showSpecialReq() {
+        this.hasSpecialReq = true;
+        return this.hasSpecialReq;
+      },
     },
     computed: {
-      hasSpecialReq() {
-        return this.specialReqSelect === 'yes';
-      },
       specialRequirement: {
         get() {
-          if (this.hasSpecialReq) {
-            return this.specialReqInput;
-          }
-          return this.specialReqSelect;
+          return this.specialReqInput;
         },
         set(specialReqVal) {
-          if (specialReqVal) {
-            this.specialReqSelect = 'yes';
-            this.specialReqInput = specialReqVal;
-          } else {
-            this.specialReqSelect = specialReqVal;
-          }
+          this.hasSpecialReq = true;
+          this.specialReqInput = specialReqVal;
         },
       },
     },
@@ -58,7 +51,5 @@
 </script>
 
 <style scoped lang="less">
-  .select-box {
-      margin-bottom: 8px;
-    }  
+
 </style>
