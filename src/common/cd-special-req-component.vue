@@ -37,8 +37,12 @@
           return this.specialReqInput;
         },
         set(specialReqVal) {
-          this.hasSpecialReq = true;
-          this.specialReqInput = specialReqVal;
+          if (specialReqVal) {
+            this.hasSpecialReq = true;
+            this.specialReqInput = specialReqVal;
+          } else {
+            this.hasSpecialReq = false;
+          }
         },
       },
     },
