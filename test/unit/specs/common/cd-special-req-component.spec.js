@@ -81,7 +81,7 @@ describe('Special Requirement Component', () => {
     it('should return the undefined value if there is no input', async () => {
       // ARRANGE
       const vm = vueUnitHelper(SpecialReqComponent);
-      vm.specialReqSelect = '';
+      vm.specialReqInput = '';
 
       // ACT
 
