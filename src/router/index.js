@@ -9,6 +9,7 @@ import EventSessions from '@/events/order/cd-event-sessions';
 import BookingConfirmation from '@/events/order/cd-booking-confirmation';
 import Login from '@/users/cd-login';
 import orderWrapper from '@/events/order/wrapper';
+import UserService from '@/users/service';
 import loggedInNavGuard from './loggedInNavGuard';
 
 Vue.use(Router);
@@ -81,6 +82,10 @@ export default new Router({
                   name: 'LoginOrRegister',
                   component: LoginOrRegister,
                   props: true,
+                  async beforeEnter(to, from, next) {
+                    const loggedInUser = (await UserService.getCurrentUser()).body;
+                    next(loggedInUser.login ? { name: 'EventSessions', replace: true, params: to.params } : true);
+                  },
                 },
                 {
                   path: 'sessions',

@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import order from './modules/order';
 
+Vue.use(Vuex);
+
 export default new Vuex.Store({
   state: {
     loggedInUser: null,
@@ -29,6 +31,10 @@ export default new Vuex.Store({
   },
   getters: {
     loggedInUser: state => state.loggedInUser.user,
+    // Three states:
+    // * logged in => true
+    // * not logged in => false
+    // * we don't know if they're logged in yet (not loaded yet) => null
     isLoggedIn: state => state.loggedInUser &&
       state.loggedInUser.ok &&
       state.loggedInUser.login !== null &&

@@ -104,7 +104,6 @@
   </div>
 </template>
 <script>
-  // import DojosService from '@/dojos/service';
   import EventService from '@/events/service';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';

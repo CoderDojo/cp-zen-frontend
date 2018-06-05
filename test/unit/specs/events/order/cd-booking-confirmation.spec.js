@@ -5,7 +5,6 @@ describe('Booking Confirmation Component', () => {
   let sandbox;
   let MockEventService;
   let BookingConfirmationComponentWithMocks;
-  let mapGettersMock;
   let vm;
 
   beforeEach(() => {

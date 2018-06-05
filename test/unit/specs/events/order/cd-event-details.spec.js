@@ -4,8 +4,6 @@ import EventDetails from '!!vue-loader?inject!@/events/order/cd-event-details';
 describe('Event Details', () => {
   let vm;
   let sandbox;
-  let MockEventService;
-  let MockDojoService;
   let MockDojoUtils;
   let EventDetailsWithMocks;
 

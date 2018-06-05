@@ -4,7 +4,6 @@ import EventTicket from '!!vue-loader?inject!@/events/order/cd-event-ticket';
 describe('Event ticket creation', () => {
   let sandbox;
   let MockStoreService;
-  let MockUsersUtils;
   let EventTicketWithMocks;
 
   beforeEach(() => {
