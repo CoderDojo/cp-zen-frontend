@@ -6,9 +6,11 @@
       <div class="cd-event-tickets__ticket-selector"> 
         <multiselect v-model="tickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.id}`" v-validate="'required'"></multiselect>
       </div>
-      <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`)">{{ $t('Ticket selection is required') }}</p>  
+      <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`)">{{ $t('Ticket selection is required') }}</p>
+
+      <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement"></special-req-component>
     </div>
-		<div class='cd-event-tickets__ticket-corner'></div>
+    <div class='cd-event-tickets__ticket-corner'></div>
   </div>
 </template>
 
@@ -16,6 +18,7 @@
   import UserUtils from '@/users/util';
   import StoreService from '@/store/store-service';
   import Multiselect from 'vue-multiselect';
+  import SpecialReqComponent from '@/common/cd-special-req-component';
 
   export default {
     name: 'TicketForUser',
@@ -25,10 +28,12 @@
       return {
         tickets: [],
         sessions: [],
+        specialRequirement: '',
       };
     },
     components: {
       Multiselect,
+      SpecialReqComponent,
     },
     computed: {
       isNinja() {
@@ -45,7 +50,7 @@
         }));
       },
       applications() {
-        return this.tickets.map(ticket => ({
+        return this.tickets.map(ticket => (Object.assign({
           name: this.user.name,
           dateOfBirth: this.user.dob,
           eventId: this.event.id,
@@ -55,11 +60,11 @@
           dojoId: this.event.dojoId,
           ticketId: ticket.id,
           userId: this.user.userId,
-        }));
+        }, !this.specialRequirement ? '' : { specialRequirement: this.specialRequirement })));
       },
     },
     watch: {
-      tickets() {
+      applications() {
         this.$emit('input', this.applications);
       },
     },
@@ -169,6 +174,11 @@
         font-style: italic;
         padding-right: 6px;
       }
+    }
+
+    &__special-req-selector {
+      flex-basis: 100%;
+      margin-top: 12px;
     }
   }
 </style>

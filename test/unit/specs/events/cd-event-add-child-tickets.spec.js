@@ -257,6 +257,43 @@ describe('Add Child Ticket', () => {
           userId: null,
         }]);
       });
+
+      it('should return full application WITH a specialRequirement when form is filled out', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(ChildTicketWithMocks);
+        vm.specialRequirement = 'Need wheelchair access';
+        vm.name = 'Jane Doe';
+        vm.dob = new Date(1980, 10, 25, 0, 0, 0, 0);
+        vm.eventId = 'eventId';
+        vm.userId = null;
+        vm.tickets = [{
+          approvedApplications: 0,
+          deleted: 0,
+          id: 'ticketId2',
+          invites: null,
+          name: 'Ticket2',
+          quantity: 1,
+          sessionId: 'sessionId',
+          totalApplications: 0,
+          type: 'ninja' }];
+        vm.event = { dojoId: 'dojoId' };
+
+        // ACT
+
+        // ASSERT
+        expect(vm.applications).to.deep.equal([{
+          dateOfBirth: new Date(1980, 10, 25, 0, 0, 0, 0),
+          dojoId: 'dojoId',
+          eventId: 'eventId',
+          name: 'Jane Doe',
+          sessionId: 'sessionId',
+          specialRequirement: 'Need wheelchair access',
+          ticketId: 'ticketId2',
+          ticketName: 'Ticket2',
+          ticketType: 'ninja',
+          userId: null,
+        }]);
+      });
     });
 
     describe('computed.child', () => {
