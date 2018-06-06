@@ -107,7 +107,9 @@
         this.children.push({ value: {}, id: uuid() });
       },
       deleteChildComponent(index) {
+        const id = this.children[index].id;
         this.children.splice(index, 1);
+        OrderStore.commit('removeApplications', id);
       },
       async addPhoneNumber() {
         this.profile.phone = this.phone;
@@ -200,6 +202,7 @@
       },
     },
     async created() {
+      OrderStore.commit('reset');
       // TODO : parallelize
       await this.setEvent();
       this.loadSessions();

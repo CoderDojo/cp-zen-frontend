@@ -20,6 +20,11 @@ const store = new Vuex.Store({
     removeApplications(state, id) {
       Vue.delete(state.applications, id);
     },
+    reset(state) {
+      state.applications = {}; // eslint-disable-line no-param-reassign
+      state.isNewUser = false; // eslint-disable-line no-param-reassign
+      state.isNewDojoMember = false; // eslint-disable-line no-param-reassign
+    },
   },
   getters: {
     applications: (state) => {
