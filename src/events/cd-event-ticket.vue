@@ -1,14 +1,19 @@
 <template>
-  <div class="cd-event-tickets">
-    <div class="cd-event-tickets__head"></div>
-    <div class="cd-event-tickets__ticket">
-      <span class="cd-event-tickets__name"><span class="cd-event-tickets__name-for">Name:</span>{{ user.firstName }} {{ user.lastName }}</span>
-      <div class="cd-event-tickets__ticket-selector"> 
-        <multiselect v-model="tickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.id}`" v-validate="'required'"></multiselect>
+  <div class="cd-event-tickets" :class="{ 'before-disabled': showTicket }">
+    <div class="cd-event-tickets__head" :class="{ 'head-disabled': showTicket }"></div>
+    <div class="cd-event-tickets__ticket" >
+      <div class="cd-event-tickets__ticket-header">
+        <span class="cd-event-tickets__name"><span class="cd-event-tickets__name-for">Name:</span>{{ user.firstName }} {{ user.lastName }}</span>
+        <span>
+          <input type="checkbox" v-model="showTicket" @click="changeTicket">
+          <span for="checkbox">Not Attending</span>
+        </span>
       </div>
-      <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`)">{{ $t('Ticket selection is required') }}</p>
-
-      <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement"></special-req-component>
+        <div class="cd-event-tickets__ticket-selector" v-show="!showTicket">
+          <multiselect v-model="tickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.id}`" v-validate="'required'"></multiselect>
+        </div>
+        <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`)&&!showTicket">{{ $t('Ticket selection is required') }}</p>
+        <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement" v-show="!showTicket"></special-req-component>
     </div>
     <div class='cd-event-tickets__ticket-corner'></div>
   </div>
@@ -29,6 +34,7 @@
         tickets: [],
         sessions: [],
         specialRequirement: '',
+        showTicket: false,
       };
     },
     components: {
@@ -40,16 +46,14 @@
         return UserUtils.isUnderAge(this.user.dob) || UserUtils.isYouthOverThirteen(this.user.dob);
       },
       ticketsOptions() {
-        return (this.sessions.map(session => ({
+        return this.sessions.map(session => ({
           description: session.description,
           eventId: session.eventId,
           id: session.id,
           name: session.name,
           status: session.status,
           tickets: session.tickets.filter(ticket => this.filterByTicketType(ticket.type)),
-        }))).concat({
-          name: 'No Ticket',
-          tickets: [{ name: 'Not Attending', type: 'noTicket' }] });
+        }));
       },
       applications() {
         return this.tickets.map(ticket => (Object.assign({
@@ -92,6 +96,14 @@
 </script>
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
+  .before-disabled {
+    &:before {
+      background-image: radial-gradient(circle at .2% 25%, @cd-white .4em, transparent .5em), radial-gradient(circle at .2% 25%, #a9a9a9 .6em,transparent .7em) !important;
+    }
+  }
+  .head-disabled {
+    background-color: #d3d3d3 !important;
+  }
   .cd-event-tickets {
     display: inline-flex;
     flex-basis: 100%;
@@ -167,9 +179,15 @@
         bottom: 0;
       }
     }
-
+    &__ticket-header {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
     &__name {
-      flex-basis: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding-right: 16px;
       font-weight: bold;
       &-for {
         font-weight: normal;
