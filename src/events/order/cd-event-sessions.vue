@@ -47,10 +47,10 @@
   import UserService from '@/users/service';
   import DojoService from '@/dojos/service';
   import UserUtils from '@/users/util';
-  import OrderStore from '@/events/order-store';
+  import OrderStore from '@/events/order/order-store';
   import service from '../service';
   import Ticket from './cd-event-ticket';
-  import EventMixin from './cd-event-tile';
+  import EventMixin from '../cd-event-tile';
   import ChildTicket from './cd-event-add-child-ticket';
 
   export default {

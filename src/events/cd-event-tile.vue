@@ -1,7 +1,7 @@
 <script>
   import moment from 'moment';
   import { sortBy } from 'lodash';
-  import TicketMixin from '@/events/cd-event-ticket-mixin';
+  import TicketMixin from '@/events/order/cd-event-ticket-mixin';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import cdUrlFormatter from '@/common/filters/cd-url-formatter';

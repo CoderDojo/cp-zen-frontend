@@ -36,10 +36,10 @@ describe('Event sessions component', () => {
     uuidMock = sandbox.stub();
     SessionListWithMocks = SessionList({
       'uuid/v4': uuidMock,
-      './service': mockService,
+      '../service': mockService,
       '@/users/service': MockUserService,
       '@/users/util': MockUserUtils,
-      '@/events/order-store': OrderStore,
+      '@/events/order/order-store': OrderStore,
       './cd-event-add-child-ticket': ChildTicket,
     });
   });

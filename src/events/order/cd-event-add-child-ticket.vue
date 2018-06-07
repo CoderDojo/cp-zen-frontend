@@ -46,8 +46,8 @@
   import GenderComponent from '@/common/cd-gender-component';
   import SpecialReqComponent from '@/common/cd-special-req-component';
   import addPossession from '@/common/filters/cd-add-possession';
-  import TicketMixin from '@/events/cd-event-ticket-mixin';
-  import OrderStore from '@/events/order-store';
+  import TicketMixin from '@/events/order/cd-event-ticket-mixin';
+  import OrderStore from '@/events/order/order-store';
 
   export default {
     name: 'ChildTicket',
@@ -126,7 +126,7 @@
         return `${this.firstName} ${this.surname}`;
       },
       applications() {
-        return this.selectedTickets.map(ticket => Object.assign({
+        return this.selectedTickets.map(ticket => (Object.assign({
           name: this.name,
           dateOfBirth: this.dob,
           eventId: this.eventId,

@@ -3,13 +3,11 @@ import EventTicket from '!!vue-loader?inject!@/events/order/cd-event-ticket';
 
 describe('Event ticket creation', () => {
   let sandbox;
-  let MockStoreService;
   let EventTicketWithMocks;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     EventTicketWithMocks = EventTicket({
-      '@/store/store-service': MockStoreService,
     });
   });
 
@@ -156,7 +154,7 @@ describe('Event ticket creation', () => {
         userId: 'userId',
         dob: '2014-08-08',
       };
-      vm.tickets = [{
+      vm.selectedTickets = [{
         name: 'ticketName',
         type: 'ticketType',
         sessionId: 'sessionId',

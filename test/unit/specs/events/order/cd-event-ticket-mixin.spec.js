@@ -1,5 +1,5 @@
 import vueUnitHelper from 'vue-unit-helper';
-import EventListItem from '@/events/cd-event-ticket-mixin';
+import EventListItem from '@/events/order/cd-event-ticket-mixin';
 
 describe('Event ticket mixin component', () => {
   let sandbox;

@@ -37,7 +37,7 @@ describe('Add Child Ticket', () => {
       'vue-multiselect': MockVueMultiselect,
       '@/users/util': MockUserUtils,
       '@/users/service': MockUsersService,
-      '@/events/order-store': OrderStore,
+      '@/events/order/order-store': OrderStore,
     });
   });
 
@@ -331,7 +331,7 @@ describe('Add Child Ticket', () => {
         vm.dob = new Date(1980, 10, 25, 0, 0, 0, 0);
         vm.eventId = 'eventId';
         vm.userId = null;
-        vm.tickets = [{
+        vm.selectedTickets = [{
           approvedApplications: 0,
           deleted: 0,
           id: 'ticketId2',

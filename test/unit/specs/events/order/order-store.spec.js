@@ -1,4 +1,4 @@
-import OrderStore from '@/events/order-store';
+import OrderStore from '@/events/order/order-store';
 
 describe('Order Store', () => {
   let sandbox;

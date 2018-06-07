@@ -24,7 +24,7 @@
 
 <script>
   import UserUtils from '@/users/util';
-  import OrderStore from '@/events/order-store';
+  import OrderStore from '@/events/order/order-store';
   import Multiselect from 'vue-multiselect';
   import SpecialReqComponent from '@/common/cd-special-req-component';
   import Ticket from './cd-event-ticket-mixin';
