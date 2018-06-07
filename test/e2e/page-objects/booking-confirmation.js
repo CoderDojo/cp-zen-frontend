@@ -63,7 +63,9 @@ const BookingConfirmation = Object.create(BasePage, {
   },
   bookingName: {
     value(index) {
-      return $$('.cd-booking-confirmation__booking-name')[index];
+      const selector = '.cd-booking-confirmation__booking-name';
+      $(selector).waitForVisible();
+      return $$(selector)[index];
     },
   },
   bookingSessionTicket: {

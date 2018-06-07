@@ -52,6 +52,7 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import cdHTMLFilter from '@/common/filters/cd-html-filter';
@@ -60,19 +61,13 @@
   import InfoColumnSection from '@/common/cd-info-column-section';
   import ImgFallback from '@/common/directives/cd-img-fallback';
   import EventsUtil from '@/events/util';
-  import DojoService from '@/dojos/service';
   import DojoUtils from '@/dojos/util';
-  import service from './service';
+  import store from '@/store';
 
   export default {
     name: 'EventDetails',
     props: ['eventId'],
-    data() {
-      return {
-        eventDetails: null,
-        dojo: null,
-      };
-    },
+    store,
     filters: {
       cdDateFormatter,
       cdTimeFormatter,
@@ -86,18 +81,16 @@
       cdExpandable,
     },
     methods: {
-      loadEvent() {
-        return service.loadEvent(this.eventId);
-      },
-      loadDojo() {
-        return DojoService.getDojoById(this.eventDetails.dojoId);
-      },
       buildRecurringFrequencyInfo: EventsUtil.buildRecurringFrequencyInfo,
       getNextStartTime: EventsUtil.getNextStartTime,
       isRecurring: EventsUtil.isRecurring,
       getDojoUrl: DojoUtils.getDojoUrl,
     },
     computed: {
+      ...mapGetters('order', {
+        eventDetails: 'event',
+      }),
+      ...mapGetters(['dojo']),
       fullAddress() {
         return `${this.eventDetails.address}, ${this.eventDetails.city.nameWithHierarchy}, ${this.eventDetails.country.countryName}`;
       },
@@ -110,10 +103,6 @@
       dojoFallbackImage: {
         get: DojoUtils.fallbackImage,
       },
-    },
-    async created() {
-      this.eventDetails = (await this.loadEvent()).body;
-      this.dojo = (await this.loadDojo()).body;
     },
   };
 </script>

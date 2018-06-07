@@ -202,24 +202,24 @@ module.exports = [
     recurringType: 'biweekly',
     dates: [
       {
-        startTime: '2018-06-03T10:00:00.000Z',
-        endTime: '2018-06-03T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 5, 3, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 5, 3, 12, 0, 0, 0]),
       },
       {
-        startTime: '2018-06-17T10:00:00.000Z',
-        endTime: '2018-06-17T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 5, 17, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 5, 17, 12, 0, 0, 0]),
       },
       {
-        startTime: '2018-07-01T10:00:00.000Z',
-        endTime: '2018-07-01T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 6, 1, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 6, 1, 12, 0, 0, 0]),
       },
       {
-        startTime: '2018-07-15T10:00:00.000Z',
-        endTime: '2018-07-15T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 6, 15, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 6, 15, 12, 0, 0, 0]),
       },
       {
-        startTime: '2018-07-29T10:00:00.000Z',
-        endTime: '2018-07-29T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 6, 29, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 6, 29, 12, 0, 0, 0]),
       }
     ],
     ticketApproval: false,

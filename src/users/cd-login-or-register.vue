@@ -1,5 +1,5 @@
 <template>
-  <div class="cd-login-or-register">
+  <div v-if="isLoggedIn === false" class="cd-login-or-register">
     <createAccount ref="bookingCreateAccountRef" :context="context" @registered="next()"></createAccount>
     <div class="cd-login-or-register__login">
       <redirectToLogin :url="redirectionUrl"></redirectToLogin>
@@ -7,60 +7,48 @@
   </div>
 </template>
 <script>
-  import EventService from '@/events/service';
-  import UserService from '@/users/service';
-  import DojoService from '@/dojos/service';
+  import { mapGetters } from 'vuex';
   import CreateAccount from '@/users/cd-create-account';
   import RedirectToLogin from '@/users/cd-redirect-to-login';
+  import store from '@/store';
 
   export default {
     name: 'LoginOrRegister',
+    store,
     props: ['eventId'],
     components: {
       CreateAccount,
       RedirectToLogin,
     },
-    data() {
-      return {
-        currentUser: null,
-        eventDetails: {},
-        dojoDetails: {},
-      };
-    },
     methods: {
-      async loadEvent() {
-        this.eventDetails = (await EventService.loadEvent(this.eventId)).body;
-      },
-      async loadDojo() {
-        this.dojoDetails = (await DojoService.getDojoById(this.eventDetails.dojoId)).body;
-      },
-      async loadCurrentUser() {
-        this.currentUser = (await UserService.getCurrentUser()).body;
+      checkIsLoggedIn() {
+        if (this.isLoggedIn) {
+          this.next();
+        }
       },
       next() {
         this.$router.push({ name: 'EventSessions', params: { eventId: this.eventId } });
       },
     },
     computed: {
+      ...mapGetters('order', ['event']),
+      ...mapGetters(['isLoggedIn', 'dojo']),
       redirectionUrl() {
         return this.$route.path;
       },
       context() {
         return {
-          country: this.dojoDetails.country,
+          country: this.dojo.country,
         };
       },
-    }, // eslint-disable-next-line consistent-return
-    async created() {
-      await this.loadCurrentUser();
-      if (this.currentUser &&
-        this.currentUser.ok &&
-        this.currentUser.login &&
-        this.currentUser.login.id) {
-        return this.next();
-      }
-      await this.loadEvent();
-      this.loadDojo();
+    },
+    watch: {
+      isLoggedIn() {
+        this.checkIsLoggedIn();
+      },
+    },
+    created() {
+      this.checkIsLoggedIn();
     },
   };
 </script>

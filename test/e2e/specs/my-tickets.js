@@ -21,7 +21,7 @@ describe('My tickets page', () => {
       expect(TicketPage.eventTime(0).getText()).to.equal('4:30pm - 6pm');
       // TODO : event2 not booked
       expect(TicketPage.eventName(1).getText()).to.equal('My Second Amazing Event');
-      expect(TicketPage.eventDate(1).getText()).to.equal('June 3, 2018');
+      expect(TicketPage.eventDate(1).getText()).to.equal(`June 3, ${currentYear + 1}`);
       expect(TicketPage.eventTime(1).getText()).to.equal('10am - 12pm');
     });
 

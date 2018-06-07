@@ -44,6 +44,7 @@ describe('Book event page', () => {
     describe('when single', () => {
       it('should let me login and redirect', () => {
         startBooking();
+        EventAccountCreation.redirectToLogin.waitForVisible();
         EventAccountCreation.redirectToLogin.click();
         LoginPage.email.waitForVisible();
         LoginPage.email.setValue('child1o13@example.com');
@@ -199,7 +200,7 @@ describe('Book event page', () => {
           expect(BookingConfirmation.bookingSessionTicket(0).getText()).to.equal('Laptop required / Arduino');
           expect(BookingConfirmation.bookingName(1).getText()).to.equal('parent 1one');
           expect(BookingConfirmation.bookingSessionTicket(1).getText()).to.equal('Parent / Arduino');
-          
+
           // TODO when we can identify 1st time user
           /*expect(BookingConfirmation.accountCreationConfirmation.getText()).to.equal('CoderDojo Account has been created\nYou can log in and find events hosted by this dojo in My Dojos');
           expect(BookingConfirmation.accountCreationConfirmation.$('a').getAttribute('href')).to.match(/\/dashboard\/my-dojos$/);
@@ -271,7 +272,7 @@ describe('Book event page', () => {
         });
         it('should have the children creation closed by default', () => {
           expect(Booking.childrenTickets.length).to.equal(0);
-        }); 
+        });
         afterEach(() => {
           browser.deleteCookie('seneca-login');
           browser.deleteCookie('loggedIn');
