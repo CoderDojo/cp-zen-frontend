@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isSingle || children.length > 0" class="cd-event-sessions">
+  <div v-if="isSingle || (children.length > 0 || existingChildren.length > 0)" class="cd-event-sessions">
     <h1 class="cd-event-sessions__header">
       <span v-if="isSingle">{{ $t('Select Your Tickets') }}</span>
       <span v-else>{{ $t('Select Youth Tickets') }}</span>

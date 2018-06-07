@@ -50,7 +50,7 @@ describe('Event sessions component', () => {
   });
 
   describe('computed', () => {
-    describe.skip('computed.showPhone', () => {
+    describe('computed.showPhone', () => {
       it('should return false if the user has a phone in their profile', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
