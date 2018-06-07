@@ -1,19 +1,19 @@
 <template>
-  <div class="cd-event-tickets" :class="{ 'before-disabled': showTicket }">
-    <div class="cd-event-tickets__head" :class="{ 'head-disabled': showTicket }"></div>
+  <div class="cd-event-tickets" :class="{ 'before-disabled': notAttending }">
+    <div class="cd-event-tickets__head" :class="{ 'head-disabled': notAttending }"></div>
     <div class="cd-event-tickets__ticket" >
       <div class="cd-event-tickets__ticket-header">
         <span class="cd-event-tickets__name"><span class="cd-event-tickets__name-for">Name:</span>{{ user.firstName }} {{ user.lastName }}</span>
         <span>
-          <input type="checkbox" v-model="showTicket" @click="changeTicket">
+          <input type="checkbox" v-model="notAttending">
           <span for="checkbox">Not Attending</span>
         </span>
       </div>
-        <div class="cd-event-tickets__ticket-selector" v-show="!showTicket">
+        <div class="cd-event-tickets__ticket-selector" v-show="!notAttending">
           <multiselect v-model="tickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.id}`" v-validate="'required'"></multiselect>
         </div>
-        <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`)&&!showTicket">{{ $t('Ticket selection is required') }}</p>
-        <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement" v-show="!showTicket"></special-req-component>
+        <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`)&&!notAttending">{{ $t('Ticket selection is required') }}</p>
+        <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement" v-show="!notAttending"></special-req-component>
     </div>
     <div class='cd-event-tickets__ticket-corner'></div>
   </div>
@@ -34,7 +34,7 @@
         tickets: [],
         sessions: [],
         specialRequirement: '',
-        showTicket: false,
+        notAttending: false,
       };
     },
     components: {
