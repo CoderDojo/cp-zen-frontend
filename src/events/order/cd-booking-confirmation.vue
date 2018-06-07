@@ -6,7 +6,7 @@
         <div class="cd-booking-confirmation__banner-title">{{ title }}</div>
         <div class="cd-booking-confirmation__banner-subtitle" v-html="subtitle"></div>
       </div>
-      <img class="cd-booking-confirmation__banner-illustration" src="../assets/characters/ninjas/ninja-female-2-ok-hand.svg"></img>
+      <img class="cd-booking-confirmation__banner-illustration" src="../../assets/characters/ninjas/ninja-female-2-ok-hand.svg" />
     </div>
 
     <div class="cd-booking-confirmation__event-name">{{ event.name }}</div>
@@ -48,7 +48,7 @@
           <span class="cd-booking-confirmation__booking-details-box-title">{{ $t('Attendees') }}</span>
         </div>
         <div class="cd-booking-confirmation__booking-details-box-content">
-          <div v-for="application in order.applications">
+          <div v-for="application in order.applications" :key="application.id">
             <div class="cd-booking-confirmation__booking-name">{{ application.name }}</div>
             <div class="cd-booking-confirmation__booking-session-ticket">{{ application.ticketName }} / {{ getSessionName(application.sessionId) }}</div>
           </div>
@@ -104,14 +104,14 @@
   </div>
 </template>
 <script>
-  import DojosService from '@/dojos/service';
   import EventService from '@/events/service';
-  import UserService from '@/users/service';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import TranslationComponentGenerator from '@/common/cd-translation-component-generator';
   import DojosUtil from '@/dojos/util';
   import EventsUtil from '@/events/util';
+  import store from '@/store';
+  import { mapGetters } from 'vuex';
 
   const HostedBy = TranslationComponentGenerator('Event hosted by {dojoName}', {
     dojoName: `
@@ -124,16 +124,14 @@
   export default {
     name: 'bookingConfirmation',
     props: ['eventId'],
+    store,
     components: {
       HostedBy,
     },
     data() {
       return {
-        user: {},
         order: {},
-        event: {},
         sessions: [],
-        dojo: {},
       };
     },
     filters: {
@@ -141,6 +139,8 @@
       cdTimeFormatter,
     },
     computed: {
+      ...mapGetters('order', ['event']),
+      ...mapGetters(['loggedInUser', 'dojo']),
       subtitle() {
         return this.event.ticketApproval ?
           this.$t('You will be notified when the organizer approves your request.') :
@@ -155,12 +155,9 @@
     methods: {
       getDojoUrl: DojosUtil.getDojoUrl,
       async loadData() {
-        this.user = (await UserService.getCurrentUser()).body.user;
         // TODO : define v3 event loading to save an HTTP call
-        this.event = (await EventService.loadEvent(this.eventId)).body;
         this.sessions = (await EventService.loadSessions(this.eventId)).body;
-        this.order = (await EventService.v3.getOrder(this.user.id, { params: { 'query[eventId]': this.event.id } })).body.results[0];
-        this.dojo = (await DojosService.getDojoById(this.event.dojoId)).body;
+        this.order = (await EventService.v3.getOrder(this.loggedInUser.id, { params: { 'query[eventId]': this.event.id } })).body.results[0];
       },
       getSessionName(sessionId) {
         return (this.sessions.find(s => s.id === sessionId)).name;
@@ -173,7 +170,7 @@
   };
 </script>
 <style scoped lang="less">
-  @import "../common/variables";
+  @import "../../common/variables";
 
   .cd-booking-confirmation {
     margin: 0 -16px;

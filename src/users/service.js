@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import store from '@/store';
 
 const UserService = {
   async login(email, password) {
@@ -7,6 +8,7 @@ const UserService = {
       password,
     });
     window.cdMenu.fns.loadProfileMenu();
+    await store.dispatch('getLoggedInUser');
     return loginResp;
   },
 

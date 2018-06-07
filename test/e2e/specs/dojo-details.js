@@ -76,11 +76,13 @@ describe('Dojo details page', () => {
     expect(secondEventName).to.equal('My Second Amazing Event');
     expect(DojoDetailsPage.eventSessions[1].getText()).to.equal('Sessions: Raspberry Pi, Unity');
     expect(DojoDetailsPage.eventDateSeries[0].getText()).to.equal('Next in series:');
-    expect(DojoDetailsPage.eventDate(1).getText()).to.equal('June 3, 2018');
+    expect(DojoDetailsPage.eventDate(1).getText()).to.equal(`June 3, ${currentYear + 1}`);
     expect(DojoDetailsPage.eventTimes(1).getText()).to.equal('10am - 12pm');
     expect(DojoDetailsPage.eventRecurringInfoIcon[0].isVisible()).to.equal(true);
     expect(DojoDetailsPage.eventRecurringInfoHeader[0].getText()).to.equal('This is a recurring event');
-    expect(DojoDetailsPage.eventRecurringInfoText[0].getText()).to.equal('Every two weeks on Sunday at 10am - 12pm, from June 3, 2018 to July 29, 2018');
+
+    const eventDay = new Intl.DateTimeFormat('en-GB', { weekday: 'long' }).format(new Date(currentYear + 1, 5, 3, 12, 0, 0));
+    expect(DojoDetailsPage.eventRecurringInfoText[0].getText()).to.equal(`Every two weeks on ${eventDay} at 10am - 12pm, from June 3, ${currentYear + 1} to July 29, ${currentYear + 1}`);
   });
 
   it('should show message if no events are scheduled', () => {
@@ -211,20 +213,20 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.eventNames.length).to.equal(1);
     browser.deleteCookie();
   });
-  
+
   it('should show past events when there is no upcoming events and not joined', () => {
     FindDojoPage.openDojoWithQuery('dublin&p=2', 2);
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.noEventsPastContent[0].getText()).to.equal('This Dojo had events recently. Join the Dojo to get notified when tickets for the next event are available.');
   });
-  
+
   it('should show past events when there is no upcoming events and joined', () => {
     LoginPage.open();
     LoginPage.email.waitForVisible();
     LoginPage.email.setValue('parent2@example.com');
     LoginPage.password.setValue('testparent2');
     LoginPage.login.click();
- 
+
     FindDojoPage.openDojoWithQuery('dublin&p=2', 2);
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.noEventsPastContent[0].getText()).to.equal('This Dojo had events recently. You\'ll be notified when tickets for the next event are available.');

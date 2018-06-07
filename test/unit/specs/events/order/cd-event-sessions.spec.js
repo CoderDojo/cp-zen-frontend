@@ -1,5 +1,5 @@
 import vueUnitHelper from 'vue-unit-helper';
-import SessionList from '!!vue-loader?inject!@/events/cd-event-sessions';
+import SessionList from '!!vue-loader?inject!@/events/order/cd-event-sessions';
 
 describe('Event sessions component', () => {
   let sandbox;
@@ -37,7 +37,7 @@ describe('Event sessions component', () => {
     uuidMock = sandbox.stub();
     SessionListWithMocks = SessionList({
       'uuid/v4': uuidMock,
-      './service': mockService,
+      '../service': mockService,
       '@/store/store-service': MockStoreService,
       '@/users/service': MockUserService,
       '@/users/util': MockUserUtils,
@@ -50,7 +50,7 @@ describe('Event sessions component', () => {
   });
 
   describe('computed', () => {
-    describe.skip('computed.showPhone', () => {
+    describe('computed.showPhone', () => {
       it('should return false if the user has a phone in their profile', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);

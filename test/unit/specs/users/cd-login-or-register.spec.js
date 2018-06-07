@@ -1,67 +1,47 @@
 import vueUnitHelper from 'vue-unit-helper';
-import LoginOrRegisterComponent from '!!vue-loader?inject!@/users/cd-login-or-register';
+import LoginOrRegisterComponent from '@/users/cd-login-or-register';
 
 describe('Login or register', () => {
   let sandbox;
-  let MockDojoService;
-  let MockEventsService;
-  let LoginOrRegisterComponentWithMocks;
+  let vm;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    MockDojoService = {
-      getDojoById: sandbox.stub(),
-    };
-    MockEventsService = {
-      loadEvent: sandbox.stub(),
-    };
-
-    LoginOrRegisterComponentWithMocks = LoginOrRegisterComponent({
-      '@/dojos/service': MockDojoService,
-      '@/events/service': MockEventsService,
-    });
+    vm = vueUnitHelper(LoginOrRegisterComponent);
   });
 
   afterEach(() => {
     sandbox.restore();
   });
 
-  describe('loadEvent()', () => {
-    it('should get the event details', async () => {
+  describe('checkIsLoggedIn', () => {
+    it('should call next if user is logged in', () => {
       // ARRANGE
-      const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
-      vm.eventId = 1;
-      MockEventsService.loadEvent.resolves({ body: { bananas: 1 } });
+      sandbox.stub(vm, 'next');
+      vm.isLoggedIn = true;
 
       // ACT
-      await vm.loadEvent();
+      vm.checkIsLoggedIn();
 
       // ASSERT
-      expect(MockEventsService.loadEvent).to.have.been.calledWith(1);
-      expect(vm.eventDetails).to.deep.equal({ bananas: 1 });
+      expect(vm.next).to.have.been.calledOnce;
     });
-  });
 
-  describe('loadDojo()', () => {
-    it('should get the dojo details', async () => {
+    it('should not call next if user is not logged in', () => {
       // ARRANGE
-      const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
-      vm.eventDetails = {
-        dojoId: 1,
-      };
-      MockDojoService.getDojoById.resolves({ body: { bananas: 1 } });
+      sandbox.stub(vm, 'next');
+      vm.isLoggedIn = false;
+
       // ACT
-      await vm.loadDojo();
+      vm.checkIsLoggedIn();
 
       // ASSERT
-      expect(MockDojoService.getDojoById).to.have.been.calledWith(1);
-      expect(vm.dojoDetails).to.deep.equal({ bananas: 1 });
+      expect(vm.next).to.not.have.been.called;
     });
   });
 
   describe('next', () => {
     it('should go to the next step', () => {
-      const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
       vm.$router = {
         push: sandbox.stub(),
       };
@@ -72,9 +52,9 @@ describe('Login or register', () => {
       expect(vm.$router.push).to.have.been.calledWith({ name: 'EventSessions', params: { eventId: vm.eventId } });
     });
   });
+
   describe('computed', () => {
     it('redirectionUrl', () => {
-      const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
       vm.$route = {
         path: 'somewhere',
       };
@@ -82,8 +62,7 @@ describe('Login or register', () => {
     });
 
     it('context', () => {
-      const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
-      vm.dojoDetails = {
+      vm.dojo = {
         country: {
           alpha2: 'FR',
         },
@@ -91,42 +70,17 @@ describe('Login or register', () => {
       expect(vm.context).to.deep.equal({ country: { alpha2: 'FR' } });
     });
   });
+
   describe('created', () => {
-    it('should load the event and the dojo after the event if the user isnt fully connected', async () => {
-      const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
-      vm.loadEvent = sandbox.stub();
-      vm.loadDojo = sandbox.stub();
-      vm.loadCurrentUser = sandbox.stub();
-      vm.currentUser = { ok: true };
-      await vm.$lifecycleMethods.created();
-      expect(vm.loadCurrentUser).to.have.been.calledOnce;
-      expect(vm.loadEvent).to.have.been.calledOnce;
-      expect(vm.loadDojo).to.have.been.calledOnce;
-    });
-    it('should load the event and the dojo after the event if the user login is wrong', async () => {
-      const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
-      vm.loadEvent = sandbox.stub();
-      vm.loadDojo = sandbox.stub();
-      vm.loadCurrentUser = sandbox.stub();
-      vm.currentUser = { ok: false };
-      await vm.$lifecycleMethods.created();
-      expect(vm.loadCurrentUser).to.have.been.calledOnce;
-      expect(vm.loadEvent).to.have.been.calledOnce;
-      expect(vm.loadDojo).to.have.been.calledOnce;
-    });
-    it('should redirect to the next page if the user is logged-in', async () => {
-      const vm = vueUnitHelper(LoginOrRegisterComponentWithMocks);
-      vm.loadEvent = sandbox.stub();
-      vm.loadDojo = sandbox.stub();
-      vm.loadCurrentUser = sandbox.stub();
-      vm.currentUser = { ok: true, login: { id: '1' } };
-      vm.$router = {
-        push: sandbox.stub(),
-      };
-      await vm.$lifecycleMethods.created();
-      expect(vm.loadCurrentUser).to.have.been.calledOnce;
-      expect(vm.loadEvent).to.not.have.been.called;
-      expect(vm.loadDojo).to.not.have.been.called;
+    it('should call checkIsLoggedIn', () => {
+      // ARRANGE
+      sandbox.stub(vm, 'checkIsLoggedIn');
+
+      // ACT
+      vm.$lifecycleMethods.created();
+
+      // ASSERT
+      expect(vm.checkIsLoggedIn).to.have.been.calledOnce;
     });
   });
 });

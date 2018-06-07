@@ -1,10 +1,9 @@
 import vueUnitHelper from 'vue-unit-helper';
-import EventTicket from '!!vue-loader?inject!@/events/cd-event-ticket';
+import EventTicket from '!!vue-loader?inject!@/events/order/cd-event-ticket';
 
 describe('Event ticket creation', () => {
   let sandbox;
   let MockStoreService;
-  let MockUsersUtils;
   let EventTicketWithMocks;
 
   beforeEach(() => {
@@ -15,7 +14,6 @@ describe('Event ticket creation', () => {
     };
     EventTicketWithMocks = EventTicket({
       '@/store/store-service': MockStoreService,
-      '@/users/util': MockUsersUtils,
     });
   });
 
@@ -27,15 +25,17 @@ describe('Event ticket creation', () => {
     it('should return true', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
       vm.user = {
-        dob: new Date().setFullYear((new Date()).getFullYear() - 2),
+        dob: new Date(),
       };
+      vm.user.dob.setFullYear((new Date()).getFullYear() - 2);
       expect(vm.isNinja).to.equal(true);
     });
     it('should return true', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
       vm.user = {
-        dob: new Date().setFullYear((new Date()).getFullYear() - 25),
+        dob: new Date(),
       };
+      vm.user.dob.setFullYear((new Date()).getFullYear() - 25);
       expect(vm.isNinja).to.equal(false);
     });
   });
