@@ -23,9 +23,6 @@
       cdFooter,
       cdCookieNotice,
     },
-    created() {
-      this.$store.dispatch('getLoggedInUser');
-    },
   };
 </script>
 

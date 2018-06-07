@@ -10,11 +10,12 @@ import BookingConfirmation from '@/events/order/cd-booking-confirmation';
 import Login from '@/users/cd-login';
 import orderWrapper from '@/events/order/wrapper';
 import UserService from '@/users/service';
+import store from '@/store';
 import loggedInNavGuard from './loggedInNavGuard';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   scrollBehavior: (to, from, savedPosition) => {
     if (savedPosition) {
@@ -29,87 +30,99 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'FindDojo',
-      component: FindDojo,
-    },
-    {
-      path: '/dojos/:country([A-Za-z]{2})/:path+',
-      name: 'DojoDetails',
-      component: DojoDetails,
-      props: true,
-    },
-    {
-      path: '/dojos/:id',
-      name: 'DojoDetailsId',
-      component: DojoDetails,
-      props: true,
-    },
-    {
-      path: '/dashboard/dojos/events/user-events',
-      redirect: '/dashboard/tickets',
-      name: 'NgMyTickets',
-      beforeEnter: loggedInNavGuard,
-    },
-    {
-      path: '/dashboard/tickets',
-      name: 'MyTickets',
-      component: UserTickets,
-      beforeEnter: loggedInNavGuard,
-    },
-    {
-      path: '/login',
-      name: 'Login',
-      component: Login,
-    },
-    {
-      path: '/v2',
       component: {
         template: '<router-view></router-view>',
       },
+      async beforeEnter(to, from, next) {
+        await store.dispatch('getLoggedInUser');
+        next();
+      },
       children: [
         {
-          path: 'events/:eventId',
-          component: orderWrapper,
+          path: '',
+          name: 'FindDojo',
+          component: FindDojo,
+        },
+        {
+          path: '/dojos/:country([A-Za-z]{2})/:path+',
+          name: 'DojoDetails',
+          component: DojoDetails,
           props: true,
+        },
+        {
+          path: '/dojos/:id',
+          name: 'DojoDetailsId',
+          component: DojoDetails,
+          props: true,
+        },
+        {
+          path: '/dashboard/dojos/events/user-events',
+          redirect: '/dashboard/tickets',
+          name: 'NgMyTickets',
+          beforeEnter: loggedInNavGuard,
+        },
+        {
+          path: '/dashboard/tickets',
+          name: 'MyTickets',
+          component: UserTickets,
+          beforeEnter: loggedInNavGuard,
+        },
+        {
+          path: '/login',
+          name: 'Login',
+          component: Login,
+        },
+        {
+          path: '/v2',
+          component: {
+            template: '<router-view></router-view>',
+          },
           children: [
             {
-              path: '',
-              component: EventDetails,
+              path: 'events/:eventId',
+              component: orderWrapper,
               props: true,
               children: [
                 {
                   path: '',
-                  name: 'LoginOrRegister',
-                  component: LoginOrRegister,
+                  component: EventDetails,
                   props: true,
-                  async beforeEnter(to, from, next) {
-                    const loggedInUser = (await UserService.getCurrentUser()).body;
-                    next(loggedInUser.login ? { name: 'EventSessions', replace: true, params: to.params } : true);
-                  },
+                  children: [
+                    {
+                      path: '',
+                      name: 'LoginOrRegister',
+                      component: LoginOrRegister,
+                      props: true,
+                      async beforeEnter(to, from, next) {
+                        const loggedInUser = (await UserService.getCurrentUser()).body;
+                        next(loggedInUser.login ? { name: 'EventSessions', replace: true, params: to.params } : true);
+                      },
+                    },
+                    {
+                      path: 'sessions',
+                      name: 'EventSessions',
+                      component: EventSessions,
+                      props: true,
+                      beforeEnter: loggedInNavGuard,
+                    },
+                  ],
                 },
                 {
-                  path: 'sessions',
-                  name: 'EventSessions',
-                  component: EventSessions,
+                  path: 'confirmation',
+                  name: 'EventBookingConfirmation',
+                  component: BookingConfirmation,
                   props: true,
                   beforeEnter: loggedInNavGuard,
                 },
               ],
             },
             {
-              path: 'confirmation',
+              path: 'events/:eventId/confirmation',
               name: 'EventBookingConfirmation',
               component: BookingConfirmation,
               props: true,
-              beforeEnter: loggedInNavGuard,
             },
           ],
-        },
-        {
-          path: 'events/:eventId/confirmation',
-          name: 'EventBookingConfirmation',
-          component: BookingConfirmation,
-          props: true,
         },
       ],
     },
@@ -124,3 +137,5 @@ export default new Router({
     },
   ],
 });
+
+export default router;

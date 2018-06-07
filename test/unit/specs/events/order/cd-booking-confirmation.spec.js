@@ -32,7 +32,7 @@ describe('Booking Confirmation Component', () => {
       MockEventService.v3.getOrder.resolves({ body: { results: [] } });
       vm.eventId = 'foo';
       vm.event = { id: 'foo' };
-      vm.loggedInUser = { user: { id: 'bar' } };
+      vm.loggedInUser = { id: 'bar' };
 
       // ACT
       await vm.loadData();

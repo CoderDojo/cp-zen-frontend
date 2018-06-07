@@ -59,7 +59,9 @@ const BookingParentData = Object.create(EventDetails, {
   },
   childrenTickets: {
     get() {
-      return $$('.cd-child-ticket__ticket-box');
+      const selector = '.cd-child-ticket__ticket-box';
+      $(selector).waitForVisible();
+      return $$(selector);
     },
   },
   childTicketTitle: {

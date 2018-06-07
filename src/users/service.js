@@ -8,7 +8,7 @@ const UserService = {
       password,
     });
     window.cdMenu.fns.loadProfileMenu();
-    store.dispatch('getLoggedInUser');
+    await store.dispatch('getLoggedInUser');
     return loginResp;
   },
 
