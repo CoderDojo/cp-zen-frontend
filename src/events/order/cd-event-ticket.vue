@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD:src/events/cd-event-ticket.vue
   <div class="cd-event-tickets" :class="{ 'cd-event-tickets--disabled': notAttending }">
     <div class="cd-event-tickets__head" :class="{ 'cd-event-tickets__head--disabled': notAttending }"></div>
     <div class="cd-event-tickets__ticket" >
@@ -9,14 +8,6 @@
           <input type="checkbox" v-model="notAttending">
           <span for="checkbox">Not Attending</span>
         </span>
-=======
-  <div class="cd-event-tickets">
-    <div class="cd-event-tickets__head"></div>
-    <div class="cd-event-tickets__ticket">
-      <span class="cd-event-tickets__name"><span class="cd-event-tickets__name-for">Name:</span>{{ user.firstName }} {{ user.lastName }}</span>
-      <div class="cd-event-tickets__ticket-selector">
-        <multiselect v-model="tickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.id}`" v-validate="'required'"></multiselect>
->>>>>>> 51c0ad2aabd034285fbed90ead1614c888efa658:src/events/order/cd-event-ticket.vue
       </div>
         <div class="cd-event-tickets__ticket-selector" v-show="!notAttending">
           <multiselect v-model="tickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.id}`" v-validate="'required'"></multiselect>
