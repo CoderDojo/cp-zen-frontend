@@ -101,7 +101,7 @@ describe('Event ticket creation', () => {
         sessionId: 'sessionId',
         id: 'ticketId',
       }];
-      expect(vm.applications[0]).to.deep.equal({
+      expect(vm.applications).to.deep.equal([{
         name: 'first last',
         dateOfBirth: '2014-08-08',
         eventId: 'eventId',
@@ -111,9 +111,8 @@ describe('Event ticket creation', () => {
         dojoId: 'dojoId',
         ticketId: 'ticketId',
         userId: 'userId',
-      });
+      }]);
     });
-
     it('should format the user\'s tickets WITH a specialRequirement', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
       vm.event = {
