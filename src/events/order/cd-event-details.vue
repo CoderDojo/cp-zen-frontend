@@ -7,7 +7,7 @@
     <div class="cd-event-details__container">
       <info-column class="cd-event-details__left-column">
         <info-column-section class="cd-event-details__left-column--dojo">
-          <div class="cd-event-details__left-column-section-value-dojo">
+          <div class="cd-event-details__left-column-section-value-dojo hidden-xs">
             {{ $t('Event hosted by') }}
             <div v-if="dojo && dojo.id">
               <img v-img-fallback="{src: dojoImage, fallback: dojoFallbackImage}" class="img-circle cd-event-details__left-column-section-value-dojo-image"/>
@@ -31,12 +31,12 @@
             </div>
           </div>
         </info-column-section>
-        <info-column-section icon="map-marker" :header="$t('Location')">
+        <info-column-section class="cd-event-details__left-column-section" icon="map-marker" :header="$t('Location')">
           <div class="cd-event-details__left-column-section-value">
             {{ fullAddress }}
           </div>
         </info-column-section>
-        <info-column-section icon="list" :header="$t('Event details')">
+        <info-column-section class="cd-event-details__left-column-section hidden-xs" icon="list" :header="$t('Event details')">
           <div class="cd-event-details__left-column-section-value">
             <cd-expandable>
               <div v-html="description"></div>
@@ -46,6 +46,14 @@
       </info-column>
       <div class="cd-event-details__main-content">
         <router-view></router-view>
+        <div class="visible-xs">
+          <div class="cd-event-details__heading">{{ $t('Event details') }}</div>
+          <div class="cd-event-details__left-column-section-value">
+            <cd-expandable>
+              <div v-html="description"></div>
+            </cd-expandable>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -107,6 +115,7 @@
   };
 </script>
 <style scoped lang="less">
+  @import "../../common/variables";
   @import "~@coderdojo/cd-common/common/_colors";
 
   .cd-event-details {
@@ -170,6 +179,37 @@
     &__main-content {
       flex: 8;
       padding: 0 16px 32px 16px;
+    }
+    &__heading {
+      font-size: 24px;
+      margin: 45px 0 16px 0;
+      font-weight: bold;
+      border-bottom: 1px solid #bebebe;
+      padding-bottom: 8px;
+    }
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-event-details {
+      &__container {
+        flex-direction: column;
+      }
+
+      &__left-column {
+        text-align: center;
+        max-width: none;
+
+        &--time, &-section  {
+          margin: 16px 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+      }
+      &__main_content {
+        padding: 45px 16px 0 16px;
+      }
     }
   }
 </style>
