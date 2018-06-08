@@ -133,14 +133,6 @@ describe('Add Child Ticket', () => {
     });
   });
 
-  describe('destroyed', () => {
-    it('should remove the application when the component is destroyed', () => {
-      const vm = vueUnitHelper(ChildTicketWithMocks);
-      vm.id = 'user1';
-      vm.$lifecycleMethods.destroyed();
-      expect(OrderStore.commit).to.have.been.calledWith('removeApplications', vm.id);
-    });
-  });
   describe('watch', () => {
     describe('watch.applications()', () => {
       it('should emit an "input" event with the entering of application details', () => {
@@ -253,7 +245,6 @@ describe('Add Child Ticket', () => {
         }];
 
         // ASSERT
-        console.log(vm.childTickets);
         expect(vm.childTickets).to.deep.equal([{ description: 'description1',
           eventId: 'some-eventId',
           id: 'sessionId',

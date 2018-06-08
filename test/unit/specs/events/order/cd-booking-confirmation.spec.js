@@ -4,6 +4,7 @@ import BookingConfirmationComponent from '!!vue-loader?inject!@/events/order/cd-
 describe('Booking Confirmation Component', () => {
   let sandbox;
   let MockEventService;
+  let OrderStore;
   let BookingConfirmationComponentWithMocks;
   let vm;
 
@@ -15,8 +16,12 @@ describe('Booking Confirmation Component', () => {
         getOrder: sandbox.stub(),
       },
     };
+    OrderStore = {
+      commit: sandbox.stub(),
+    };
     BookingConfirmationComponentWithMocks = BookingConfirmationComponent({
       '@/events/service': MockEventService,
+      '@/events/order/order-store': OrderStore,
     });
     vm = vueUnitHelper(BookingConfirmationComponentWithMocks);
   });
@@ -109,6 +114,17 @@ describe('Booking Confirmation Component', () => {
 
       // ASSERT
       expect(vm.loadData).to.have.been.calledOnce;
+    });
+  });
+  describe('destroyed()', () => {
+    it('should empty the current order store', () => {
+      // ACT
+      vm.$lifecycleMethods.destroyed();
+
+      // ASSERT
+      expect(OrderStore.commit).to.have.been.calledTwice;
+      expect(OrderStore.commit.getCall(1)).to.have.been.calledWith('resetStatuses');
+      expect(OrderStore.commit.getCall(0)).to.have.been.calledWith('resetApplications');
     });
   });
 });

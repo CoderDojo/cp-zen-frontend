@@ -176,6 +176,10 @@
     created() {
       this.loadData();
     },
+    destroyed() {
+      OrderStore.commit('resetApplications');
+      OrderStore.commit('resetStatuses');
+    },
   };
 </script>
 <style scoped lang="less">
