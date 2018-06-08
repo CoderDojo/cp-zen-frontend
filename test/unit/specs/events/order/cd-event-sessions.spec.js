@@ -4,9 +4,9 @@ import SessionList from '!!vue-loader?inject!@/events/order/cd-event-sessions';
 describe('Event sessions component', () => {
   let sandbox;
   let mockService;
-  let MockStoreService;
   let MockUserService;
   let MockUserUtils;
+  let OrderStore;
   let ChildTicket;
   let uuidMock;
   let SessionListWithMocks;
@@ -19,10 +19,6 @@ describe('Event sessions component', () => {
         createOrder: sandbox.stub(),
       },
     };
-    MockStoreService = {
-      load: sandbox.stub(),
-      save: sandbox.stub(),
-    };
     MockUserService = {
       getCurrentUser: sandbox.stub(),
       userProfileData: sandbox.stub(),
@@ -34,13 +30,16 @@ describe('Event sessions component', () => {
     MockUserUtils = {
       isYouthOverThirteen: sandbox.stub(),
     };
+    OrderStore = {
+      getters: {},
+    };
     uuidMock = sandbox.stub();
     SessionListWithMocks = SessionList({
       'uuid/v4': uuidMock,
       '../service': mockService,
-      '@/store/store-service': MockStoreService,
       '@/users/service': MockUserService,
       '@/users/util': MockUserUtils,
+      '@/events/order/order-store': OrderStore,
       './cd-event-add-child-ticket': ChildTicket,
     });
   });
@@ -114,35 +113,19 @@ describe('Event sessions component', () => {
     });
 
     describe('computed.applications', () => {
-      it('should return the value of each object in the children array', () => {
+      it('should return the value of the store without adult ticket', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.children = [{ value: { name: 'John Doe' }, id: '1' }, { value: { name: 'Jane Doe' }, id: '2' }];
 
+        OrderStore.getters.applications = [{ name: 'John Doe' }, { name: 'Jane Doe' }];
         // ASSERT
-        expect(vm.applications).to.deep.equal([
-          {
-            name: 'John Doe',
-          },
-          {
-            name: 'Jane Doe',
-          }]);
-      });
-      it('should return the existing users tickets', () => {
-        // ARRANGE
-        const vm = vueUnitHelper(SessionListWithMocks);
-        vm.usersTickets = [{ name: 'John Doe', id: '1' }];
-
-        // ASSERT
-        expect(vm.applications).to.deep.equal([{
-          name: 'John Doe',
-          id: '1',
-        }]);
+        expect(vm.applications).to.deep.equal(OrderStore.getters.applications);
       });
       it('should add the parentTicket if defined', () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        vm.usersTickets = [{ name: 'John Doe', id: '1' }];
+        OrderStore.getters.applications = [{ id: '1', name: 'John Doe' }];
         vm.parentTicket = { name: 'parent1', id: '2' };
 
         // ASSERT
@@ -483,27 +466,6 @@ describe('Event sessions component', () => {
     expect(vm.user).to.deep.equal({ name: 'parent1' });
   });
 
-  it('should load the selected event', (done) => {
-    // ARRANGE
-    const vm = vueUnitHelper(SessionListWithMocks);
-    vm.eventId = '123';
-    const event = { name: 'Foo event' };
-    MockStoreService.load.withArgs('selected-event')
-      .returns(event);
-
-    // ACT
-    vm.loadEvent();
-
-    // ASSERT
-    requestAnimationFrame(() => {
-      expect(vm.event).to.deep.equal(event);
-      expect(MockStoreService.load).to.be.calledOnce;
-      expect(MockStoreService.save).to.be.calledOnce;
-      expect(MockStoreService.save).to.be.calledWith(`booking-${vm.eventId}-sessions`, {});
-      done();
-    });
-  });
-
   it('should show the list of event sessions', (done) => {
     // ARRANGE
     const mockSessionDataResponse = [
@@ -531,10 +493,6 @@ describe('Event sessions component', () => {
     // ASSERT
     requestAnimationFrame(() => {
       expect(vm.sessions).to.deep.equal(mockSessionDataResponse);
-      expect(MockStoreService.save).to.have.been.calledWith('selected-event', {
-        name: 'Scratch',
-        sessions: mockSessionDataResponse,
-      });
       done();
     });
   });

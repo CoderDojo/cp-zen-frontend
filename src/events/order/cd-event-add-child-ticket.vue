@@ -28,8 +28,8 @@
       <p class="gender-why" v-show="genderExplaination && errors.has(`gender-${id}:required`)">{{ $t(`We want to provide activities that appeal to people regardless of their gender.`) }}<br/>{{ $t(`To check how well we are succeeding, we'd like to find out whether or not people of different genders are equally likely to take part.`) }}</p>
 
       <label>{{ $t('Ticket') }}</label>
-      <div class="cd-child-ticket__ticket-selector">
-        <multiselect v-model="tickets" :options="childTickets" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select Event Tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${id}`" v-validate="'required'"></multiselect>
+      <div class="cd-child-ticket__ticket-selector"> 
+        <multiselect v-model="selectedTickets" :options="childTickets" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select Event Tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${id}`" v-validate="'required'"></multiselect>
       </div>
       <p class="cd-child-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${id}:required`)">{{ $t('Ticket selection is required') }}</p>  
 
@@ -46,11 +46,13 @@
   import GenderComponent from '@/common/cd-gender-component';
   import SpecialReqComponent from '@/common/cd-special-req-component';
   import addPossession from '@/common/filters/cd-add-possession';
-
+  import TicketMixin from '@/events/order/cd-event-ticket-mixin';
+  import OrderStore from '@/events/order/order-store';
 
   export default {
     name: 'ChildTicket',
     inject: ['$validator'],
+    mixins: [TicketMixin],
     props: ['sessions', 'eventId', 'event', 'id'],
     filters: {
       addPossession,
@@ -68,7 +70,7 @@
         dob: null,
         gender: '',
         genderExplaination: false,
-        tickets: [],
+        selectedTickets: [],
         userId: null,
         specialRequirement: '',
       };
@@ -92,9 +94,12 @@
         });
       },
     },
+    destroyed() {
+      OrderStore.commit('removeApplications', this.id);
+    },
     watch: {
       applications() {
-        this.$emit('input', this.applications);
+        OrderStore.commit('setApplications', { id: this.id, applications: this.applications });
       },
     },
     computed: {
@@ -105,14 +110,23 @@
           id: session.id,
           name: session.name,
           status: session.status,
-          tickets: session.tickets.filter(ticket => ticket.type === 'ninja' && 'others'),
+          tickets: session.tickets
+            .filter(ticket => ticket.type === 'ninja' && 'others')
+            .map((t) => {
+              const isFull = this.ticketIsFull(t, OrderStore.getters.applications);
+              return {
+                ...t,
+                $isDisabled: isFull,
+                name: isFull ? `${t.name} [${this.$t('Fully booked')}]` : t.name,
+              };
+            }),
         }));
       },
       name() {
         return `${this.firstName} ${this.surname}`;
       },
       applications() {
-        return this.tickets.map(ticket => (Object.assign({
+        return this.selectedTickets.map(ticket => (Object.assign({
           name: this.name,
           dateOfBirth: this.dob,
           eventId: this.eventId,

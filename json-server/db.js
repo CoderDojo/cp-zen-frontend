@@ -370,7 +370,7 @@ module.exports = {
           deleted: 0,
           invites: null,
           totalApplications: 0,
-          approvedApplications: 0
+          approvedApplications: 5 
         },
         {
           entity$: '-/cd/tickets',
@@ -378,7 +378,7 @@ module.exports = {
           sessionId: '97273d08-6b44-4529-8c75-bdaa7a02ba3e',
           name: 'Lacking Pi',
           type: 'ninja',
-          quantity: 3,
+          quantity: 1,
           deleted: 0,
           invites: null,
           totalApplications: 0,

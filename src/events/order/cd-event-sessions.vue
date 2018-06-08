@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isSingle || (children.length > 0 || existingChildren.length > 0)" class="cd-event-sessions">
+  <div v-if="isSingle || (children.length > 0 || existingChildren.length > 0) && !isFull" class="cd-event-sessions">
     <h1 class="cd-event-sessions__header">
       <span v-if="isSingle">{{ $t('Select Your Tickets') }}</span>
       <span v-else>{{ $t('Select Youth Tickets') }}</span>
@@ -7,10 +7,10 @@
      <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
     {{ $t('Please contact the Dojo if you have any questions.') }}</p>
     <div class="cd-event-sessions__tickets">
-      <ticket v-for="(_user, index) in users" :user="_user" :event="event" v-model="usersTickets[index]" :key="_user.id"></ticket>
+      <ticket v-for="(_user, index) in users" :user="_user" :event="event" :key="_user.id"></ticket>
     </div>
     <!-- TODO : isn't the index enough rather than generating an uuid ? -->
-    <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="sessions" :id="child.id" v-model="child.value" v-on:delete="deleteChildComponent(index)"></child-ticket>
+    <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="sessions" :id="child.id" v-on:delete="deleteChildComponent(index)"></child-ticket>
 
     <div class="cd-event-sessions__add-button" v-if="!isO13">
       <button class="cd-event-sessions__add-youth btn btn-primary" tag="button" @click="addChildComponent"><i class="fa fa-plus" aria-hidden="true"></i> {{ $t('Add another youth ticket') }}</button>
@@ -25,7 +25,7 @@
       <p class="cd-event-session__phone-number-err-required text-danger" v-show="showPhone && errors.has('phone:required')">{{ $t('Phone number is required') }}</p>
       <p class="cd-event-session__phone-number-err-regex text-danger" v-show="showPhone && errors.has('phone:regex')">{{ $t('* Please include the plus symbol(+) and country code. For example, a phone number in Ireland should begin +353') }}</p>
     </div>
-    <div class="cd-event-sessions__next-block">
+    <div class="cd-event-sessions__next-block" >
       <p v-show="errors.has('submitApplications:required')" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('Please select at least one ticket') }}</p>
       <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="submitBooking" name="submitApplications" v-validate:applications="'required'" >
         <span v-if="this.event.ticketApproval">{{ $t('Request booking for {totalBooked} ticket(s)', { totalBooked }) }}</span>
@@ -33,30 +33,38 @@
       </button>
     </div>
   </div>
+  <div v-else>
+    <div class="cd-event-sessions__no-tickets">
+      <div class="cd-event-sessions__no-tickets-emoticon">:(</div>
+      <h3>{{ $t('We\'re sorry, there are no tickets left.') }}</h3>
+      <h4>{{ $t('Keep an eye out for future events!') }}</h4>
+    </div>
+  </div>
 </template>
 <script>
   import { omit } from 'lodash';
   import uuid from 'uuid/v4';
-  import StoreService from '@/store/store-service';
   import UserService from '@/users/service';
   import DojoService from '@/dojos/service';
   import UserUtils from '@/users/util';
+  import OrderStore from '@/events/order/order-store';
   import service from '../service';
   import Ticket from './cd-event-ticket';
+  import EventMixin from '../cd-event-tile';
   import ChildTicket from './cd-event-add-child-ticket';
 
   export default {
     name: 'sessions',
     props: ['eventId'],
+    mixins: [EventMixin],
     components: {
       Ticket,
       ChildTicket,
     },
     data() {
       return {
+        event: {},
         sessions: [],
-        event: null,
-        usersTickets: [],
         parentTicket: null,
         children: [],
         existingChildren: [],
@@ -71,8 +79,7 @@
         return !this.profile.phone && !this.isO13;
       },
       applications() {
-        const applications = [].concat(...(this.children).map(child => child.value))
-          .concat(...this.usersTickets);
+        const applications = OrderStore.getters.applications;
         if (this.parentTicket) {
           applications.push(this.parentTicket);
         }
@@ -165,22 +172,11 @@
       loadSessions() {
         service.loadSessions(this.eventId).then((response) => {
           this.sessions = response.body;
-          this.event.sessions = this.sessions;
-          StoreService.save('selected-event', this.event);
+          this.event = { ...this.event, sessions: this.sessions };
         });
       },
       async setEvent() {
-        if (!this.event) {
-          this.event = (await service.loadEvent(this.eventId)).body;
-          StoreService.save('selected-event', this.event);
-          return Promise.resolve();
-        }
-        return Promise.resolve();
-      },
-      async loadEvent() {
-        StoreService.save(`booking-${this.eventId}-sessions`, {});
-        this.event = StoreService.load('selected-event');
-        return Promise.resolve();
+        this.event = (await service.loadEvent(this.eventId)).body;
       },
       async loadChildren() {
         if (this.profile.children) {
@@ -196,10 +192,7 @@
     },
     async created() {
       // TODO : parallelize
-      await Promise.all([
-        this.loadEvent(),
-        this.setEvent(),
-      ]);
+      await this.setEvent();
       this.loadSessions();
       await this.loadCurrentUser();
       await this.loadProfile();
@@ -251,6 +244,16 @@
     }
     &__phone-number-input{
       max-width: 25%;
+    }
+    &__no-tickets {
+      text-align: center;
+      &-emoticon{
+        font-size: 15em;
+        max-width: 80%;
+        max-height: 250px;
+        transform: rotate(90deg);
+        margin-left: 15%;
+      }
     }
   }
 </style>
