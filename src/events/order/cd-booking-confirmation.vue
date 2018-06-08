@@ -1,6 +1,5 @@
 <template>
-  <div class="cd-booking-confirmation">
-
+  <div class="cd-booking-confirmation" v-if="order && event">
     <div class="cd-booking-confirmation__banner">
       <div class="cd-booking-confirmation__banner-left">
         <div class="cd-booking-confirmation__banner-title">{{ title }}</div>
@@ -10,7 +9,7 @@
     </div>
 
     <div class="cd-booking-confirmation__event-name">{{ event.name }}</div>
-    <div class="cd-booking-confirmation__hosted-by-message">
+    <div class="cd-booking-confirmation__hosted-by-message" v-if="dojo">
       <hosted-by :props="{ dojoName: dojo.name, dojoRoute: getDojoUrl(dojo) }"></hosted-by>
     </div>
 
@@ -36,7 +35,7 @@
           <span class="cd-booking-confirmation__booking-details-box-title">{{ $t('Location') }}</span>
         </div>
         <div class="cd-booking-confirmation__booking-details-box-content">
-          <div class="cd-booking-confirmation__event-location" v-if="event.city && event.country">
+          <div class="cd-booking-confirmation__event-location">
             {{ `${event.address}, ${event.city.nameWithHierarchy}, ${event.country.countryName}` }}
           </div>
         </div>
@@ -164,7 +163,10 @@
       async loadData() {
         // TODO : define v3 event loading to save an HTTP call
         this.sessions = (await EventService.loadSessions(this.eventId)).body;
-        this.order = (await EventService.v3.getOrder(this.loggedInUser.id, { params: { 'query[eventId]': this.event.id } })).body.results[0];
+        this.order = (await EventService.v3.getOrder(this.loggedInUser.id, { params: { 'query[eventId]': this.eventId } })).body.results[0];
+        if (!this.event) {
+          this.$store.dispatch('order/loadEvent', this.eventId);
+        }
       },
       getSessionName(sessionId) {
         return (this.sessions.find(s => s.id === sessionId)).name;
