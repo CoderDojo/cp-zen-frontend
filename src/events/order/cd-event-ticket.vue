@@ -1,6 +1,6 @@
 <template>
   <div class="cd-event-tickets" :class="{ 'cd-event-tickets--disabled': notAttending }">
-    <div class="cd-event-tickets__head" :class="{ 'cd-event-tickets__head--disabled': notAttending }"></div>
+    <div class="cd-event-tickets__head"></div>
     <div class="cd-event-tickets__ticket" >
       <div class="cd-event-tickets__ticket-header">
         <span class="cd-event-tickets__name"><span class="cd-event-tickets__name-for">Name:</span>{{ user.firstName }} {{ user.lastName }}</span>
