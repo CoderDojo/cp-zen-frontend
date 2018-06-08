@@ -91,7 +91,7 @@ describe('Book event page', () => {
         });
         it('should let me select tickets for ninjas', () => {
           browser.waitUntil(() => Booking.tickets.length > 0);
-          expect(Booking.ticketName(0).getText()).to.equal('Name:child 1o13');
+          expect(Booking.ticketName(0).getText()).to.equal('Name:\nchild 1o13');
           expect(Booking.ticketSelector(0).isVisible()).to.be.true;
         });
       });
