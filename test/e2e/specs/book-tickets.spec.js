@@ -246,7 +246,7 @@ describe('Book event page', () => {
           expect(Booking.phoneNumber.isVisible()).to.be.false;
         });
         it('should let me select tickets for ninjas', () => {
-          expect(Booking.ticketName(0).getText()).to.equal('Name:child 1o13');
+          expect(Booking.ticketName(0).getText()).to.equal('Name:\nchild 1o13');
           expect(Booking.ticketSelector(0).isVisible()).to.be.true;
         });
       });
