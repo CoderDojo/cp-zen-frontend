@@ -91,7 +91,7 @@ describe('Book event page', () => {
         });
         it('should let me select tickets for ninjas', () => {
           browser.waitUntil(() => Booking.tickets.length > 0);
-          expect(Booking.ticketName(0).getText()).to.equal('Name:child 1o13');
+          expect(Booking.ticketName(0).getText()).to.equal('Name:\nchild 1o13');
           expect(Booking.ticketSelector(0).isVisible()).to.be.true;
         });
       });
@@ -246,7 +246,7 @@ describe('Book event page', () => {
           expect(Booking.phoneNumber.isVisible()).to.be.false;
         });
         it('should let me select tickets for ninjas', () => {
-          expect(Booking.ticketName(0).getText()).to.equal('Name:child 1o13');
+          expect(Booking.ticketName(0).getText()).to.equal('Name:\nchild 1o13');
           expect(Booking.ticketSelector(0).isVisible()).to.be.true;
         });
       });
@@ -265,7 +265,7 @@ describe('Book event page', () => {
         });
         it('should show a mentor ticket', () => {
           browser.waitUntil(() => Booking.tickets.length > 0);
-          expect(Booking.ticketName(0).getText()).to.equal('Name:mentor one');
+          expect(Booking.ticketName(0).getText()).to.equal('Name:\nmentor one');
         });
         it('should let me add a child', () => {
           expect(Booking.addYouthButton.isVisible()).to.be.true;
@@ -291,7 +291,7 @@ describe('Book event page', () => {
       });
       it('should display as many indiviual tickets as many existing kids', () => {
         browser.waitUntil(() => Booking.tickets.length > 0);
-        expect(Booking.ticketName(0).getText()).to.equal('Name:child 3three');
+        expect(Booking.ticketName(0).getText()).to.equal('Name:\nchild 3three');
       });
       it('should let me create new children', () => {
         expect(Booking.addYouthButton.isVisible()).to.be.true;

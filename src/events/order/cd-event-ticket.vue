@@ -1,14 +1,19 @@
 <template>
-  <div class="cd-event-tickets">
+  <div class="cd-event-tickets" :class="{ 'cd-event-tickets--disabled': notAttending }">
     <div class="cd-event-tickets__head"></div>
-    <div class="cd-event-tickets__ticket">
-      <span class="cd-event-tickets__name"><span class="cd-event-tickets__name-for">Name:</span>{{ user.firstName }} {{ user.lastName }}</span>
-      <div class="cd-event-tickets__ticket-selector">
-        <multiselect v-model="tickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.id}`" v-validate="'required'"></multiselect>
+    <div class="cd-event-tickets__ticket" >
+      <div class="cd-event-tickets__ticket-header">
+        <span class="cd-event-tickets__name"><span class="cd-event-tickets__name-for">Name:</span>{{ user.firstName }} {{ user.lastName }}</span>
+        <span>
+          <input type="checkbox" v-model="notAttending">
+          <span for="checkbox">{{ $t('Not attending') }}</span>
+        </span>
       </div>
-      <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`)">{{ $t('Ticket selection is required') }}</p>
-
-      <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement"></special-req-component>
+        <div class="cd-event-tickets__ticket-selector" v-show="!notAttending">
+          <multiselect v-model="tickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.id}`" v-validate="'required'"></multiselect>
+        </div>
+        <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`) && !notAttending">{{ $t('Ticket selection is required') }}</p>
+        <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement" v-show="!notAttending"></special-req-component>
     </div>
     <div class='cd-event-tickets__ticket-corner'></div>
   </div>
@@ -29,6 +34,7 @@
         tickets: [],
         sessions: [],
         specialRequirement: '',
+        notAttending: false,
       };
     },
     components: {
@@ -165,9 +171,15 @@
         bottom: 0;
       }
     }
-
+    &__ticket-header {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
     &__name {
-      flex-basis: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding-right: 16px;
       font-weight: bold;
       &-for {
         font-weight: normal;
@@ -175,10 +187,17 @@
         padding-right: 6px;
       }
     }
-
     &__special-req-selector {
       flex-basis: 100%;
       margin-top: 12px;
+    }
+    &--disabled {
+      &:before {
+        background-image: radial-gradient(circle at .2% 25%, @cd-white .4em, transparent .5em), radial-gradient(circle at .2% 25%, #a9a9a9 .6em,transparent .7em);
+      }
+      .cd-event-tickets__head {
+        background-color: #d3d3d3;
+      }
     }
   }
 </style>
