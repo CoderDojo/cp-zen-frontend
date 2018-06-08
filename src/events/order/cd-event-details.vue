@@ -36,7 +36,7 @@
             {{ fullAddress }}
           </div>
         </info-column-section>
-        <info-column-section class="cd-event-details__left-column-section" icon="list" :header="$t('Event details')">
+        <info-column-section class="cd-event-details__left-column-section hidden-xs" icon="list" :header="$t('Event details')">
           <div class="cd-event-details__left-column-section-value">
             <cd-expandable>
               <div v-html="description"></div>
@@ -46,6 +46,14 @@
       </info-column>
       <div class="cd-event-details__main-content">
         <router-view></router-view>
+        <div class="visible-xs">
+          <div class="cd-event-details__heading">{{ $t('Event details') }}</div>
+          <div class="cd-event-details__left-column-section-value">
+            <cd-expandable>
+              <div v-html="description"></div>
+            </cd-expandable>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -171,6 +179,14 @@
     &__main-content {
       flex: 8;
       padding: 0 16px 32px 16px;
+    }
+    &__heading {
+      color: #000;
+      font-size: 24px;
+      margin: 45px 0 16px 0;
+      font-weight: bold;
+      border-bottom: 1px solid #bebebe;
+      padding-bottom: 8px;
     }
   }
 
