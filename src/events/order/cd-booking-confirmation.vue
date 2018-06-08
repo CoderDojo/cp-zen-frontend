@@ -299,13 +299,13 @@
     &__account {
       &-confirmation {
         display: flex;
-        flex: 1;
         font-size: 18px;
-        margin: 0 32px 0 0;
+        flex-basis: 30%;
 
         &-wrapper {
           display: flex;
-          margin: 48px 32px;
+          margin: 48px 12px;
+          justify-content: space-around;
         }
 
         &-icon {
