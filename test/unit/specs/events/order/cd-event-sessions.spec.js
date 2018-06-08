@@ -578,7 +578,7 @@ describe('Event sessions component', () => {
       await vm.$lifecycleMethods.created();
       expect(vm.children.length).to.equal(1);
       expect(OrderStore.commit).to.have.been.calledOnce;
-      expect(OrderStore.commit).to.have.been.calledWith('reset');
+      expect(OrderStore.commit).to.have.been.calledWith('resetApplications');
     });
     it('should not add a default child if the user has children', async () => {
       const vm = vueUnitHelper(SessionListWithMocks);
@@ -595,7 +595,7 @@ describe('Event sessions component', () => {
       await vm.$lifecycleMethods.created();
       expect(vm.children.length).to.equal(0);
       expect(OrderStore.commit).to.have.been.calledOnce;
-      expect(OrderStore.commit).to.have.been.calledWith('reset');
+      expect(OrderStore.commit).to.have.been.calledWith('resetApplications');
     });
     it('should not add a default child if the user is single', async () => {
       const vm = vueUnitHelper(SessionListWithMocks);
@@ -612,7 +612,7 @@ describe('Event sessions component', () => {
       await vm.$lifecycleMethods.created();
       expect(vm.children.length).to.equal(0);
       expect(OrderStore.commit).to.have.been.calledOnce;
-      expect(OrderStore.commit).to.have.been.calledWith('reset');
+      expect(OrderStore.commit).to.have.been.calledWith('resetApplications');
     });
   });
 });

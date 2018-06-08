@@ -34,6 +34,28 @@ describe('Order Store', () => {
         expect(OrderStore.state.applications).to.deep.equal({});
       });
     });
+    describe('mutations.resetApplications', () => {
+      it('should reset the applications', () => {
+        // ARRANGE
+        OrderStore.state.applications = { 1: [{ userId: 1, name: 'Jane Doe' }] };
+
+        // ACT
+        OrderStore.commit('resetApplications');
+        expect(OrderStore.state.applications).to.deep.equal({});
+      });
+    });
+    describe('mutations.resetStatuses', () => {
+      it('should reset the order statuses', () => {
+        // ARRANGE
+        OrderStore.state.isNewUser = true;
+        OrderStore.state.isNewDojoMember = true;
+
+        // ACT
+        OrderStore.commit('resetStatuses');
+        expect(OrderStore.state.isNewUser).to.be.false;
+        expect(OrderStore.state.isNewDojoMember).to.be.false;
+      });
+    });
   });
 
   describe('getters', () => {

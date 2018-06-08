@@ -202,7 +202,7 @@
       },
     },
     async created() {
-      OrderStore.commit('reset');
+      OrderStore.commit('resetApplications');
       // TODO : parallelize
       await this.setEvent();
       this.loadSessions();
