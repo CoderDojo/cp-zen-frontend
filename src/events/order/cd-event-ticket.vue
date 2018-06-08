@@ -6,7 +6,7 @@
         <span class="cd-event-tickets__name"><span class="cd-event-tickets__name-for">Name:</span>{{ user.firstName }} {{ user.lastName }}</span>
         <span>
           <input type="checkbox" v-model="notAttending">
-          <span for="checkbox">Not Attending</span>
+          <span for="checkbox">{{ $t('Not attending') }}</span>
         </span>
       </div>
         <div class="cd-event-tickets__ticket-selector" v-show="!notAttending">
