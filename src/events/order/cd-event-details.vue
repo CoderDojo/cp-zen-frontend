@@ -181,7 +181,6 @@
       padding: 0 16px 32px 16px;
     }
     &__heading {
-      color: #000;
       font-size: 24px;
       margin: 45px 0 16px 0;
       font-weight: bold;
