@@ -5,16 +5,18 @@
       <div class="cd-event-tickets__ticket-header">
         <span class="cd-event-tickets__name"><span class="cd-event-tickets__name-for">Name:</span>{{ user.firstName }} {{ user.lastName }}</span>
         <span>
-          <input type="checkbox" v-model="notAttending" v-if="!ticketsAreFull(tickets)">
-          <span for="checkbox">{{ $t('Not attending') }}</span>
+          <label>
+            <input type="checkbox" v-model="notAttending" v-if="!ticketsAreFull(tickets)" v-on:change="resetSelectedTickets()">
+            {{ $t('Not attending') }}
+          </label>
         </span>
       </div>
-      <div class="cd-event-tickets__ticket-selector" v-show="!notAttending" v-if="!ticketsAreFull(tickets)">
+      <div class="cd-event-tickets__ticket-selector" v-if="!ticketsAreFull(tickets) && !notAttending">
         <multiselect v-model="selectedTickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.userId}`" v-validate="'required'"></multiselect>
         <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`)">{{ $t('Ticket selection is required') }}</p>
         <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement"></special-req-component>
       </div>
-      <div v-else>
+      <div v-else-if="ticketsAreFull(tickets)">
         {{ $t('Whoopsies, no more tickets available for you :( ') }}
       </div>
     </div>
@@ -88,6 +90,9 @@
       },
     },
     methods: {
+      resetSelectedTickets() {
+        this.selectedTickets = [];
+      },
       filterByTicketType(type) {
         const allowedTypes = this.isNinja ? ['ninja', 'others'] : ['mentor'];
         return allowedTypes.includes(type);
