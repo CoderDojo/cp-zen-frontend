@@ -35,9 +35,9 @@
   </div>
   <div v-else>
     <div class="cd-event-sessions__no-tickets">
-      <div class="cd-event-sessions__no-tickets-emoji">:(</div>
-      <h3>{{ $t('We\'re sorry, it seems there are no tickets left.') }}</h3>
-      <h4>{{ $t('Next time?') }}</h4>
+      <div class="cd-event-sessions__no-tickets-emoticon">:(</div>
+      <h3>{{ $t('We\'re sorry, there are no tickets left.') }}</h3>
+      <h4>{{ $t('Keep an eye out for future events!') }}</h4>
     </div>
   </div>
 </template>
@@ -247,7 +247,7 @@
     }
     &__no-tickets {
       text-align: center;
-      &-emoji {
+      &-emoticon{
         font-size: 15em;
         max-width: 80%;
         max-height: 250px;

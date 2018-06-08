@@ -8,7 +8,7 @@ const BookingParentData = Object.create(EventDetails, {
   },
   eventIsFullEmoji: {
     get() {
-      return $('.cd-event-sessions__no-tickets-emoji');
+      return $('.cd-event-sessions__no-tickets-emoticon');
     },
   },
   eventIsFullHeader: {

@@ -117,7 +117,7 @@
               return {
                 ...t,
                 $isDisabled: isFull,
-                name: isFull ? `${t.name} ${this.$t('[ this ticket is fully booked ]')}` : `${t.name}`,
+                name: isFull ? `${t.name} [${this.$t('Fully booked')}]` : t.name,
               };
             }),
         }));

@@ -158,7 +158,7 @@ describe('Book event page', () => {
         it('should stop me from booking a ticket that has no space for me', () => {
           browser.url('http://localhost:8080/v2/events/34174952-8ca4-4189-b8cb-d383e3fde992/sessions');
           Booking.eventTitle.waitForVisible();
-          const ticket = Booking.childTicketSelector('With Pi [ this ticket is fully booked ]')[0];
+          const ticket = Booking.childTicketSelector('With Pi [Fully booked]')[0];
           ticket.waitForVisible();
           expect(ticket.isVisible()).to.be.true;
         });
@@ -175,7 +175,7 @@ describe('Book event page', () => {
           Booking.eventTitle.waitForVisible();
           Booking.childTicketSelector('Lacking Pi')[0].click()
           Booking.addYouthButton.click();
-          const ticket = Booking.childTicketSelector('Lacking Pi [ this ticket is fully booked ]')[0];
+          const ticket = Booking.childTicketSelector('Lacking Pi [Fully booked]')[0];
           ticket.waitForVisible();
           expect(ticket.isVisible()).to.be.true;
         });
@@ -338,6 +338,7 @@ describe('Book event page', () => {
           expect(Booking.ticketName(0).getText()).to.equal('Name:\nmentor one');
         });
         it('should let me add a child', () => {
+          Booking.addYouthButton.waitForVisible();
           expect(Booking.addYouthButton.isVisible()).to.be.true;
         });
         it('should have the children creation closed by default', () => {

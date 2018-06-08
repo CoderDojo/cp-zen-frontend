@@ -253,6 +253,7 @@ describe('Add Child Ticket', () => {
         }];
 
         // ASSERT
+        console.log(vm.childTickets);
         expect(vm.childTickets).to.deep.equal([{ description: 'description1',
           eventId: 'some-eventId',
           id: 'sessionId',
@@ -263,7 +264,7 @@ describe('Add Child Ticket', () => {
               deleted: 0,
               id: 'ticketId2',
               invites: null,
-              name: 'Ticket2 [ this ticket is fully booked ]',
+              name: 'Ticket2 [Fully booked]',
               quantity: 1,
               sessionId: 'sessionId',
               $isDisabled: true,

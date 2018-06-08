@@ -17,7 +17,7 @@
         <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement"></special-req-component>
       </div>
       <div v-else-if="ticketsAreFull(tickets)">
-        {{ $t('Whoopsies, no more tickets available for you :( ') }}
+        {{ $t('Sorry, there are no applicable tickets left') }}
       </div>
     </div>
     <div class='cd-event-tickets__ticket-corner'></div>
