@@ -113,6 +113,11 @@
         this.profile.phone = this.phone;
         return UserService.updateUserProfileData(omit(this.profile, ['userTypes', 'dojos', 'children']));
       },
+      async joinDojo() {
+        OrderStore.commit('setIsNewDojoMember', true);
+        const userType = this.isO13 ? 'attendee-o13' : 'parent-guardian';
+        return DojoService.joinDojo(this.profile.userId, this.event.dojoId, [userType]);
+      },
       async addNewChildren() {
         if (this.$refs.allChildComponents) {
           return Promise.all((this.$refs.allChildComponents)
@@ -147,10 +152,14 @@
         return service.v3.createOrder(this.eventId, this.applications);
       },
       async setupPrerequisites() {
+        const promises = [this.addNewChildren()];
         if (this.showPhone) {
-          return Promise.all([this.addPhoneNumber(), this.addNewChildren()]);
+          promises.push(this.addPhoneNumber());
         }
-        return this.addNewChildren();
+        if (!this.dojoRole) {
+          promises.push(this.joinDojo());
+        }
+        return Promise.all(promises);
       },
       async submitBooking() {
         const valid = await this.$validator.validateAll();

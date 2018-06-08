@@ -105,6 +105,7 @@
   import VueDobPicker from 'vue-dob-picker';
   import UserService from '@/users/service';
   import UserUtils from '@/users/util';
+  import OrderStore from '@/events/order/order-store';
 
   export default {
     name: 'BookingCreateAccount',
@@ -177,6 +178,7 @@
                   { dob: this.dob, ...context },
             )));
             this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
+            OrderStore.commit('setIsNewUser', true);
             this.$emit('registered');
           } catch (err) {
             if (err.message === 'nick-exists') {

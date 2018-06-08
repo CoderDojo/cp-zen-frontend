@@ -1,6 +1,5 @@
 <template>
-  <div class="cd-booking-confirmation">
-
+  <div class="cd-booking-confirmation" v-if="order && event">
     <div class="cd-booking-confirmation__banner">
       <div class="cd-booking-confirmation__banner-left">
         <div class="cd-booking-confirmation__banner-title">{{ title }}</div>
@@ -10,7 +9,7 @@
     </div>
 
     <div class="cd-booking-confirmation__event-name">{{ event.name }}</div>
-    <div class="cd-booking-confirmation__hosted-by-message">
+    <div class="cd-booking-confirmation__hosted-by-message" v-if="dojo">
       <hosted-by :props="{ dojoName: dojo.name, dojoRoute: getDojoUrl(dojo) }"></hosted-by>
     </div>
 
@@ -59,9 +58,9 @@
 
     <div class="cd-booking-confirmation__line-page-splitter"></div>
 
-    <div class="cd-booking-confirmation__account-confirmation-wrapper">
+    <div class="cd-booking-confirmation__account-confirmation-wrapper" v-if="isNewUser || isNewDojoMember || event.ticketApproval">
 
-      <div class="cd-booking-confirmation__account-confirmation">
+      <div class="cd-booking-confirmation__account-confirmation cd-booking-confirmation__acount-confirmation-created" v-if="isNewUser">
         <div class="fa fa-check-circle-o cd-booking-confirmation__account-confirmation-icon"></div>
         <div>
           {{ $t('Your CoderDojo account has been created') }}
@@ -70,7 +69,7 @@
         </div>
       </div>
 
-      <div class="cd-booking-confirmation__account-confirmation">
+      <div class="cd-booking-confirmation__account-confirmation cd-booking-confirmation__account-confirmation-joined" v-if="isNewDojoMember">
         <div class="fa fa-check-circle-o cd-booking-confirmation__account-confirmation-icon"></div>
         <div>
           <span v-html="$t('You are now subscribed to {dojoName} dojo', {dojoName: `<strong>${dojo.name}</strong>`})"></span>
@@ -112,6 +111,7 @@
   import EventsUtil from '@/events/util';
   import store from '@/store';
   import { mapGetters } from 'vuex';
+  import OrderStore from '@/events/order/order-store';
 
   const HostedBy = TranslationComponentGenerator('Event hosted by {dojoName}', {
     dojoName: `
@@ -141,6 +141,12 @@
     computed: {
       ...mapGetters('order', ['event']),
       ...mapGetters(['loggedInUser', 'dojo']),
+      isNewUser() {
+        return OrderStore.state.isNewUser;
+      },
+      isNewDojoMember() {
+        return OrderStore.state.isNewDojoMember;
+      },
       subtitle() {
         return this.event.ticketApproval ?
           this.$t('You will be notified when the organizer approves your request.') :
@@ -157,7 +163,10 @@
       async loadData() {
         // TODO : define v3 event loading to save an HTTP call
         this.sessions = (await EventService.loadSessions(this.eventId)).body;
-        this.order = (await EventService.v3.getOrder(this.loggedInUser.id, { params: { 'query[eventId]': this.event.id } })).body.results[0];
+        this.order = (await EventService.v3.getOrder(this.loggedInUser.id, { params: { 'query[eventId]': this.eventId } })).body.results[0];
+        if (!this.event) {
+          this.$store.dispatch('order/loadEvent', this.eventId);
+        }
       },
       getSessionName(sessionId) {
         return (this.sessions.find(s => s.id === sessionId)).name;
