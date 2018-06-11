@@ -6,7 +6,7 @@
         <span class="cd-event-tickets__name"><span class="cd-event-tickets__name-for">Name:</span>{{ user.firstName }} {{ user.lastName }}</span>
         <span>
           <label>
-            <input type="checkbox" v-model="notAttending" v-if="!ticketsAreFull(tickets)" v-on:change="resetSelectedTickets()">
+            <input class="cd-event-tickets__not-attending-selector" type="checkbox" v-model="notAttending" v-if="!ticketsAreFull(tickets)" v-on:change="resetSelectedTickets()">
             {{ $t('Not attending') }}
           </label>
         </span>
