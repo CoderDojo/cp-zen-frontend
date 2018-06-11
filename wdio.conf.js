@@ -165,6 +165,7 @@ exports.config = {
   before(capabilities, specs) {
     global.expect = chai.expect;
     global.should = chai.Should();
+    global.vI18nWarnings = new Set();
   },
   //
   /**
@@ -183,8 +184,15 @@ exports.config = {
    * Hook that gets executed _after_ a hook within the suite starts (e.g. runs after calling
    * afterEach in Mocha)
    */
-  // afterHook: function () {
-  // },
+   afterHook: function () {
+     const warnings = (browser.log('browser')).value;
+     warnings.forEach((w) => {
+       const keys = w.message.match(/Value of key \'(.*)\' is not a string/);
+       if (keys) {
+         global.vI18nWarnings.add(keys[0]);
+       }
+     });
+   },
   /**
    * Function to be executed before a test (in Mocha/Jasmine) or a step (in Cucumber) starts.
    * @param {Object} test test details
@@ -226,8 +234,9 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that ran
    */
-  // after: function (result, capabilities, specs) {
-  // },
+   after: function (result, capabilities, specs) {
+     console.warn(global.vI18nWarnings);
+   },
   /**
    * Gets executed right after terminating the webdriver session.
    * @param {Object} config wdio configuration object
