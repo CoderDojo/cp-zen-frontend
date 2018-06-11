@@ -62,6 +62,16 @@ const BookingParentData = Object.create(EventDetails, {
       return $$('.cd-event-tickets__ticket-selector')[index];
     }
   },
+  notAttendingSelector: {
+    value(index) {
+      return $$('.cd-event-tickets__not-attending-selector')[index];
+    }
+  },
+  specialReqSelector: {
+    value(index) {
+      return $$('.cd-event-tickets__special-req-selector')[index];
+    }
+  },
   submitBookingButton: {
     get() {
       return $('button[name="submitApplications"]');

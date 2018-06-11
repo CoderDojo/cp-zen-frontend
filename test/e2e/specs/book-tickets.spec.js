@@ -363,6 +363,16 @@ describe('Book event page', () => {
         browser.waitUntil(() => Booking.tickets.length > 0);
         expect(Booking.ticketName(0).getText()).to.equal('Name:\nchild 3three');
       });
+      it('should hide the ticket when not attending is selected', () => {
+        browser.waitUntil(() => Booking.tickets.length > 0);
+        expect(Booking.ticketName(0).getText()).to.equal('Name:\nchild 3three');
+        expect(Booking.notAttendingSelector(0).isVisible()).to.be.true;
+        expect(Booking.ticketSelector(0).isVisible()).to.be.true;
+        expect(Booking.specialReqSelector(0).isVisible()).to.be.true;
+        Booking.notAttendingSelector(0).click();
+        expect(Booking.ticketSelector(0)).to.be.undefined;
+        expect(Booking.specialReqSelector(0)).to.be.undefined;
+      });
       it('should let me create new children', () => {
         expect(Booking.addYouthButton.isVisible()).to.be.true;
       });
