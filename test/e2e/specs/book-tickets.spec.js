@@ -401,4 +401,24 @@ describe('Book event page', () => {
       });
     });
   });
+  describe('edit booking', () => {
+    it('should display no indiviual tickets as it has no kids', () => {
+      LoginPage.open();
+      LoginPage.email.waitForVisible();
+      LoginPage.email.setValue('mentor1@example.com');
+      LoginPage.password.setValue('test');
+      LoginPage.login.click();
+      startBooking();
+      // Book a first time
+      Booking.eventTitle.waitForVisible();
+      Booking.ticketSelector(0).click()
+      Booking.ticketOption('Mentor')[0].click()
+      Booking.phoneNumber.setValue('+0');
+      Booking.submitBookingButton.click();
+      // Return to booking
+      startBooking();
+      Booking.ticketSelected.waitForVisible();
+      expect(Booking.ticketSelected.getText()).to.equal('Mentor');
+    });
+  });
 });

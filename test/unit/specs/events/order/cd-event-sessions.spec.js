@@ -18,6 +18,7 @@ describe('Event sessions component', () => {
       loadSessions: sandbox.stub(),
       v3: {
         createOrder: sandbox.stub(),
+        getOrder: sandbox.stub(),
       },
     };
     MockUserService = {
@@ -229,6 +230,121 @@ describe('Event sessions component', () => {
         // ASSERT
         expect(vm.children).to.deep.equal([{ value: { name: 'Jane Doe' }, id: '2' }]);
         expect(OrderStore.commit).to.have.been.calledWith('removeApplications', '1');
+      });
+    });
+
+    describe('methods.initStore()', () => {
+      it('should get the existing order and set existingApplications', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        mockService.v3.getOrder.resolves({
+          body: {
+            results: [{
+              applications: [{
+                dateOfBirth: '1969-11-26T00:00:00.000Z',
+                eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+                ticketName: 'Mentor',
+                ticketType: 'mentor',
+                sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
+                dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+                ticketId: '018a57a1-0696-44ad-81b8-0d7b8480e422',
+                userId: 'mentor1',
+              }],
+              id: '087b9c30-6e39-11e8-85be-bd6e50591bce',
+            }] },
+        });
+        vm.user = {
+          id: 'user1',
+        };
+        vm.eventId = 'event1';
+
+        // ACT
+        await vm.initStore();
+
+        // ASSERT
+        expect(mockService.v3.getOrder).to.have.been.calledOnce;
+        expect(mockService.v3.getOrder).to.have.been.calledWith('user1', { params: { 'query[eventId]': 'event1' } });
+        expect(vm.existingApplications).to.deep.equal({ mentor1: [{
+          dateOfBirth: '1969-11-26T00:00:00.000Z',
+          eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+          ticketName: 'Mentor',
+          ticketType: 'mentor',
+          sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
+          dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+          ticketId: '018a57a1-0696-44ad-81b8-0d7b8480e422',
+          userId: 'mentor1',
+        }] });
+      });
+      it('should get the existing order and set existingApplications while excluding parent ticket', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        mockService.v3.getOrder.resolves({
+          body: {
+            results: [{
+              applications: [{
+                dateOfBirth: '1969-11-26T00:00:00.000Z',
+                eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+                ticketName: 'kid',
+                ticketType: 'ninja',
+                sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
+                dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+                ticketId: '018a57a1-0696-44ad-81b8-0d7b8480e422',
+                userId: 'kido1',
+              }, {
+                dateOfBirth: '1969-11-26T00:00:00.000Z',
+                eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+                ticketName: 'parent',
+                ticketType: 'parent-guardian',
+                sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
+                dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+                ticketId: '018a57a1-0696-44ad-81b8-0d7b8480e422',
+                userId: 'parent1',
+              }],
+              id: '087b9c30-6e39-11e8-85be-bd6e50591bce',
+            }] },
+        });
+        vm.user = {
+          id: 'user1',
+        };
+        vm.eventId = 'event1';
+
+        // ACT
+        await vm.initStore();
+
+        // ASSERT
+        expect(mockService.v3.getOrder).to.have.been.calledOnce;
+        expect(mockService.v3.getOrder).to.have.been.calledWith('user1', { params: { 'query[eventId]': 'event1' } });
+        expect(vm.existingApplications).to.deep.equal({ kido1: [{
+          dateOfBirth: '1969-11-26T00:00:00.000Z',
+          eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+          ticketName: 'kid',
+          ticketType: 'ninja',
+          sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
+          dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+          ticketId: '018a57a1-0696-44ad-81b8-0d7b8480e422',
+          userId: 'kido1',
+        }] });
+      });
+      it('should set existingApplications to an empty object if there are no results', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        mockService.v3.getOrder.resolves({
+          body: {
+            results: [],
+          },
+        });
+        vm.user = {
+          id: 'user1',
+        };
+        vm.eventId = 'event1';
+
+        // ACT
+        await vm.initStore();
+
+        // ASSERT
+        expect(mockService.v3.getOrder).to.have.been.calledOnce;
+        expect(mockService.v3.getOrder).to.have.been.calledWith('user1', { params: { 'query[eventId]': 'event1' } });
+        expect(vm.existingApplications).to.deep.equal({});
       });
     });
 
@@ -571,6 +687,7 @@ describe('Event sessions component', () => {
       vm.loadProfile = sinon.stub().resolves();
       vm.loadChildren = sinon.stub().resolves();
       vm.loadDojoRelationship = sinon.stub().resolves();
+      vm.initStore = sinon.stub().resolves();
       vm.profile.children = [];
       vm.isSingle = false;
       vm.children = [];
@@ -589,6 +706,7 @@ describe('Event sessions component', () => {
       vm.loadProfile = sinon.stub().resolves();
       vm.loadChildren = sinon.stub().resolves();
       vm.loadDojoRelationship = sinon.stub().resolves();
+      vm.initStore = sinon.stub().resolves();
       vm.profile.children = [{ id: '1' }];
       vm.isSingle = false;
 
@@ -606,6 +724,7 @@ describe('Event sessions component', () => {
       vm.loadProfile = sinon.stub().resolves();
       vm.loadChildren = sinon.stub().resolves();
       vm.loadDojoRelationship = sinon.stub().resolves();
+      vm.initStore = sinon.stub().resolves();
       vm.profile.children = [];
       vm.isSingle = true;
 

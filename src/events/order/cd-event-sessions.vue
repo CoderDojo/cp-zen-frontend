@@ -6,8 +6,8 @@
     </h1>
      <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
     {{ $t('Please contact the Dojo if you have any questions.') }}</p>
-    <div class="cd-event-sessions__tickets">
-      <ticket v-for="(_user, index) in users" :user="_user" :event="event" :key="_user.id"></ticket>
+    <div class="cd-event-sessions__tickets" v-if="!!existingApplications">
+      <ticket v-for="(_user, index) in users" :user="_user" :event="event" :key="_user.userId" :existing-applications="existingApplications[_user.userId]"></ticket>
     </div>
     <!-- TODO : isn't the index enough rather than generating an uuid ? -->
     <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="sessions" :id="child.id" v-on:delete="deleteChildComponent(index)"></child-ticket>
@@ -63,11 +63,13 @@
     },
     data() {
       return {
+        orderId: null,
         event: {},
         sessions: [],
         parentTicket: null,
         children: [],
         existingChildren: [],
+        existingApplications: null,
         phone: '',
         user: {},
         profile: {},
@@ -151,6 +153,9 @@
           this.createParentTicket();
         }
         this.$ga.event(this.$route.name, 'click', 'book_tickets', this.totalBooked);
+        if (this.orderId) {
+          return service.v3.updateOrder(this.orderId, this.user.id, this.applications);
+        }
         return service.v3.createOrder(this.eventId, this.applications);
       },
       async setupPrerequisites() {
@@ -200,6 +205,23 @@
       async loadDojoRelationship() {
         this.userDojos = (await DojoService.getUsersDojos(this.user.id, this.event.dojoId)).body;
       },
+      async initStore() {
+        const orders = (await service.v3.getOrder(this.user.id, { params: { 'query[eventId]': this.eventId } })).body;
+        if (orders.results.length > 0) {
+          const order = orders.results[0];
+          // Remove the automatic parent ticket
+          const manualApplications = order.applications.filter(a => a.ticketType !== 'parent-guardian');
+          this.orderId = order.id;
+          this.existingApplications = manualApplications.reduce((red, application) => {
+            // eslint-disable-next-line no-param-reassign
+            red[application.userId] = red[application.userId] ? red[application.userId] : [];
+            red[application.userId].push(application);
+            return red;
+          }, {});
+        } else {
+          this.existingApplications = {};
+        }
+      },
     },
     async created() {
       OrderStore.commit('resetApplications');
@@ -210,6 +232,7 @@
       await this.loadProfile();
       this.loadChildren();
       await this.loadDojoRelationship();
+      await this.initStore();
       if (!(this.profile.children && this.profile.children.length > 0) &&
         !this.isSingle) {
         this.children.push({ value: {}, id: uuid() });

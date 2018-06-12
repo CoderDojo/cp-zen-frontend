@@ -37,6 +37,9 @@ const EventsService = {
     createOrder(eventId, applications) {
       return Vue.http.post(`${Vue.config.apiServer}/api/3.0/events/${eventId}/orders`, { applications });
     },
+    updateOrder(orderId, userId, applications) {
+      return Vue.http.put(`${Vue.config.apiServer}/api/3.0/users/${userId}/orders/${orderId}`, { applications });
+    },
     getOrder(userId, options) {
       return Vue.http.get(`${Vue.config.apiServer}/api/3.0/users/${userId}/orders`, options);
     },
