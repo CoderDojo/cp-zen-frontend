@@ -1,8 +1,8 @@
 <template>
   <div v-if="isSingle || (children.length > 0 || existingChildren.length > 0) && !isFull" class="cd-event-sessions">
     <h1 class="cd-event-sessions__header">
-      <span v-if="isSingle">{{ $t('Select Your Tickets') }}</span>
-      <span v-else>{{ $t('Select Youth Tickets') }}</span>
+      <span v-if="isSingle">{{ $t('Select your tickets') }}</span>
+      <span v-else>{{ $t('Select youth tickets') }}</span>
     </h1>
      <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
     {{ $t('Please contact the Dojo if you have any questions.') }}</p>
@@ -17,7 +17,7 @@
     </div>
 
     <div class="cd-event-sessions__phone-number" v-if="showPhone">
-      <label>{{ $t('Phone Number') }}</label>
+      <label>{{ $t('Phone number') }}</label>
       <p>{{ $t('Since you are acting as a guardian, the Dojo needs your number in case of emergencies.') }}</p>
       <div class="cd-event-sessions__phone-number-input">
         <input class="form-control" v-model="phone" ref="phone" type="text" placeholder="e.g. +353851234567" data-vv-name="phone" data-vv-validate-on="blur" v-validate="{ required: true, regex: /^\+[0-9\ \.\-]+$/ }"/>

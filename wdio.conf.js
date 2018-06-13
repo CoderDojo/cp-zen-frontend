@@ -184,7 +184,7 @@ exports.config = {
    * Hook that gets executed _after_ a hook within the suite starts (e.g. runs after calling
    * afterEach in Mocha)
    */
-   afterHook: function () {
+   afterTest: function () {
      const warnings = (browser.log('browser')).value;
      warnings.forEach((w) => {
        const keys = w.message.match(/Value of key \'(.*)\' is not a string/);
@@ -234,17 +234,19 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that ran
    */
-   after: function (result, capabilities, specs) {
-     console.warn(global.vI18nWarnings);
-   },
+    after: function (result, capabilities, specs) {
+      if (process.env.I18N_DEBUG) {
+        console.warn(global.vI18nWarnings);
+      }
+    },
   /**
    * Gets executed right after terminating the webdriver session.
    * @param {Object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that ran
    */
-  // afterSession: function (config, capabilities, specs) {
-  // },
+   // afterSession: function (config, capabilities, specs) {
+   //},
   /**
    * Gets executed after all workers got shut down and the process is about to exit. It is not
    * possible to defer the end of the process using a promise.

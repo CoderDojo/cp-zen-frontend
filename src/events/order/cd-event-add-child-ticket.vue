@@ -20,7 +20,7 @@
                         :placeholders="[$t('Date'), $t('Month'), $t('Year')]"
                         :proportions="[2, 2, 3]" data-vv-value-path="value" :data-vv-name="`dob-${id}`" v-validate="'required'"></vue-dob-picker>
       </div>
-      <p class="cd-child-ticket__dob-err text-danger" v-show="errors.has(`dob-${id}:required`)">{{ $t('Date of Birth is required') }}</p>
+      <p class="cd-child-ticket__dob-err text-danger" v-show="errors.has(`dob-${id}:required`)">{{ $t('Date of birth is required') }}</p>
 
       <label>{{ $t('Gender') }}</label>
       <gender-component class="cd-child-ticket__gender-selector" v-model="gender" data-vv-value-path="value" :data-vv-name="`gender-${id}`" v-validate="'required'"></gender-component>

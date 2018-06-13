@@ -22,7 +22,7 @@
           <p class="cd-create-account-form__first-name-error text-danger" v-show="errors.has('firstName:required')" for="firstName">{{ $t('First name is required') }}</p>
         </div>
           <div class="cd-create-account__names-last" :class="{'cd-create-account__names--error': !errors.has('lastName:required') && errors.has('firstName:required')}">
-          <input type="text" class="form-control" name="lastName" :placeholder="$t('Last Name')" id="lastName" data-vv-as="last name" v-validate="'required'" v-model="profile.lastName">
+          <input type="text" class="form-control" name="lastName" :placeholder="$t('Last name')" id="lastName" data-vv-as="last name" v-validate="'required'" v-model="profile.lastName">
           <p class="cd-create-account-form__last-name-error text-danger" v-show="errors.has('lastName:required')" for="lastName">{{ $t('Last name is required') }}</p>
         </div>
       </div>
@@ -39,8 +39,8 @@
             :proportions="[2, 2, 3]"></vue-dob-picker>
         </div>
         <p v-if="isUnderage" class="cd-create-account__dob-error text-danger">
-          {{ $t('Sorry :( Children under 13 are note allowed to book events.') }} 
-          {{ $t('You can ask your parent or guardian to bookfor you.') }}
+          {{ $t('Sorry :( Children under 13 are not allowed to book events.') }} 
+          {{ $t('You can ask your parent or guardian to book for you.') }}
         </p>
         <p class="cd-create-account__dob-error text-danger"
           v-show="errors.has('dob:required')">{{ $t('Date of birth is required') }}</p>
@@ -60,7 +60,9 @@
         </span>
         <i class="fa cd-create-account__password-visibility" :class="isPasswordVisible ? 'fa-eye-slash': 'fa-eye' " @click="togglePasswordVisibility()"></i>
         <p class="text-danger cd-create-account__password-error"
-               v-show="errors.has('password')">{{ $t(errors.first('password')) }}</p>
+               v-show="errors.has('password:required')">{{ $t('Password is required') }}</p>
+        <p class="text-danger cd-create-account__password-error"
+               v-show="errors.has('password:cd-password')">{{ $t('Password must be at least 8 characters with at least one number.') }}</p>
       </div>
       <div>
         <div class="cd-create-account__recaptcha">
