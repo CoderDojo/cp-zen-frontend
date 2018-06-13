@@ -94,9 +94,16 @@ exports.register = function (server, options, next) {
   server.route({
     method: 'GET',
     path: '/events/{eventId}',
-    handler: {
-      file: {
-        path: 'index.html',
+    handler: function (request, reply) {
+      reply(openGraphTemplate({
+        openGraphProperties: request.app.context.preload
+      }));
+    },
+    config: {
+      plugins: {
+        senecaPreloader: {
+          handler: 'seneca-event-preloader'
+        }
       },
     },
   });
@@ -104,9 +111,16 @@ exports.register = function (server, options, next) {
   server.route({
     method: 'GET',
     path: '/events/{eventId}/sessions',
-    handler: {
-      file: {
-        path: 'index.html',
+    handler: function (request, reply) {
+      reply(openGraphTemplate({
+        openGraphProperties: request.app.context.preload
+      }));
+    },
+    config: {
+      plugins: {
+        senecaPreloader: {
+          handler: 'seneca-event-preloader'
+        }
       },
     },
   });
@@ -114,9 +128,16 @@ exports.register = function (server, options, next) {
   server.route({
     method: 'GET',
     path: '/events/{eventId}/confirmation',
-    handler: {
-      file: {
-        path: 'index.html',
+    handler: function (request, reply) {
+      reply(openGraphTemplate({
+        openGraphProperties: request.app.context.preload
+      }));
+    },
+    config: {
+      plugins: {
+        senecaPreloader: {
+          handler: 'seneca-event-preloader'
+        }
       },
     },
   });
