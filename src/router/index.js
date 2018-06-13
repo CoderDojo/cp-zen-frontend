@@ -73,50 +73,49 @@ const router = new Router({
           component: Login,
         },
         {
-          path: '/v2',
-          component: {
-            template: '<router-view></router-view>',
-          },
+          path: 'events/:eventId',
+          component: orderWrapper,
+          props: true,
           children: [
             {
-              path: 'events/:eventId',
-              component: orderWrapper,
+              path: '',
+              component: EventDetails,
               props: true,
               children: [
                 {
                   path: '',
-                  component: EventDetails,
+                  name: 'LoginOrRegister',
+                  component: LoginOrRegister,
                   props: true,
-                  children: [
-                    {
-                      path: '',
-                      name: 'LoginOrRegister',
-                      component: LoginOrRegister,
-                      props: true,
-                      async beforeEnter(to, from, next) {
-                        const loggedInUser = (await UserService.getCurrentUser()).body;
-                        next(loggedInUser.login ? { name: 'EventSessions', replace: true, params: to.params } : true);
-                      },
-                    },
-                    {
-                      path: 'sessions',
-                      name: 'EventSessions',
-                      component: EventSessions,
-                      props: true,
-                      beforeEnter: loggedInNavGuard,
-                    },
-                  ],
+                  async beforeEnter(to, from, next) {
+                    const loggedInUser = (await UserService.getCurrentUser()).body;
+                    next(loggedInUser.login ? { name: 'EventSessions', params: to.params } : true);
+                  },
+                },
+                {
+                  path: 'sessions',
+                  name: 'EventSessions',
+                  component: EventSessions,
+                  props: true,
+                  beforeEnter: loggedInNavGuard,
                 },
               ],
             },
-            {
-              path: 'events/:eventId/confirmation',
-              name: 'EventBookingConfirmation',
-              component: BookingConfirmation,
-              beforeEnter: loggedInNavGuard,
-              props: true,
-            },
           ],
+        },
+        {
+          path: 'events/:eventId/confirmation',
+          name: 'EventBookingConfirmation',
+          component: BookingConfirmation,
+          beforeEnter: loggedInNavGuard,
+          props: true,
+        },
+        // Kept for future development/transitions
+        {
+          path: '/v2',
+          component: {
+            template: '<router-view></router-view>',
+          },
         },
       ],
     },

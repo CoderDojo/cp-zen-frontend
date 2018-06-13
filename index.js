@@ -93,6 +93,36 @@ exports.register = function (server, options, next) {
 
   server.route({
     method: 'GET',
+    path: '/events/{eventId}',
+    handler: {
+      file: {
+        path: 'index.html',
+      },
+    },
+  });
+  
+  server.route({
+    method: 'GET',
+    path: '/events/{eventId}/sessions',
+    handler: {
+      file: {
+        path: 'index.html',
+      },
+    },
+  });
+  
+  server.route({
+    method: 'GET',
+    path: '/events/{eventId}/confirmation',
+    handler: {
+      file: {
+        path: 'index.html',
+      },
+    },
+  });
+
+  server.route({
+    method: 'GET',
     path: '/',
     handler: {
       file: {

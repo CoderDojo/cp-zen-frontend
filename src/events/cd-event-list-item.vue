@@ -71,9 +71,6 @@
         return this.event.sessions.map(session => session.name).join(', ');
       },
       bookLink() {
-        if (Vue.config.buildBranch === 'master') {
-          return `/dojo/${this.dojo.id}/event/${this.event.id}`;
-        }
         return { name: 'LoginOrRegister', params: { eventId: this.event.id } };
       },
     },
