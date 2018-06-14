@@ -59,6 +59,11 @@
         }
       },
     },
+    async created() {
+      const loggedInUser = (await UserService.getCurrentUser()).body;
+      if (loggedInUser.login) return this.$router.push(this.redirectUrl);
+      return undefined;
+    },
   };
 </script>
 
