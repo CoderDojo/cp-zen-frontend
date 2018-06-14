@@ -44,7 +44,6 @@
   </div>
 </template>
 <script>
-  import Vue from 'vue';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import cdUrlFormatter from '@/common/filters/cd-url-formatter';

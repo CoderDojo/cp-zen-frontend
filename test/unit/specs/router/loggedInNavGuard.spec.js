@@ -43,7 +43,6 @@ describe('loggedInNavGuard', () => {
     expect(nextMock).to.have.been.calledOnce;
     expect(nextMock).to.have.been.calledWith({
       name: 'Login',
-      replace: true,
       query: { referer: '/some/path' },
     });
   });

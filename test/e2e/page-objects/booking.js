@@ -3,7 +3,7 @@ const EventDetails = require('./event-details');
 const BookingParentData = Object.create(EventDetails, {
   open: {
     value(eventId) {
-      return this.open.call(this, `/v2/events/${eventId}/book`);
+      return this.open.call(this, `/events/${eventId}`);
     },
   },
   eventIsFullEmoji: {
