@@ -18,7 +18,7 @@ function startBooking() {
   DojoDetailsPage.eventViewButtons[0].click();
 }
 
-describe.only('Book event page', () => {
+describe('Book event page', () => {
   describe('Register page', () => {
     it('should display an error if underage', () => {
       startBooking();
