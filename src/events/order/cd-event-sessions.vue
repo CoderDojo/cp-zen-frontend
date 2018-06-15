@@ -230,7 +230,7 @@
   @import "~@coderdojo/cd-common/common/_colors";
   @import "../../common/styles/cd-primary-button";
   @import "../../common/styles/cd-filler-loading";
-  .cd-filler-loading;
+
   .cd-event-sessions {
     &__header {
       font-size: 24px;
