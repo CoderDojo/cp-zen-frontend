@@ -13,6 +13,9 @@ describe('My tickets page', () => {
       LoginPage.login.click();
       TicketPage.open();
     });
+    afterEach(() => {
+      browser.deleteCookie('loggedIn');
+    });
     it('should show a list of events', () => {
       TicketPage.firstEvent.waitForVisible();
       expect(TicketPage.events.length).to.equal(2);

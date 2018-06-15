@@ -293,6 +293,9 @@ describe('Book event page', () => {
     });
   });
   describe('RBF', () => {
+    afterEach(() => {
+      browser.deleteCookie('loggedIn');
+    });
     describe('when single', () => {
       describe('when o13', () => {
         beforeEach(() => {
