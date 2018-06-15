@@ -35,7 +35,7 @@
     name: 'TicketForUser',
     inject: ['$validator'],
     mixins: [Ticket],
-    props: ['event', 'user'],
+    props: ['event', 'user', 'existing-applications'],
     data() {
       return {
         notes: '',
@@ -97,6 +97,10 @@
         const allowedTypes = this.isNinja ? ['ninja', 'others'] : ['mentor'];
         return allowedTypes.includes(type);
       },
+      findTicketOption(application) {
+        const session = (this.ticketsOptions.find(s => s.id === application.sessionId));
+        return session.tickets.find(t => t.id === application.ticketId);
+      },
       onBlur() {
         this.blurTimeout = window.setTimeout(() => {
           this.$emit('blur');
@@ -105,6 +109,14 @@
       onFocus() {
         window.clearTimeout(this.blurTimeout);
       },
+    },
+    created() {
+      if (this.existingApplications) {
+        this.selectedTickets = this.existingApplications.reduce(
+          (acc, ticket) => acc.concat(this.findTicketOption(ticket)),
+          [],
+        );
+      }
     },
   };
 </script>
