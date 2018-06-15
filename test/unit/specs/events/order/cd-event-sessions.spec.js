@@ -15,7 +15,6 @@ describe('Event sessions component', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     mockService = {
-      loadSessions: sandbox.stub(),
       v3: {
         createOrder: sandbox.stub(),
         getOrder: sandbox.stub(),
@@ -681,11 +680,17 @@ describe('Event sessions component', () => {
           dob: '1975-05-08',
           userId: 'user1',
         };
-        vm.event = { id: 'event1', dojoId: 'dojo1' };
         vm.applications = [{ sessionId: 'session2' }];
         const mockTickets = (index, sessionId) => ([{ id: `ticket${index}1`, name: `ticket${index}1`, type: 'ninja', sessionId },
           { id: `ticket${index}2`, name: `ticket${index}2`, type: 'parent-guardian', sessionId }]);
-        vm.sessions = [{ id: 'session1', tickets: mockTickets(1, 'session1') }, { id: 'session2', tickets: mockTickets(2, 'session2') }];
+        vm.event = {
+          id: 'event1',
+          dojoId: 'dojo1',
+          sessions: [
+            { id: 'session1', tickets: mockTickets(1, 'session1') },
+            { id: 'session2', tickets: mockTickets(2, 'session2') },
+          ],
+        };
 
         // ACT
         vm.createParentTicket();
@@ -709,7 +714,12 @@ describe('Event sessions component', () => {
         vm.applications = [{ sessionId: 'session2' }];
         const mockTickets = (index, sessionId) => ([{ id: `ticket${index}1`, name: `ticket${index}1`, type: 'ninja', sessionId },
           { id: `ticket${index}2`, name: `ticket${index}2`, type: 'parent-guardian', sessionId }]);
-        vm.sessions = [{ id: 'session1', tickets: mockTickets(1, 'session1') }, { id: 'session2', tickets: [{ id: 'ticket21', name: 'ticket21', type: 'ninja', sessionId: 'session2' }] }];
+        vm.event = {
+          sessions: [
+            { id: 'session1', tickets: mockTickets(1, 'session1') },
+            { id: 'session2', tickets: [{ id: 'ticket21', name: 'ticket21', type: 'ninja', sessionId: 'session2' }] }
+          ],
+        };
 
         // ACT
         vm.createParentTicket();
@@ -732,43 +742,11 @@ describe('Event sessions component', () => {
     expect(vm.user).to.deep.equal({ name: 'parent1' });
   });
 
-  it('should show the list of event sessions', (done) => {
-    // ARRANGE
-    const mockSessionDataResponse = [
-      {
-        name: 'Scratch',
-        description: 'Beginners welcomes',
-      },
-      {
-        name: 'Arduino',
-        description: 'Intermediate',
-      },
-    ];
-
-    const vm = vueUnitHelper(SessionListWithMocks);
-    vm.eventId = '123';
-    vm.event = {
-      name: 'Scratch',
-    };
-    mockService.loadSessions.withArgs(vm.eventId)
-      .returns(Promise.resolve({ body: mockSessionDataResponse }));
-
-    // ACT
-    vm.loadSessions();
-
-    // ASSERT
-    requestAnimationFrame(() => {
-      expect(vm.sessions).to.deep.equal(mockSessionDataResponse);
-      done();
-    });
-  });
-
   describe('created', () => {
     it('should add a default child if the user is having no child and is not single', async () => {
       const vm = vueUnitHelper(SessionListWithMocks);
       vm.loadEvent = sinon.stub().resolves();
       vm.setEvent = sinon.stub().resolves();
-      vm.loadSessions = sinon.stub().resolves();
       vm.loadCurrentUser = sinon.stub().resolves();
       vm.loadProfile = sinon.stub().resolves();
       vm.loadChildren = sinon.stub().resolves();
@@ -787,7 +765,6 @@ describe('Event sessions component', () => {
       const vm = vueUnitHelper(SessionListWithMocks);
       vm.loadEvent = sinon.stub().resolves();
       vm.setEvent = sinon.stub().resolves();
-      vm.loadSessions = sinon.stub().resolves();
       vm.loadCurrentUser = sinon.stub().resolves();
       vm.loadProfile = sinon.stub().resolves();
       vm.loadChildren = sinon.stub().resolves();
@@ -805,7 +782,6 @@ describe('Event sessions component', () => {
       const vm = vueUnitHelper(SessionListWithMocks);
       vm.loadEvent = sinon.stub().resolves();
       vm.setEvent = sinon.stub().resolves();
-      vm.loadSessions = sinon.stub().resolves();
       vm.loadCurrentUser = sinon.stub().resolves();
       vm.loadProfile = sinon.stub().resolves();
       vm.loadChildren = sinon.stub().resolves();

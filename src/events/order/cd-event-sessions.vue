@@ -9,9 +9,7 @@
     <div class="cd-event-sessions__tickets" v-if="!!existingApplications">
       <ticket v-for="(_user, index) in users" :user="_user" :event="event" :key="_user.userId" :existing-applications="existingApplications[_user.userId]"></ticket>
     </div>
-    <!-- TODO : isn't the index enough rather than generating an uuid ? -->
-    <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="sessions" :id="child.id" v-on:delete="deleteChildComponent(index)" v-validate.disable="'submitApplications:required'" :deletable="users.length > 0 || children.length > 1"></child-ticket>
-
+    <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="event.sessions" :id="child.id" v-on:delete="deleteChildComponent(index)" v-validate.disable="'submitApplications:required'" :deletable="users.length > 0 || children.length > 1"></child-ticket>
     <div class="cd-event-sessions__add-button" v-if="!isO13">
       <button class="cd-event-sessions__add-youth btn btn-primary" tag="button" @click="addChildComponent"><i class="fa fa-plus" aria-hidden="true"></i> {{ $t('Add a new youth') }}</button>
     </div>
@@ -49,6 +47,7 @@
 </template>
 <script>
   import { omit } from 'lodash';
+  import { mapGetters } from 'vuex';
   import uuid from 'uuid/v4';
   import UserService from '@/users/service';
   import DojoService from '@/dojos/service';
@@ -70,8 +69,6 @@
     data() {
       return {
         orderId: null,
-        event: {},
-        sessions: [],
         parentTicket: null,
         children: [],
         existingChildren: [],
@@ -124,6 +121,7 @@
         }
         return this.existingChildren;
       },
+      ...mapGetters('order', ['event']),
     },
     methods: {
       async addChildComponent() {
@@ -152,7 +150,7 @@
       },
       createParentTicket() {
         const sessionIds = this.applications.map(a => a.sessionId);
-        const bookedSessions = this.sessions.filter(s => sessionIds.includes(s.id));
+        const bookedSessions = this.event.sessions.filter(s => sessionIds.includes(s.id));
         const possibleTickets = bookedSessions.reduce((arr, s) => arr.concat(s.tickets), []);
         const parentTickets = possibleTickets.filter(t => t.type === 'parent-guardian');
         if (parentTickets.length > 0) {
@@ -206,15 +204,6 @@
       async loadProfile() {
         this.profile = (await UserService.userProfileData(this.user.id)).body;
       },
-      loadSessions() {
-        service.loadSessions(this.eventId).then((response) => {
-          this.sessions = response.body;
-          this.event = { ...this.event, sessions: this.sessions };
-        });
-      },
-      async setEvent() {
-        this.event = (await service.loadEvent(this.eventId)).body;
-      },
       async loadChildren() {
         if (this.profile.children) {
           this.existingChildren = (await Promise.all(
@@ -247,8 +236,6 @@
     async created() {
       OrderStore.commit('resetApplications');
       // TODO : parallelize
-      await this.setEvent();
-      this.loadSessions();
       await this.loadCurrentUser();
       await this.loadProfile();
       this.loadChildren();
