@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isSingle || (children.length > 0 || existingChildren.length > 0) && !isFull" class="cd-event-sessions">
+  <div v-if="isDisplayable && !isFull" class="cd-event-sessions">
     <h1 class="cd-event-sessions__header">
       <span v-if="isSingle">{{ $t('Select Your Tickets') }}</span>
       <span v-else>{{ $t('Select Youth Tickets') }}</span>
@@ -33,11 +33,17 @@
       </button>
     </div>
   </div>
-  <div v-else>
+  <div v-else-if="isFull && isDisplayable">
     <div class="cd-event-sessions__no-tickets">
       <div class="cd-event-sessions__no-tickets-emoticon">:(</div>
       <h3>{{ $t('We\'re sorry, there are no tickets left.') }}</h3>
       <h4>{{ $t('Keep an eye out for future events!') }}</h4>
+    </div>
+  </div>
+  <div v-else class="cd-event-sessions cd-filler">
+    <h1 class="cd-event-sessions__header cd-event-sessions__header--filler"></h1>
+    <div class="cd-event-sessions__tickets">
+      <div class="cd-event-sessions__tickets cd-event-sessions__tickets--filler"></div>
     </div>
   </div>
 </template>
@@ -75,6 +81,9 @@
       };
     },
     computed: {
+      isDisplayable() {
+        return this.isSingle || (this.children.length > 0 || this.existingChildren.length > 0);
+      },
       showPhone() {
         return !this.profile.phone && !this.isO13;
       },
@@ -220,12 +229,18 @@
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
   @import "../../common/styles/cd-primary-button";
+  @import "../../common/styles/cd-filler-loading";
 
   .cd-event-sessions {
     &__header {
       font-size: 24px;
       margin: 45px 0 16px 0;
       font-weight: bold;
+      &--filler {
+        background-color: @cd-very-light-grey;
+        height: 24px;
+        width: 176px;
+      }
     }
     &__next {
       .primary-button-large;
@@ -238,6 +253,11 @@
       display: flex;
       flex-direction: column;
       align-items: self-end;
+      &--filler {
+        height: 150px;
+        width: 450px;
+        background-color: @cd-very-light-grey;
+      }
     }
     &__add-button {
       padding: 0px 0px 8px;
