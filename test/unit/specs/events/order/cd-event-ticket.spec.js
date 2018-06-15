@@ -160,7 +160,7 @@ describe('Event ticket creation', () => {
         sessionId: 'sessionId',
         id: 'ticketId',
       }];
-      vm.specialRequirement = 'Need wheelchair access';
+      vm.notes = 'Need wheelchair access';
 
       expect(vm.applications[0]).to.deep.equal({
         name: 'first last',
@@ -169,7 +169,7 @@ describe('Event ticket creation', () => {
         ticketName: 'ticketName',
         ticketType: 'ticketType',
         sessionId: 'sessionId',
-        specialRequirement: 'Need wheelchair access',
+        notes: 'Need wheelchair access',
         dojoId: 'dojoId',
         ticketId: 'ticketId',
         userId: 'userId',
