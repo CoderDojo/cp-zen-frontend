@@ -152,18 +152,17 @@ describe('Login', () => {
   describe('created', () => {
     it('should redirect if the user is logged-in', async () => {
       const vm = vueUnitHelper(LoginComponentWithMocks);
-      vm.$router = { push: sandbox.stub() };
+      vm.$router = { replace: sandbox.stub() };
       vm.$route = {
         query: {
           referer: '/library',
         },
       };
-      MockUserService.getCurrentUser.resolves({ body: { login: {} } });
+      vm.isLoggedIn = true;
 
       await vm.$lifecycleMethods.created();
-      expect(MockUserService.getCurrentUser).to.have.been.calledOnce;
-      expect(vm.$router.push).to.have.been.calledOnce;
-      expect(vm.$router.push).to.have.been.calledWith('/library');
+      expect(vm.$router.replace).to.have.been.calledOnce;
+      expect(vm.$router.replace).to.have.been.calledWith('/library');
     });
   });
 });

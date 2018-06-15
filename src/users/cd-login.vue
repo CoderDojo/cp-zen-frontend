@@ -28,6 +28,8 @@
 </template>
 
 <script>
+  import store from '@/store';
+  import { mapGetters } from 'vuex';
   import UserService from './service';
 
   export default {
@@ -38,10 +40,12 @@
         password: '',
       };
     },
+    store,
     computed: {
       redirectUrl() {
         return this.$route.query.referer || this.$route.query.referrer || '/';
       },
+      ...mapGetters(['isLoggedIn']),
     },
     methods: {
       async validateForm() {
@@ -60,8 +64,7 @@
       },
     },
     async created() {
-      const loggedInUser = (await UserService.getCurrentUser()).body;
-      if (loggedInUser.login) return this.$router.push(this.redirectUrl);
+      if (this.isLoggedIn) return this.$router.replace(this.redirectUrl);
       return undefined;
     },
   };
