@@ -14,7 +14,7 @@
       <div class="cd-event-tickets__ticket-selector" v-if="!ticketsAreFull(tickets) && !notAttending">
         <multiselect v-model="selectedTickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.userId}`" v-validate="'required'"></multiselect>
         <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`)">{{ $t('Ticket selection is required') }}</p>
-        <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement"></special-req-component>
+        <special-req-component class="cd-event-tickets__special-req-selector" v-model="notes"></special-req-component>
       </div>
       <div v-else-if="ticketsAreFull(tickets)">
         {{ $t('Sorry, there are no applicable tickets left') }}
@@ -38,7 +38,7 @@
     props: ['event', 'user'],
     data() {
       return {
-        specialRequirement: '',
+        notes: '',
         notAttending: false,
         selectedTickets: [],
       };
@@ -81,7 +81,7 @@
           dojoId: this.event.dojoId,
           ticketId: ticket.id,
           userId: this.user.userId,
-        }, !this.specialRequirement ? '' : { specialRequirement: this.specialRequirement })));
+        }, !this.notes ? '' : { notes: this.notes })));
       },
     },
     watch: {

@@ -33,7 +33,7 @@
       </div>
       <p class="cd-child-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${id}:required`)">{{ $t('Ticket selection is required') }}</p>  
 
-      <special-req-component class="cd-child-ticket__special-req-selector" v-model="specialRequirement"></special-req-component>
+      <special-req-component class="cd-child-ticket__special-req-selector" v-model="notes"></special-req-component>
     </form>
   </div>
 </template>
@@ -72,7 +72,7 @@
         genderExplaination: false,
         selectedTickets: [],
         userId: null,
-        specialRequirement: '',
+        notes: '',
       };
     },
     methods: {
@@ -133,7 +133,7 @@
           dojoId: this.event.dojoId,
           ticketId: ticket.id,
           userId: this.userId,
-        }, !this.specialRequirement ? '' : { specialRequirement: this.specialRequirement })));
+        }, !this.notes ? '' : { notes: this.notes })));
       },
       child() {
         return {
