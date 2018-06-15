@@ -40,7 +40,7 @@
       <h4>{{ $t('Keep an eye out for future events!') }}</h4>
     </div>
   </div>
-  <div v-else class="cd-event-sessions--filler">
+  <div v-else class="cd-event-sessions cd-filler">
     <h1 class="cd-event-sessions__header cd-event-sessions__header--filler"></h1>
     <div class="cd-event-sessions__tickets">
       <div class="cd-event-sessions__tickets cd-event-sessions__tickets--filler"></div>
@@ -232,20 +232,6 @@
   @import "../../common/styles/cd-filler-loading";
   .cd-filler-loading;
   .cd-event-sessions {
-    &--filler {
-      overflow: hidden;
-      width: 100%;
-      height: 100%;
-      position: relative;
-      &::before {
-        content: " ";
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        animation: fillerLoading .8s linear infinite;
-        background: linear-gradient(to right, transparent 42%, fade(@cd-white, 50%) 50%, transparent 58%) 50% 50%;
-      }
-    }
     &__header {
       font-size: 24px;
       margin: 45px 0 16px 0;
