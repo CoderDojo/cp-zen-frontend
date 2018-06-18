@@ -34,7 +34,7 @@
         </router-link>
       </form>
       <div v-if="!searchExecuted" class="cd-find-dojo__panel-illustration">
-        <img src="../assets/characters/ninjas/CD_Character_SVGS-31.svg" />
+        <img src="../assets/characters/ninjas/CD_Character_SVGS-31.png" />
       </div>
     </div>
     <div v-if="searchExecuted" class="cd-find-dojo__results-header cd-find-dojo__results-header--mobile">

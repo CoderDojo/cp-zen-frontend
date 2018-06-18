@@ -5,7 +5,7 @@
         <div class="cd-booking-confirmation__banner-title">{{ title }}</div>
         <div class="cd-booking-confirmation__banner-subtitle" v-html="subtitle"></div>
       </div>
-      <img class="cd-booking-confirmation__banner-illustration" src="../../assets/characters/ninjas/CD_Character_SVGS-32.svg" />
+      <img class="cd-booking-confirmation__banner-illustration" src="../../assets/characters/ninjas/CD_Character_SVGS-32.png" />
     </div>
 
     <div class="cd-booking-confirmation__event-name">{{ event.name }}</div>
@@ -212,8 +212,7 @@
         flex: 2;
         align-self: flex-end;
         padding: 0 32px;
-        transform-origin: bottom;
-        transform: scale(0.9);
+        max-width: 300px;
       }
     }
     &__booking {
