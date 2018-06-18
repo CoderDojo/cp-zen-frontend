@@ -5,7 +5,7 @@
         <div class="cd-booking-confirmation__banner-title">{{ title }}</div>
         <div class="cd-booking-confirmation__banner-subtitle" v-html="subtitle"></div>
       </div>
-      <img class="cd-booking-confirmation__banner-illustration" src="../../assets/characters/ninjas/ninja-female-2-ok-hand.svg" />
+      <img class="cd-booking-confirmation__banner-illustration" src="../../assets/characters/ninjas/CD_Character_SVGS-32.svg" />
     </div>
 
     <div class="cd-booking-confirmation__event-name">{{ event.name }}</div>

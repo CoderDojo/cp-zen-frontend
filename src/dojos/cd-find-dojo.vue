@@ -34,7 +34,7 @@
         </router-link>
       </form>
       <div v-if="!searchExecuted" class="cd-find-dojo__panel-illustration">
-        <img src="../assets/characters/ninjas/ninja-female-2-laptop-sitting.svg" />
+        <img src="../assets/characters/ninjas/CD_Character_SVGS-31.svg" />
       </div>
     </div>
     <div v-if="searchExecuted" class="cd-find-dojo__results-header cd-find-dojo__results-header--mobile">
@@ -299,7 +299,7 @@
         flex: 1;
         align-self: flex-end;
         padding: 0 32px;
-        transform: rotateY(180deg) translateY(15%);
+        transform: rotateY(180deg);
         img {
           max-width: 240px;
         }
