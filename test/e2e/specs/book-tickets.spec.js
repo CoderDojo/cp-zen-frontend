@@ -273,7 +273,7 @@ describe('Book event page', () => {
           expect(BookingConfirmation.bookingSessionTicket(1).getText()).to.equal('Parent / Arduino');
 
           expect(BookingConfirmation.accountCreationConfirmation.isVisible()).to.be.false;
-          expect(BookingConfirmation.joinedDojoConfirmation.getText()).to.equal('You are now subscribed to Dublin Ninja Kids dojo\nYou will be notified about future events hosted by this dojo');
+          expect(BookingConfirmation.joinedDojoConfirmation.getText()).to.equal('You are now subscribed to Dublin Ninja Kids dojo\nYou will be notified about future events hosted by this Dojo');
           expect(BookingConfirmation.approvalRequiredMessage.getText()).to.equal('Your tickets are now awaiting approval\nYou will be notified when the organizer approves your request.');
 
           expect(BookingConfirmation.eventDetailsHeader.getText()).to.equal('Event Details');
