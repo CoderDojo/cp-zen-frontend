@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import MultiGuard from 'vue-router-multiguard';
 import DojoDetails from '@/dojos/cd-dojo-details';
 import FindDojo from '@/dojos/cd-find-dojo';
 import UserTickets from '@/users/cd-tickets';
@@ -12,6 +13,7 @@ import orderWrapper from '@/events/order/wrapper';
 import UserService from '@/users/service';
 import store from '@/store';
 import loggedInNavGuard from './loggedInNavGuard';
+import orderExistsNavGuard from './orderExistsNavGuard';
 
 Vue.use(Router);
 
@@ -107,7 +109,7 @@ const router = new Router({
           path: 'events/:eventId/confirmation',
           name: 'EventBookingConfirmation',
           component: BookingConfirmation,
-          beforeEnter: loggedInNavGuard,
+          beforeEnter: MultiGuard([orderExistsNavGuard, loggedInNavGuard]),
           props: true,
         },
         // Kept for future development/transitions
