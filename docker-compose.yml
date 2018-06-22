@@ -9,6 +9,7 @@ services:
     working_dir: /usr/src/app
     volumes:
       - .:/usr/src/app:Z
+      - ../cp-translations:/usr/src/app/node_modules/cp-translations:ro
     depends_on:
       - selenium
     environment:

@@ -74,7 +74,7 @@
         <div>
           <span v-html="$t('You are now subscribed to {dojoName} dojo', {dojoName: `<strong>${dojo.name}</strong>`})"></span>
             <div class="cd-booking-confirmation__account-confirmation-help-message">
-              {{ $t('You will be notified about future events hosted by this dojo') }}
+              {{ $t('You will be notified about future events hosted by this Dojo') }}
           </div>
         </div>
       </div>
