@@ -24,7 +24,7 @@
         <a :href="event.eventbriteUrl | cdUrlFormatter" target="_blank" class="btn btn-lg btn-primary cd-user-ticket-list-item__view">{{ $t('See Details and Book') }}</a>
       </div>
       <div v-if="hasApplications" class="cd-user-ticket-list-item__view-applications">
-        <h4 class="cd-user-ticket-list-item__view-application-title"><i class="fa fa-ticket"></i>{{ $tc('Tickets') }}</h4>
+        <h4 class="cd-user-ticket-list-item__view-application-title"><i class="fa fa-ticket"></i>{{ $t('Tickets') }}</h4>
         <div v-for="application in applications" :key="application.id">
           <cd-attendee :application="application" :session="sessions[application.sessionId]" :ticket="tickets[application.ticketId]" :user="users[application.userId]"></cd-attendee>
         </div>
