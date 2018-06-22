@@ -26,7 +26,7 @@ describe('loggedInNavGuard', () => {
 
     // ASSERT
     expect(nextMock).to.have.been.calledOnce;
-    expect(nextMock).to.have.been.calledWith(true);
+    expect(nextMock).to.have.been.calledWith(undefined);
   });
 
   it('should redirect to login with a referer query param of the route if user is not logged in', async () => {

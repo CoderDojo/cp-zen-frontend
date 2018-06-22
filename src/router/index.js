@@ -109,7 +109,7 @@ const router = new Router({
           path: 'events/:eventId/confirmation',
           name: 'EventBookingConfirmation',
           component: BookingConfirmation,
-          beforeEnter: MultiGuard([orderExistsNavGuard, loggedInNavGuard]),
+          beforeEnter: MultiGuard([loggedInNavGuard, orderExistsNavGuard]),
           props: true,
         },
         // Kept for future development/transitions
