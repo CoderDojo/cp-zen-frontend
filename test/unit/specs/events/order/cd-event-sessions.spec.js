@@ -109,6 +109,33 @@ describe('Event sessions component', () => {
       });
     });
 
+    describe('computed.isDisplayable', () => {
+      it('should return true if the user is Single', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.isSingle = true;
+
+        // ASSERT
+        expect(vm.isDisplayable).to.be.true;
+      });
+      it('should return true if the user is Mentoring', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.isMentoring = true;
+
+        // ASSERT
+        expect(vm.isDisplayable).to.be.true;
+      });
+      it('should return true if the user has children', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.hasChildren = true;
+
+        // ASSERT
+        expect(vm.isDisplayable).to.be.true;
+      });
+    });
+
     describe('computed.totalBooked', () => {
       it('should return the length of the children array', () => {
         // ARRANGE
@@ -117,6 +144,45 @@ describe('Event sessions component', () => {
 
         // ASSERT
         expect(vm.totalBooked).to.equal(2);
+      });
+    });
+
+    describe('computed.hasChildren', () => {
+      it('should return true when the user has children tickets created', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.children = [{}];
+
+        // ASSERT
+        expect(vm.hasChildren).to.be.true;
+      });
+      it('should return true when the user has profile children', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.profile = {
+          children: [{}],
+        };
+        // ASSERT
+        expect(vm.hasChildren).to.be.true;
+      });
+    });
+
+    describe('computed.isMentoring', () => {
+      it('should return true when the user has a dojoRole of champion', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.dojoRole = { userTypes: ['champion'] };
+
+        // ASSERT
+        expect(vm.isMentoring).to.be.true;
+      });
+      it('should return true when the user has a dojoRole of mentor', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.dojoRole = { userTypes: ['mentor'] };
+
+        // ASSERT
+        expect(vm.isMentoring).to.be.true;
       });
     });
 
@@ -148,21 +214,24 @@ describe('Event sessions component', () => {
     });
 
     describe('computed.isSingle', () => {
-      it('should return true if the user is o13', () => {
+      it('should return true if the user is o13 without children', () => {
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.isO13 = true;
+        vm.hasChildren = false;
         expect(vm.isSingle).to.be.true;
       });
-      it('should return false if the user is not an adult with children', () => {
+      it('should return false if the user has children', () => {
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.isO13 = false;
-        vm.dojoRole = undefined;
+        vm.isMentoring = true;
+        vm.hasChildren = true;
         expect(vm.isSingle).to.be.false;
       });
-      it('should return true if the user is an adult mentor', () => {
+      it('should return true if the user is mentoring without children', () => {
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.isO13 = false;
-        vm.dojoRole = { userTypes: ['mentor'] };
+        vm.isMentoring = true;
+        vm.hasChildren = false;
         expect(vm.isSingle).to.be.true;
       });
     });
@@ -178,6 +247,21 @@ describe('Event sessions component', () => {
         vm.profile = { id: '1' };
         vm.isSingle = false;
         expect(vm.users).to.deep.equal([]);
+      });
+      it('should return the existing children if not mentoring nor single ', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.isSingle = false;
+        vm.isMentoring = false;
+        vm.existingChildren = [{ banana: true }];
+        expect(vm.users).to.deep.equal([{ banana: true }]);
+      });
+      it('should return the existing children and the user profile if Mentoring', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.profile = { id: '1' };
+        vm.isSingle = false;
+        vm.isMentoring = true;
+        vm.existingChildren = [{ banana: true }];
+        expect(vm.users).to.deep.equal([{ id: '1' }, { banana: true }]);
       });
     });
     describe('dojoRole', () => {
@@ -426,6 +510,8 @@ describe('Event sessions component', () => {
         vm.$route = { name: 'a' };
         vm.totalBooked = 1;
         vm.isSingle = false;
+        vm.isO13 = false;
+        vm.hasChildren = true;
         vm.createParentTicket = sandbox.stub();
         vm.applications = [{
           eventId: 'eventId',
