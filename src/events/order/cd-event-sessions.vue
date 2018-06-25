@@ -13,7 +13,7 @@
     <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="sessions" :id="child.id" v-on:delete="deleteChildComponent(index)"></child-ticket>
 
     <div class="cd-event-sessions__add-button" v-if="!isO13">
-      <button class="cd-event-sessions__add-youth btn btn-primary" tag="button" @click="addChildComponent"><i class="fa fa-plus" aria-hidden="true"></i> {{ $t('Add another youth ticket') }}</button>
+      <button class="cd-event-sessions__add-youth btn btn-primary" tag="button" @click="addChildComponent"><i class="fa fa-plus" aria-hidden="true"></i> {{ $t('Add a new youth') }}</button>
     </div>
 
     <div class="cd-event-sessions__phone-number" v-if="showPhone">
