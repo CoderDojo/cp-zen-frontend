@@ -336,3 +336,9 @@
     height: 36px;
   }
 </style>
+<style lang="less">
+  @import "~bootstrap/less/variables";
+  .cd-create-account__dob-picker-wrapper .vue-dob-picker label select {
+    font: @font-size-base Lato, @font-family-sans-serif;
+  }
+</style>
