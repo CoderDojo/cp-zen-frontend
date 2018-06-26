@@ -150,7 +150,7 @@
       subtitle() {
         return this.event.ticketApproval ?
           this.$t('You will be notified when the organizer approves your request.') :
-          this.$t('A confirmation email has been sent to {email}', { email: `<strong>${this.user.email}</strong>` });
+          this.$t('A confirmation email has been sent to {email}', { email: `<strong>${this.loggedInUser.email}</strong>` });
       },
       title() {
         return this.event.ticketApproval ?

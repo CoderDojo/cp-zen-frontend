@@ -15,7 +15,7 @@
 
       <label>{{ $t('Date of Birth') }}</label>
       <div class="cd-child-ticket__dob-picker-wrapper">
-        <vue-dob-picker select-class="form-control" v-model="dob"
+        <vue-dob-picker select-class="form-control cd-child-ticket__dob-picker-wrapper-select" v-model="dob"
                         show-labels="false" month-format="short"
                         :placeholders="[$t('Date'), $t('Month'), $t('Year')]"
                         :proportions="[2, 2, 3]" data-vv-value-path="value" :data-vv-name="`dob-${id}`" v-validate="'required'"></vue-dob-picker>
@@ -231,7 +231,7 @@
 .cd-child-ticket__ticket-selector .multiselect__select {
   height: 30px;
 }
-.cd-child-ticket__dob-picker-wrapper .vue-dob-picker label select {
-  font: @font-size-base Lato, @font-family-sans-serif;
+.cd-child-ticket__dob-picker-wrapper-select {
+  font-weight: 400;
 }
 </style>

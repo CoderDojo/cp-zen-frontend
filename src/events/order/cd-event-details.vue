@@ -43,6 +43,9 @@
             </cd-expandable>
           </div>
         </info-column-section>
+        <info-column-section icon="envelope-o" :header="$t('Email')" class="cd-event-details__left-column--email" >
+          <a :href="`mailto:${dojo.email}`">{{ dojo.email }}</a>
+        </info-column-section>
       </info-column>
       <div class="cd-event-details__main-content">
         <router-view></router-view>

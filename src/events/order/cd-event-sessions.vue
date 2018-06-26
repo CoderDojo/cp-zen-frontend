@@ -13,7 +13,7 @@
     <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="sessions" :id="child.id" v-on:delete="deleteChildComponent(index)" v-validate.disable="'submitApplications:required'"></child-ticket>
 
     <div class="cd-event-sessions__add-button" v-if="!isO13">
-      <button class="cd-event-sessions__add-youth btn btn-primary" tag="button" @click="addChildComponent"><i class="fa fa-plus" aria-hidden="true"></i> {{ $t('Add another youth ticket') }}</button>
+      <button class="cd-event-sessions__add-youth btn btn-primary" tag="button" @click="addChildComponent"><i class="fa fa-plus" aria-hidden="true"></i> {{ $t('Add a new youth') }}</button>
     </div>
 
     <div class="cd-event-sessions__phone-number" v-if="showPhone">
@@ -84,7 +84,7 @@
     },
     computed: {
       isDisplayable() {
-        return this.isSingle || (this.children.length > 0 || this.existingChildren.length > 0);
+        return (this.isSingle || this.isMentoring) || this.hasChildren;
       },
       showPhone() {
         return !this.profile.phone && !this.isO13;
@@ -105,12 +105,24 @@
       dojoRole() {
         return (this.userDojos.filter(ud => ud.dojoId === this.event.dojoId))[0];
       },
+      hasChildren() {
+        return (this.profile.children && this.profile.children.length > 0) ||
+          (this.children && this.children.length > 0);
+      },
       isSingle() {
-        return this.isO13 || !!(this.dojoRole && this.dojoRole.userTypes.includes('mentor'));
+        return this.isO13 || (this.isMentoring && !this.hasChildren);
+      },
+      isMentoring() {
+        return this.dojoRole && (this.dojoRole.userTypes.includes('mentor') || this.dojoRole.userTypes.includes('champion'));
       },
       users() {
-        // TODO : use the proper children which are the existing one for returning flow
-        return this.isSingle ? [this.profile] : this.existingChildren;
+        if (this.isSingle) {
+          return [this.profile];
+        }
+        if (this.isMentoring) {
+          return [this.profile].concat(this.existingChildren);
+        }
+        return this.existingChildren;
       },
     },
     methods: {
@@ -158,7 +170,7 @@
         }
       },
       async bookTickets() {
-        if (!this.isSingle) {
+        if (!this.isO13 && this.hasChildren) {
           this.createParentTicket();
         }
         this.$ga.event(this.$route.name, 'click', 'book_tickets', this.totalBooked);
@@ -242,8 +254,7 @@
       this.loadChildren();
       await this.loadDojoRelationship();
       await this.initStore();
-      if (!(this.profile.children && this.profile.children.length > 0) &&
-        !this.isSingle) {
+      if (!this.isSingle && !this.hasChildren) {
         this.children.push({ value: {}, id: uuid() });
       }
     },
