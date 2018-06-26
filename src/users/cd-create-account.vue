@@ -95,7 +95,7 @@
                v-show="errors.has('termsConditionsAccepted')">
             {{ $t('You must accept the terms and conditions before proceeding.') }}
         </p>
-        <button type="submit" name="registration" class="cd-create-account__submit" v-validate="'nick-exists'" >{{ $t('Next') }}</button>
+        <button type="submit" name="registration" class="cd-create-account__submit" v-validate="'nick-exists'" v-ga-track-click="'attempt_register'">{{ $t('Next') }}</button>
         <p class="cd-create-account__errors text-danger" v-show="errors.has('registration')">{{ $t('A user already exists for this email.') }} {{ $t('Login to your account to continue.') }}</p>
       </div>
     </div>
