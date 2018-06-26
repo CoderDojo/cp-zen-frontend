@@ -717,7 +717,7 @@ describe('Event sessions component', () => {
         vm.event = {
           sessions: [
             { id: 'session1', tickets: mockTickets(1, 'session1') },
-            { id: 'session2', tickets: [{ id: 'ticket21', name: 'ticket21', type: 'ninja', sessionId: 'session2' }] }
+            { id: 'session2', tickets: [{ id: 'ticket21', name: 'ticket21', type: 'ninja', sessionId: 'session2' }] },
           ],
         };
 
