@@ -29,7 +29,7 @@
       <div class="cd-create-account__dob">
         <label class="cd-create-account__label" for="dob">{{ $t('Enter your Date of Birth') }}</label>
         <div class="cd-create-account__dob-picker-wrapper">
-          <vue-dob-picker v-model="dob" select-class="form-control" id="dob" class="cd-create-account__dob-picker"
+          <vue-dob-picker v-model="dob" select-class="form-control cd-create-account__dob-picker-wrapper-select" id="dob" class="cd-create-account__dob-picker"
             v-validate="'required'"
             data-vv-name="dob"
             data-vv-value-path="value"
@@ -337,8 +337,7 @@
   }
 </style>
 <style lang="less">
-  @import "~bootstrap/less/variables";
-  .cd-create-account__dob-picker-wrapper .vue-dob-picker label select {
-    font: @font-size-base Lato, @font-family-sans-serif;
+  .cd-create-account__dob-picker-wrapper-select {
+    font-weight: 400;
   }
 </style>
