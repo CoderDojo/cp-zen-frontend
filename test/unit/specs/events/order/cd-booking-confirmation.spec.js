@@ -96,7 +96,7 @@ describe('Booking Confirmation Component', () => {
         vm.event = {
           ticketApproval: false,
         };
-        vm.user = {
+        vm.loggedInUser = {
           email: 'doo@do.do',
         };
         expect(vm.subtitle).to.equal('A confirmation email has been sent to {email}', { email: '<strong>doo@do.do</strong>' });
