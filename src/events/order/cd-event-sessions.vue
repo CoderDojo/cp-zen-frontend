@@ -10,7 +10,7 @@
       <ticket v-for="(_user, index) in users" :user="_user" :event="event" :key="_user.userId" :existing-applications="existingApplications[_user.userId]"></ticket>
     </div>
     <!-- TODO : isn't the index enough rather than generating an uuid ? -->
-    <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="sessions" :id="child.id" v-on:delete="deleteChildComponent(index)" v-validate.disable="'submitApplications:required'"></child-ticket>
+    <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="sessions" :id="child.id" v-on:delete="deleteChildComponent(index)" v-validate.disable="'submitApplications:required'" :deletable="users.length > 0 || (users.length <= 0 && children.length > 1)"></child-ticket>
 
     <div class="cd-event-sessions__add-button" v-if="!isO13">
       <button class="cd-event-sessions__add-youth btn btn-primary" tag="button" @click="addChildComponent"><i class="fa fa-plus" aria-hidden="true"></i> {{ $t('Add a new youth') }}</button>
