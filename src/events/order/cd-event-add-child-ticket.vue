@@ -21,6 +21,7 @@
                         :proportions="[2, 2, 3]" data-vv-value-path="value" :data-vv-name="`dob-${id}`" v-validate="'required'"></vue-dob-picker>
       </div>
       <p class="cd-child-ticket__dob-err text-danger" v-show="errors.has(`dob-${id}:required`)">{{ $t('Date of birth is required') }}</p>
+      <p class="cd-child-ticket__dob-u19-err text-danger" v-show="errors.has(`dob-u19-${id}:overage`)">{{ $t('Youths need to be 18 years old or younger.') }}</p> 
 
       <label>{{ $t('Gender') }}</label>
       <gender-component class="cd-child-ticket__gender-selector" v-model="gender" data-vv-value-path="value" :data-vv-name="`gender-${id}`" v-validate="'required'"></gender-component>
@@ -98,8 +99,19 @@
       applications() {
         OrderStore.commit('setApplications', { id: this.id, applications: this.applications });
       },
+      dob() {
+        if (this.dob && !this.isU19) {
+          this.errors.add(`dob-u19-${this.id}`, 'Overage', 'overage');
+        }
+        if (this.isU19) {
+          this.errors.remove(`dob-u19-${this.id}`);
+        }
+      },
     },
     computed: {
+      isU19() {
+        return UserUtils.isYouthUnderNineteen(this.dob);
+      },
       childTickets() {
         return this.sessions.map(session => ({
           description: session.description,
