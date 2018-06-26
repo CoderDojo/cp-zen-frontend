@@ -209,6 +209,7 @@ server.get('/api/3.0/dojos/:dojoId/events', (req, res) => {
 });
 
 server.use('/api/2.0', router);
+server.use('/api/3.0', router);
 server.get('/locale/data', (req, res) => {
   const lang = req.query.lang || 'en_US';
   res.send(locales[lang]);
