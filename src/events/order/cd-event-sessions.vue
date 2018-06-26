@@ -7,7 +7,7 @@
      <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
     {{ $t('Please contact the Dojo if you have any questions.') }}</p>
     <div class="cd-event-sessions__tickets" v-if="!!existingApplications">
-      <ticket v-for="(_user, index) in users" :user="_user" :event="event" :key="_user.userId" :existing-applications="existingApplications[_user.userId]"></ticket>
+      <ticket v-for="_user in users" :user="_user" :event="event" :key="_user.userId" :existing-applications="existingApplications[_user.userId]"></ticket>
     </div>
     <child-ticket v-for="(child, index) in children" ref="allChildComponents" :key="child.id" :eventId="eventId" :event="event" :sessions="event.sessions" :id="child.id" v-on:delete="deleteChildComponent(index)" v-validate.disable="'submitApplications:required'" :deletable="users.length > 0 || children.length > 1"></child-ticket>
     <div class="cd-event-sessions__add-button" v-if="!isO13">
@@ -49,6 +49,7 @@
   import { omit } from 'lodash';
   import { mapGetters } from 'vuex';
   import uuid from 'uuid/v4';
+  import store from '@/store';
   import UserService from '@/users/service';
   import DojoService from '@/dojos/service';
   import UserUtils from '@/users/util';
@@ -66,6 +67,7 @@
       Ticket,
       ChildTicket,
     },
+    store,
     data() {
       return {
         orderId: null,
