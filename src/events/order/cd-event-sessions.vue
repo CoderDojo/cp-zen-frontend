@@ -27,9 +27,9 @@
       <p v-show="errors.has('submitApplications:required')" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('Please select at least one ticket') }}</p>
       <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="submitBooking" name="submitApplications" v-validate:applications="'required'" v-ga-track-click="'attempt_book_tickets'"
         :disabled="submitting">
-        <span v-show="submitting"><i class="fa fa-spinner fa-spin"></i></span>
         <span v-if="this.event.ticketApproval">{{ $t('Request booking for {totalBooked} ticket(s)', { totalBooked }) }}</span>
         <span v-else>{{ $t('Confirm booking for {totalBooked} ticket(s)', { totalBooked }) }}</span>
+        <span v-show="submitting"><i class="fa fa-spinner fa-spin"></i></span>
       </button>
     </div>
   </div>
