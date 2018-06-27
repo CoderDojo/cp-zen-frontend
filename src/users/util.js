@@ -33,10 +33,10 @@ export default {
     const age = this.getAge(dob);
     return age > 12 && age < 18;
   },
-  isYouthUnderNineteen(dob) {
+  isYouthUnderEighteen(dob) {
     if (dob) {
       const age = this.getAge(dob);
-      return age < 19;
+      return age < 18;
     }
     return null;
   },
