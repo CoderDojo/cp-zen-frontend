@@ -95,7 +95,10 @@
                v-show="errors.has('termsConditionsAccepted')">
             {{ $t('You must accept the terms and conditions before proceeding.') }}
         </p>
-        <button type="submit" name="registration" class="cd-create-account__submit" v-validate="'nick-exists'" v-ga-track-click="'attempt_register'">{{ $t('Next') }}</button>
+        <button type="submit" name="registration" class="cd-create-account__submit" v-validate="'nick-exists'" v-ga-track-click="'attempt_register'" :disabled="submitting">
+          {{ $t('Next') }}
+          <span v-show="submitting"><i class="fa fa-spinner fa-spin"></i></span>
+        </button>
         <p class="cd-create-account__errors text-danger" v-show="errors.has('registration')">{{ $t('A user already exists for this email.') }} {{ $t('Login to your account to continue.') }}</p>
       </div>
     </div>
@@ -130,6 +133,7 @@
         recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
         recaptchaResponse: null,
         isPasswordVisible: false,
+        submitting: false,
       };
     },
     computed: {
@@ -168,6 +172,7 @@
       async register() {
         const ready = await this.validateForm();
         if (ready) {
+          this.submitting = true;
           const isAdult = UserUtils.getAge(new Date(this.dob)) > 18;
           const context = this.context;
           try {
@@ -182,7 +187,9 @@
             this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
             OrderStore.commit('setIsNewUser', true);
             this.$emit('registered');
+            this.submitting = false;
           } catch (err) {
+            this.submitting = false;
             if (err.message === 'nick-exists') {
               this.errors.add('registration', 'Nick exists', 'nick-exists');
               return;
