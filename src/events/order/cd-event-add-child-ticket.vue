@@ -1,7 +1,7 @@
 <template>
   <div class="cd-child-ticket__ticket-box">
     <div class="cd-child-ticket__header">
-       <h3 class="cd-child-ticket__ticket-name">{{ $t('Ticket')}} {{firstName|addPossession}}</h3>
+       <h3 class="cd-child-ticket__ticket-name">{{ $t('Youth ticket')}} {{firstName|addPossession}}</h3>
        <button class="cd-child-ticket__delete-ticket" @click="$emit('delete')" v-if="deletable"><i class="fa fa-trash" aria-hidden="true" ></i></button>
     </div>
     <form class="cd-child-ticket__body">
