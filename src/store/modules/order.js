@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import moment from 'moment';
 
 export default {
   namespaced: true,
@@ -14,7 +15,16 @@ export default {
   actions: {
     async loadEvent({ commit, dispatch }, eventId) {
       commit('setEvent', null);
-      const event = (await Vue.http.get(`${Vue.config.apiServer}/api/2.0/events/${eventId}`)).body;
+      const event = (await Vue.http.get(`${Vue.config.apiServer}/api/3.0/events/${eventId}`,
+        {
+          params: {
+            query: {
+              afterDate: moment().unix(),
+              utcOffset: moment().utcOffset(),
+            },
+            related: 'sessions.tickets',
+          },
+        })).body;
       commit('setEvent', event);
       dispatch('loadDojo', event.dojoId, { root: true });
     },

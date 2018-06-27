@@ -33,6 +33,13 @@ export default {
     const age = this.getAge(dob);
     return age > 12 && age < 18;
   },
+  isYouthUnderEighteen(dob) {
+    if (dob) {
+      const age = this.getAge(dob);
+      return age < 18;
+    }
+    return null;
+  },
   profileToJSON(profile) {
     const profileClone = cloneDeep(profile);
     if (!(profileClone.dob instanceof Date)) {

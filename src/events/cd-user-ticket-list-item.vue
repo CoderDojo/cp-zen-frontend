@@ -26,7 +26,7 @@
       <div v-if="hasApplications" class="cd-user-ticket-list-item__view-applications">
         <h4 class="cd-user-ticket-list-item__view-application-title"><i class="fa fa-ticket"></i>{{ $t('Tickets') }}</h4>
         <div v-for="application in applications" :key="application.id">
-          <cd-attendee :application="application" :session="sessions[application.sessionId]" :ticket="tickets[application.ticketId]" :user="users[application.userId]"></cd-attendee>
+          <cd-attendee :application="application" :session="sessions[application.sessionId]" :ticket="ticketsById[application.ticketId]" :user="users[application.userId]"></cd-attendee>
         </div>
         <button tag="button"
           @click="cancel()"
@@ -69,7 +69,7 @@
       return {
         applications: [],
         sessions: {},
-        tickets: {},
+        ticketsById: {},
       };
     },
     computed: {
@@ -87,11 +87,9 @@
         });
       },
       prepareTickets() {
-        this.event.sessions.forEach((s) => {
-          s.tickets.forEach((t) => {
-            this.tickets[t.id] = t;
-          }, this);
-        });
+        this.tickets.forEach((t) => {
+          this.ticketsById[t.id] = t;
+        }, this);
       },
       async cancel() {
         const payload = [];

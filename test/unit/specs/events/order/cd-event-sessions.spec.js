@@ -15,9 +15,9 @@ describe('Event sessions component', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     mockService = {
-      loadSessions: sandbox.stub(),
       v3: {
         createOrder: sandbox.stub(),
+        getOrder: sandbox.stub(),
       },
     };
     MockUserService = {
@@ -108,6 +108,33 @@ describe('Event sessions component', () => {
       });
     });
 
+    describe('computed.isDisplayable', () => {
+      it('should return true if the user is Single', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.isSingle = true;
+
+        // ASSERT
+        expect(vm.isDisplayable).to.be.true;
+      });
+      it('should return true if the user is Mentoring', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.isMentoring = true;
+
+        // ASSERT
+        expect(vm.isDisplayable).to.be.true;
+      });
+      it('should return true if the user has children', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.hasChildren = true;
+
+        // ASSERT
+        expect(vm.isDisplayable).to.be.true;
+      });
+    });
+
     describe('computed.totalBooked', () => {
       it('should return the length of the children array', () => {
         // ARRANGE
@@ -116,6 +143,45 @@ describe('Event sessions component', () => {
 
         // ASSERT
         expect(vm.totalBooked).to.equal(2);
+      });
+    });
+
+    describe('computed.hasChildren', () => {
+      it('should return true when the user has children tickets created', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.children = [{}];
+
+        // ASSERT
+        expect(vm.hasChildren).to.be.true;
+      });
+      it('should return true when the user has profile children', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.profile = {
+          children: [{}],
+        };
+        // ASSERT
+        expect(vm.hasChildren).to.be.true;
+      });
+    });
+
+    describe('computed.isMentoring', () => {
+      it('should return true when the user has a dojoRole of champion', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.dojoRole = { userTypes: ['champion'] };
+
+        // ASSERT
+        expect(vm.isMentoring).to.be.true;
+      });
+      it('should return true when the user has a dojoRole of mentor', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.dojoRole = { userTypes: ['mentor'] };
+
+        // ASSERT
+        expect(vm.isMentoring).to.be.true;
       });
     });
 
@@ -147,21 +213,24 @@ describe('Event sessions component', () => {
     });
 
     describe('computed.isSingle', () => {
-      it('should return true if the user is o13', () => {
+      it('should return true if the user is o13 without children', () => {
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.isO13 = true;
+        vm.hasChildren = false;
         expect(vm.isSingle).to.be.true;
       });
-      it('should return false if the user is not an adult with children', () => {
+      it('should return false if the user has children', () => {
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.isO13 = false;
-        vm.dojoRole = undefined;
+        vm.isMentoring = true;
+        vm.hasChildren = true;
         expect(vm.isSingle).to.be.false;
       });
-      it('should return true if the user is an adult mentor', () => {
+      it('should return true if the user is mentoring without children', () => {
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.isO13 = false;
-        vm.dojoRole = { userTypes: ['mentor'] };
+        vm.isMentoring = true;
+        vm.hasChildren = false;
         expect(vm.isSingle).to.be.true;
       });
     });
@@ -177,6 +246,21 @@ describe('Event sessions component', () => {
         vm.profile = { id: '1' };
         vm.isSingle = false;
         expect(vm.users).to.deep.equal([]);
+      });
+      it('should return the existing children if not mentoring nor single ', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.isSingle = false;
+        vm.isMentoring = false;
+        vm.existingChildren = [{ banana: true }];
+        expect(vm.users).to.deep.equal([{ banana: true }]);
+      });
+      it('should return the existing children and the user profile if Mentoring', () => {
+        const vm = vueUnitHelper(SessionListWithMocks);
+        vm.profile = { id: '1' };
+        vm.isSingle = false;
+        vm.isMentoring = true;
+        vm.existingChildren = [{ banana: true }];
+        expect(vm.users).to.deep.equal([{ id: '1' }, { banana: true }]);
       });
     });
     describe('dojoRole', () => {
@@ -229,6 +313,121 @@ describe('Event sessions component', () => {
         // ASSERT
         expect(vm.children).to.deep.equal([{ value: { name: 'Jane Doe' }, id: '2' }]);
         expect(OrderStore.commit).to.have.been.calledWith('removeApplications', '1');
+      });
+    });
+
+    describe('methods.initStore()', () => {
+      it('should get the existing order and set existingApplications', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        mockService.v3.getOrder.resolves({
+          body: {
+            results: [{
+              applications: [{
+                dateOfBirth: '1969-11-26T00:00:00.000Z',
+                eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+                ticketName: 'Mentor',
+                ticketType: 'mentor',
+                sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
+                dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+                ticketId: '018a57a1-0696-44ad-81b8-0d7b8480e422',
+                userId: 'mentor1',
+              }],
+              id: '087b9c30-6e39-11e8-85be-bd6e50591bce',
+            }] },
+        });
+        vm.user = {
+          id: 'user1',
+        };
+        vm.eventId = 'event1';
+
+        // ACT
+        await vm.initStore();
+
+        // ASSERT
+        expect(mockService.v3.getOrder).to.have.been.calledOnce;
+        expect(mockService.v3.getOrder).to.have.been.calledWith('user1', { params: { 'query[eventId]': 'event1' } });
+        expect(vm.existingApplications).to.deep.equal({ mentor1: [{
+          dateOfBirth: '1969-11-26T00:00:00.000Z',
+          eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+          ticketName: 'Mentor',
+          ticketType: 'mentor',
+          sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
+          dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+          ticketId: '018a57a1-0696-44ad-81b8-0d7b8480e422',
+          userId: 'mentor1',
+        }] });
+      });
+      it('should get the existing order and set existingApplications while excluding parent ticket', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        mockService.v3.getOrder.resolves({
+          body: {
+            results: [{
+              applications: [{
+                dateOfBirth: '1969-11-26T00:00:00.000Z',
+                eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+                ticketName: 'kid',
+                ticketType: 'ninja',
+                sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
+                dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+                ticketId: '018a57a1-0696-44ad-81b8-0d7b8480e422',
+                userId: 'kido1',
+              }, {
+                dateOfBirth: '1969-11-26T00:00:00.000Z',
+                eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+                ticketName: 'parent',
+                ticketType: 'parent-guardian',
+                sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
+                dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+                ticketId: '018a57a1-0696-44ad-81b8-0d7b8480e422',
+                userId: 'parent1',
+              }],
+              id: '087b9c30-6e39-11e8-85be-bd6e50591bce',
+            }] },
+        });
+        vm.user = {
+          id: 'user1',
+        };
+        vm.eventId = 'event1';
+
+        // ACT
+        await vm.initStore();
+
+        // ASSERT
+        expect(mockService.v3.getOrder).to.have.been.calledOnce;
+        expect(mockService.v3.getOrder).to.have.been.calledWith('user1', { params: { 'query[eventId]': 'event1' } });
+        expect(vm.existingApplications).to.deep.equal({ kido1: [{
+          dateOfBirth: '1969-11-26T00:00:00.000Z',
+          eventId: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+          ticketName: 'kid',
+          ticketType: 'ninja',
+          sessionId: '69624aec-e254-4636-b4c6-f623fdb0421b',
+          dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+          ticketId: '018a57a1-0696-44ad-81b8-0d7b8480e422',
+          userId: 'kido1',
+        }] });
+      });
+      it('should set existingApplications to an empty object if there are no results', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(SessionListWithMocks);
+        mockService.v3.getOrder.resolves({
+          body: {
+            results: [],
+          },
+        });
+        vm.user = {
+          id: 'user1',
+        };
+        vm.eventId = 'event1';
+
+        // ACT
+        await vm.initStore();
+
+        // ASSERT
+        expect(mockService.v3.getOrder).to.have.been.calledOnce;
+        expect(mockService.v3.getOrder).to.have.been.calledWith('user1', { params: { 'query[eventId]': 'event1' } });
+        expect(vm.existingApplications).to.deep.equal({});
       });
     });
 
@@ -310,6 +509,8 @@ describe('Event sessions component', () => {
         vm.$route = { name: 'a' };
         vm.totalBooked = 1;
         vm.isSingle = false;
+        vm.isO13 = false;
+        vm.hasChildren = true;
         vm.createParentTicket = sandbox.stub();
         vm.applications = [{
           eventId: 'eventId',
@@ -479,11 +680,17 @@ describe('Event sessions component', () => {
           dob: '1975-05-08',
           userId: 'user1',
         };
-        vm.event = { id: 'event1', dojoId: 'dojo1' };
         vm.applications = [{ sessionId: 'session2' }];
         const mockTickets = (index, sessionId) => ([{ id: `ticket${index}1`, name: `ticket${index}1`, type: 'ninja', sessionId },
           { id: `ticket${index}2`, name: `ticket${index}2`, type: 'parent-guardian', sessionId }]);
-        vm.sessions = [{ id: 'session1', tickets: mockTickets(1, 'session1') }, { id: 'session2', tickets: mockTickets(2, 'session2') }];
+        vm.event = {
+          id: 'event1',
+          dojoId: 'dojo1',
+          sessions: [
+            { id: 'session1', tickets: mockTickets(1, 'session1') },
+            { id: 'session2', tickets: mockTickets(2, 'session2') },
+          ],
+        };
 
         // ACT
         vm.createParentTicket();
@@ -507,7 +714,12 @@ describe('Event sessions component', () => {
         vm.applications = [{ sessionId: 'session2' }];
         const mockTickets = (index, sessionId) => ([{ id: `ticket${index}1`, name: `ticket${index}1`, type: 'ninja', sessionId },
           { id: `ticket${index}2`, name: `ticket${index}2`, type: 'parent-guardian', sessionId }]);
-        vm.sessions = [{ id: 'session1', tickets: mockTickets(1, 'session1') }, { id: 'session2', tickets: [{ id: 'ticket21', name: 'ticket21', type: 'ninja', sessionId: 'session2' }] }];
+        vm.event = {
+          sessions: [
+            { id: 'session1', tickets: mockTickets(1, 'session1') },
+            { id: 'session2', tickets: [{ id: 'ticket21', name: 'ticket21', type: 'ninja', sessionId: 'session2' }] },
+          ],
+        };
 
         // ACT
         vm.createParentTicket();
@@ -530,47 +742,16 @@ describe('Event sessions component', () => {
     expect(vm.user).to.deep.equal({ name: 'parent1' });
   });
 
-  it('should show the list of event sessions', (done) => {
-    // ARRANGE
-    const mockSessionDataResponse = [
-      {
-        name: 'Scratch',
-        description: 'Beginners welcomes',
-      },
-      {
-        name: 'Arduino',
-        description: 'Intermediate',
-      },
-    ];
-
-    const vm = vueUnitHelper(SessionListWithMocks);
-    vm.eventId = '123';
-    vm.event = {
-      name: 'Scratch',
-    };
-    mockService.loadSessions.withArgs(vm.eventId)
-      .returns(Promise.resolve({ body: mockSessionDataResponse }));
-
-    // ACT
-    vm.loadSessions();
-
-    // ASSERT
-    requestAnimationFrame(() => {
-      expect(vm.sessions).to.deep.equal(mockSessionDataResponse);
-      done();
-    });
-  });
-
   describe('created', () => {
     it('should add a default child if the user is having no child and is not single', async () => {
       const vm = vueUnitHelper(SessionListWithMocks);
       vm.loadEvent = sinon.stub().resolves();
       vm.setEvent = sinon.stub().resolves();
-      vm.loadSessions = sinon.stub().resolves();
       vm.loadCurrentUser = sinon.stub().resolves();
       vm.loadProfile = sinon.stub().resolves();
       vm.loadChildren = sinon.stub().resolves();
       vm.loadDojoRelationship = sinon.stub().resolves();
+      vm.initStore = sinon.stub().resolves();
       vm.profile.children = [];
       vm.isSingle = false;
       vm.children = [];
@@ -584,11 +765,11 @@ describe('Event sessions component', () => {
       const vm = vueUnitHelper(SessionListWithMocks);
       vm.loadEvent = sinon.stub().resolves();
       vm.setEvent = sinon.stub().resolves();
-      vm.loadSessions = sinon.stub().resolves();
       vm.loadCurrentUser = sinon.stub().resolves();
       vm.loadProfile = sinon.stub().resolves();
       vm.loadChildren = sinon.stub().resolves();
       vm.loadDojoRelationship = sinon.stub().resolves();
+      vm.initStore = sinon.stub().resolves();
       vm.profile.children = [{ id: '1' }];
       vm.isSingle = false;
 
@@ -601,11 +782,11 @@ describe('Event sessions component', () => {
       const vm = vueUnitHelper(SessionListWithMocks);
       vm.loadEvent = sinon.stub().resolves();
       vm.setEvent = sinon.stub().resolves();
-      vm.loadSessions = sinon.stub().resolves();
       vm.loadCurrentUser = sinon.stub().resolves();
       vm.loadProfile = sinon.stub().resolves();
       vm.loadChildren = sinon.stub().resolves();
       vm.loadDojoRelationship = sinon.stub().resolves();
+      vm.initStore = sinon.stub().resolves();
       vm.profile.children = [];
       vm.isSingle = true;
 

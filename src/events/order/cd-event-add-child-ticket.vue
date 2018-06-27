@@ -2,7 +2,7 @@
   <div class="cd-child-ticket__ticket-box">
     <div class="cd-child-ticket__header">
        <h3 class="cd-child-ticket__ticket-name">{{ $t('Ticket')}} {{firstName|addPossession}}</h3>
-       <button class="cd-child-ticket__delete-ticket" @click="$emit('delete')"><i class="fa fa-trash" aria-hidden="true" ></i></button>
+       <button class="cd-child-ticket__delete-ticket" @click="$emit('delete')" v-if="deletable"><i class="fa fa-trash" aria-hidden="true" ></i></button>
     </div>
     <form class="cd-child-ticket__body">
       <label>{{ $t('Name')}}</label>
@@ -15,12 +15,13 @@
 
       <label>{{ $t('Date of Birth') }}</label>
       <div class="cd-child-ticket__dob-picker-wrapper">
-        <vue-dob-picker select-class="form-control" v-model="dob"
+        <vue-dob-picker select-class="form-control cd-child-ticket__dob-picker-wrapper-select" v-model="dob"
                         show-labels="false" month-format="short"
                         :placeholders="[$t('Date'), $t('Month'), $t('Year')]"
-                        :proportions="[2, 2, 3]" data-vv-value-path="value" :data-vv-name="`dob-${id}`" v-validate="'required'"></vue-dob-picker>
+                        :proportions="[2, 2, 3]" data-vv-value-path="value" :data-vv-name="`dob-${id}`" v-validate="'required|over-age'"></vue-dob-picker>
       </div>
-      <p class="cd-child-ticket__dob-err text-danger" v-show="errors.has(`dob-${id}:required`)">{{ $t('Date of Birth is required') }}</p>
+      <p class="cd-child-ticket__dob-err text-danger" v-show="errors.has(`dob-${id}:required`)">{{ $t('Date of birth is required') }}</p>
+      <p class="cd-child-ticket__dob-o17-err text-danger" v-show="errors.has(`dob-${id}:over-age`)">{{ $t('Youth tickets are for attendees 17 years or younger. No ticket is required for guardians or parents.') }}</p>
 
       <label>{{ $t('Gender') }}</label>
       <gender-component class="cd-child-ticket__gender-selector" v-model="gender" data-vv-value-path="value" :data-vv-name="`gender-${id}`" v-validate="'required'"></gender-component>
@@ -33,7 +34,7 @@
       </div>
       <p class="cd-child-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${id}:required`)">{{ $t('Ticket selection is required') }}</p>  
 
-      <special-req-component class="cd-child-ticket__special-req-selector" v-model="specialRequirement"></special-req-component>
+      <special-req-component class="cd-child-ticket__special-req-selector" v-model="notes"></special-req-component>
     </form>
   </div>
 </template>
@@ -53,7 +54,7 @@
     name: 'ChildTicket',
     inject: ['$validator'],
     mixins: [TicketMixin],
-    props: ['sessions', 'eventId', 'event', 'id'],
+    props: ['sessions', 'eventId', 'event', 'id', 'deletable'],
     filters: {
       addPossession,
     },
@@ -72,8 +73,14 @@
         genderExplaination: false,
         selectedTickets: [],
         userId: null,
-        specialRequirement: '',
+        notes: '',
       };
+    },
+    created() {
+      this.$validator.extend('over-age', {
+        getMessage: field => `The ${field} value is invalid. Youth is over-age (18+)`,
+        validate: value => UserUtils.isYouthUnderEighteen(value),
+      });
     },
     methods: {
       showWhy() {
@@ -133,7 +140,7 @@
           dojoId: this.event.dojoId,
           ticketId: ticket.id,
           userId: this.userId,
-        }, !this.specialRequirement ? '' : { specialRequirement: this.specialRequirement })));
+        }, !this.notes ? '' : { notes: this.notes })));
       },
       child() {
         return {
@@ -231,7 +238,7 @@
 .cd-child-ticket__ticket-selector .multiselect__select {
   height: 30px;
 }
-.cd-child-ticket__dob-picker-wrapper .vue-dob-picker label select {
-  font: @font-size-base Lato, @font-family-sans-serif;
+.cd-child-ticket__dob-picker-wrapper-select {
+  font-weight: 400;
 }
 </style>

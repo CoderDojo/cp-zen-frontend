@@ -92,8 +92,8 @@ server.post('/api/2.0/profiles/create', (req, res) => {
 
 server.post('/api/3.0/events/:eventId/orders', (req, res) => {
   const order = req.body;
-  const userId = (req.body.applications.filter(a => a.ticketType === 'parent-guardian'))[0].userId ||
-    req.body.applications[0].userId;
+  const parentApplication = (req.body.applications.filter(a => a.ticketType === 'parent-guardian'))[0]; 
+  const userId = parentApplication ? parentApplication.userId : req.body.applications[0].userId;
   order.id = uuidv1();
   orders[userId] = orders[userId] || [];
   orders[userId].push(order);
@@ -102,7 +102,15 @@ server.post('/api/3.0/events/:eventId/orders', (req, res) => {
 
 server.get('/api/3.0/users/:userId/orders', (req, res) => {
   const userId = req.params.userId;
-  res.send({ results: orders[userId] });
+  res.send({ results: orders[userId] || [] });
+});
+
+server.put('/api/3.0/users/:userId/orders/:orderId', (req, res) => {
+  const userId = req.params.userId;
+  const orderId = req.params.orderId;
+  const orderIndex = orders[userId].findIndex(o => o.id === orderId);
+  orders[userId][orderIndex].applications = req.body.applications;
+  res.send(orders[userId][orderIndex]);
 });
 
 server.get('/api/2.0/profiles/children-for-user/:parentId', (req, res) => {
@@ -201,6 +209,7 @@ server.get('/api/3.0/dojos/:dojoId/events', (req, res) => {
 });
 
 server.use('/api/2.0', router);
+server.use('/api/3.0', router);
 server.get('/locale/data', (req, res) => {
   const lang = req.query.lang || 'en_US';
   res.send(locales[lang]);

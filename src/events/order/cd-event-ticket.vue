@@ -12,9 +12,9 @@
         </span>
       </div>
       <div class="cd-event-tickets__ticket-selector" v-if="!ticketsAreFull(tickets) && !notAttending">
+        <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.userId}:required`)">{{ $t('Please select a ticket or "Not attending"') }}</p>
         <multiselect v-model="selectedTickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.userId}`" v-validate="'required'"></multiselect>
-        <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.id}:required`)">{{ $t('Ticket selection is required') }}</p>
-        <special-req-component class="cd-event-tickets__special-req-selector" v-model="specialRequirement"></special-req-component>
+        <special-req-component class="cd-event-tickets__special-req-selector" v-model="notes"></special-req-component>
       </div>
       <div v-else-if="ticketsAreFull(tickets)">
         {{ $t('Sorry, there are no applicable tickets left') }}
@@ -35,10 +35,10 @@
     name: 'TicketForUser',
     inject: ['$validator'],
     mixins: [Ticket],
-    props: ['event', 'user'],
+    props: ['event', 'user', 'existing-applications'],
     data() {
       return {
-        specialRequirement: '',
+        notes: '',
         notAttending: false,
         selectedTickets: [],
       };
@@ -81,7 +81,7 @@
           dojoId: this.event.dojoId,
           ticketId: ticket.id,
           userId: this.user.userId,
-        }, !this.specialRequirement ? '' : { specialRequirement: this.specialRequirement })));
+        }, !this.notes ? '' : { notes: this.notes })));
       },
     },
     watch: {
@@ -97,6 +97,10 @@
         const allowedTypes = this.isNinja ? ['ninja', 'others'] : ['mentor'];
         return allowedTypes.includes(type);
       },
+      findTicketOption(application) {
+        const session = (this.ticketsOptions.find(s => s.id === application.sessionId));
+        return session.tickets.find(t => t.id === application.ticketId);
+      },
       onBlur() {
         this.blurTimeout = window.setTimeout(() => {
           this.$emit('blur');
@@ -105,6 +109,14 @@
       onFocus() {
         window.clearTimeout(this.blurTimeout);
       },
+    },
+    created() {
+      if (this.existingApplications) {
+        this.selectedTickets = this.existingApplications.reduce(
+          (acc, ticket) => acc.concat(this.findTicketOption(ticket)),
+          [],
+        );
+      }
     },
   };
 </script>

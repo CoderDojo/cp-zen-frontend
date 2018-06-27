@@ -29,7 +29,7 @@ describe('Book event page', () => {
       EventAccountCreation.checkRecaptcha();
       EventAccountCreation.verify.click();
       expect(EventAccountCreation.dateOfBirthError.isVisible()).to.be.true;
-      expect(EventAccountCreation.dateOfBirthError.getText()).to.equal('Sorry :( Children under 13 are note allowed to book events. You can ask your parent or guardian to bookfor you.');
+      expect(EventAccountCreation.dateOfBirthError.getText()).to.equal('Sorry :( Children under 13 are not allowed to book events. You can ask your parent or guardian to book for you.');
     });
     it('should display an error invalid email', () => {
       startBooking();
@@ -273,7 +273,7 @@ describe('Book event page', () => {
           expect(BookingConfirmation.bookingSessionTicket(1).getText()).to.equal('Parent / Arduino');
 
           expect(BookingConfirmation.accountCreationConfirmation.isVisible()).to.be.false;
-          expect(BookingConfirmation.joinedDojoConfirmation.getText()).to.equal('You are now subscribed to Dublin Ninja Kids dojo\nYou will be notified about future events hosted by this dojo');
+          expect(BookingConfirmation.joinedDojoConfirmation.getText()).to.equal('You are now subscribed to Dublin Ninja Kids dojo\nYou will be notified about future events hosted by this Dojo');
           expect(BookingConfirmation.approvalRequiredMessage.getText()).to.equal('Your tickets are now awaiting approval\nYou will be notified when the organizer approves your request.');
 
           expect(BookingConfirmation.eventDetailsHeader.getText()).to.equal('Event Details');
@@ -293,6 +293,9 @@ describe('Book event page', () => {
     });
   });
   describe('RBF', () => {
+    afterEach(() => {
+      browser.deleteCookie('loggedIn');
+    });
     describe('when single', () => {
       describe('when o13', () => {
         beforeEach(() => {
@@ -399,6 +402,26 @@ describe('Book event page', () => {
       it('should have the children creation opened by default', () => {
         expect(Booking.childrenTickets.length).to.equal(1);
       });
+    });
+  });
+  describe('edit booking', () => {
+    it('should display no indiviual tickets as it has no kids', () => {
+      LoginPage.open();
+      LoginPage.email.waitForVisible();
+      LoginPage.email.setValue('mentor1@example.com');
+      LoginPage.password.setValue('test');
+      LoginPage.login.click();
+      startBooking();
+      // Book a first time
+      Booking.eventTitle.waitForVisible();
+      Booking.ticketSelector(0).click()
+      Booking.ticketOption('Mentor')[0].click()
+      Booking.phoneNumber.setValue('+0');
+      Booking.submitBookingButton.click();
+      // Return to booking
+      startBooking();
+      Booking.ticketSelected.waitForVisible();
+      expect(Booking.ticketSelected.getText()).to.equal('Mentor');
     });
   });
 });

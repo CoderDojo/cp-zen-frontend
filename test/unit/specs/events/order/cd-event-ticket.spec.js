@@ -160,7 +160,7 @@ describe('Event ticket creation', () => {
         sessionId: 'sessionId',
         id: 'ticketId',
       }];
-      vm.specialRequirement = 'Need wheelchair access';
+      vm.notes = 'Need wheelchair access';
 
       expect(vm.applications[0]).to.deep.equal({
         name: 'first last',
@@ -169,7 +169,7 @@ describe('Event ticket creation', () => {
         ticketName: 'ticketName',
         ticketType: 'ticketType',
         sessionId: 'sessionId',
-        specialRequirement: 'Need wheelchair access',
+        notes: 'Need wheelchair access',
         dojoId: 'dojoId',
         ticketId: 'ticketId',
         userId: 'userId',
@@ -199,6 +199,40 @@ describe('Event ticket creation', () => {
       };
       vm.isNinja = false;
       expect(vm.filterByTicketType('mentor')).to.be.true;
+    });
+  });
+  describe('methods: findTicketOption', () => {
+    it('should find a ticket from its id', () => {
+      const vm = vueUnitHelper(EventTicketWithMocks);
+      const application = { sessionId: 'session1', ticketId: 'ticket1' };
+      vm.ticketsOptions = [
+        {
+          id: 'session1', tickets: [{ id: 'ticket1' }, { id: 'ticket2' }],
+        },
+        {
+          id: 'session2', tickets: [{ id: 'ticket3' }],
+        }];
+      const res = vm.findTicketOption(application);
+      expect(res).to.deep.equal({ id: 'ticket1' });
+    });
+  });
+  describe('lifecycle: created', () => {
+    it('should transform the existingApplications into selected tickets', () => {
+      const vm = vueUnitHelper(EventTicketWithMocks);
+      vm.findTicketOption = sandbox.stub().returnsArg(0);
+      vm.existingApplications = [{ ticketId: 'ticket1' }, { ticketId: 'ticket2' }];
+
+      vm.$lifecycleMethods.created();
+      expect(vm.findTicketOption).to.have.been.calledTwice;
+      expect(vm.selectedTickets).to.deep.equal(vm.existingApplications);
+    });
+    it('should not transform the applications if there aren\'t any', () => {
+      const vm = vueUnitHelper(EventTicketWithMocks);
+      vm.findTicketOption = sandbox.stub().returnsArg(0);
+      vm.existingApplications = undefined;
+
+      vm.$lifecycleMethods.created();
+      expect(vm.findTicketOption).to.not.have.been.called;
     });
   });
 });

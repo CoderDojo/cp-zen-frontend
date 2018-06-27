@@ -5,7 +5,7 @@
         <div class="cd-booking-confirmation__banner-title">{{ title }}</div>
         <div class="cd-booking-confirmation__banner-subtitle" v-html="subtitle"></div>
       </div>
-      <img class="cd-booking-confirmation__banner-illustration" src="../../assets/characters/ninjas/ninja-female-2-ok-hand.svg" />
+      <img class="cd-booking-confirmation__banner-illustration" src="../../assets/characters/ninjas/CD_Character_SVGS-32.png" />
     </div>
 
     <div class="cd-booking-confirmation__event-name">{{ event.name }}</div>
@@ -74,7 +74,7 @@
         <div>
           <span v-html="$t('You are now subscribed to {dojoName} dojo', {dojoName: `<strong>${dojo.name}</strong>`})"></span>
             <div class="cd-booking-confirmation__account-confirmation-help-message">
-              {{ $t('You will be notified about future events hosted by this dojo') }}
+              {{ $t('You will be notified about future events hosted by this Dojo') }}
           </div>
         </div>
       </div>
@@ -150,7 +150,7 @@
       subtitle() {
         return this.event.ticketApproval ?
           this.$t('You will be notified when the organizer approves your request.') :
-          this.$t('A confirmation email has been sent to {email}', { email: `<strong>${this.user.email}</strong>` });
+          this.$t('A confirmation email has been sent to {email}', { email: `<strong>${this.loggedInUser.email}</strong>` });
       },
       title() {
         return this.event.ticketApproval ?
@@ -212,8 +212,7 @@
         flex: 2;
         align-self: flex-end;
         padding: 0 32px;
-        transform-origin: bottom;
-        transform: scale(0.9);
+        max-width: 300px;
       }
     }
     &__booking {

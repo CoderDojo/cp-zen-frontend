@@ -318,7 +318,7 @@ describe('Add Child Ticket', () => {
       it('should return full application WITH a specialRequirement when form is filled out', async () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.specialRequirement = 'Need wheelchair access';
+        vm.notes = 'Need wheelchair access';
         vm.name = 'Jane Doe';
         vm.dob = new Date(1980, 10, 25, 0, 0, 0, 0);
         vm.eventId = 'eventId';
@@ -344,7 +344,7 @@ describe('Add Child Ticket', () => {
           eventId: 'eventId',
           name: 'Jane Doe',
           sessionId: 'sessionId',
-          specialRequirement: 'Need wheelchair access',
+          notes: 'Need wheelchair access',
           ticketId: 'ticketId2',
           ticketName: 'Ticket2',
           ticketType: 'ninja',

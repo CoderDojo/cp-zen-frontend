@@ -62,6 +62,16 @@ const BookingParentData = Object.create(EventDetails, {
       return $$('.cd-event-tickets__ticket-selector')[index];
     }
   },
+  ticketSelected: {
+    get() {
+      return $('.cd-event-tickets__ticket-selector .multiselect__tags');
+    }
+  },
+  ticketOption: {
+    value(selected) {
+      return $$(`//li[@class="multiselect__element"]/span[.="${selected}"]`);
+    }
+  },
   notAttendingSelector: {
     value(index) {
       return $$('.cd-event-tickets__not-attending-selector')[index];
