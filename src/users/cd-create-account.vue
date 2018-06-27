@@ -11,12 +11,15 @@
       </div>
       <div>
         <label class="cd-create-account__label" for="email">{{ $t('Your email') }}</label>
-        <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate="'required|email'" v-model="profile.email">
+        <div class="cd-create-account__email">
+         <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate="'required|email'" v-model="profile.email">
+       </div>
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</p>
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</p>
       </div>
+
+      <label class="cd-create-account__label cd-create-account__names-label" for="firstName">{{ $t('Name') }}</label>
       <div class="cd-create-account__names" >
-        <label class="cd-create-account__label cd-create-account__names-label" for="firstName">{{ $t('Name') }}</label>
         <div class="cd-create-account__names-first" :class="{'cd-create-account__names--error': errors.has('lastName:required') && !errors.has('firstName:required')}">
           <input type="text" class="form-control" name="firstName" :placeholder="$t('First Name')" id="name" data-vv-as="first name" v-validate="'required'" v-model="profile.firstName">
           <p class="cd-create-account-form__first-name-error text-danger" v-show="errors.has('firstName:required')" for="firstName">{{ $t('First name is required') }}</p>
@@ -95,7 +98,7 @@
                v-show="errors.has('termsConditionsAccepted')">
             {{ $t('You must accept the terms and conditions before proceeding.') }}
         </p>
-        <button type="submit" name="registration" class="cd-create-account__submit" v-validate="'nick-exists'" v-ga-track-click="'attempt_register'" :disabled="submitting">
+        <button type="submit" name="registration" class="cd-create-account__submit btn btn-primary" v-validate="'nick-exists'" v-ga-track-click="'attempt_register'" :disabled="submitting">
           {{ $t('Next') }}
           <span v-show="submitting"><i class="fa fa-spinner fa-spin"></i></span>
         </button>
@@ -208,7 +211,8 @@
   };
 </script>
 <style scoped lang="less">
-  @import '../common/styles/cd-primary-button'; 
+  @import "../common/styles/cd-primary-button";
+
   .cd-create-account {
     margin-right: 33px;
     margin-top: 50px;
@@ -226,20 +230,24 @@
       }
     }
     &__label {
-      margin-top: 16px;
-      display: block;
-      font-size: 16px;
-      font-weight: bold;
+      margin-bottom: 5px;
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    &__email {
+      max-width: 110%;
+      padding: 8px 0px 24px;
     }
     &__names {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
+      padding: 8px 0px 24px;
+      max-width: 100%;
+
       &-label {
         flex-basis: 100%;
       }
-      &-first {
-        margin-right: 8px;
+      &-first, &-last {
+        display: inline;
       }
       &--error {
         margin-top: -30px;
@@ -254,14 +262,19 @@
       margin-top: 4px;
       font-weight: 300;
     }
-    &__dob-picker {
-      padding-left: 0;
-      max-width: 600px;
+    &__dob-picker-wrapper {
+      max-width: 50%;
+      padding: 8px 0px 24px;
     }
     &__password {
+      max-width: 50%;
+      padding: 8px 0px 24px;
       &-visibility {
         padding-left: 6px;
       }
+    }
+    &__agreement {
+        padding: 8px;
     }
     &__terms-conditions {
       &-error {
@@ -269,7 +282,8 @@
       }
     }
     &__submit {
-      .active-primary-button;
+      .primary-button-large;
+      margin-top: 24px;
     }
     input[type=checkbox] {
       width: 21px;
