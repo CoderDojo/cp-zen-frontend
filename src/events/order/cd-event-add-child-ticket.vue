@@ -18,9 +18,10 @@
         <vue-dob-picker select-class="form-control cd-child-ticket__dob-picker-wrapper-select" v-model="dob"
                         show-labels="false" month-format="short"
                         :placeholders="[$t('Date'), $t('Month'), $t('Year')]"
-                        :proportions="[2, 2, 3]" data-vv-value-path="value" :data-vv-name="`dob-${id}`" v-validate="'required'"></vue-dob-picker>
+                        :proportions="[2, 2, 3]" data-vv-value-path="value" :data-vv-name="`dob-${id}`" v-validate="'required|over-age'"></vue-dob-picker>
       </div>
       <p class="cd-child-ticket__dob-err text-danger" v-show="errors.has(`dob-${id}:required`)">{{ $t('Date of birth is required') }}</p>
+      <p class="cd-child-ticket__dob-o17-err text-danger" v-show="errors.has(`dob-${id}:over-age`)">{{ $t('Youth tickets are for attendees 17 years or younger. No ticket is required for guardians or parents.') }}</p>
 
       <label>{{ $t('Gender') }}</label>
       <gender-component class="cd-child-ticket__gender-selector" v-model="gender" data-vv-value-path="value" :data-vv-name="`gender-${id}`" v-validate="'required'"></gender-component>
@@ -74,6 +75,12 @@
         userId: null,
         notes: '',
       };
+    },
+    created() {
+      this.$validator.extend('over-age', {
+        getMessage: field => `The ${field} value is invalid. Youth is over-age (18+)`,
+        validate: value => UserUtils.isYouthUnderEighteen(value),
+      });
     },
     methods: {
       showWhy() {
