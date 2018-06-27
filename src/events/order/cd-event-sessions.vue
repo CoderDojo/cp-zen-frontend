@@ -24,7 +24,7 @@
       <p class="cd-event-session__phone-number-err-regex text-danger" v-show="showPhone && errors.has('phone:regex')">{{ $t('* Please include the plus symbol(+) and country code. For example, a phone number in Ireland should begin +353') }}</p>
     </div>
     <div class="cd-event-sessions__next-block" >
-      <p v-show="errors.has('submitApplications:required')" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('Please select at least one ticket') }}</p>
+      <p v-show="errors.has('submitApplications:required')" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('There are some errors with your booking. Please scroll up and follow the tips to finish this booking.') }}</p>
       <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="submitBooking" name="submitApplications" v-validate:applications="'required'" v-ga-track-click="'attempt_book_tickets'"
         :disabled="submitting">
         <span v-if="this.event.ticketApproval">{{ $t('Request booking for {totalBooked} ticket(s)', { totalBooked }) }}</span>
