@@ -1,6 +1,6 @@
 <template>
   <form class="cd-create-account" @submit.prevent="register">
-    <h3>{{ $t('Register your details so you can book Dojo Events') }}</h3>
+    <h1 class="cd-create-account__header">{{ $t('Register your details so you can book Dojo Events') }}</h1>
     <div>
       <div>
         <p>
@@ -216,17 +216,13 @@
       margin-top: 33px;
     }
     &__header {
-      background-color: #f4f5f6;
-      height: 100px;
-      text-align: center;
-      &-title {
-        margin-top: 21px;
-        font-size: 18px;
-        font-weight: bold;
-      }
-      &-info {
-        font-size: 16px;
-        margin-top: 4px;
+      font-size: 24px;
+      margin: 45px 0 16px 0;
+      font-weight: bold;
+      &--filler {
+        background-color: @cd-very-light-grey;
+        height: 24px;
+        width: 176px;
       }
     }
     &__label {
