@@ -131,7 +131,6 @@
     data() {
       return {
         order: {},
-        sessions: [],
       };
     },
     filters: {
@@ -161,15 +160,13 @@
     methods: {
       getDojoUrl: DojosUtil.getDojoUrl,
       async loadData() {
-        // TODO : define v3 event loading to save an HTTP call
-        this.sessions = (await EventService.loadSessions(this.eventId)).body;
         this.order = (await EventService.v3.getOrder(this.loggedInUser.id, { params: { 'query[eventId]': this.eventId } })).body.results[0];
         if (!this.event) {
           this.$store.dispatch('order/loadEvent', this.eventId);
         }
       },
       getSessionName(sessionId) {
-        return (this.sessions.find(s => s.id === sessionId)).name;
+        return (this.event.sessions.find(s => s.id === sessionId)).name;
       },
       buildRecurringFrequencyInfo: EventsUtil.buildRecurringFrequencyInfo,
     },

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 const EventsService = {
-
+  // event-list, cd-tickets
   loadEvents(dojoId) {
     return Vue.http.post(`${Vue.config.apiServer}/api/2.0/events/search`,
       {
@@ -9,15 +9,11 @@ const EventsService = {
       },
     );
   },
-  loadEvent(eventId) {
-    return Vue.http.get(`${Vue.config.apiServer}/api/2.0/events/${eventId}`);
-  },
-  loadSessions(eventId) {
-    return Vue.http.get(`${Vue.config.apiServer}/api/2.0/events/${eventId}/sessions`);
-  },
+  // cancel booking
   loadApplications(eventId) {
     return Vue.http.get(`${Vue.config.apiServer}/api/2.0/user/events/${eventId}/applications`);
   },
+  // cancel booking
   manageTickets(applications) {
     applications.forEach((application) => {
       /* eslint-disable no-param-reassign */
