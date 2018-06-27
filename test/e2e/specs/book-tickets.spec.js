@@ -51,7 +51,7 @@ describe('Book event page', () => {
         LoginPage.password.setValue('testchild1o13');
         LoginPage.login.click();
         Booking.eventTitle.waitForVisible();
-        expect(browser.getUrl()).to.equal('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+        expect(browser.getUrl()).to.equal('http://localhost:8080/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
       });
       it('should let me register as an o13', () => {
         startBooking();
@@ -66,8 +66,8 @@ describe('Book event page', () => {
         EventAccountCreation.termsAndCond.click();
         EventAccountCreation.verify.click();
         Booking.eventTitle.waitForVisible();
-        browser.waitUntil(() => browser.getUrl() === 'http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
-        expect(browser.getUrl()).to.equal('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+        browser.waitUntil(() => browser.getUrl() === 'http://localhost:8080/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+        expect(browser.getUrl()).to.equal('http://localhost:8080/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
       });
       describe('logged-in', () => {
         beforeEach(() => {
@@ -80,7 +80,7 @@ describe('Book event page', () => {
           Booking.eventTitle.waitForVisible();
         });
         it('should bypass the registration display', () => {
-          expect(browser.getUrl()).to.equal('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+          expect(browser.getUrl()).to.equal('http://localhost:8080/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
         });
         it('should display an individual ticket without options to add children', () => {
           expect(Booking.tickets.length).to.equal(1);
@@ -110,7 +110,7 @@ describe('Book event page', () => {
         LoginPage.password.setValue('test');
         LoginPage.login.click();
         Booking.eventTitle.waitForVisible();
-        expect(browser.getUrl()).to.equal('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+        expect(browser.getUrl()).to.equal('http://localhost:8080/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
       });
       it('should let me register as an adult', () => {
         startBooking();
@@ -125,8 +125,8 @@ describe('Book event page', () => {
         EventAccountCreation.termsAndCond.click();
         EventAccountCreation.verify.click();
         Booking.eventTitle.waitForVisible();
-        browser.waitUntil(() => browser.getUrl() === 'http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
-        expect(browser.getUrl()).to.equal('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+        browser.waitUntil(() => browser.getUrl() === 'http://localhost:8080/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+        expect(browser.getUrl()).to.equal('http://localhost:8080/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
       });
       describe('pre-logged-in', () => {
         beforeEach(() => {
@@ -139,7 +139,7 @@ describe('Book event page', () => {
           Booking.eventTitle.waitForVisible();
         });
         it('should bypass the registration display', () => {
-          expect(browser.getUrl()).to.equal('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+          expect(browser.getUrl()).to.equal('http://localhost:8080/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
         });
         it('should display an option to add children, with 1 by default open', () => {
           expect(Booking.ticketName(0)).to.be.undefined;
@@ -156,14 +156,14 @@ describe('Book event page', () => {
           expect(Booking.childTicketTitle.length).to.equal(2);
         });
         it('should stop me from booking a ticket that has no space for me', () => {
-          browser.url('http://localhost:8080/v2/events/34174952-8ca4-4189-b8cb-d383e3fde992/sessions');
+          browser.url('http://localhost:8080/events/34174952-8ca4-4189-b8cb-d383e3fde992/sessions');
           Booking.eventTitle.waitForVisible();
           const ticket = Booking.childTicketSelector('With Pi [Fully booked]')[0];
           ticket.waitForVisible();
           expect(ticket.isVisible()).to.be.true;
         });
         it('should stop me from booking an event that has no space', () => {
-          browser.url('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1a/sessions');
+          browser.url('http://localhost:8080/events/d206004a-b0ce-4267-bf07-133e8113aa1a/sessions');
           Booking.eventIsFullEmoji.waitForVisible();
           expect(Booking.ticketName(0)).to.be.undefined;
           expect(Booking.eventIsFullEmoji.isVisible()).to.be.true; 
@@ -171,7 +171,7 @@ describe('Book event page', () => {
           expect(Booking.eventIsFullSubheader.isVisible()).to.be.true;
         });
         it('should stop me from booking a ticket that has less than the sum of possible tickets', () => {
-          browser.url('http://localhost:8080/v2/events/34174952-8ca4-4189-b8cb-d383e3fde992/sessions');
+          browser.url('http://localhost:8080/events/34174952-8ca4-4189-b8cb-d383e3fde992/sessions');
           Booking.eventTitle.waitForVisible();
           Booking.childTicketSelector('Lacking Pi')[0].click()
           Booking.addYouthButton.click();
@@ -308,7 +308,7 @@ describe('Book event page', () => {
           Booking.eventTitle.waitForVisible();
         });
         it('should bypass the registration display', () => {
-          expect(browser.getUrl()).to.equal('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+          expect(browser.getUrl()).to.equal('http://localhost:8080/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
         });
         it('should display an individual ticket without options to add children', () => {
           expect(Booking.tickets.length).to.equal(1);
@@ -333,7 +333,7 @@ describe('Book event page', () => {
           Booking.eventTitle.waitForVisible();
         });
         it('should bypass the registration display', () => {
-          expect(browser.getUrl()).to.equal('http://localhost:8080/v2/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
+          expect(browser.getUrl()).to.equal('http://localhost:8080/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
         });
         it('should show a mentor ticket', () => {
           browser.waitUntil(() => Booking.tickets.length > 0);
