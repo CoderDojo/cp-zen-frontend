@@ -12,7 +12,7 @@
       <div>
         <label class="cd-create-account__label" for="email">{{ $t('Your email') }}</label>
         <div class="cd-create-account__email">
-         <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate="'required|email'" v-model="profile.email">
+         <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-name="email" v-validate="'required|email'" data-vv-validate-on="blur" v-model="profile.email">
        </div>
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</p>
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</p>
