@@ -199,4 +199,36 @@ describe('Events Util', () => {
       expect(recurring).to.be.false;
     });
   });
+  describe('orderByStartTime', () => {
+    it('should return -1 when the date1 < date2', () => {
+      const event1 = {
+        startTime: '2018-05-05T15:50:00',
+      };
+      const event2 = {
+        startTime: '2018-05-05T16:50:00',
+      };
+      const res = EventsUtilWithMock.orderByStartTime(event1, event2);
+      expect(res).to.equal(-1);
+    });
+    it('should return 1 when the date1 > date2', () => {
+      const event1 = {
+        startTime: '2018-05-05T16:50:00',
+      };
+      const event2 = {
+        startTime: '2018-05-05T15:50:00',
+      };
+      const res = EventsUtilWithMock.orderByStartTime(event1, event2);
+      expect(res).to.equal(1);
+    });
+    it('should return 0 when equal', () => {
+      const event1 = {
+        startTime: '2018-05-05T16:50:00',
+      };
+      const event2 = {
+        startTime: '2018-05-05T16:50:00',
+      };
+      const res = EventsUtilWithMock.orderByStartTime(event1, event2);
+      expect(res).to.equal(0);
+    });
+  });
 });

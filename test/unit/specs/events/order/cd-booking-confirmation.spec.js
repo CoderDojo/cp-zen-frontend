@@ -11,7 +11,6 @@ describe('Booking Confirmation Component', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     MockEventService = {
-      loadSessions: sandbox.stub(),
       v3: {
         getOrder: sandbox.stub(),
       },
@@ -33,7 +32,6 @@ describe('Booking Confirmation Component', () => {
   describe('methods.loadData()', () => {
     it('should load create user and booking data from the store', async () => {
       // ARRANGE
-      MockEventService.loadSessions.resolves({ body: {} });
       MockEventService.v3.getOrder.resolves({ body: { results: [] } });
       vm.eventId = 'foo';
       vm.event = { id: 'foo' };
@@ -43,8 +41,6 @@ describe('Booking Confirmation Component', () => {
       await vm.loadData();
 
       // ASSERT
-      expect(MockEventService.loadSessions).to.have.been.calledOnce;
-      expect(MockEventService.loadSessions).to.have.been.calledWith('foo');
       expect(MockEventService.v3.getOrder).to.have.been.calledOnce;
       expect(MockEventService.v3.getOrder).to.have.been.calledWith('bar', { params: { 'query[eventId]': 'foo' } });
     });
@@ -54,10 +50,11 @@ describe('Booking Confirmation Component', () => {
     it('should get the session name for the session.id', () => {
       // ARRANGE
       const sessionId = '1';
-      vm.sessions = [{
-        id: '1',
-        name: 'banana',
-      }];
+      vm.event = {
+        sessions: [{
+          id: '1',
+          name: 'banana',
+        }] };
 
       // ACT
       const sessionName = vm.getSessionName(sessionId);
