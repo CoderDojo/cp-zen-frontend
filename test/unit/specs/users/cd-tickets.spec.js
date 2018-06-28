@@ -5,13 +5,19 @@ describe('Events/Tickets list component', () => {
   let sandbox;
   let TicketListWithMocks;
   let MockEventsService;
+  let MockEventsUtil;
   let MockDojosService;
   let MockUsersService;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     MockEventsService = {
-      loadEvents: sandbox.stub(),
+      v3: {
+        get: sandbox.stub(),
+      },
+    };
+    MockEventsUtil = {
+      orderByStartTime: sandbox.stub(),
     };
     MockDojosService = {
       getUsersDojos: sandbox.stub(),
@@ -22,6 +28,7 @@ describe('Events/Tickets list component', () => {
     };
     TicketListWithMocks = ticketList({
       '@/events/service': MockEventsService,
+      '@/events/util': MockEventsUtil,
       '@/dojos/service': MockDojosService,
       '@/users/service': MockUsersService,
     });
@@ -51,11 +58,12 @@ describe('Events/Tickets list component', () => {
     describe('loadEvents', () => {
       it('should load the user\'s events', async () => {
         // ARRANGE
-        const mockEventDataResponse = [
-          {
+        const mockEventDataResponse = {
+          results: [{
             id: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
             name: 'My First Amazing Event',
             dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+            startTime: '2017-06-06T16:30:00.000Z',
             dates: [
               {
                 startTime: '2017-06-06T16:30:00.000Z',
@@ -67,26 +75,74 @@ describe('Events/Tickets list component', () => {
             id: '34174952-8ca4-4189-b8cb-d383e3fde992',
             name: 'My Second Amazing Event',
             dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+            startTime: '2017-05-06T16:30:00.000Z',
             dates: [
               {
                 startTime: '2017-06-06T16:30:00.000Z',
                 endTime: '2017-06-06T18:00:00.000Z',
               },
             ],
-          },
-        ];
-        MockEventsService.loadEvents.returns(Promise.resolve({ body: mockEventDataResponse }));
+          }],
+        };
+        const expected = [{
+          id: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+          name: 'My First Amazing Event',
+          dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+          startTime: '2017-06-06T16:30:00.000Z',
+          dates: [
+            {
+              startTime: '2017-06-06T16:30:00.000Z',
+              endTime: '2017-06-06T18:00:00.000Z',
+            },
+          ],
+        }, {
+          id: '34174952-8ca4-4189-b8cb-d383e3fde992',
+          name: 'My Second Amazing Event',
+          dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+          startTime: '2017-05-06T16:30:00.000Z',
+          dates: [
+            {
+              startTime: '2017-06-06T16:30:00.000Z',
+              endTime: '2017-06-06T18:00:00.000Z',
+            },
+          ],
+        }, {
+          id: 'd206004a-b0ce-4267-bf07-133e8113aa1b',
+          name: 'My First Amazing Event',
+          dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+          startTime: '2017-06-06T16:30:00.000Z',
+          dates: [
+            {
+              startTime: '2017-06-06T16:30:00.000Z',
+              endTime: '2017-06-06T18:00:00.000Z',
+            },
+          ],
+        }, {
+          id: '34174952-8ca4-4189-b8cb-d383e3fde992',
+          name: 'My Second Amazing Event',
+          dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
+          startTime: '2017-05-06T16:30:00.000Z',
+          dates: [
+            {
+              startTime: '2017-06-06T16:30:00.000Z',
+              endTime: '2017-06-06T18:00:00.000Z',
+            },
+          ],
+        }];
+        MockEventsService.v3.get.returns(Promise.resolve({ body: mockEventDataResponse }));
         const vm = vueUnitHelper(TicketListWithMocks);
         vm.currentUser = {
           id: 'foo',
         };
-        vm.usersDojos = [{ dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77' }];
+        vm.usersDojos = [{ dojoId: 'dojo1' }, { dojoId: 'dojo2' }];
 
         // ACT
         await vm.loadEvents();
 
         // ASSERT
-        expect(vm.events).to.deep.equal(mockEventDataResponse);
+        expect(MockEventsService.v3.get).to.have.been.calledTwice;
+        expect(MockEventsUtil.orderByStartTime).to.have.been.calledThrice;
+        expect(vm.events).to.deep.equal(expected);
       });
     });
     describe('loadUserDojos', () => {

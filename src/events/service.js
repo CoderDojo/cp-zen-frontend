@@ -1,14 +1,6 @@
 import Vue from 'vue';
 
 const EventsService = {
-  // event-list, cd-tickets
-  loadEvents(dojoId) {
-    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/events/search`,
-      {
-        query: { dojoId, filterPastEvents: true, status: 'published' },
-      },
-    );
-  },
   // cancel booking
   loadApplications(eventId) {
     return Vue.http.get(`${Vue.config.apiServer}/api/2.0/user/events/${eventId}/applications`);
