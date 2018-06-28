@@ -45,17 +45,16 @@
         query.afterDate = moment().unix();
         query.utcOffset = moment().utcOffset();
 
-        return Promise.all(this.usersDojos.map(dojo =>
+        const events = await Promise.all(this.usersDojos.map(dojo =>
           EventService.v3.get(dojo.dojoId, {
             params: {
               query,
               related: 'sessions.tickets',
-            } })))
-          .then((events) => {
-            this.events = (events.reduce((red, dojoEvents) =>
-              red.concat(dojoEvents.body.results), []))
+            } }),
+        ));
+        this.events = (events.reduce((acc, dojoEvents) =>
+          acc.concat(dojoEvents.body.results), []))
             .sort(EventUtils.orderByStartTime);
-          });
       },
       async loadUserDojos() {
         const res = await DojosService.getUsersDojos(this.currentUser.id);
