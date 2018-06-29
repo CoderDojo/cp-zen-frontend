@@ -2,7 +2,7 @@
   <form class="cd-create-account" @submit.prevent="register">
     <h1 class="cd-create-account__header">{{ $t('Register your details so you can book Dojo Events') }}</h1>
     <div>
-      <div>
+      <div class="cd-create-account__info">
         <p>
           <i class="fa fa-info-circle"></i>
           {{ $t('If you are a parent or a guardian booking tickets for a child, or a child over 13 please still tell us your details here.')  }} <br/>
@@ -229,6 +229,9 @@
         width: 176px;
       }
     }
+    &__info {
+      margin-bottom: 16px;
+    }
     &__label {
       margin-bottom: 5px;
       display: inline-block;
@@ -273,8 +276,11 @@
         padding-left: 6px;
       }
     }
+    &__recaptcha {
+        padding: 8px 0px 24px;
+    }
     &__agreement {
-        padding: 8px;
+        padding: 8px 0px 24px;
     }
     &__terms-conditions {
       &-error {
@@ -284,6 +290,7 @@
     &__submit {
       .primary-button-large;
       margin-top: 24px;
+      margin-bottom: 32px;
     }
     input[type=checkbox] {
       width: 21px;
