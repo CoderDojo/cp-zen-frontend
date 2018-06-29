@@ -211,6 +211,7 @@
   };
 </script>
 <style scoped lang="less">
+  @import "../common/variables";
   @import "../common/styles/cd-primary-button";
 
   .cd-create-account {
@@ -264,7 +265,7 @@
       font-weight: 300;
     }
     &__dob-picker-wrapper {
-      max-width: 75%;
+      max-width: 50%;
       padding: 8px 0px 24px;
     }
     &__password {
@@ -355,6 +356,14 @@
     .form;
     width: 230px;
     height: 36px;
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-create-account {
+      &__dob-picker-wrapper {
+        max-width: 100%;
+      }
+    }
   }
 </style>
 <style lang="less">
