@@ -32,7 +32,7 @@
       <div class="cd-create-account__dob">
         <label class="cd-create-account__label" for="dob">{{ $t('Enter your Date of Birth') }}</label>
         <div class="cd-create-account__dob-picker-wrapper">
-          <vue-dob-picker v-model="dob" select-class="form-control cd-create-account__dob-picker-wrapper-select" id="dob" class="cd-create-account__dob-picker"
+          <vue-dob-picker v-model="dob" select-class="form-control cd-create-account__dob-picker-wrapper-select" id="dob"
             v-validate="'required'"
             data-vv-name="dob"
             data-vv-value-path="value"
@@ -239,12 +239,10 @@
       font-weight: 700;
     }
     &__email {
-      max-width: 110%;
       padding: 8px 0px 24px;
     }
     &__names {
       padding: 8px 0px 24px;
-      max-width: 100%;
 
       &-label {
         flex-basis: 100%;
@@ -266,11 +264,10 @@
       font-weight: 300;
     }
     &__dob-picker-wrapper {
-      max-width: 50%;
+      max-width: 75%;
       padding: 8px 0px 24px;
     }
     &__password {
-      max-width: 50%;
       padding: 8px 0px 24px;
       &-visibility {
         padding-left: 6px;
