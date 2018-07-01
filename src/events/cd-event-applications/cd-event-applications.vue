@@ -69,7 +69,6 @@
   </div>
 </template>
 <script>
-  import moment from 'moment';
   import { flatten, uniqBy } from 'lodash';
   import i18n from '@/i18n';
   import { mapGetters } from 'vuex';
@@ -215,11 +214,10 @@
         // TODO : filter if child?
         this.applications.map(a =>
           UserService.parentsOf(a.userId)
-          .then((res) => { 
+          .then((res) => {
             this.$store.commit('parentsOf', { userId: a.userId, data: res.body[0] });
           }),
         );
-        
       },
       removeGroupBy() {
         this.tableOrdered = true;

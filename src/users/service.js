@@ -33,7 +33,7 @@ const UserService = {
     delete payload.profile.otherGender;
     return Vue.http.post(`${Vue.config.apiServer}/api/2.0/profiles/youth/create`, payload);
   },
-  parentsOf: (userId) =>
+  parentsOf: userId =>
     Vue.http.get(`${Vue.config.apiServer}/api/2.0/profiles/parents-for-user/${userId}`),
 };
 

@@ -23,23 +23,31 @@ export default new Vuex.Store({
         },
         tableData(state) {
           state.data = state.applications.map((a) => {
-            const { id, name, dateOfBirth, userId, notes, ticketName, ticketType, created, status } = a;
-             return Object.assign({
-                sessionName: state.sessions[a.sessionId].name,
-              }, {
-                id,
-                userId,
-                name,
-                parent: state.parents[userId],
-                age: UserUtils.getAge(moment.utc(dateOfBirth).toDate()),
-                ticketName,
-                ticketType,
-                notes,
-                created: moment.utc(created),
-                status,
-                notesVisible: false,
-                isApproved: status === 'approved',
-             });
+            const { id,
+              name,
+              dateOfBirth,
+              userId,
+              notes,
+              ticketName,
+              ticketType,
+              created,
+              status } = a;
+            return Object.assign({
+              sessionName: state.sessions[a.sessionId].name,
+            }, {
+              id,
+              userId,
+              name,
+              parent: state.parents[userId],
+              age: UserUtils.getAge(moment.utc(dateOfBirth).toDate()),
+              ticketName,
+              ticketType,
+              notes,
+              created: moment.utc(created),
+              status,
+              notesVisible: false,
+              isApproved: status === 'approved',
+            });
           });
         },
         event(state, data) {
@@ -49,8 +57,8 @@ export default new Vuex.Store({
           state.sessions = state.event.sessions.reduce(reducer, {});
         },
         parentsOf(state, { userId, data }) {
-          state.parents[userId] = data; 
-          const row = state.data.findIndex((row) => row.userId === userId);
+          state.parents[userId] = data;
+          const row = state.data.findIndex(r => r.userId === userId);
           state.data[row].parent = data;
         },
         toggleApproval(state, id, value) {
@@ -60,8 +68,8 @@ export default new Vuex.Store({
       getters: {
         applications: state => state.applications,
         event: state => state.event,
-        sessions: (state) => state.sessions,
-        data: (state) => state.data,
+        sessions: state => state.sessions,
+        data: state => state.data,
       },
     },
   },
