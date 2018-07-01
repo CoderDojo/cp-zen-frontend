@@ -107,6 +107,14 @@ describe('Events Util', () => {
   describe('getNextStartTime', () => {
     it('should return the first event startTime date after now', () => {
       // ARRANGE
+      const event = { ...mockRecurringEventData, dates: mockRecurringEventData.dates.slice(0, -2) };
+      // ACT
+      const nextStartTime = EventsUtilWithMock.getNextStartTime(event);
+      // ASSERT
+      expect(nextStartTime).to.deep.equal('2017-07-01T10:00:00.000Z');
+    });
+    it('should return the last date if the event is past', () => {
+      // ARRANGE
       const event = mockRecurringEventData;
       // ACT
       const nextStartTime = EventsUtilWithMock.getNextStartTime(event);
@@ -189,6 +197,38 @@ describe('Events Util', () => {
       const recurring = EventsUtilWithMock.isRecurring(event);
       // ASSERT
       expect(recurring).to.be.false;
+    });
+  });
+  describe('orderByStartTime', () => {
+    it('should return -1 when the date1 < date2', () => {
+      const event1 = {
+        startTime: '2018-05-05T15:50:00',
+      };
+      const event2 = {
+        startTime: '2018-05-05T16:50:00',
+      };
+      const res = EventsUtilWithMock.orderByStartTime(event1, event2);
+      expect(res).to.equal(-1);
+    });
+    it('should return 1 when the date1 > date2', () => {
+      const event1 = {
+        startTime: '2018-05-05T16:50:00',
+      };
+      const event2 = {
+        startTime: '2018-05-05T15:50:00',
+      };
+      const res = EventsUtilWithMock.orderByStartTime(event1, event2);
+      expect(res).to.equal(1);
+    });
+    it('should return 0 when equal', () => {
+      const event1 = {
+        startTime: '2018-05-05T16:50:00',
+      };
+      const event2 = {
+        startTime: '2018-05-05T16:50:00',
+      };
+      const res = EventsUtilWithMock.orderByStartTime(event1, event2);
+      expect(res).to.equal(0);
     });
   });
 });

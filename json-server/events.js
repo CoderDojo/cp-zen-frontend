@@ -20,7 +20,17 @@ module.exports = [
     createdAt: '2017-05-29T13:53:16.502Z',
     createdBy: '7ae18cb2-582d-4bc9-90d1-47defc2a3563',
     type: 'one-off',
-    description: '<p>LEARN ALL THE THINGS</p>\n',
+    description: '<p>Join us for our second session back in the autumn term!</br> \
+      New beginners will be building games and creating projects using Scratch a visual programming language. Returning ninjas will working on more advanced content so come with your thinking hats and be ready to solve some advanced problems!   \
+      <b>Note</b>: Doors open at 5:50 pm attendees will not be able to enter Dogpatch Labs before this. </p> </br>\
+      <b>All ninjas should:</b> \
+      <ul>\
+      <li> Book a ticket </li>\
+      <li> Bring a laptop (there are limited laptops available). </li>\
+      <li> Bring an Android Phone/Tablet (if they have one & are using App Inventor)</li>\
+      <li> Be accompanied by a parent/guardian at all times. </li>\
+      </ul>\
+      Parents are asked to help get their child set up, laptops turned on etc so mentors can focus on mentoring.',
     dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
     eventbriteId: null,
     eventbriteUrl: null,
@@ -172,7 +182,17 @@ module.exports = [
     createdAt: '2017-05-29T13:57:29.351Z',
     createdBy: '7ae18cb2-582d-4bc9-90d1-47defc2a3563',
     type: 'recurring',
-    description: '<p>Learn all the other things</p>\n',
+    description: '<p>Join us for our second session back in the autumn term!</br> \
+      New beginners will be building games and creating projects using Scratch a visual programming language. Returning ninjas will working on more advanced content so come with your thinking hats and be ready to solve some advanced problems!   \
+      <b>Note</b>: Doors open at 5:50 pm attendees will not be able to enter Dogpatch Labs before this. </p> </br>\
+      <b>All ninjas should:</b> \
+      <ul>\
+      <li> Book a ticket </li>\
+      <li> Bring a laptop (there are limited laptops available). </li>\
+      <li> Bring an Android Phone/Tablet (if they have one & are using App Inventor)</li>\
+      <li> Be accompanied by a parent/guardian at all times. </li>\
+      </ul>\
+      Parents are asked to help get their child set up, laptops turned on etc so mentors can focus on mentoring.',
     dojoId: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
     eventbriteId: null,
     eventbriteUrl: null,
@@ -182,24 +202,24 @@ module.exports = [
     recurringType: 'biweekly',
     dates: [
       {
-        startTime: '2018-06-03T10:00:00.000Z',
-        endTime: '2018-06-03T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 5, 3, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 5, 3, 12, 0, 0, 0]),
       },
       {
-        startTime: '2018-06-17T10:00:00.000Z',
-        endTime: '2018-06-17T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 5, 17, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 5, 17, 12, 0, 0, 0]),
       },
       {
-        startTime: '2018-07-01T10:00:00.000Z',
-        endTime: '2018-07-01T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 6, 1, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 6, 1, 12, 0, 0, 0]),
       },
       {
-        startTime: '2018-07-15T10:00:00.000Z',
-        endTime: '2018-07-15T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 6, 15, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 6, 15, 12, 0, 0, 0]),
       },
       {
-        startTime: '2018-07-29T10:00:00.000Z',
-        endTime: '2018-07-29T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 6, 29, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 6, 29, 12, 0, 0, 0]),
       }
     ],
     ticketApproval: false,
@@ -222,7 +242,7 @@ module.exports = [
             deleted: 0,
             invites: null,
             totalApplications: 0,
-            approvedApplications: 0
+            approvedApplications: 5
           },
           {
             entity$: '-/cd/tickets',
@@ -230,7 +250,7 @@ module.exports = [
             sessionId: '97273d08-6b44-4529-8c75-bdaa7a02ba3e',
             name: 'Lacking Pi',
             type: 'ninja',
-            quantity: 3,
+            quantity: 1,
             deleted: 0,
             invites: null,
             totalApplications: 0,

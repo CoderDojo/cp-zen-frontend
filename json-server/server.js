@@ -8,6 +8,7 @@ const usersProfile = require('./users-profile');
 const usersDojos = require('./users-dojos');
 const applications = require('./applications');
 const events = require('./events');
+const orders = {};
 
 const server = jsonServer.create();
 const router = jsonServer.router(require('./db'));
@@ -82,6 +83,36 @@ server.post('/api/2.0/profiles/youth/create', (req, res) => {
   res.send(child);
 });
 
+server.post('/api/2.0/profiles/create', (req, res) => {
+  const profile = req.body.profile;
+  profile.id = uuidv1();
+  profile.userId = uuidv1();
+  res.send(profile);
+});
+
+server.post('/api/3.0/events/:eventId/orders', (req, res) => {
+  const order = req.body;
+  const parentApplication = (req.body.applications.filter(a => a.ticketType === 'parent-guardian'))[0]; 
+  const userId = parentApplication ? parentApplication.userId : req.body.applications[0].userId;
+  order.id = uuidv1();
+  orders[userId] = orders[userId] || [];
+  orders[userId].push(order);
+  res.send(order);
+});
+
+server.get('/api/3.0/users/:userId/orders', (req, res) => {
+  const userId = req.params.userId;
+  res.send({ results: orders[userId] || [] });
+});
+
+server.put('/api/3.0/users/:userId/orders/:orderId', (req, res) => {
+  const userId = req.params.userId;
+  const orderId = req.params.orderId;
+  const orderIndex = orders[userId].findIndex(o => o.id === orderId);
+  orders[userId][orderIndex].applications = req.body.applications;
+  res.send(orders[userId][orderIndex]);
+});
+
 server.get('/api/2.0/profiles/children-for-user/:parentId', (req, res) => {
   const children = users[req.cookies.loggedIn].children;
   Object.keys(children).forEach((key) => {
@@ -98,12 +129,18 @@ server.post('/api/2.0/users/register', (req, res) => {
   users[req.body.user.email].name = `${req.body.user.firstName} ${req.body.user.lastName}`;
   users[req.body.user.email].roles = ['basic-user'];
   users[req.body.user.email].initUserType = JSON.stringify(users[req.body.user.email].initUserType);
-  res.send();
+  res.send({ ok: true });
 });
 
 server.post('/api/2.0/users/login', (req, res) => {
-  res.cookie('loggedIn', req.body.email, { maxAge: 900000, httpOnly: true });
-  res.send();
+  if (users[req.body.email]) {
+    res.cookie('loggedIn', req.body.email, { maxAge: 900000, httpOnly: true });
+    res.send();
+  } else if (req.body.email === 'failure@example.com') {
+    res.send({ ok: false, why: 'invalid-password' });
+  } else {
+    res.send({ ok: false, why: 'user-not-found' });
+  }
 });
 
 server.get('/api/2.0/user/events/:id/applications', (req, res) => {
@@ -117,21 +154,28 @@ server.get('/api/2.0/user/events/:id/applications', (req, res) => {
 server.get('/api/2.0/users/instance', (req, res) => {
   if (req.cookies.loggedIn) {
     res.send({
-      login: {},
+      login: { id: 'user' },
       ok: true,
       user: users[req.cookies.loggedIn],
     });
   } else {
     res.send({
-      login: {},
-      ok: false,
+      login: null,
+      ok: true,
+      user: null,
     });
   }
 });
 
 server.post('/api/2.0/profiles/user-profile-data', (req, res) => {
+  let profile;
   if (req.cookies.loggedIn) {
-    res.send(usersProfile[req.cookies.loggedIn]);
+    if (req.body.query && req.body.query.userId) {
+      profile = Object.values(usersProfile).find((p) => req.body.query.userId === p.userId);
+    } else {
+      profile = usersProfile[req.cookies.loggedIn];
+    }
+    res.send(profile);
   } else {
     res.send();
   }
@@ -165,6 +209,7 @@ server.get('/api/3.0/dojos/:dojoId/events', (req, res) => {
 });
 
 server.use('/api/2.0', router);
+server.use('/api/3.0', router);
 server.get('/locale/data', (req, res) => {
   const lang = req.query.lang || 'en_US';
   res.send(locales[lang]);
@@ -172,20 +217,20 @@ server.get('/locale/data', (req, res) => {
 
 server.get('/locale/languages', (req, res) => {
   res.send([
-    { 
-      name: 'pt', 
+    {
+      name: 'pt',
       code: 'pt_PT'
     },
-    { 
-      name: 'de', 
+    {
+      name: 'de',
       code: 'de_DE'
     },
-    { 
-      name: 'es', 
+    {
+      name: 'es',
       code: 'es_ES'
     },
-    { 
-      name: 'en', 
+    {
+      name: 'en',
       code: 'en_US'
     },
   ]);

@@ -8,7 +8,7 @@ const BookingConfirmation = Object.create(BasePage, {
   },
   accountCreationConfirmation: {
     get() {
-      return $$('.cd-booking-confirmation__account-confirmation')[0];
+      return $('.cd-booking-confirmation__account-confirmation-created');
     },
   },
   bookingConfirmationMessage: {
@@ -18,7 +18,12 @@ const BookingConfirmation = Object.create(BasePage, {
   },
   joinedDojoConfirmation: {
     get() {
-      return $$('.cd-booking-confirmation__account-confirmation')[1];
+      return $('.cd-booking-confirmation__account-confirmation-joined');
+    },
+  },
+  approvalRequiredMessage: {
+    get() {
+      return $('.cd-booking-confirmation__account-confirmation-approval');
     },
   },
   hostedByMessage: {
@@ -58,7 +63,9 @@ const BookingConfirmation = Object.create(BasePage, {
   },
   bookingName: {
     value(index) {
-      return $$('.cd-booking-confirmation__booking-name')[index];
+      const selector = '.cd-booking-confirmation__booking-name';
+      $(selector).waitForVisible();
+      return $$(selector)[index];
     },
   },
   bookingSessionTicket: {

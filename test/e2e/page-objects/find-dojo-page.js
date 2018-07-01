@@ -101,7 +101,7 @@ const DojoPage = Object.create(BasePage, {
   },
   startADojoMessageMobile: {
     get() {
-      return $$('.cd-find-dojo__start-a-dojo-message')[1];
+      return $('.cd-find-dojo__start-a-dojo-box.visible-xs .cd-find-dojo__start-a-dojo-message');
     },
   },
   startADojoButton: {

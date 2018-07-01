@@ -5,6 +5,7 @@ module.exports = {
     lastName: 'one',
     name: 'parent one',
     email: 'parent1@example.com',
+    phone: '',
     initUserType: JSON.stringify({name: 'parent-guardian', title: 'Parent/Guardian'}),
     roles: ['basic-user'],
     children: {'child1': {
@@ -21,6 +22,7 @@ module.exports = {
     lastName: 'two',
     name: 'parent two',
     email: 'parent2@example.com',
+    phone: '123456789',
     initUserType: JSON.stringify({name: 'parent-guardian', title: 'Parent/Guardian'}),
     roles: ['basic-user'],
     children: {'child1': {
@@ -30,6 +32,33 @@ module.exports = {
       firstName: 'child',
       lastName: 'two',
     }}
+  },
+  'parent3@example.com': {
+    id: 'parent3',
+    firstName: 'parent',
+    lastName: 'forty-three-and-two',
+    name: 'parent 3',
+    email: 'parent3@example.com',
+    phone: '',
+    initUserType: JSON.stringify({name: 'parent-guardian', title: 'Parent/Guardian'}),
+    roles: ['basic-user'],
+    children: {'child3': {
+      id: 'pchild3',
+      userId: 'child3',
+      name: 'child3 three',
+      firstName: 'child',
+      lastName: 'three',
+    }}
+  },
+  'adult1@example.com': {
+    id: 'adult1',
+    firstName: 'adult',
+    lastName: 'one',
+    name: 'adult one',
+    email: 'adult1@example.com',
+    phone: '',
+    initUserType: JSON.stringify({name: 'parent-guardian', title: 'Parent/Guardian'}),
+    roles: ['basic-user'],
   },
   'mentor1@example.com': {
     id: 'mentor1',

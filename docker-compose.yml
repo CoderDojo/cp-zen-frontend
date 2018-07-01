@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+  selenium:
+    shm_size: '2gb'
+    image: selenium/standalone-chrome
+  test:
+    image: circleci/node:8-browsers
+    command: yarn test
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app:Z
+      - ../cp-translations:/usr/src/app/node_modules/cp-translations:ro
+    depends_on:
+      - selenium
+    environment:
+      - EXTERNAL_SELENIUM=1
+    network_mode: "service:selenium"
+  dev:
+    image: node:carbon
+    command: yarn start-with-mocks
+    working_dir: /usr/src/app
+    ports:
+      - '8080:8080'    
+    volumes:
+      - .:/usr/src/app:Z

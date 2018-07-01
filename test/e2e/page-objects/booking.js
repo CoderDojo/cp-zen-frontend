@@ -3,7 +3,22 @@ const EventDetails = require('./event-details');
 const BookingParentData = Object.create(EventDetails, {
   open: {
     value(eventId) {
-      return this.open.call(this, `/v2/events/${eventId}/book`);
+      return this.open.call(this, `/events/${eventId}`);
+    },
+  },
+  eventIsFullEmoji: {
+    get() {
+      return $('.cd-event-sessions__no-tickets-emoticon');
+    },
+  },
+  eventIsFullHeader: {
+    get() {
+      return $('.cd-event-sessions__no-tickets h3');
+    },
+  },
+  eventIsFullSubheader: {
+    get() {
+      return $('.cd-event-sessions__no-tickets h4');
     },
   },
   attendeeTypeHeader: {
@@ -17,46 +32,6 @@ const BookingParentData = Object.create(EventDetails, {
       return $('label[for=name]');
     },
   },
-  firstName: {
-    get() {
-      return $('input[name=firstName]');
-    },
-  },
-  firstNameValidationError: {
-    get() {
-      return $('p[id=firstNameValidationError]');
-    },
-  },
-  lastName: {
-    get() {
-      return $('input[name=lastName]');
-    },
-  },
-  lastNameValidationError: {
-    get() {
-      return $('p[id=lastNameValidationError]');
-    },
-  },
-  dateOfBirthLabel: {
-    get() {
-      return $('label.cd-booking-parent-form__parent-dob-label');
-    },
-  },
-  dateOfBirthDayInput: {
-    get() {
-      return $$('.cd-booking-parent-form__parent-dob select')[0];
-    },
-  },
-  dateOfBirthMonthInput: {
-    get() {
-      return $$('.cd-booking-parent-form__parent-dob select')[1];
-    },
-  },
-  dateOfBirthYearInput: {
-    get() {
-      return $$('.cd-booking-parent-form__parent-dob select')[2];
-    },
-  },
   phoneNumberLabel: {
     get() {
       return $('label[for=phoneNumber]');
@@ -64,155 +39,142 @@ const BookingParentData = Object.create(EventDetails, {
   },
   phoneNumber: {
     get() {
-      return $('input[name=phoneNumber]');
+      return $('.cd-event-sessions__phone-number-input input');
     },
   },
   phoneNumberValidationError: {
     get() {
-      return $('p[id=phoneNumberValidationError]');
-    },
-  },
-  emailLabel: {
-    get() {
-      return $('label[for=email]');
-    },
-  },
-  email: {
-    get() {
-      return $('input[name=email]');
-    },
-  },
-  emailValidationError: {
-    get() {
-      return $('p[id=emailValidationError]');
-    },
-  },
-  attendeeHeading: {
-    get() {
-      return $('.cd-booking__attendee-heading')
-    },
-  },
-  selectedTicketsHeading: {
-    get() {
-      return $('.cd-booking__selected-tickets-heading')
+      return $('.cd-event-session__phone-number-err-required');
     },
   },
   tickets: {
-    value(index) {
-      $('.cd-booking__tickets').waitForVisible();
-      return $$('.cd-booking__tickets')[index];
+    get() {
+      return $$('.cd-event-tickets');
     },
   },
-  allTickets: {
-    value() {
-      $('.cd-booking__tickets').waitForVisible();
-      return $$('.cd-booking__tickets');
-    },
+  ticketName: {
+    value(index) {
+      return $$('.cd-event-tickets__name')[index];
+    }
+  },
+  ticketSelector: {
+    value(index) {
+      return $$('.cd-event-tickets__ticket-selector')[index];
+    }
+  },
+  ticketSelected: {
+    get() {
+      return $('.cd-event-tickets__ticket-selector .multiselect__tags');
+    }
+  },
+  ticketOption: {
+    value(selected) {
+      return $$(`//li[@class="multiselect__element"]/span[.="${selected}"]`);
+    }
+  },
+  notAttendingSelector: {
+    value(index) {
+      return $$('.cd-event-tickets__not-attending-selector')[index];
+    }
+  },
+  specialReqSelector: {
+    value(index) {
+      return $$('.cd-event-tickets__special-req-selector')[index];
+    }
   },
   submitBookingButton: {
     get() {
-      return $('input[value="Confirm Booking"]');
+      return $('button[name="submitApplications"]');
     },
   },
-  sessionTicketTitle: {
+  addYouthButton: {
     get() {
-      $('.cd-booking-parent-form__child-section').waitForVisible();
-      return $$('.cd-booking-parent-form__child-section');
+      return $('button.cd-event-sessions__add-youth');
     },
   },
-  sessionTicketFirstName: {
+  childrenTickets: {
     get() {
-      return $$('.cd-booking-parent-form__child-first-name');
+      return $$('.cd-child-ticket__ticket-box');
     },
   },
-  sessionTicketLastName: {
+  removeChildTicket: {
     get() {
-      return $$('.cd-booking-parent-form__child-last-name');
+      return $$('.cd-child-ticket__delete-ticket i');
     },
   },
-  sessionTicketDayOfBirth: {
+  childTicketTitle: {
+    get() {
+      $('.cd-child-ticket__header').waitForVisible();
+      return $$('.cd-child-ticket__header');
+    },
+  },
+  childTicketFirstName: {
+    get() {
+      return $$('.cd-child-ticket__first-name');
+    },
+  },
+  childTicketLastName: {
+    get() {
+      return $$('.cd-child-ticket__surname');
+    },
+  },
+  childTicketFirstNameValidationError: {
+    get() {
+      return $('.cd-child-ticket__first-name-err');
+    },
+  },
+  childTicketLastNameValidationError: {
+    get() {
+      return $('.cd-child-ticket__surname-err');
+    },
+  },
+  childTicketDayOfBirth: {
     value(index) {
-      let datePicker = $$('.cd-booking-parent-form__child-dob')[index];
+      let datePicker = $$('.cd-child-ticket__dob-picker-wrapper')[index];
       return datePicker.$$('select')[0];
     },
   },
-  sessionTicketMonthOfBirth: {
+  childTicketMonthOfBirth: {
     value(index) {
-      let datePicker = $$('.cd-booking-parent-form__child-dob')[index];
+      let datePicker = $$('.cd-child-ticket__dob-picker-wrapper')[index];
       return datePicker.$$('select')[1];
     },
   },
-  sessionTicketYearOfBirth: {
+  childTicketYearOfBirth: {
     value(index) {
-      let datePicker = $$('.cd-booking-parent-form__child-dob')[index];
+      let datePicker = $$('.cd-child-ticket__dob-picker-wrapper')[index];
       return datePicker.$$('select')[2];
     },
   },
-  sessionTicketEmailAddress: {
+  childTicketDateOfBirthValidationError: {
     get() {
-      return $$('.cd-booking-parent-form__child-email');
+      return $('.cd-child-ticket__dob-err');
     },
   },
-  sessionTicketGender: {
-    value(gender) {
-      return $$(`.cd-booking-parent-form__child-gender input[value=${gender}]`);
+  childTicketGender: {
+    value(index) {
+      return $$('.cd-child-ticket__gender-selector select')[index];
     },
   },
-  sessionOtherGender: {
+  childOtherGender: {
     get() {
-      return $$('.cd-booking-parent-form__child-gender input[name^=otherGender]');
+      return $('.cd-child-ticket__gender-selector input');
     },
   },
-  password: {
+  childTicketGenderValidationError: {
     get() {
-      return $('input[name=password]');
+      return $('.gender-err');
     },
   },
-  passwordError: {
+  childTicketSelector: {
+    value(selected, index = 0) {
+      $$('.cd-child-ticket__ticket-selector .multiselect')[index].click();
+      return $$(`//li[@class="multiselect__element"]/span[.="${selected}"]`);
+    },
+  },
+  childTicketSelectorValidationError: {
     get() {
-      return $('.cd-booking-create-account__password-error');
-    },
-  },
-  confirmPassword: {
-    get() {
-      return $('input[name=confirmPassword]');
-    },
-  },
-  confirmPasswordError: {
-    get() {
-      return $('.cd-booking-create-account__password-confirmation-error');
-    },
-  },
-  termsAndConditions: {
-    get() {
-      return $('input[name=termsConditionsAccepted]');
-    },
-  },
-  termsAndConditionsError: {
-    get() {
-      return $('.cd-booking-create-account__terms-conditions-error');
-    },
-  },
-  termsAndConditionsLink: {
-    get() {
-      return $('.cd-booking-create-account__terms-conditions-link');
-    },
-  },
-  checkRecaptcha: {
-    value() {
-      const selector = '.cd-booking-create-account__recaptcha iframe';
-      browser.waitForVisible(selector);
-      const iframe = browser.element(selector);
-      browser.frame(iframe.value);
-      browser.waitForVisible('.recaptcha-checkbox')
-      browser.click('.recaptcha-checkbox');
-      browser.waitForVisible('.recaptcha-checkbox[aria-checked="true"]');
-      browser.frame();
-    },
-  },
-  modifyButton: {
-    get() {
-      return $('.cd-booking__modify');
+      return $('.cd-child-ticket__ticket-select-err');
     },
   },
 });

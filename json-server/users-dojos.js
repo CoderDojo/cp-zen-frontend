@@ -109,6 +109,23 @@ module.exports = {
       "deleted": 0,
       "deletedBy": null,
       "deletedAt": null
-    }]
+    }],
+    "3ed47c6d-a689-46a0-883b-1f3fd46e9c77": [{
+      "entity$": "-/cd/usersdojos",
+      "id": "3ed47c6d-a689-46a0-883b-169e7540a9c9",
+      "mysqlUserId": null,
+      "mysqlDojoId": null,
+      "owner": 0,
+      "userId": "mentor1",
+      "dojoId": "3ed47c6d-a689-46a0-883b-1f3fd46e9c77",
+      "userTypes": [
+        "mentor"
+      ],
+      "userPermissions": [],
+      "backgroundChecked": true,
+      "deleted": 0,
+      "deletedBy": null,
+      "deletedAt": null
+    }],
   },
 };

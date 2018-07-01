@@ -1,7 +1,7 @@
 const FindDojoPage = require('../page-objects/find-dojo-page');
 const DojoDetailsPage = require('../page-objects/dojo-details');
-const EventDobVerificationPage = require('../page-objects/event-dob-verification');
 const EventSessionsPage = require('../page-objects/event-sessions');
+const ChildTicket = require('../page-objects/child-ticket');
 const LoginPage = require('../page-objects/login');
 const currentYear = (new Date()).getFullYear();
 
@@ -76,11 +76,13 @@ describe('Dojo details page', () => {
     expect(secondEventName).to.equal('My Second Amazing Event');
     expect(DojoDetailsPage.eventSessions[1].getText()).to.equal('Sessions: Raspberry Pi, Unity');
     expect(DojoDetailsPage.eventDateSeries[0].getText()).to.equal('Next in series:');
-    expect(DojoDetailsPage.eventDate(1).getText()).to.equal('June 3, 2018');
+    expect(DojoDetailsPage.eventDate(1).getText()).to.equal(`June 3, ${currentYear + 1}`);
     expect(DojoDetailsPage.eventTimes(1).getText()).to.equal('10am - 12pm');
     expect(DojoDetailsPage.eventRecurringInfoIcon[0].isVisible()).to.equal(true);
     expect(DojoDetailsPage.eventRecurringInfoHeader[0].getText()).to.equal('This is a recurring event');
-    expect(DojoDetailsPage.eventRecurringInfoText[0].getText()).to.equal('Every two weeks on Sunday at 10am - 12pm, from June 3, 2018 to July 29, 2018');
+
+    const eventDay = new Intl.DateTimeFormat('en-GB', { weekday: 'long' }).format(new Date(currentYear + 1, 5, 3, 12, 0, 0));
+    expect(DojoDetailsPage.eventRecurringInfoText[0].getText()).to.equal(`Every two weeks on ${eventDay} at 10am - 12pm, from June 3, ${currentYear + 1} to July 29, ${currentYear + 1}`);
   });
 
   it('should show message if no events are scheduled', () => {
@@ -100,63 +102,8 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.detailsLabel[1]).to.not.equal('Recent Events');
   });
 
-  it('should show event details after clicking on an event', () => {
-    FindDojoPage.openDojoWithQuery('dublin');
-    DojoDetailsPage.name.waitForVisible();
-    DojoDetailsPage.eventViewButtons[0].click();
-
-    EventDobVerificationPage.dateOfBirthDayInput.selectByValue('27');
-    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('3');
-    EventDobVerificationPage.dateOfBirthYearInput.selectByValue('1980');
-    EventDobVerificationPage.verify.click();
-
-    expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/sessions');
-    expect(EventSessionsPage.eventSessions[0].getText()).to.have.string('Scratch');
-    expect(EventSessionsPage.eventSessions[0].getText()).to.have.string('Beginners welcome');
-    expect(EventSessionsPage.eventTickets(0).getText()).to.have.string('Laptop Required');
-    expect(EventSessionsPage.eventTickets(1).getText()).to.have.string('Parent');
-    expect(EventSessionsPage.eventTickets(2).getText()).to.have.string('Mentor');
-    expect(EventSessionsPage.eventTickets(3).getText()).to.have.string('Bringing a laptop');
-
-    expect(EventSessionsPage.eventSessions[1].getText()).to.have.string('Arduino');
-    expect(EventSessionsPage.eventSessions[1].getText()).to.have.string('Intermediate');
-    expect(EventSessionsPage.eventTickets(4).getText()).to.have.string('Laptop required');
-
-    expect(EventSessionsPage.ticketCounterValues.length).to.equal(8);
-    EventSessionsPage.ticketCounterValues.forEach((counterValue) => {
-      expect(counterValue.getValue()).to.equal('0');
-    });
-
-    EventSessionsPage.ticketCounterIncrement(0).click();
-    expect(EventSessionsPage.ticketCounterValue(0).getValue()).to.equal('1');
-
-    EventSessionsPage.ticketCounterIncrement(2).click();
-    EventSessionsPage.ticketCounterIncrement(2).click();
-    expect(EventSessionsPage.ticketCounterValue(2).getValue()).to.equal('2');
-
-    EventSessionsPage.ticketCounterDecrement(2).click();
-    expect(EventSessionsPage.ticketCounterValue(2).getValue()).to.equal('1');
-
-    expect(EventSessionsPage.nextButton.isVisible()).to.equal(true);
-    EventSessionsPage.nextButton.click();
-    expect(browser.getUrl()).to.have.string('/events/d206004a-b0ce-4267-bf07-133e8113aa1b/book');
-  });
-
-  it('should not allow an underage person to proceed in the flow', () => {
-    FindDojoPage.openDojoWithQuery('dublin');
-    DojoDetailsPage.name.waitForVisible();
-    DojoDetailsPage.firstEventViewButton.waitForVisible();
-    DojoDetailsPage.eventViewButtons[0].click();
-
-    EventDobVerificationPage.dateOfBirthDayInput.selectByValue('25');
-    EventDobVerificationPage.dateOfBirthMonthInput.selectByValue('5');
-    EventDobVerificationPage.dateOfBirthYearInput.selectByValue('2017');
-    EventDobVerificationPage.verify.click();
-    EventDobVerificationPage.dateOfBirthError.waitForVisible();
-    expect(EventDobVerificationPage.dateOfBirthError.getText()).to.equal('You will need your parent to carry out the registration.');
-  });
-
   it('should hide book button on private dojos when not logged in', () => {
+    browser.deleteCookie();
     FindDojoPage.openDojoWithQuery('dublin', 3);
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.eventViewButtons.length).to.equal(0);
@@ -266,20 +213,20 @@ describe('Dojo details page', () => {
     expect(DojoDetailsPage.eventNames.length).to.equal(1);
     browser.deleteCookie();
   });
-  
+
   it('should show past events when there is no upcoming events and not joined', () => {
     FindDojoPage.openDojoWithQuery('dublin&p=2', 2);
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.noEventsPastContent[0].getText()).to.equal('This Dojo had events recently. Join the Dojo to get notified when tickets for the next event are available.');
   });
-  
+
   it('should show past events when there is no upcoming events and joined', () => {
     LoginPage.open();
     LoginPage.email.waitForVisible();
     LoginPage.email.setValue('parent2@example.com');
     LoginPage.password.setValue('testparent2');
     LoginPage.login.click();
- 
+
     FindDojoPage.openDojoWithQuery('dublin&p=2', 2);
     DojoDetailsPage.name.waitForVisible();
     expect(DojoDetailsPage.noEventsPastContent[0].getText()).to.equal('This Dojo had events recently. You\'ll be notified when tickets for the next event are available.');
@@ -324,7 +271,7 @@ describe('Dojo details page', () => {
     LoginPage.open();
     LoginPage.email.waitForVisible();
     LoginPage.email.setValue('parent1@example.com');
-    LoginPage.password.setValue('password');
+    LoginPage.password.setValue('password1');
     LoginPage.login.click();
     FindDojoPage.header.waitForVisible();
 
@@ -342,7 +289,7 @@ describe('Dojo details page', () => {
     LoginPage.open();
     LoginPage.email.waitForVisible();
     LoginPage.email.setValue('parent1@example.com');
-    LoginPage.password.setValue('password');
+    LoginPage.password.setValue('password1');
     LoginPage.login.click();
     FindDojoPage.header.waitForVisible();
 
@@ -369,7 +316,7 @@ describe('Dojo details page', () => {
     LoginPage.open();
     LoginPage.email.waitForVisible();
     LoginPage.email.setValue('parent1@example.com');
-    LoginPage.password.setValue('password');
+    LoginPage.password.setValue('password1');
     LoginPage.login.click();
     FindDojoPage.header.waitForVisible();
 
@@ -386,7 +333,7 @@ describe('Dojo details page', () => {
     LoginPage.open();
     LoginPage.email.waitForVisible();
     LoginPage.email.setValue('parent1@example.com');
-    LoginPage.password.setValue('password');
+    LoginPage.password.setValue('password1');
     LoginPage.login.click();
     FindDojoPage.header.waitForVisible();
 
@@ -406,7 +353,7 @@ describe('Dojo details page', () => {
       LoginPage.open();
       LoginPage.email.waitForVisible();
       LoginPage.email.setValue('admin@coderdojo.org');
-      LoginPage.password.setValue('cdfadmin');
+      LoginPage.password.setValue('cdfadmin1');
       LoginPage.login.click();
       FindDojoPage.header.waitForVisible();
       browser.url(url);

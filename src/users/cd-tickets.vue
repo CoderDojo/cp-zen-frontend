@@ -14,9 +14,11 @@
   </div>
 </template>
 <script>
+  import moment from 'moment';
   import UserService from '@/users/service';
   import DojosService from '@/dojos/service';
   import EventService from '@/events/service';
+  import EventUtils from '@/events/util';
   import UserTickets from '@/events/cd-user-ticket-list-item';
 
   export default {
@@ -39,10 +41,20 @@
         this.currentUser = res.body.user;
       },
       async loadEvents() {
-        this.usersDojos.forEach(async (dojo) => {
-          const res = await EventService.loadEvents(dojo.dojoId);
-          this.events = this.events.concat(res.body);
-        }, this);
+        const query = { status: 'published' };
+        query.afterDate = moment().unix();
+        query.utcOffset = moment().utcOffset();
+
+        const events = await Promise.all(this.usersDojos.map(dojo =>
+          EventService.v3.get(dojo.dojoId, {
+            params: {
+              query,
+              related: 'sessions.tickets',
+            } }),
+        ));
+        this.events = (events.reduce((acc, dojoEvents) =>
+          acc.concat(dojoEvents.body.results), []))
+            .sort(EventUtils.orderByStartTime);
       },
       async loadUserDojos() {
         const res = await DojosService.getUsersDojos(this.currentUser.id);

@@ -11,6 +11,11 @@ const EventSessionsPage = Object.create(EventDetails, {
       return $('.cd-event-sessions__next');
     },
   },
+  noTicketSelectedError: {
+    get() {
+      return $('.cd-event-sessions__next-ticket-select-error');
+    },
+  },
   eventSessions: {
     get() {
       const selector = '.cd-event-sessions__session';
