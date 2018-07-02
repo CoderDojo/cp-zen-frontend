@@ -16,7 +16,7 @@
         <multiselect v-model="selectedTickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.userId}`" v-validate="'required'"></multiselect>
         <special-req-component class="cd-event-tickets__special-req-selector" v-model="notes"></special-req-component>
       </div>
-      <div class="cd-event-tickets__available-ticket-err text-danger" v-if="!availableTickets"><p>There are no {{userType}} tickets available for this event. Please contact your dojo for more information.</p>
+      <div class="cd-event-tickets__available-ticket-err text-danger" v-if="!availableTickets"><p>{{ $t('There are no {userType} tickets available for this event. Please contact your dojo for more information.', { userType }) }}</p>
       </div>
       <div v-else-if="ticketsAreFull(tickets)">
         {{ $t('Sorry, there are no applicable tickets left') }}
