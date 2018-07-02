@@ -9,7 +9,7 @@
         <info-column-section class="cd-event-details__left-column--dojo">
           <div class="cd-event-details__left-column-section-value-dojo hidden-xs">
             {{ $t('Event hosted by') }}
-            <div v-if="dojo && dojo.id">
+            <div class="img-circle cd-event-details__left-column-section-value-dojo-info" v-if="dojo && dojo.id">
               <img v-img-fallback="{src: dojoImage, fallback: dojoFallbackImage}" class="img-circle cd-event-details__left-column-section-value-dojo-image"/>
               <router-link :to="getDojoUrl(dojo)">{{ dojo.name }}</router-link>
             </div>
@@ -170,6 +170,9 @@
           &-dojo {
             padding-bottom: 24px;
             border-bottom: 1px solid @cd-grey;
+            &-info {
+              margin-top: 16px;
+            }
             &-image {
               width: 24px;
               height: 24px;

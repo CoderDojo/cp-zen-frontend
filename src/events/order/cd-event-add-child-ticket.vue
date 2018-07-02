@@ -1,11 +1,11 @@
 <template>
   <div class="cd-child-ticket__ticket-box">
     <div class="cd-child-ticket__header">
-       <h3 class="cd-child-ticket__ticket-name">{{ $t('Ticket')}} {{firstName|addPossession}}</h3>
+       <h3 class="cd-child-ticket__ticket-name">{{ $t('Youth ticket')}} {{firstName|addPossession}}</h3>
        <button class="cd-child-ticket__delete-ticket" @click="$emit('delete')" v-if="deletable"><i class="fa fa-trash" aria-hidden="true" ></i></button>
     </div>
     <form class="cd-child-ticket__body">
-      <label>{{ $t('Name')}}</label>
+      <label class="cd-child-ticket__label">{{ $t('Name')}}</label>
       <div class="cd-child-ticket__child-name">
         <input class="cd-child-ticket__first-name form-control" v-model="firstName" type="text" :placeholder="$t('First Name')" :data-vv-name="`firstName-${id}`" data-vv-validate-on="blur" v-validate="'required'"/>
         <input class="cd-child-ticket__surname form-control" v-model="surname" type="text" :placeholder="$t('Surname')" :data-vv-name="`surname-${id}`" data-vv-validate-on="blur" v-validate="'required'"/>
@@ -13,7 +13,7 @@
       <p class="cd-child-ticket__first-name-err text-danger" v-show="errors.has(`firstName-${id}:required`)">{{ $t('First name is required') }}</p>
       <p class="cd-child-ticket__surname-err text-danger" v-show="errors.has(`surname-${id}:required`)">{{ $t('Surname is required') }}</p>
 
-      <label>{{ $t('Date of Birth') }}</label>
+      <label class="cd-child-ticket__label">{{ $t('Date of Birth') }}</label>
       <div class="cd-child-ticket__dob-picker-wrapper">
         <vue-dob-picker select-class="form-control cd-child-ticket__dob-picker-wrapper-select" v-model="dob"
                         show-labels="false" month-format="short"
@@ -23,12 +23,12 @@
       <p class="cd-child-ticket__dob-err text-danger" v-show="errors.has(`dob-${id}:required`)">{{ $t('Date of birth is required') }}</p>
       <p class="cd-child-ticket__dob-o17-err text-danger" v-show="errors.has(`dob-${id}:over-age`)">{{ $t('Youth tickets are for attendees 17 years or younger. No ticket is required for guardians or parents.') }}</p>
 
-      <label>{{ $t('Gender') }}</label>
+      <label class="cd-child-ticket__label">{{ $t('Gender') }}</label>
       <gender-component class="cd-child-ticket__gender-selector" v-model="gender" data-vv-value-path="value" :data-vv-name="`gender-${id}`" v-validate="'required'"></gender-component>
       <p class="gender-err text-danger" v-show="errors.has(`gender-${id}:required`)">{{ $t('Gender is required') }}<br/><a v-on:click="showWhy">{{ $t('Why is this required? Click here to find out more') }}</a></p>
       <p class="gender-why" v-show="genderExplaination && errors.has(`gender-${id}:required`)">{{ $t(`We want to provide activities that appeal to people regardless of their gender.`) }}<br/>{{ $t(`To check how well we are succeeding, we'd like to find out whether or not people of different genders are equally likely to take part.`) }}</p>
 
-      <label>{{ $t('Ticket') }}</label>
+      <label class="cd-child-ticket__label">{{ $t('Ticket') }}</label>
       <div class="cd-child-ticket__ticket-selector"> 
         <multiselect v-model="selectedTickets" :options="childTickets" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select Event Tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${id}`" v-validate="'required'"></multiselect>
       </div>
@@ -160,6 +160,12 @@
   @import "~@coderdojo/cd-common/common/_colors";
   @import "../../common/variables";
   .cd-child-ticket {
+    &__label {
+      margin-bottom: 5px;
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+    }
     &__ticket-box {
       border-style: solid;
       border-color: @cd-orange;

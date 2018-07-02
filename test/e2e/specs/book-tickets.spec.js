@@ -37,6 +37,7 @@ describe('Book event page', () => {
       EventAccountCreation.verify.click();
       expect(EventAccountCreation.emailValidationError[0].getText()).to.equal('Parent email address is required');
       EventAccountCreation.email.setValue('banana');
+      EventAccountCreation.firstName.click();
       expect(EventAccountCreation.emailValidationError[1].getText()).to.equal('Parent email address is invalid');
     });
   });
@@ -145,7 +146,7 @@ describe('Book event page', () => {
           expect(Booking.ticketName(0)).to.be.undefined;
           expect(Booking.childTicketTitle.length).to.equal(1);
           expect(Booking.childTicketTitle[0].isVisible()).to.be.true;
-          expect(Booking.childTicketTitle[0].getText()).to.equal('Ticket');
+          expect(Booking.childTicketTitle[0].getText()).to.equal('Youth ticket');
           expect(Booking.addYouthButton.isVisible()).to.be.true;
         });
         it('should let me select tickets for ninjas')
@@ -182,7 +183,7 @@ describe('Book event page', () => {
         it('should let me fill the new user form', () => {
           browser.waitUntil(() => Booking.childrenTickets.length > 0);
           Booking.childTicketFirstName[0].setValue('Babar');
-          expect(Booking.childTicketTitle[0].getText()).to.equal('Ticket - Babar');
+          expect(Booking.childTicketTitle[0].getText()).to.equal('Youth ticket - Babar');
           // TODO
         });
         it('should validate on submit', () => {
