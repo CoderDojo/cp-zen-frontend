@@ -11,7 +11,7 @@
           </label>
         </span>
       </div>
-      <div class="cd-event-tickets__ticket-selector" v-if="availableTickets" v-if="(!ticketsAreFull(tickets) && !notAttending) && availableTickets">
+      <div class="cd-event-tickets__ticket-selector" v-if="(!ticketsAreFull(tickets) && !notAttending) && availableTickets">
         <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.userId}:required`)">{{ $t('Please select a ticket or "Not attending"') }}</p>
         <multiselect v-model="selectedTickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.userId}`" v-validate="'required'"></multiselect>
         <special-req-component class="cd-event-tickets__special-req-selector" v-model="notes"></special-req-component>
