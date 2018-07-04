@@ -88,6 +88,23 @@ jobs:
       - run:
           name: Tests
           command: yarn lint
+  test-cypress:
+    working_directory: ~/cp-zen-frontend
+    docker:
+      - image: cypress/base:8
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "yarn.lock" }}
+            - dependency-cache
+      - restore_cache:
+          keys:
+            - build-cache-{{ .Revision }}
+            - build-cache
+      - run:
+          name: Tests
+          command: yarn cypress
   publish:
     working_directory: ~/cp-zen-frontend
     docker:
@@ -132,11 +149,15 @@ workflows:
       - test-lint:
           requires:
             - build
+      - test-cypress:
+          requires:
+            - build
       - publish:
           requires:
             - test-unit
             - test-e2e
             - test-lint
+            - test-cypress
           filters:
             branches:
               only:
