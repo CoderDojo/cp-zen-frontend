@@ -25,6 +25,10 @@ jobs:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
+      - save_cache:
+          key: cypress-bin-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - /home/circleci/.cache/Cypress
       - run:
           name: Build
           command: GIT_BRANCH=$CIRCLE_BRANCH yarn build
@@ -102,6 +106,10 @@ jobs:
           keys:
             - build-cache-{{ .Revision }}
             - build-cache
+      - restore_cache:
+          keys:
+            - cypress-bin-cache-{{ checksum "yarn.lock" }}
+            - cypress-bin-cache
       - run:
           name: Tests
           command: yarn cypress
