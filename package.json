@@ -15,7 +15,7 @@
     "test": "yarn unit && yarn e2e-with-mocks",
     "lint": "eslint --ext .js,.vue src test/unit/specs",
     "mock-server": "node ./json-server/server.js",
-    "cypress": "concurrently --kill-others --success first \"yarn mock-server > /dev/null\" \"yarn start > /dev/null\" \"cypress run\"",
+    "cypress": "concurrently --kill-others --success first \"http-server dist/ --push-state > /dev/null\" \"cypress run\"",
     "cypress:open": "cypress open",
     "cypress:install": "cypress install"
   },
@@ -108,6 +108,7 @@
     "shelljs": "^0.7.6",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.8.0",
+    "spa-http-server": "^0.9.0",
     "timeshift-js": "^1.0.1",
     "url-loader": "^0.5.8",
     "vue-loader": "^11.3.4",

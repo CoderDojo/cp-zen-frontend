@@ -3,6 +3,16 @@ import findDojoPage from '../pages/find-dojo';
 import dojoDetailsPage from '../pages/dojo-details';
 
 describe('Cookie Notice', () => {
+  before(() => {
+    cy.server();
+    cy.route('/api/2.0/users/instance', 'fx:loggedOutUser');
+    cy.route('/api/2.0/ip-country-details', 'fx:ip-country-details/ie');
+    cy.fixture('dojos').then(((dojos) => {
+      cy.route('POST', '/api/2.0/dojos/search-bounding-box', dojos);
+      cy.route('POST', '/api/2.0/dojos/find', dojos[0]);
+    }));
+  });
+
   it('should disappear after navigating from first page, and persist', () => {
     cy.visit('/');
     cy.get(basePage.cookieNoticeDismiss).should('be.visible');
