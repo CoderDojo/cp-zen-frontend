@@ -4,17 +4,19 @@
     <div class="cd-event-tickets__ticket">
       <div class="cd-event-tickets__ticket-header">
         <span class="cd-event-tickets__name"><span class="cd-event-tickets__name-for">Name:</span>{{ user.firstName }} {{ user.lastName }}</span>
-        <span>
+        <span v-if="availableTickets">
           <label>
             <input class="cd-event-tickets__not-attending-selector" type="checkbox" v-model="notAttending" v-if="!ticketsAreFull(tickets)" v-on:change="resetSelectedTickets()">
             {{ $t('Not attending') }}
           </label>
         </span>
       </div>
-      <div class="cd-event-tickets__ticket-selector" v-if="!ticketsAreFull(tickets) && !notAttending">
+      <div class="cd-event-tickets__ticket-selector" v-if="(!ticketsAreFull(tickets) && !notAttending) && availableTickets">
         <p class="cd-event-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${user.userId}:required`)">{{ $t('Please select a ticket or "Not attending"') }}</p>
         <multiselect v-model="selectedTickets" :options="ticketsOptions" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${user.userId}`" v-validate="'required'"></multiselect>
         <special-req-component class="cd-event-tickets__special-req-selector" v-model="notes"></special-req-component>
+      </div>
+      <div class="cd-event-tickets__available-ticket-err text-danger" v-if="!availableTickets"><p>{{ $t('There are no {userType} tickets available for this event. Please contact your Dojo for more information.', { userType }) }}</p>
       </div>
       <div v-else-if="ticketsAreFull(tickets)">
         {{ $t('Sorry, there are no applicable tickets left') }}
@@ -41,6 +43,7 @@
         notes: '',
         notAttending: false,
         selectedTickets: [],
+        allowedTypes: [],
       };
     },
     components: {
@@ -70,6 +73,23 @@
             }),
         }));
       },
+      userType() {
+        if (this.isNinja) {
+          return 'youth';
+        } else if (this.allowedTypes.includes('mentor')) {
+          return 'mentor';
+        }
+        return 'other';
+      },
+      availableTickets() {
+        const ticketsAvail = (this.ticketsOptions.filter(option =>
+          option.tickets.length > 0)).length;
+        if (ticketsAvail === 0) {
+          this.notAttending = true;
+          return false;
+        }
+        return true;
+      },
       applications() {
         return this.selectedTickets.map(ticket => (Object.assign({
           name: this.user.name,
@@ -94,8 +114,8 @@
         this.selectedTickets = [];
       },
       filterByTicketType(type) {
-        const allowedTypes = this.isNinja ? ['ninja', 'others'] : ['mentor'];
-        return allowedTypes.includes(type);
+        this.allowedTypes = this.isNinja ? ['ninja', 'others'] : ['mentor'];
+        return this.allowedTypes.includes(type);
       },
       findTicketOption(application) {
         const session = (this.ticketsOptions.find(s => s.id === application.sessionId));
@@ -212,6 +232,10 @@
         font-style: italic;
         padding-right: 6px;
       }
+    }
+    &__available-ticket-err {
+      flex-basis: 100%;
+      padding-top: 15px;
     }
     &__special-req-selector {
       flex-basis: 100%;
