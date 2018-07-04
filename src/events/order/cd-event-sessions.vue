@@ -4,8 +4,10 @@
       <span v-if="isSingle">{{ $t('Select your tickets') }}</span>
       <span v-else>{{ $t('Select youth tickets') }}</span>
     </h1>
-     <p>{{ $t('NOTE: Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
-    {{ $t('Please contact the Dojo if you have any questions.') }}</p>
+     <p>
+      <i class="fa fa-info-circle"></i>
+      {{ $t('Parent attendance is highly encouraged, and in some cases mandatory.') }} <br/>
+      {{ $t('Please contact the Dojo if you have any questions.') }}</p>
     <div class="cd-event-sessions__tickets" v-if="!!existingApplications">
       <ticket v-for="_user in users" :user="_user" :event="event" :key="_user.userId" :existing-applications="existingApplications[_user.userId]"></ticket>
     </div>
