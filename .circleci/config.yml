@@ -113,6 +113,10 @@ jobs:
       - run:
           name: Tests
           command: yarn cypress
+      - store_artifacts:
+          path: cypress/videos
+      - store_artifacts:
+          path: cypress/screenshots
   publish:
     working_directory: ~/cp-zen-frontend
     docker:
