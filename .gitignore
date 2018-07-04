@@ -70,3 +70,7 @@ errorShots/
 
 # Yarn checksum
 .yarn.sha1
+
+# Cypress files
+cypress/videos/
+.Trash*/

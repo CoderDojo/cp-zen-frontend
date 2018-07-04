@@ -91,7 +91,7 @@ jobs:
   test-cypress:
     working_directory: ~/cp-zen-frontend
     docker:
-      - image: cypress/base:8
+      - image: circleci/node:8-browsers
     steps:
       - checkout
       - restore_cache:
