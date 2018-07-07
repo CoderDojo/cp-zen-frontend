@@ -68,7 +68,7 @@ const MyTicketPage = Object.create(BasePage, {
   },
   cancel: {
     value(index) {
-      return $$(`.cd-user-ticket-list-item__view-cancel-button`)[index];
+      return $$(`.cd-user-ticket-list-item__view-cancel`)[index];
     }
   },
   book: {
