@@ -42,7 +42,7 @@
       <div v-if="!hasApplications && !event.eventbriteId">
         <p>{{ $t('No ticket booked') }}</p>
         <router-link
-          :to="bookLink"
+           :to="{ name: 'EventSessions', params: { eventId: event.id } }"
           tag="button" class="btn btn-lg btn-primary cd-user-ticket-list-item__view">
           {{ $t('Book') }}</router-link>
       </div>
@@ -80,9 +80,6 @@
     computed: {
       hasApplications() {
         return this.applications.length > 0;
-      },
-      bookLink() {
-        return `/dojo/${this.event.dojoId}/event/${this.event.id}`;
       },
     },
     methods: {
