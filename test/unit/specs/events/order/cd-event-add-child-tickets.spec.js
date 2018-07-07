@@ -1,6 +1,6 @@
 import vueUnitHelper from 'vue-unit-helper';
 import { clone } from 'lodash';
-import ChildTicket from '!!vue-loader?inject!@/events/cd-event-add-child-ticket';
+import ChildTicket from '!!vue-loader?inject!@/events/order/cd-event-add-child-ticket';
 
 describe('Add Child Ticket', () => {
   let sandbox;
@@ -8,6 +8,7 @@ describe('Add Child Ticket', () => {
   let MockVueMultiselect;
   let MockUserUtils;
   let MockUsersService;
+  let OrderStore;
   let ChildTicketWithMocks;
   let clock;
 
@@ -27,11 +28,16 @@ describe('Add Child Ticket', () => {
     MockUsersService = {
       addChild: sandbox.stub(),
     };
+    OrderStore = {
+      getters: {},
+      commit: sandbox.stub(),
+    };
     ChildTicketWithMocks = ChildTicket({
       'vue-dob-picker': MockVueDobPicker,
       'vue-multiselect': MockVueMultiselect,
       '@/users/util': MockUserUtils,
       '@/users/service': MockUsersService,
+      '@/events/order/order-store': OrderStore,
     });
   });
 
@@ -142,15 +148,14 @@ describe('Add Child Ticket', () => {
           ticket_name: 'Ticket2',
           ticket_type: 'ninja',
         };
-        const emitStub = sandbox.stub();
-        vm.$emit = emitStub;
+        vm.id = 'application1';
         vm.applications = mockApplication;
 
         // ACT
         vm.$watchers.applications();
 
         // ASSERT
-        expect(emitStub).to.have.been.calledWith('input', mockApplication);
+        expect(OrderStore.commit).to.have.been.calledWith('setApplications', { id: vm.id, applications: vm.applications });
       });
     });
   });
@@ -160,6 +165,8 @@ describe('Add Child Ticket', () => {
       it('should filter out only child tickets from each sessions tickets', async () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
+        vm.ticketIsFull = sandbox.stub().returns(false);
+        OrderStore.getters.applications = [];
         vm.sessions = [{ description: 'description1',
           eventId: 'some-eventId',
           id: 'sessionId',
@@ -186,8 +193,6 @@ describe('Add Child Ticket', () => {
               type: 'ninja' }],
         }];
 
-        // ACT
-
         // ASSERT
         expect(vm.childTickets).to.deep.equal([{ description: 'description1',
           eventId: 'some-eventId',
@@ -202,6 +207,58 @@ describe('Add Child Ticket', () => {
               name: 'Ticket2',
               quantity: 1,
               sessionId: 'sessionId',
+              $isDisabled: false,
+              totalApplications: 0,
+              type: 'ninja' }],
+        }]);
+      });
+      it('should set the ticket as disabled', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(ChildTicketWithMocks);
+        vm.ticketIsFull = sandbox.stub().returns(true);
+        vm.$t = sandbox.stub().returnsArg(0);
+        OrderStore.getters.applications = [];
+        vm.sessions = [{ description: 'description1',
+          eventId: 'some-eventId',
+          id: 'sessionId',
+          name: 'Session1',
+          status: 'status1',
+          tickets: [
+            { approvedApplications: 0,
+              deleted: 0,
+              id: 'ticketId1',
+              invites: null,
+              name: 'Ticket1',
+              quantity: 1,
+              sessionId: 'sessionId',
+              totalApplications: 0,
+              type: 'parent-guardian' },
+            { approvedApplications: 0,
+              deleted: 0,
+              id: 'ticketId2',
+              invites: null,
+              name: 'Ticket2',
+              quantity: 1,
+              sessionId: 'sessionId',
+              totalApplications: 0,
+              type: 'ninja' }],
+        }];
+
+        // ASSERT
+        expect(vm.childTickets).to.deep.equal([{ description: 'description1',
+          eventId: 'some-eventId',
+          id: 'sessionId',
+          name: 'Session1',
+          status: 'status1',
+          tickets: [
+            { approvedApplications: 0,
+              deleted: 0,
+              id: 'ticketId2',
+              invites: null,
+              name: 'Ticket2 [Fully booked]',
+              quantity: 1,
+              sessionId: 'sessionId',
+              $isDisabled: true,
               totalApplications: 0,
               type: 'ninja' }],
         }]);
@@ -230,7 +287,7 @@ describe('Add Child Ticket', () => {
         vm.dob = new Date(1980, 10, 25, 0, 0, 0, 0);
         vm.eventId = 'eventId';
         vm.userId = null;
-        vm.tickets = [{
+        vm.selectedTickets = [{
           approvedApplications: 0,
           deleted: 0,
           id: 'ticketId2',
@@ -251,6 +308,43 @@ describe('Add Child Ticket', () => {
           eventId: 'eventId',
           name: 'Jane Doe',
           sessionId: 'sessionId',
+          ticketId: 'ticketId2',
+          ticketName: 'Ticket2',
+          ticketType: 'ninja',
+          userId: null,
+        }]);
+      });
+
+      it('should return full application WITH a specialRequirement when form is filled out', async () => {
+        // ARRANGE
+        const vm = vueUnitHelper(ChildTicketWithMocks);
+        vm.notes = 'Need wheelchair access';
+        vm.name = 'Jane Doe';
+        vm.dob = new Date(1980, 10, 25, 0, 0, 0, 0);
+        vm.eventId = 'eventId';
+        vm.userId = null;
+        vm.selectedTickets = [{
+          approvedApplications: 0,
+          deleted: 0,
+          id: 'ticketId2',
+          invites: null,
+          name: 'Ticket2',
+          quantity: 1,
+          sessionId: 'sessionId',
+          totalApplications: 0,
+          type: 'ninja' }];
+        vm.event = { dojoId: 'dojoId' };
+
+        // ACT
+
+        // ASSERT
+        expect(vm.applications).to.deep.equal([{
+          dateOfBirth: new Date(1980, 10, 25, 0, 0, 0, 0),
+          dojoId: 'dojoId',
+          eventId: 'eventId',
+          name: 'Jane Doe',
+          sessionId: 'sessionId',
+          notes: 'Need wheelchair access',
           ticketId: 'ticketId2',
           ticketName: 'Ticket2',
           ticketType: 'ninja',

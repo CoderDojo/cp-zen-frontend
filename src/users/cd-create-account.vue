@@ -1,8 +1,8 @@
 <template>
   <form class="cd-create-account" @submit.prevent="register">
-    <h3>{{ $t('Register your details so you can book Dojo Events') }}</h3>
+    <h1 class="cd-create-account__header">{{ $t('Register your details so you can book Dojo Events') }}</h1>
     <div>
-      <div>
+      <div class="cd-create-account__info">
         <p>
           <i class="fa fa-info-circle"></i>
           {{ $t('If you are a parent or a guardian booking tickets for a child, or a child over 13 please still tell us your details here.')  }} <br/>
@@ -11,25 +11,28 @@
       </div>
       <div>
         <label class="cd-create-account__label" for="email">{{ $t('Your email') }}</label>
-        <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-as="email" v-validate="'required|email'" v-model="profile.email">
+        <div class="cd-create-account__email">
+         <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-name="email" v-validate="'required|email'" data-vv-validate-on="blur" v-model="profile.email">
+       </div>
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</p>
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</p>
       </div>
+
+      <label class="cd-create-account__label cd-create-account__names-label" for="firstName">{{ $t('Name') }}</label>
       <div class="cd-create-account__names" >
-        <label class="cd-create-account__label cd-create-account__names-label" for="firstName">{{ $t('Name') }}</label>
         <div class="cd-create-account__names-first" :class="{'cd-create-account__names--error': errors.has('lastName:required') && !errors.has('firstName:required')}">
           <input type="text" class="form-control" name="firstName" :placeholder="$t('First Name')" id="name" data-vv-as="first name" v-validate="'required'" v-model="profile.firstName">
           <p class="cd-create-account-form__first-name-error text-danger" v-show="errors.has('firstName:required')" for="firstName">{{ $t('First name is required') }}</p>
         </div>
           <div class="cd-create-account__names-last" :class="{'cd-create-account__names--error': !errors.has('lastName:required') && errors.has('firstName:required')}">
-          <input type="text" class="form-control" name="lastName" :placeholder="$t('Last Name')" id="lastName" data-vv-as="last name" v-validate="'required'" v-model="profile.lastName">
+          <input type="text" class="form-control" name="lastName" :placeholder="$t('Last name')" id="lastName" data-vv-as="last name" v-validate="'required'" v-model="profile.lastName">
           <p class="cd-create-account-form__last-name-error text-danger" v-show="errors.has('lastName:required')" for="lastName">{{ $t('Last name is required') }}</p>
         </div>
       </div>
       <div class="cd-create-account__dob">
         <label class="cd-create-account__label" for="dob">{{ $t('Enter your Date of Birth') }}</label>
         <div class="cd-create-account__dob-picker-wrapper">
-          <vue-dob-picker v-model="dob" select-class="form-control" id="dob" class="cd-create-account__dob-picker"
+          <vue-dob-picker v-model="dob" select-class="form-control cd-create-account__dob-picker-wrapper-select" id="dob" class="cd-create-account__dob-picker"
             v-validate="'required'"
             data-vv-name="dob"
             data-vv-value-path="value"
@@ -39,8 +42,8 @@
             :proportions="[2, 2, 3]"></vue-dob-picker>
         </div>
         <p v-if="isUnderage" class="cd-create-account__dob-error text-danger">
-          {{ $t('Sorry :( Children under 13 are note allowed to book events.') }} 
-          {{ $t('You can ask your parent or guardian to bookfor you.') }}
+          {{ $t('Sorry :( Children under 13 are not allowed to book events.') }} 
+          {{ $t('You can ask your parent or guardian to book for you.') }}
         </p>
         <p class="cd-create-account__dob-error text-danger"
           v-show="errors.has('dob:required')">{{ $t('Date of birth is required') }}</p>
@@ -60,7 +63,9 @@
         </span>
         <i class="fa cd-create-account__password-visibility" :class="isPasswordVisible ? 'fa-eye-slash': 'fa-eye' " @click="togglePasswordVisibility()"></i>
         <p class="text-danger cd-create-account__password-error"
-               v-show="errors.has('password')">{{ $t(errors.first('password')) }}</p>
+               v-show="errors.has('password:required')">{{ $t('Password is required') }}</p>
+        <p class="text-danger cd-create-account__password-error"
+               v-show="errors.has('password:cd-password')">{{ $t('Password must be at least 8 characters with at least one number.') }}</p>
       </div>
       <div>
         <div class="cd-create-account__recaptcha">
@@ -93,7 +98,10 @@
                v-show="errors.has('termsConditionsAccepted')">
             {{ $t('You must accept the terms and conditions before proceeding.') }}
         </p>
-        <button type="submit" name="registration" class="cd-create-account__submit" v-validate="'nick-exists'" >{{ $t('Next') }}</button>
+        <button type="submit" name="registration" class="cd-create-account__submit btn btn-primary" v-validate="'nick-exists'" v-ga-track-click="'attempt_register'" :disabled="submitting">
+          {{ $t('Next') }}
+          <span v-show="submitting"><i class="fa fa-spinner fa-spin"></i></span>
+        </button>
         <p class="cd-create-account__errors text-danger" v-show="errors.has('registration')">{{ $t('A user already exists for this email.') }} {{ $t('Login to your account to continue.') }}</p>
       </div>
     </div>
@@ -105,6 +113,7 @@
   import VueDobPicker from 'vue-dob-picker';
   import UserService from '@/users/service';
   import UserUtils from '@/users/util';
+  import OrderStore from '@/events/order/order-store';
 
   export default {
     name: 'BookingCreateAccount',
@@ -127,6 +136,7 @@
         recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
         recaptchaResponse: null,
         isPasswordVisible: false,
+        submitting: false,
       };
     },
     computed: {
@@ -165,6 +175,7 @@
       async register() {
         const ready = await this.validateForm();
         if (ready) {
+          this.submitting = true;
           const isAdult = UserUtils.getAge(new Date(this.dob)) > 18;
           const context = this.context;
           try {
@@ -177,8 +188,11 @@
                   { dob: this.dob, ...context },
             )));
             this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
+            OrderStore.commit('setIsNewUser', true);
             this.$emit('registered');
+            this.submitting = false;
           } catch (err) {
+            this.submitting = false;
             if (err.message === 'nick-exists') {
               this.errors.add('registration', 'Nick exists', 'nick-exists');
               return;
@@ -197,7 +211,9 @@
   };
 </script>
 <style scoped lang="less">
-  @import '../common/styles/cd-primary-button'; 
+  @import "../common/variables";
+  @import "../common/styles/cd-primary-button";
+
   .cd-create-account {
     margin-right: 33px;
     margin-top: 50px;
@@ -205,34 +221,35 @@
       margin-top: 33px;
     }
     &__header {
-      background-color: #f4f5f6;
-      height: 100px;
-      text-align: center;
-      &-title {
-        margin-top: 21px;
-        font-size: 18px;
-        font-weight: bold;
+      font-size: 24px;
+      margin: 45px 0 16px 0;
+      font-weight: bold;
+      &--filler {
+        background-color: @cd-very-light-grey;
+        height: 24px;
+        width: 176px;
       }
-      &-info {
-        font-size: 16px;
-        margin-top: 4px;
-      }
+    }
+    &__info {
+      margin-bottom: 16px;
     }
     &__label {
-      margin-top: 16px;
-      display: block;
-      font-size: 16px;
-      font-weight: bold;
+      margin-bottom: 5px;
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    &__email {
+      padding: 8px 0px 24px;
     }
     &__names {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
+      padding: 8px 0px 24px;
+
       &-label {
         flex-basis: 100%;
       }
-      &-first {
-        margin-right: 8px;
+      &-first, &-last {
+        display: inline;
       }
       &--error {
         margin-top: -30px;
@@ -247,14 +264,21 @@
       margin-top: 4px;
       font-weight: 300;
     }
-    &__dob-picker {
-      padding-left: 0;
-      max-width: 600px;
+    &__dob-picker-wrapper {
+      max-width: 50%;
+      padding: 8px 0px 24px;
     }
     &__password {
+      padding: 8px 0px 24px;
       &-visibility {
         padding-left: 6px;
       }
+    }
+    &__recaptcha {
+        padding: 8px 0px 24px;
+    }
+    &__agreement {
+        padding: 8px 0px 24px;
     }
     &__terms-conditions {
       &-error {
@@ -262,7 +286,9 @@
       }
     }
     &__submit {
-      .active-primary-button;
+      .primary-button-large;
+      margin-top: 24px;
+      margin-bottom: 32px;
     }
     input[type=checkbox] {
       width: 21px;
@@ -330,5 +356,18 @@
     .form;
     width: 230px;
     height: 36px;
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-create-account {
+      &__dob-picker-wrapper {
+        max-width: 100%;
+      }
+    }
+  }
+</style>
+<style lang="less">
+  .cd-create-account__dob-picker-wrapper-select {
+    font-weight: 400;
   }
 </style>

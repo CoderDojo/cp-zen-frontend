@@ -26,7 +26,11 @@
       },
     },
     watch: {
-      $route: 'dismissNotice',
+      $route(newVal, oldVal) {
+        if (newVal.fullPath !== oldVal.fullPath) {
+          this.dismissNotice();
+        }
+      },
     },
     created() {
       if (Cookie.get('cookieDisclaimer') === 'confirmed') {

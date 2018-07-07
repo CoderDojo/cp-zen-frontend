@@ -3,7 +3,22 @@ const EventDetails = require('./event-details');
 const BookingParentData = Object.create(EventDetails, {
   open: {
     value(eventId) {
-      return this.open.call(this, `/v2/events/${eventId}/book`);
+      return this.open.call(this, `/events/${eventId}`);
+    },
+  },
+  eventIsFullEmoji: {
+    get() {
+      return $('.cd-event-sessions__no-tickets-emoticon');
+    },
+  },
+  eventIsFullHeader: {
+    get() {
+      return $('.cd-event-sessions__no-tickets h3');
+    },
+  },
+  eventIsFullSubheader: {
+    get() {
+      return $('.cd-event-sessions__no-tickets h4');
     },
   },
   attendeeTypeHeader: {
@@ -47,6 +62,26 @@ const BookingParentData = Object.create(EventDetails, {
       return $$('.cd-event-tickets__ticket-selector')[index];
     }
   },
+  ticketSelected: {
+    get() {
+      return $('.cd-event-tickets__ticket-selector .multiselect__tags');
+    }
+  },
+  ticketOption: {
+    value(selected) {
+      return $$(`//li[@class="multiselect__element"]/span[.="${selected}"]`);
+    }
+  },
+  notAttendingSelector: {
+    value(index) {
+      return $$('.cd-event-tickets__not-attending-selector')[index];
+    }
+  },
+  specialReqSelector: {
+    value(index) {
+      return $$('.cd-event-tickets__special-req-selector')[index];
+    }
+  },
   submitBookingButton: {
     get() {
       return $('button[name="submitApplications"]');
@@ -60,6 +95,11 @@ const BookingParentData = Object.create(EventDetails, {
   childrenTickets: {
     get() {
       return $$('.cd-child-ticket__ticket-box');
+    },
+  },
+  removeChildTicket: {
+    get() {
+      return $$('.cd-child-ticket__delete-ticket i');
     },
   },
   childTicketTitle: {
@@ -127,9 +167,9 @@ const BookingParentData = Object.create(EventDetails, {
     },
   },
   childTicketSelector: {
-    value(selected) {
-      $('.cd-child-ticket__ticket-selector .multiselect').click();
-      $(`//li[@class="multiselect__element"]/span[.="${selected}"]`).click();
+    value(selected, index = 0) {
+      $$('.cd-child-ticket__ticket-selector .multiselect')[index].click();
+      return $$(`//li[@class="multiselect__element"]/span[.="${selected}"]`);
     },
   },
   childTicketSelectorValidationError: {

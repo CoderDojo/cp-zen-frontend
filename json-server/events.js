@@ -202,24 +202,24 @@ module.exports = [
     recurringType: 'biweekly',
     dates: [
       {
-        startTime: '2018-06-03T10:00:00.000Z',
-        endTime: '2018-06-03T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 5, 3, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 5, 3, 12, 0, 0, 0]),
       },
       {
-        startTime: '2018-06-17T10:00:00.000Z',
-        endTime: '2018-06-17T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 5, 17, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 5, 17, 12, 0, 0, 0]),
       },
       {
-        startTime: '2018-07-01T10:00:00.000Z',
-        endTime: '2018-07-01T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 6, 1, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 6, 1, 12, 0, 0, 0]),
       },
       {
-        startTime: '2018-07-15T10:00:00.000Z',
-        endTime: '2018-07-15T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 6, 15, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 6, 15, 12, 0, 0, 0]),
       },
       {
-        startTime: '2018-07-29T10:00:00.000Z',
-        endTime: '2018-07-29T12:00:00.000Z'
+        startTime: moment.utc([currentYear + 1, 6, 29, 10, 0, 0, 0]),
+        endTime: moment.utc([currentYear + 1, 6, 29, 12, 0, 0, 0]),
       }
     ],
     ticketApproval: false,
@@ -242,7 +242,7 @@ module.exports = [
             deleted: 0,
             invites: null,
             totalApplications: 0,
-            approvedApplications: 0
+            approvedApplications: 5
           },
           {
             entity$: '-/cd/tickets',
@@ -250,7 +250,7 @@ module.exports = [
             sessionId: '97273d08-6b44-4529-8c75-bdaa7a02ba3e',
             name: 'Lacking Pi',
             type: 'ninja',
-            quantity: 3,
+            quantity: 1,
             deleted: 0,
             invites: null,
             totalApplications: 0,

@@ -1,16 +1,15 @@
 <template>
-  <div class="cd-booking-confirmation">
-
+  <div class="cd-booking-confirmation" v-if="order && event">
     <div class="cd-booking-confirmation__banner">
       <div class="cd-booking-confirmation__banner-left">
         <div class="cd-booking-confirmation__banner-title">{{ title }}</div>
         <div class="cd-booking-confirmation__banner-subtitle" v-html="subtitle"></div>
       </div>
-      <img class="cd-booking-confirmation__banner-illustration" src="../assets/characters/ninjas/ninja-female-2-ok-hand.svg"></img>
+      <img class="cd-booking-confirmation__banner-illustration" src="../../assets/characters/ninjas/CD_Character_SVGS-32.png" />
     </div>
 
     <div class="cd-booking-confirmation__event-name">{{ event.name }}</div>
-    <div class="cd-booking-confirmation__hosted-by-message">
+    <div class="cd-booking-confirmation__hosted-by-message" v-if="dojo">
       <hosted-by :props="{ dojoName: dojo.name, dojoRoute: getDojoUrl(dojo) }"></hosted-by>
     </div>
 
@@ -48,7 +47,7 @@
           <span class="cd-booking-confirmation__booking-details-box-title">{{ $t('Attendees') }}</span>
         </div>
         <div class="cd-booking-confirmation__booking-details-box-content">
-          <div v-for="application in order.applications">
+          <div v-for="application in order.applications" :key="application.id">
             <div class="cd-booking-confirmation__booking-name">{{ application.name }}</div>
             <div class="cd-booking-confirmation__booking-session-ticket">{{ application.ticketName }} / {{ getSessionName(application.sessionId) }}</div>
           </div>
@@ -59,9 +58,9 @@
 
     <div class="cd-booking-confirmation__line-page-splitter"></div>
 
-    <div class="cd-booking-confirmation__account-confirmation-wrapper">
+    <div class="cd-booking-confirmation__account-confirmation-wrapper" v-if="isNewUser || isNewDojoMember || event.ticketApproval">
 
-      <div class="cd-booking-confirmation__account-confirmation">
+      <div class="cd-booking-confirmation__account-confirmation cd-booking-confirmation__acount-confirmation-created" v-if="isNewUser">
         <div class="fa fa-check-circle-o cd-booking-confirmation__account-confirmation-icon"></div>
         <div>
           {{ $t('Your CoderDojo account has been created') }}
@@ -70,12 +69,12 @@
         </div>
       </div>
 
-      <div class="cd-booking-confirmation__account-confirmation">
+      <div class="cd-booking-confirmation__account-confirmation cd-booking-confirmation__account-confirmation-joined" v-if="isNewDojoMember">
         <div class="fa fa-check-circle-o cd-booking-confirmation__account-confirmation-icon"></div>
         <div>
           <span v-html="$t('You are now subscribed to {dojoName} dojo', {dojoName: `<strong>${dojo.name}</strong>`})"></span>
             <div class="cd-booking-confirmation__account-confirmation-help-message">
-              {{ $t('You will be notified about future events hosted by this dojo') }}
+              {{ $t('You will be notified about future events hosted by this Dojo') }}
           </div>
         </div>
       </div>
@@ -104,14 +103,15 @@
   </div>
 </template>
 <script>
-  import DojosService from '@/dojos/service';
   import EventService from '@/events/service';
-  import UserService from '@/users/service';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import TranslationComponentGenerator from '@/common/cd-translation-component-generator';
   import DojosUtil from '@/dojos/util';
   import EventsUtil from '@/events/util';
+  import store from '@/store';
+  import { mapGetters } from 'vuex';
+  import OrderStore from '@/events/order/order-store';
 
   const HostedBy = TranslationComponentGenerator('Event hosted by {dojoName}', {
     dojoName: `
@@ -124,16 +124,13 @@
   export default {
     name: 'bookingConfirmation',
     props: ['eventId'],
+    store,
     components: {
       HostedBy,
     },
     data() {
       return {
-        user: {},
         order: {},
-        event: {},
-        sessions: [],
-        dojo: {},
       };
     },
     filters: {
@@ -141,10 +138,18 @@
       cdTimeFormatter,
     },
     computed: {
+      ...mapGetters('order', ['event']),
+      ...mapGetters(['loggedInUser', 'dojo']),
+      isNewUser() {
+        return OrderStore.state.isNewUser;
+      },
+      isNewDojoMember() {
+        return OrderStore.state.isNewDojoMember;
+      },
       subtitle() {
         return this.event.ticketApproval ?
           this.$t('You will be notified when the organizer approves your request.') :
-          this.$t('A confirmation email has been sent to {email}', { email: `<strong>${this.user.email}</strong>` });
+          this.$t('A confirmation email has been sent to {email}', { email: `<strong>${this.loggedInUser.email}</strong>` });
       },
       title() {
         return this.event.ticketApproval ?
@@ -155,25 +160,27 @@
     methods: {
       getDojoUrl: DojosUtil.getDojoUrl,
       async loadData() {
-        this.user = (await UserService.getCurrentUser()).body.user;
-        // TODO : define v3 event loading to save an HTTP call
-        this.event = (await EventService.loadEvent(this.eventId)).body;
-        this.sessions = (await EventService.loadSessions(this.eventId)).body;
-        this.order = (await EventService.v3.getOrder(this.user.id, { params: { 'query[eventId]': this.event.id } })).body.results[0];
-        this.dojo = (await DojosService.getDojoById(this.event.dojoId)).body;
+        this.order = (await EventService.v3.getOrder(this.loggedInUser.id, { params: { 'query[eventId]': this.eventId } })).body.results[0];
+        if (!this.event) {
+          this.$store.dispatch('order/loadEvent', this.eventId);
+        }
       },
       getSessionName(sessionId) {
-        return (this.sessions.find(s => s.id === sessionId)).name;
+        return (this.event.sessions.find(s => s.id === sessionId)).name;
       },
       buildRecurringFrequencyInfo: EventsUtil.buildRecurringFrequencyInfo,
     },
     created() {
       this.loadData();
     },
+    destroyed() {
+      OrderStore.commit('resetApplications');
+      OrderStore.commit('resetStatuses');
+    },
   };
 </script>
 <style scoped lang="less">
-  @import "../common/variables";
+  @import "../../common/variables";
 
   .cd-booking-confirmation {
     margin: 0 -16px;
@@ -202,8 +209,7 @@
         flex: 2;
         align-self: flex-end;
         padding: 0 32px;
-        transform-origin: bottom;
-        transform: scale(0.9);
+        max-width: 300px;
       }
     }
     &__booking {

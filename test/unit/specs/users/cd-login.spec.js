@@ -10,6 +10,7 @@ describe('Login', () => {
     sandbox = sinon.sandbox.create();
     MockUserService = {
       login: sandbox.stub(),
+      getCurrentUser: sandbox.stub(),
     };
     LoginComponentWithMocks = LoginComponent({
       './service': MockUserService,
@@ -148,4 +149,21 @@ describe('Login', () => {
       expect(vm.$router.push).to.have.been.calledWith('/library');
     });
   });
+  describe('created', () => {
+    it('should redirect if the user is logged-in', async () => {
+      const vm = vueUnitHelper(LoginComponentWithMocks);
+      vm.$router = { replace: sandbox.stub() };
+      vm.$route = {
+        query: {
+          referer: '/library',
+        },
+      };
+      vm.isLoggedIn = true;
+
+      await vm.$lifecycleMethods.created();
+      expect(vm.$router.replace).to.have.been.calledOnce;
+      expect(vm.$router.replace).to.have.been.calledWith('/library');
+    });
+  });
 });
+

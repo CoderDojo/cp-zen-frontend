@@ -3,9 +3,9 @@ const FindDojoPage = require('../page-objects/find-dojo-page');
 const MyTickets = require('../page-objects/my-tickets');
 
 describe('Login Page', () => {
-  // beforeEach(() => {
-  //   LoginPage.open();
-  // });
+   afterEach(() => {
+     browser.deleteCookie('loggedIn');
+   });
 
   it('should show the header, login box , and all login box elements', () => {
     LoginPage.open();

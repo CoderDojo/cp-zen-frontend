@@ -7,9 +7,9 @@
     <div class="cd-event-details__container">
       <info-column class="cd-event-details__left-column">
         <info-column-section class="cd-event-details__left-column--dojo">
-          <div class="cd-event-details__left-column-section-value-dojo">
+          <div class="cd-event-details__left-column-section-value-dojo hidden-xs">
             {{ $t('Event hosted by') }}
-            <div v-if="dojo && dojo.id">
+            <div class="img-circle cd-event-details__left-column-section-value-dojo-info" v-if="dojo && dojo.id">
               <img v-img-fallback="{src: dojoImage, fallback: dojoFallbackImage}" class="img-circle cd-event-details__left-column-section-value-dojo-image"/>
               <router-link :to="getDojoUrl(dojo)">{{ dojo.name }}</router-link>
             </div>
@@ -31,27 +31,39 @@
             </div>
           </div>
         </info-column-section>
-        <info-column-section icon="map-marker" :header="$t('Location')">
+        <info-column-section class="cd-event-details__left-column-section" icon="map-marker" :header="$t('Location')">
           <div class="cd-event-details__left-column-section-value">
             {{ fullAddress }}
           </div>
         </info-column-section>
-        <info-column-section icon="list" :header="$t('Event details')">
+        <info-column-section class="cd-event-details__left-column-section hidden-xs" icon="list" :header="$t('Event details')">
           <div class="cd-event-details__left-column-section-value">
             <cd-expandable>
               <div v-html="description"></div>
             </cd-expandable>
           </div>
         </info-column-section>
+        <info-column-section icon="envelope-o" :header="$t('Email')" class="cd-event-details__left-column--email" >
+          <a :href="`mailto:${dojo.email}`">{{ dojo.email }}</a>
+        </info-column-section>
       </info-column>
       <div class="cd-event-details__main-content">
         <router-view></router-view>
+        <div class="visible-xs">
+          <div class="cd-event-details__heading">{{ $t('Event details') }}</div>
+          <div class="cd-event-details__left-column-section-value">
+            <cd-expandable>
+              <div v-html="description"></div>
+            </cd-expandable>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import cdHTMLFilter from '@/common/filters/cd-html-filter';
@@ -60,19 +72,13 @@
   import InfoColumnSection from '@/common/cd-info-column-section';
   import ImgFallback from '@/common/directives/cd-img-fallback';
   import EventsUtil from '@/events/util';
-  import DojoService from '@/dojos/service';
   import DojoUtils from '@/dojos/util';
-  import service from './service';
+  import store from '@/store';
 
   export default {
     name: 'EventDetails',
     props: ['eventId'],
-    data() {
-      return {
-        eventDetails: null,
-        dojo: null,
-      };
-    },
+    store,
     filters: {
       cdDateFormatter,
       cdTimeFormatter,
@@ -86,18 +92,16 @@
       cdExpandable,
     },
     methods: {
-      loadEvent() {
-        return service.loadEvent(this.eventId);
-      },
-      loadDojo() {
-        return DojoService.getDojoById(this.eventDetails.dojoId);
-      },
       buildRecurringFrequencyInfo: EventsUtil.buildRecurringFrequencyInfo,
       getNextStartTime: EventsUtil.getNextStartTime,
       isRecurring: EventsUtil.isRecurring,
       getDojoUrl: DojoUtils.getDojoUrl,
     },
     computed: {
+      ...mapGetters('order', {
+        eventDetails: 'event',
+      }),
+      ...mapGetters(['dojo']),
       fullAddress() {
         return `${this.eventDetails.address}, ${this.eventDetails.city.nameWithHierarchy}, ${this.eventDetails.country.countryName}`;
       },
@@ -111,13 +115,10 @@
         get: DojoUtils.fallbackImage,
       },
     },
-    async created() {
-      this.eventDetails = (await this.loadEvent()).body;
-      this.dojo = (await this.loadDojo()).body;
-    },
   };
 </script>
 <style scoped lang="less">
+  @import "../../common/variables";
   @import "~@coderdojo/cd-common/common/_colors";
 
   .cd-event-details {
@@ -169,6 +170,9 @@
           &-dojo {
             padding-bottom: 24px;
             border-bottom: 1px solid @cd-grey;
+            &-info {
+              margin-top: 16px;
+            }
             &-image {
               width: 24px;
               height: 24px;
@@ -181,6 +185,37 @@
     &__main-content {
       flex: 8;
       padding: 0 16px 32px 16px;
+    }
+    &__heading {
+      font-size: 24px;
+      margin: 45px 0 16px 0;
+      font-weight: bold;
+      border-bottom: 1px solid #bebebe;
+      padding-bottom: 8px;
+    }
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-event-details {
+      &__container {
+        flex-direction: column;
+      }
+
+      &__left-column {
+        text-align: center;
+        max-width: none;
+
+        &--time, &-section  {
+          margin: 16px 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+      }
+      &__main_content {
+        padding: 45px 16px 0 16px;
+      }
     }
   }
 </style>

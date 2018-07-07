@@ -20,9 +20,20 @@ export default {
       dateMoment.subtract(dateMoment.utcOffset(), 'minutes');
       return dateMoment.isAfter(now);
     });
-    return nextDateInfo.startTime;
+    return nextDateInfo ? nextDateInfo.startTime : event.dates[event.dates.length - 1].startTime;
   },
   isRecurring(event) {
     return event.type === 'recurring';
+  },
+  orderByStartTime(event1, event2) {
+    const startTime1 = moment(event1.startTime).valueOf();
+    const startTime2 = moment(event2.startTime).valueOf();
+    if (startTime1 < startTime2) {
+      return -1;
+    }
+    if (startTime1 > startTime2) {
+      return 1;
+    }
+    return 0;
   },
 };

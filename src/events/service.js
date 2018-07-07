@@ -1,23 +1,11 @@
 import Vue from 'vue';
 
 const EventsService = {
-
-  loadEvents(dojoId) {
-    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/events/search`,
-      {
-        query: { dojoId, filterPastEvents: true, status: 'published' },
-      },
-    );
-  },
-  loadEvent(eventId) {
-    return Vue.http.get(`${Vue.config.apiServer}/api/2.0/events/${eventId}`);
-  },
-  loadSessions(eventId) {
-    return Vue.http.get(`${Vue.config.apiServer}/api/2.0/events/${eventId}/sessions`);
-  },
+  // cancel booking
   loadApplications(eventId) {
     return Vue.http.get(`${Vue.config.apiServer}/api/2.0/user/events/${eventId}/applications`);
   },
+  // cancel booking
   manageTickets(applications) {
     applications.forEach((application) => {
       /* eslint-disable no-param-reassign */
@@ -36,6 +24,9 @@ const EventsService = {
     },
     createOrder(eventId, applications) {
       return Vue.http.post(`${Vue.config.apiServer}/api/3.0/events/${eventId}/orders`, { applications });
+    },
+    updateOrder(orderId, userId, applications) {
+      return Vue.http.put(`${Vue.config.apiServer}/api/3.0/users/${userId}/orders/${orderId}`, { applications });
     },
     getOrder(userId, options) {
       return Vue.http.get(`${Vue.config.apiServer}/api/3.0/users/${userId}/orders`, options);
