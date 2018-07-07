@@ -28,10 +28,15 @@
         <div v-for="application in applications" :key="application.id">
           <cd-attendee :application="application" :session="sessions[application.sessionId]" :ticket="ticketsById[application.ticketId]" :user="users[application.userId]"></cd-attendee>
         </div>
-        <button tag="button"
+        <span v-if="applications && applications[0].orderId">
+          <router-link
+            tag="button" class="btn btn-lg btn-primary cd-user-ticket-list-item__view"
+            :to="{ name: 'EventSessions', params: { eventId: event.id } }">{{ $t('Modify booking') }}</router-link>
+        </span>
+        <a
           @click="cancel()"
-          class="btn btn-lg cd-user-ticket-list-item__view-cancel-button">
-          {{ $t('Cancel ticket', applications.length) }}</button>
+          class="cd-user-ticket-list-item__view-cancel">
+          {{ $t('Cancel ticket', applications.length) }}</a>
       </div>
       <!-- NOTE : What about awaiting approval tickets ?-->
       <div v-if="!hasApplications && !event.eventbriteId">
@@ -124,33 +129,20 @@
   .cd-user-ticket-list-item {
     .cd-event-tile;
 
-    &__view-application {
+    &__view{
+      &-application {
       font-size: @font-size-large;
-    }
-
-    &__view-application-title {
-      color: @light-grey;
-    }
-
-    &__view {
-      &-cancel-button {
-        font-size: @font-size-medium;
-        font-weight: bold;
-        margin-top: 16px;
-        padding: 8px;
-        color: @cd-blue;
-        background-color: white;
-        text-decoration: none;
-        border: solid 1px @cd-blue;
-        border-radius: 4px;
-        display: block;
-        &:hover {
-          color: white;
-          background-color: @cd-blue;
+        &-title {
+          color: @light-grey;
         }
       }
-
+      &-cancel {
+        padding-left: 6px;
+        cursor: pointer;
+        vertical-align: bottom;
+      }
     }
+
   }
   @media (max-width: @screen-xs-max) {
     .cd-user-ticket-list-item {
