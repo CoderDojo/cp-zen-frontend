@@ -28,7 +28,7 @@
         <div class="cd-user-ticket-list-item__view-applications-order">
           <div class="cd-user-ticket-list-item__view-applications-order-applicants">
             <div v-for="application in applications" :key="application.id">
-              <cd-attendee :application="application" :session="sessions[application.sessionId]" :ticket="tickets[application.ticketId]" :user="users[application.userId]"></cd-attendee>
+              <cd-attendee :application="application" :session="sessions[application.sessionId]" :ticket="ticketsById[application.ticketId]" :user="users[application.userId]"></cd-attendee>
             </div>
             <button tag="button"
               @click="cancel()"
@@ -36,7 +36,7 @@
               {{ $t('Cancel ticket', applications.length) }}</button>
           </div>
           <div class="cd-user-ticket-list-item__view-applications-order-qrcode">
-            <img v-if="hasApplications && applications[0].orderId" :src="qrCodeUrl" alt="qrcode-checkin"/>
+            <img v-if="applications && applications[0].orderId" :src="qrCodeUrl" alt="qrcode-checkin"/>
             <small> {{ $t('Get this image scanned by your champion to be checked-in!') }} </small>
           </div>
         </div>
