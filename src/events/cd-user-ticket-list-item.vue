@@ -36,7 +36,7 @@
               {{ $t('Cancel ticket', applications.length) }}</button>
           </div>
           <div class="cd-user-ticket-list-item__view-applications-order-qrcode">
-            <img v-if="applications && applications[0].orderId" :src="qrCodeUrl" alt="qrcode-checkin"/>
+            <img v-if="applications && applications[0].orderId" :src="qrCodeUrl(applications[0].orderId)" alt="qrcode-checkin"/>
             <small> {{ $t('Get this image scanned by your champion to be checked-in!') }} </small>
           </div>
         </div>
@@ -61,6 +61,7 @@
   </div>
 </template>
 <script>
+  import Vue from 'vue';
   import { pick } from 'lodash';
   import cdAttendee from './cd-attendee';
   import EventTile from './cd-event-tile';
@@ -81,11 +82,6 @@
       };
     },
     computed: {
-      qrCodeUrl() {
-        const baseUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=';
-        const redirUrl = encodeURIComponent(`https://localhost:8000/dashboard/tickets/${this.applications[0].orderId}`);
-        return `${baseUrl}${redirUrl}`;
-      },
       hasApplications() {
         return this.applications.length > 0;
       },
@@ -94,6 +90,9 @@
       },
     },
     methods: {
+      qrCodeUrl(orderId) {
+        return `${Vue.config.s3Server}/zenbookingqrcode/${orderId}.png`;
+      },
       prepareSessions() {
         this.event.sessions.forEach((s) => {
           this.sessions[s.id] = s;

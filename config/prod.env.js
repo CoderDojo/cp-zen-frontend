@@ -1,6 +1,7 @@
 module.exports = {
   NODE_ENV: '"production"',
   API_SERVER: '""',
+  S3_SERVER: '"https://s3.amazonaws.com"',
   RECAPTCHA_SITE_KEY: '"6LfVKQgTAAAAAF3wUs0q-vfrtsKdHO1HCAkp6pnY"',
   GOOGLE_ANALYTICS_PROPERTY_ID: process.env.GIT_BRANCH === 'master' ? '"UA-25136319-2"': '"UA-25136319-8"',
   GOOGLE_MAPS_API_KEY: '"AIzaSyC3xF9XV91bS2R14Gjmx3UQaKbGgAfHbE4"',
