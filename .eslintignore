@@ -1,2 +1,6 @@
 build/*.js
 config/*.js
+*.conf.js
+dist
+json-server
+test/e2e
