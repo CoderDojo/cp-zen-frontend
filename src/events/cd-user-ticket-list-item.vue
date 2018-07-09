@@ -138,6 +138,7 @@
         font-weight: bold;
         margin-top: 16px;
         padding: 8px;
+        margin-left: 12px;
         color: @cd-blue;
         background-color: white;
         text-decoration: none;
