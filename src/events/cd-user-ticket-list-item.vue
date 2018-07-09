@@ -30,12 +30,12 @@
         </div>
         <span v-if="applications && applications[0].orderId">
           <router-link
-            tag="button" class="btn btn-lg btn-primary cd-user-ticket-list-item__view"
+            tag="button" class="btn btn-lg btn-primary cd-user-ticket-list-item__view cd-user-ticket-list-item__view-mod-booking"
             :to="{ name: 'EventSessions', params: { eventId: event.id } }">{{ $t('Modify booking') }}</router-link>
         </span>
         <button
           @click="cancel()"
-          class="btn btn-large cd-user-ticket-list-item__view-cancel">
+          class="btn btn-lg cd-user-ticket-list-item__view-cancel">
           {{ $t('Cancel ticket', applications.length) }}</button>
       </div>
       <!-- NOTE : What about awaiting approval tickets ?-->
@@ -134,11 +134,7 @@
         }
       }
       &-cancel {
-        font-size: @font-size-medium;
-        font-weight: bold;
         margin-top: 16px;
-        padding: 8px;
-        margin-left: 12px;
         color: @cd-blue;
         background-color: white;
         text-decoration: none;
@@ -151,8 +147,10 @@
           background-color: @cd-blue;
         }
       }
+      &-mod-booking {
+        margin-right: 12px;
+      }
     }
-
   }
   @media (max-width: @screen-xs-max) {
     .cd-user-ticket-list-item {
