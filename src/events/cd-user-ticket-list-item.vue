@@ -33,10 +33,10 @@
             tag="button" class="btn btn-lg btn-primary cd-user-ticket-list-item__view"
             :to="{ name: 'EventSessions', params: { eventId: event.id } }">{{ $t('Modify booking') }}</router-link>
         </span>
-        <a
+        <button
           @click="cancel()"
-          class="cd-user-ticket-list-item__view-cancel">
-          {{ $t('Cancel ticket', applications.length) }}</a>
+          class="btn btn-large cd-user-ticket-list-item__view-cancel">
+          {{ $t('Cancel ticket', applications.length) }}</button>
       </div>
       <!-- NOTE : What about awaiting approval tickets ?-->
       <div v-if="!hasApplications && !event.eventbriteId">
@@ -134,9 +134,21 @@
         }
       }
       &-cancel {
-        padding-left: 6px;
-        cursor: pointer;
+        font-size: @font-size-medium;
+        font-weight: bold;
+        margin-top: 16px;
+        padding: 8px;
+        color: @cd-blue;
+        background-color: white;
+        text-decoration: none;
+        border: solid 1px @cd-blue;
+        border-radius: 4px;
+        display: inline-block;
         vertical-align: bottom;
+        &:hover {
+          color: white;
+          background-color: @cd-blue;
+        }
       }
     }
 
