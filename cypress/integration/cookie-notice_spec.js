@@ -3,7 +3,7 @@ import findDojoPage from '../pages/find-dojo';
 import dojoDetailsPage from '../pages/dojo-details';
 
 describe('Cookie Notice', () => {
-  before(() => {
+  beforeEach(() => {
     cy.server();
     cy.route('/api/2.0/users/instance', 'fx:loggedOutUser');
     cy.route('/api/2.0/ip-country-details', 'fx:ip-country-details/ie');
