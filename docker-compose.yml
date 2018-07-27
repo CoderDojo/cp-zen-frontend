@@ -20,6 +20,15 @@ services:
     command: yarn start-with-mocks
     working_dir: /usr/src/app
     ports:
-      - '8080:8080'    
+      - '8080:8080'
     volumes:
       - .:/usr/src/app:Z
+  cypress:
+    image: cypress/base:8
+    command: yarn cypress
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app:Z
+      - cypress-bin:/root/.cache/Cypress
+volumes:
+  cypress-bin:

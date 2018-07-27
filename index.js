@@ -12,21 +12,10 @@ var openGraphTemplate = Handlebars.compile(openGraphTemplateString);
 exports.register = function (server, options, next) {
 
   server.path(`${__dirname}/dist/`);
-  if (process.env.NODE_ENV !== 'production') {
-    server.route({
-      method: 'GET',
-      path: '/v2/{param*}',
-      handler: {
-        file: {
-          path: 'index.html'
-        }
-      }
-    });
-  }
 
   server.route({
     method: 'GET',
-    path: '/v2/static/{param*}',
+    path: '/static/{param*}',
     handler: {
       directory: {
         path: 'static'
@@ -107,7 +96,7 @@ exports.register = function (server, options, next) {
       },
     },
   });
-  
+
   server.route({
     method: 'GET',
     path: '/events/{eventId}/sessions',
@@ -124,7 +113,7 @@ exports.register = function (server, options, next) {
       },
     },
   });
-  
+
   server.route({
     method: 'GET',
     path: '/events/{eventId}/confirmation',
