@@ -24,11 +24,11 @@ services:
     volumes:
       - .:/usr/src/app:Z
   cypress:
-    image: circleci/node:8-browsers
+    image: cypress/base:8
     command: yarn cypress
     working_dir: /usr/src/app
     volumes:
       - .:/usr/src/app:Z
-      - cypress-bin:/home/circleci/.cache/Cypress
+      - cypress-bin:/root/.cache/Cypress
 volumes:
   cypress-bin:
