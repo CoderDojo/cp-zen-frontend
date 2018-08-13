@@ -203,7 +203,7 @@ describe('Book event page', () => {
           Booking.childTicketDayOfBirth(0).selectByValue(20);
           Booking.childTicketMonthOfBirth(0).selectByValue(1);
           Booking.childTicketYearOfBirth(0).selectByValue(2002);
-          Booking.childTicketGender(0).selectByValue('male');
+          Booking.childTicketGender(0).selectByValue('Male');
           Booking.childTicketSelector('Laptop required')[0].click();
           // Fill 2nd kid
           Booking.addYouthButton.click();
@@ -213,7 +213,7 @@ describe('Book event page', () => {
           Booking.childTicketDayOfBirth(1).selectByValue(20);
           Booking.childTicketMonthOfBirth(1).selectByValue(1);
           Booking.childTicketYearOfBirth(1).selectByValue(2002);
-          Booking.childTicketGender(1).selectByValue('female');
+          Booking.childTicketGender(1).selectByValue('Female');
           
           Booking.childTicketSelector('Bringing a laptop', 1)[3].click();
           Booking.removeChildTicket[1].click();
@@ -248,7 +248,7 @@ describe('Book event page', () => {
           Booking.childTicketDayOfBirth(0).selectByValue(20);
           Booking.childTicketMonthOfBirth(0).selectByValue(1);
           Booking.childTicketYearOfBirth(0).selectByValue(2002);
-          Booking.childTicketGender(0).selectByValue('male');
+          Booking.childTicketGender(0).selectByValue('Male');
           Booking.childTicketSelector('Laptop required')[0].click();
           Booking.phoneNumber.setValue('+0');
           Booking.submitBookingButton.click();

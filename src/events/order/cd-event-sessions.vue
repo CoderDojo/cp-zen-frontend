@@ -27,6 +27,7 @@
     </div>
     <div class="cd-event-sessions__next-block" >
       <p v-show="errors.has('submitApplications:required')" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('There are some errors with your booking. Please scroll up and follow the tips to finish this booking.') }}</p>
+      <p v-show="errors.has('409')" class="text-danger">{{ $t('We\'re sorry, one or more of your tickets is over capacity') }}</p>
       <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="submitBooking" name="submitApplications" v-validate:applications="'required'" v-ga-track-click="'attempt_book_tickets'"
         :disabled="submitting">
         <span v-if="this.event.ticketApproval">{{ $t('Request booking for {totalBooked} ticket(s)', { totalBooked }) }}</span>
@@ -200,8 +201,12 @@
           this.submitting = true;
           const setupSucceeded = await this.setupPrerequisites();
           if (setupSucceeded) {
-            await this.bookTickets();
-            this.$router.push({ name: 'EventBookingConfirmation', params: { eventId: this.eventId } });
+            try {
+              await this.bookTickets();
+              this.$router.push({ name: 'EventBookingConfirmation', params: { eventId: this.eventId } });
+            } catch (err) {
+              this.errors.add(`${err.status}`, err.body.message);
+            }
           }
           this.submitting = false;
         }

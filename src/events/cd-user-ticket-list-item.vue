@@ -30,9 +30,14 @@
             <div v-for="application in applications" :key="application.id">
               <cd-attendee :application="application" :session="sessions[application.sessionId]" :ticket="ticketsById[application.ticketId]" :user="users[application.userId]"></cd-attendee>
             </div>
-            <button tag="button"
+            <span v-if="applications && applications[0].orderId">
+              <router-link
+                tag="button" class="btn btn-lg btn-primary cd-user-ticket-list-item__view cd-user-ticket-list-item__view-mod-booking"
+                :to="{ name: 'EventSessions', params: { eventId: event.id } }">{{ $t('Modify booking') }}</router-link>
+            </span>
+            <button
               @click="cancel()"
-              class="btn btn-lg cd-user-ticket-list-item__view-cancel-button">
+              class="btn btn-lg cd-user-ticket-list-item__view-cancel">
               {{ $t('Cancel ticket', applications.length) }}</button>
           </div>
           <div class="cd-user-ticket-list-item__view-applications-order-qrcode">
@@ -45,7 +50,7 @@
       <div v-if="!hasApplications && !event.eventbriteId">
         <p>{{ $t('No ticket booked') }}</p>
         <router-link
-          :to="bookLink"
+           :to="{ name: 'EventSessions', params: { eventId: event.id } }"
           tag="button" class="btn btn-lg btn-primary cd-user-ticket-list-item__view">
           {{ $t('Book') }}</router-link>
       </div>
@@ -84,9 +89,6 @@
     computed: {
       hasApplications() {
         return this.applications.length > 0;
-      },
-      bookLink() {
-        return `/dojo/${this.event.dojoId}/event/${this.event.id}`;
       },
     },
     methods: {
@@ -136,25 +138,27 @@
   .cd-user-ticket-list-item {
     .cd-event-tile;
 
-    &__view-application {
-      font-size: @font-size-large;
-      &s-order {
-        display: flex;
-        flex-wrap: wrap;
-        &-applicants {
-          flex: 3.5;
-        }
-        &-qrcode {
-          flex: 1;
+    &__view{
+      &-application {
+        font-size: @font-size-large;
+        &s-order {
           display: flex;
-          flex-direction: column;
-          & img {
-            max-width: 150px;
-            min-width: 150px;
+          flex-wrap: wrap;
+          &-applicants {
+            flex: 3.5;
           }
-          & small {
-            text-align: center;
-            max-width: 150px;
+          &-qrcode {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            & img {
+              max-width: 150px;
+              min-width: 150px;
+            }
+            & small {
+              text-align: center;
+              max-width: 150px;
+            }
           }
         }
       }
@@ -168,20 +172,27 @@
       &-cancel-button {
         font-size: @font-size-medium;
         font-weight: bold;
+        &-title {
+          color: @light-grey;
+        }
+      }
+      &-cancel {
         margin-top: 16px;
-        padding: 8px;
         color: @cd-blue;
         background-color: white;
         text-decoration: none;
         border: solid 1px @cd-blue;
         border-radius: 4px;
-        display: block;
+        display: inline-block;
+        vertical-align: bottom;
         &:hover {
           color: white;
           background-color: @cd-blue;
         }
       }
-
+      &-mod-booking {
+        margin-right: 12px;
+      }
     }
   }
   @media (max-width: @screen-xs-max) {

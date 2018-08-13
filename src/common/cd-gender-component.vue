@@ -2,9 +2,9 @@
 <div>
   <select class="select-box form-control" v-model="genderSelect" @blur="onBlur" @focus="onFocus">
     <option value="" selected data-default disabled>{{ $t('Select an option') }}</option>
-    <option value="male">{{ $t('Male') }}</option>
-    <option value="female">{{ $t('Female') }}</option>
-    <option value="prefer not to answer">{{ $t('Prefer not to answer') }}</option>
+    <option value="Male">{{ $t('Male') }}</option>
+    <option value="Female">{{ $t('Female') }}</option>
+    <option value="Undisclosed">{{ $t('Prefer not to answer') }}</option>
     <option value="specify">{{ $t('Specify Identity') }}</option>
   </select>
   <input v-show="specifyGender" class="form-control" v-model="genderInput" :placeholder="$t('Identify as...')" @blur="onBlur" @focus="onFocus"/>
@@ -44,7 +44,7 @@
           return this.genderSelect;
         },
         set(genderVal) {
-          if (genderVal !== ('male' || 'female' || 'prefer not to answer')) {
+          if (genderVal !== ('Male' || 'Female' || 'Undisclosed')) {
             this.genderSelect = 'specify';
             this.genderInput = genderVal;
           } else {
