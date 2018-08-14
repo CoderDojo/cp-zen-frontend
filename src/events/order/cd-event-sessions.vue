@@ -17,7 +17,7 @@
     </div>
 
     <div class="cd-event-sessions__phone-number" v-if="showPhone">
-      <label>{{ $t('Phone number') }}</label>
+      <label>{{ $t('Phone number of a parent/guardian') }}</label>
       <p>{{ $t('Since you are acting as a guardian, the Dojo needs your number in case of emergencies.') }}</p>
       <div class="cd-event-sessions__phone-number-input">
         <input class="form-control" v-model="phone" ref="phone" type="text" placeholder="e.g. +353851234567" data-vv-name="phone" data-vv-validate-on="blur" v-validate="{ required: true, regex: /^\+[0-9\ \.\-]+$/ }"/>
@@ -26,7 +26,7 @@
       <p class="cd-event-session__phone-number-err-regex text-danger" v-show="showPhone && errors.has('phone:regex')">{{ $t('* Please include the plus symbol(+) and country code. For example, a phone number in Ireland should begin +353') }}</p>
     </div>
     <div class="cd-event-sessions__next-block" >
-      <p v-show="errors.has('submitApplications:required')" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('There are some errors with your booking. Please scroll up and follow the tips to finish this booking.') }}</p>
+      <p v-show="errors.has('submitApplications:required')" class="cd-event-sessions__next-ticket-select-error text-danger"> {{ $t('Your booking information is incomplete. Please scroll up and follow the hints to complete the booking.') }}</p>
       <p v-show="errors.has('409')" class="text-danger">{{ $t('We\'re sorry, one or more of your tickets is over capacity') }}</p>
       <button class="cd-event-sessions__next btn btn-primary" tag="button" @click="submitBooking" name="submitApplications" v-validate:applications="'required'" v-ga-track-click="'attempt_book_tickets'"
         :disabled="submitting">

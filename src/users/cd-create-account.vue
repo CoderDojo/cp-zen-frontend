@@ -1,27 +1,27 @@
 <template>
   <form class="cd-create-account" @submit.prevent="register">
-    <h1 class="cd-create-account__header">{{ $t('Register your details so you can book Dojo Events') }}</h1>
+    <h1 class="cd-create-account__header">{{ $t('Please register your details so you can book Dojo events tickets') }}</h1>
     <div>
       <div class="cd-create-account__info">
         <p>
           <i class="fa fa-info-circle"></i>
-          {{ $t('If you are a parent or a guardian booking tickets for a child, or a child over 13 please still tell us your details here.')  }} <br/>
-          {{ $t('We collect these details to allow Dojos to contact attendees\' parents.') }}
+          {{ $t('If you are a parent/guardian and want to book tickets for a child under 13, please fill in your own details.') }} <br/> 
+          {{ $t('We collect this information so we can contact you with updates about the events you\'re booking tickets for.') }}
         </p>
       </div>
       <div>
-        <label class="cd-create-account__label" for="email">{{ $t('Your email') }}</label>
+        <label class="cd-create-account__label" for="email">{{ $t('Your email address') }}</label>
         <div class="cd-create-account__email">
          <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-name="email" v-validate="'required|email'" data-vv-validate-on="blur" v-model="profile.email">
        </div>
-        <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Parent email address is required') }}</p>
-        <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Parent email address is invalid') }}</p>
+        <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Email address is required') }}</p>
+        <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Email address is invalid') }}</p>
       </div>
 
       <label class="cd-create-account__label cd-create-account__names-label" for="firstName">{{ $t('Name') }}</label>
       <div class="cd-create-account__names" >
         <div class="cd-create-account__names-first" :class="{'cd-create-account__names--error': errors.has('lastName:required') && !errors.has('firstName:required')}">
-          <input type="text" class="form-control" name="firstName" :placeholder="$t('First Name')" id="name" data-vv-as="first name" v-validate="'required'" v-model="profile.firstName">
+          <input type="text" class="form-control" name="firstName" :placeholder="$t('First name')" id="name" data-vv-as="first name" v-validate="'required'" v-model="profile.firstName">
           <p class="cd-create-account-form__first-name-error text-danger" v-show="errors.has('firstName:required')" for="firstName">{{ $t('First name is required') }}</p>
         </div>
           <div class="cd-create-account__names-last" :class="{'cd-create-account__names--error': !errors.has('lastName:required') && errors.has('firstName:required')}">
@@ -30,7 +30,7 @@
         </div>
       </div>
       <div class="cd-create-account__dob">
-        <label class="cd-create-account__label" for="dob">{{ $t('Enter your Date of Birth') }}</label>
+        <label class="cd-create-account__label" for="dob">{{ $t('Enter your date of birth') }}</label>
         <div class="cd-create-account__dob-picker-wrapper">
           <vue-dob-picker v-model="dob" select-class="form-control cd-create-account__dob-picker-wrapper-select" id="dob" class="cd-create-account__dob-picker"
             v-validate="'required'"
@@ -42,8 +42,8 @@
             :proportions="[2, 2, 3]"></vue-dob-picker>
         </div>
         <p v-if="isUnderage" class="cd-create-account__dob-error text-danger">
-          {{ $t('Sorry :( Children under 13 are not allowed to book events.') }} 
-          {{ $t('You can ask your parent or guardian to book for you.') }}
+          {{ $t('Sorry :( Since you are under 13, you\'re not yet allowed to book event tickets yourself.') }} 
+          {{ $t('Please ask your parent or guardian to book for you.') }}
         </p>
         <p class="cd-create-account__dob-error text-danger"
           v-show="errors.has('dob:required')">{{ $t('Date of birth is required') }}</p>
@@ -51,7 +51,7 @@
       <div>
         <label class="cd-create-account__label" for="password">{{ $t('Password') }}</label>
         <p class="cd-create-account__password-hint">
-          {{ $t('Password must be at least 8 characters with at least one number.') }}
+          {{ $t('Password must be at least eight characters, with at least one number.') }}
         </p>
         <span v-if="isPasswordVisible">
           <input type="text" class="form-control" placeholder="Password" name="password" id="password" data-vv-as="password"
@@ -65,7 +65,7 @@
         <p class="text-danger cd-create-account__password-error"
                v-show="errors.has('password:required')">{{ $t('Password is required') }}</p>
         <p class="text-danger cd-create-account__password-error"
-               v-show="errors.has('password:cd-password')">{{ $t('Password must be at least 8 characters with at least one number.') }}</p>
+               v-show="errors.has('password:cd-password')">{{ $t('Password must be at least eight characters, with at least one number.') }}</p>
       </div>
       <div>
         <div class="cd-create-account__recaptcha">
@@ -79,7 +79,7 @@
             <input type="checkbox" name="isSubscribedToMailingList" v-model="isSubscribedToMailingList"/>
           </span>
           <span class="cd-create-account__agreement-right">
-            <span>{{ $t('I want to join the CoderDojo Mailing List') }}</span>
+            <span>{{ $t('I want to join the CoderDojo mailing list') }}</span>
           </span>
         </div>
       </div>
@@ -91,7 +91,7 @@
                       v-model="termsConditionsAccepted"/>
           </span>
           <span class="cd-create-account__agreement-right">
-            <span v-html="$t('I agree with {openLinkTag}Terms & Conditions{closingLinkTag}', { openLinkTag: '<a class=\'cd-create-account__terms-conditions-link\' href=\'https://zen.coderdojo.com/terms-and-conditions\'>', closingLinkTag: '</a>' })"></span>
+            <span v-html="$t('I agree with the {openLinkTag}Terms & Conditions{closingLinkTag}', { openLinkTag: '<a class=\'cd-create-account__terms-conditions-link\' href=\'https://zen.coderdojo.com/terms-and-conditions\'>', closingLinkTag: '</a>' })"></span>
           </span>
         </div>
         <p class="text-danger cd-create-account__terms-conditions-error"
