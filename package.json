@@ -22,7 +22,7 @@
   "dependencies": {
     "@coderdojo/cd-common": "1.1.11",
     "bootstrap": "^3.3.7",
-    "cp-translations": "1.0.108",
+    "cp-translations": "1.0.110",
     "font-awesome": "^4.7.0",
     "handlebars": "^4.0.10",
     "js-cookie": "^2.1.4",
