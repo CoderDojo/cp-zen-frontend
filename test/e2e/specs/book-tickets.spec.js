@@ -22,23 +22,23 @@ describe('Book event page', () => {
   describe('Register page', () => {
     it('should display an error if underage', () => {
       startBooking();
-      expect(EventAccountCreation.dobInputLabel.getText()).to.equal('Enter your Date of Birth');
+      expect(EventAccountCreation.dobInputLabel.getText()).to.equal('Enter your date of birth');
       EventAccountCreation.dateOfBirthDayInput.selectByValue('27');
       EventAccountCreation.dateOfBirthMonthInput.selectByValue('3');
       EventAccountCreation.dateOfBirthYearInput.selectByValue(new Date(u13Year).getFullYear());
       EventAccountCreation.checkRecaptcha();
       EventAccountCreation.verify.click();
       expect(EventAccountCreation.dateOfBirthError.isVisible()).to.be.true;
-      expect(EventAccountCreation.dateOfBirthError.getText()).to.equal('Sorry :( Children under 13 are not allowed to book events. You can ask your parent or guardian to book for you.');
+      expect(EventAccountCreation.dateOfBirthError.getText()).to.equal('Sorry :( Since you are under 13, you\'re not yet allowed to book event tickets yourself. Please ask your parent or guardian to book for you.');
     });
     it('should display an error invalid email', () => {
       startBooking();
       EventAccountCreation.checkRecaptcha();
       EventAccountCreation.verify.click();
-      expect(EventAccountCreation.emailValidationError[0].getText()).to.equal('Parent email address is required');
+      expect(EventAccountCreation.emailValidationError[0].getText()).to.equal('Email address is required');
       EventAccountCreation.email.setValue('banana');
       EventAccountCreation.firstName.click();
-      expect(EventAccountCreation.emailValidationError[1].getText()).to.equal('Parent email address is invalid');
+      expect(EventAccountCreation.emailValidationError[1].getText()).to.equal('Email address is invalid');
     });
   });
   describe('FTB', () => {
@@ -183,7 +183,7 @@ describe('Book event page', () => {
         it('should let me fill the new user form', () => {
           browser.waitUntil(() => Booking.childrenTickets.length > 0);
           Booking.childTicketFirstName[0].setValue('Babar');
-          expect(Booking.childTicketTitle[0].getText()).to.equal('Youth ticket - Babar');
+          expect(Booking.childTicketTitle[0].getText()).to.equal('Youth ticket – Babar');
           // TODO
         });
         it('should validate on submit', () => {

@@ -1,7 +1,7 @@
 <template>
   <div v-if="eventDetails" class="cd-event-details">
     <div class="row cd-event-details__header">
-      <p class="cd-event-details__book-event-title">{{ $t('Book Event') }}</p>
+      <p class="cd-event-details__book-event-title">{{ $t('Book event tickets') }}</p>
       <p class="cd-event-details__event-title">{{ eventDetails.name }}</p>
     </div>
     <div class="cd-event-details__container">
