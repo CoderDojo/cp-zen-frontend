@@ -1,7 +1,7 @@
 <template>
   <div class="column">
-    <div class="children">
-      <h1 class="children__header">My Kids</h1>
+    <div class="cd-dashboard-stats">
+      <h1 class="cd-dashboard-stats__header">Dojo Stats</h1>
     </div>
   </div>
 </div>
@@ -9,7 +9,7 @@
 
 <script>
   export default {
-    name: 'children',
+    name: 'cd-dashboard-stats',
     components: {
     },
   };
@@ -18,7 +18,7 @@
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
 
-  .children {
+  .cd-dashboard-stats {
     background-color: #fff;
     padding: 0 32px;
     margin-left: auto;

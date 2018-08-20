@@ -12,7 +12,7 @@ import Login from '@/users/cd-login';
 import orderWrapper from '@/events/order/wrapper';
 import UserService from '@/users/service';
 import store from '@/store';
-import Home from '@/dashboard/home';
+import Home from '@/dashboard/cd-dashboard';
 import loggedInNavGuard from './loggedInNavGuard';
 import orderExistsNavGuard from './orderExistsNavGuard';
 

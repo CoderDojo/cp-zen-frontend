@@ -1,14 +1,14 @@
 <template>
-  <div class="column">
-    <div class="projects">
-      <h3 class="projects__header">Before your next event, here are some projects you can try</h3>
+  <div class="row">
+    <div class="cd-dashboard-events">
+      <h1 class="cd-dashboard-events__header">Upcoming Events</h1>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'projects',
+    name: 'cd-dashboard-events',
   };
 </script>
 
@@ -17,14 +17,15 @@
   @import "../common/styles/cd-primary-button.less";
   @import "../common/variables";
 
-  .projects {
-    background-color: #f4f5f6;
+  .cd-dashboard-events {
+    background-color: @cd-purple;
     padding: 0 32px;
     min-height: 432px;
-    width: 940px;
     display: flex;
+    justify-content: center;
 
     &__header {
+      color: #fff;
       padding: 16px;
     }
   }

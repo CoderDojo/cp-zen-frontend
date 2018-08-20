@@ -1,14 +1,14 @@
 <template>
-  <div class="row">
-    <div class="events">
-      <h1 class="events__header">Upcoming Events</h1>
+  <div class="column">
+    <div class="cd-dashboard-news">
+      <h3 class="cd-dashboard-news__header">Community News and Forum Updates</h3>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'events',
+    name: 'cd-dashboard-news',
   };
 </script>
 
@@ -17,15 +17,14 @@
   @import "../common/styles/cd-primary-button.less";
   @import "../common/variables";
 
-  .events {
-    background-color: @cd-purple;
+  .cd-dashboard-news {
+    background-color: #f4f5f6;
     padding: 0 32px;
     min-height: 432px;
+    width: 940px;
     display: flex;
-    justify-content: center;
 
     &__header {
-      color: #fff;
       padding: 16px;
     }
   }

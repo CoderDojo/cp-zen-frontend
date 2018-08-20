@@ -1,14 +1,14 @@
 <template>
   <div class="column">
-    <div class="news">
-      <h3 class="news__header">Community News and Forum Updates</h3>
+    <div class="cd-dashboard-projects">
+      <h3 class="cd-dashboard-projects__header">Before your next event, here are some projects you can try</h3>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'news',
+    name: 'cd-dashboard-projects',
   };
 </script>
 
@@ -17,7 +17,7 @@
   @import "../common/styles/cd-primary-button.less";
   @import "../common/variables";
 
-  .news {
+  .cd-dashboard-projects {
     background-color: #f4f5f6;
     padding: 0 32px;
     min-height: 432px;
