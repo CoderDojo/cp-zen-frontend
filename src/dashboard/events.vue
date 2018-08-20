@@ -1,6 +1,8 @@
 <template>
   <div class="row">
-    <div class="events"></div>
+    <div class="events">
+      <h1 class="events__header">Upcoming Events</h1>
+    </div>
   </div>
 </template>
 
@@ -20,6 +22,11 @@
     padding: 0 32px;
     min-height: 432px;
     display: flex;
-    align-items: center;
+    justify-content: center;
+
+    &__header {
+      color: #fff;
+      padding: 16px;
+    }
   }
 </style>

@@ -1,6 +1,8 @@
 <template>
   <div class="column">
-    <div class="projects"></div>
+    <div class="projects">
+      <h3 class="projects__header">Before your next event, here are some projects you can try</h3>
+    </div>
   </div>
 </template>
 
@@ -21,6 +23,9 @@
     min-height: 432px;
     width: 940px;
     display: flex;
-    align-items: center;
+
+    &__header {
+      padding: 16px;
+    }
   }
 </style>

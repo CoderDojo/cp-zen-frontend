@@ -1,6 +1,8 @@
 <template>
   <div class="column">
-    <div class="stats"></div>
+    <div class="stats">
+      <h1 class="stats__header">Dojo Stats</h1>
+    </div>
   </div>
 </div>
 </template>
@@ -19,9 +21,13 @@
   .stats {
     background-color: #fff;
     padding: 0 32px;
-    height: 100%;
-    display:flex;
     margin-left: auto;
+    min-height: 100%;
+    display:flex;
+
+    &__header {
+      padding: 16px;
+    }
   }
 </style>
 

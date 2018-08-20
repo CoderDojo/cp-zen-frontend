@@ -44,6 +44,7 @@ export default {
     flex-direction: column;
 
     &__container {
+      display:flex;
       margin: 0 -16px;
     }
 

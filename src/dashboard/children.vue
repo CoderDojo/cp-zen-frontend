@@ -1,6 +1,8 @@
 <template>
   <div class="column">
-    <div class="children"></div>
+    <div class="children">
+      <h1 class="children__header">My Kids</h1>
+    </div>
   </div>
 </div>
 </template>
@@ -19,9 +21,13 @@
   .children {
     background-color: #fff;
     padding: 0 32px;
-    height: 100%;
-    display:flex;
     margin-left: auto;
+    min-height: 100%;
+    display:flex;
+
+    &__header {
+      padding: 16px;
+    }
   }
 </style>
 

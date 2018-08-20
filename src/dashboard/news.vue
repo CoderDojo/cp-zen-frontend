@@ -1,6 +1,8 @@
 <template>
   <div class="column">
-    <div class="news"></div>
+    <div class="news">
+      <h3 class="news__header">Community News and Forum Updates</h3>
+    </div>
   </div>
 </template>
 
@@ -21,6 +23,9 @@
     min-height: 432px;
     width: 940px;
     display: flex;
-    align-items: center;
+
+    &__header {
+      padding: 16px;
+    }
   }
 </style>
