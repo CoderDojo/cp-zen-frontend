@@ -82,6 +82,16 @@ exports.register = function (server, options, next) {
 
   server.route({
     method: 'GET',
+    path: '/home',
+    handler: {
+      file: {
+        path: 'index.html'
+      }
+    }
+  });  
+
+  server.route({
+    method: 'GET',
     path: '/events/{eventId}',
     handler: function (request, reply) {
       reply(openGraphTemplate({
