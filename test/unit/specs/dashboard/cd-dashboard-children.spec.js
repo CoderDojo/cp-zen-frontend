@@ -89,7 +89,6 @@ describe('Dashboard children component', () => {
   describe('created', () => {
     it('should call each method to load the data', async () => {
       const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
-      vm.loadCurrentUser = sinon.stub().resolves();
       vm.loadProfile = sinon.stub().resolves();
       vm.loadChildren = sinon.stub().resolves();
       vm.userProfile = {};
