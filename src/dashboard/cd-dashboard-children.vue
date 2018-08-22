@@ -17,8 +17,8 @@
     name: 'cd-dashboard-children',
     data() {
       return {
-        user: {},
-        profile: {},
+        currentUser: null,
+        userProfile: {},
         userChildren: [],
       };
     },
@@ -32,16 +32,16 @@
     },
     methods: {
       async loadCurrentUser() {
-        const response = await UserService.getCurrentUser();
-        this.user = response.body.user;
+        const res = await UserService.getCurrentUser();
+        this.currentUser = res.body.user;
       },
       async loadProfile() {
-        this.profile = (await UserService.userProfileData(this.user.id)).body;
+        this.userProfile = (await UserService.userProfileData(this.currentUser.id)).body;
       },
       async loadChildren() {
-        if (this.profile.children) {
+        if (this.userProfile.children) {
           this.userChildren = (await Promise.all(
-            this.profile.children.map(
+            this.userProfile.children.map(
               child => UserService.userProfileData(child))))
             .map(res => res.body);
         }
