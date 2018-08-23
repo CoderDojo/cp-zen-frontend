@@ -2,7 +2,8 @@
   <div class="column">
     <div class="cd-dashboard-children">
       <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
-      <div class="cd-dashboard-children__child" v-for="child in children">
+      <h1 v-if="!loaded"><i class="fa fa-spinner fa-spin"></i></h1>
+      <div v-else class="cd-dashboard-children__child" v-for="child in children">
         <h3>{{ child.firstName }} {{ child.lastName }}</h3>
       </div>
     </div>
@@ -20,6 +21,7 @@
         currentUser: null,
         userProfile: {},
         userChildren: [],
+        loaded: false,
       };
     },
     computed: {
@@ -51,6 +53,14 @@
       await this.loadCurrentUser();
       await this.loadProfile();
       this.loadChildren();
+    },
+    async mounted() {
+      // setTimeout(() => {
+      //   this.loaded = true;
+      // }, 1000);
+      this.$nextTick(() => {
+        this.loaded = true;
+      });
     },
   };
 </script>
