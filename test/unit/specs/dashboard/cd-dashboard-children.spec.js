@@ -25,7 +25,7 @@ describe('Dashboard children component', () => {
 
   describe('computed', () => {
     describe('computed.children', () => {
-      it('should return a list containing the current user if isSingle', () => {
+      it('should return a list containing the current user\'s children', () => {
         // ARRANGE
         const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
         vm.userChildren = [{ id: '1' }];
@@ -33,7 +33,7 @@ describe('Dashboard children component', () => {
         // ASSERT
         expect(vm.children).to.deep.equal([{ id: '1' }]);
       });
-      it('should return a empty list if the current user is not isSingle', () => {
+      it('should return a empty list if the current user has no children', () => {
         // ARRANGE
         const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
         vm.userChildren = [];
@@ -104,7 +104,7 @@ describe('Dashboard children component', () => {
   });
 
   describe('created', () => {
-    it('should add a default child if the user is having no child and is not single', async () => {
+    it('should call each method to load the data', async () => {
       const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
       vm.loadCurrentUser = sinon.stub().resolves();
       vm.loadProfile = sinon.stub().resolves();
@@ -114,6 +114,9 @@ describe('Dashboard children component', () => {
       vm.userChildren = [];
 
       await vm.$lifecycleMethods.created();
+      expect(vm.loadCurrentUser).to.have.been.calledOnce;
+      expect(vm.loadProfile).to.have.been.calledOnce;
+      expect(vm.loadChildren).to.have.been.calledOnce;
     });
   });
 });

@@ -1,7 +1,7 @@
 <template>
   <div class="column">
     <div class="cd-dashboard-children">
-      <h1 class="cd-dashboard-children__header">My Children</h1>
+      <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
       <div class="cd-dashboard-children__child" v-for="child in children">
         <h3>{{ child.firstName }} {{ child.lastName }}</h3>
       </div>
