@@ -3,7 +3,10 @@
     <div class="cd-dashboard-children">
       <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
       <div class="cd-dashboard-children__child" v-for="child in children">
-        <h3>{{ child.firstName }} {{ child.lastName }}</h3>
+        <h3 class="cd-dashboard-children__name">
+          {{ child.firstName }} {{ child.lastName }}
+          <a :href="`/dashboard/profile/${userId}/edit`" class="cd-dashboard-children__edit-child"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+        </h3>
       </div>
     </div>
   </div>
@@ -74,6 +77,17 @@
       margin: 16px 0 16px 0;
       display: flex;
       flex-direction: column;
+    }
+
+    &__name {
+      display: flex;
+    }
+
+    &__edit-child {
+      font-size: 14px;
+      display: flex;
+      align-self: flex-end;
+      padding: 0 0 0 5px;
     }
   }
 </style>
