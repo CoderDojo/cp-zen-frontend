@@ -36,8 +36,7 @@
         return null;
       },
       hasChildren() {
-        return (this.userProfile.children && this.userProfile.children.length > 0) ||
-          (this.userChildren && this.userChildren.length > 0);
+        return (this.userChildren && this.userChildren.length > 0);
       },
       isDisplayable() {
         return this.hasChildren && this.loadedChildren;
