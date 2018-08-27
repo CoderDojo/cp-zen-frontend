@@ -9,6 +9,8 @@ const usersDojos = require('./users-dojos');
 const applications = require('./applications');
 const events = require('./events');
 const orders = {};
+const news = require('./news');
+const forums = require('./forums');
 
 const server = jsonServer.create();
 const router = jsonServer.router(require('./db'));
@@ -76,6 +78,15 @@ nonResourcePostUrls.forEach((url) => {
     res.send();
   });
 });
+
+server.get('/api/recent/new', (req, res) => {
+  res.send(forums);
+});
+
+server.get('/wp-json/wp/v2/posts', (req, res) => {
+  res.send(news);
+});
+
 server.post('/api/2.0/profiles/youth/create', (req, res) => {
   const child = req.body.profile;
   child.id = uuidv1();

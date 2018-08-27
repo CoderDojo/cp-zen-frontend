@@ -7,8 +7,28 @@
 </template>
 
 <script>
+  import NewsForumsService from './service';
+
   export default {
     name: 'cd-dashboard-news',
+    data() {
+      return {
+        news: null,
+        forums: null,
+      };
+    },
+    methods: {
+      loadNews() {
+        this.news = NewsForumsService.loadNews();
+      },
+      loadForums() {
+        this.forums = NewsForumsService.loadForums();
+      },
+    },
+    async created() {
+      this.loadNews();
+      this.loadForums();
+    },
   };
 </script>
 
