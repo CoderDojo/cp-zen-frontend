@@ -7,8 +7,45 @@
 </template>
 
 <script>
+  import NewsForumsService from './service';
+
   export default {
     name: 'cd-dashboard-news',
+    data() {
+      return {
+        news: null,
+        forums: null,
+      };
+    },
+    computed: {
+      allPosts() {
+        return (this.news).map(post => ({
+          type: 'News',
+          date: post.date,
+          link: post.link,
+          title: post.title.rendered,
+        })).concat((this.forums).map(post => ({
+          type: 'Forums',
+          date: post.timestampISO,
+          link: `https://forums.coderdojo.com/topic/${post.slug}`,
+          title: post.title,
+        })));
+      },
+    },
+    methods: {
+      async loadNews() {
+        const res = await NewsForumsService.loadNews();
+        this.news = res.body;
+      },
+      async loadForums() {
+        const res = await NewsForumsService.loadForums();
+        this.forums = res.body.topics;
+      },
+    },
+    async created() {
+      await this.loadNews();
+      await this.loadForums();
+    },
   };
 </script>
 

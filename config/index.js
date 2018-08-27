@@ -35,6 +35,10 @@ module.exports = {
       '/locale': {
         target: 'http://localhost:3000',
         changeOrigin: true
+      },
+      '/wp-json': {
+        target: 'http://localhost:3000',
+        changeOrigin: true
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
