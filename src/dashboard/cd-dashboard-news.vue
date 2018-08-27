@@ -17,12 +17,35 @@
         forums: null,
       };
     },
+    computed: {
+      allUpdates() {
+        return [...this.formattedNews, ...this.formattedForums];
+      },
+      formattedNews() {
+        return (this.news).map(post => ({
+          type: 'News',
+          date: post.date,
+          link: post.link,
+          title: post.title.rendered,
+        }));
+      },
+      formattedForums() {
+        return (this.forums).map(post => ({
+          type: 'Forums',
+          date: post.timestampISO,
+          link: `https://forums.coderdojo.com/topic/${post.slug}`,
+          title: post.title,
+        }));
+      },
+    },
     methods: {
       async loadNews() {
-        this.news = await NewsForumsService.loadNews({ per_page: 6 });
+        const res = await NewsForumsService.loadNews({ per_page: 6 });
+        this.news = res.body;
       },
       async loadForums() {
-        this.forums = await NewsForumsService.loadForums();
+        const res = await NewsForumsService.loadForums();
+        this.forums = res.body.topics;
       },
     },
     async created() {
