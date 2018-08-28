@@ -3,7 +3,7 @@
     <div class="cd-dashboard-children">
       <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
       <div class="cd-dashboard-children__child" v-for="child in children">
-        <h3>{{ child.firstName }} {{ child.lastName }}</h3>
+        <h3>{{ child.name }}</h3>
       </div>
     </div>
   </div>
@@ -12,17 +12,18 @@
 
 <script>
   import UserService from '@/users/service';
+  import { mapGetters } from 'vuex';
 
   export default {
     name: 'cd-dashboard-children',
     data() {
       return {
-        currentUser: null,
         userProfile: {},
         userChildren: [],
       };
     },
     computed: {
+      ...mapGetters(['loggedInUser']),
       children() {
         if (this.userChildren) {
           return this.userChildren;
@@ -31,12 +32,8 @@
       },
     },
     methods: {
-      async loadCurrentUser() {
-        const res = await UserService.getCurrentUser();
-        this.currentUser = res.body.user;
-      },
       async loadProfile() {
-        this.userProfile = (await UserService.userProfileData(this.currentUser.id)).body;
+        this.userProfile = (await UserService.userProfileData(this.loggedInUser.id)).body;
       },
       async loadChildren() {
         if (this.userProfile.children) {
@@ -48,7 +45,6 @@
       },
     },
     async created() {
-      await this.loadCurrentUser();
       await this.loadProfile();
       this.loadChildren();
     },
