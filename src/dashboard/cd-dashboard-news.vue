@@ -15,19 +15,41 @@
       return {
         news: null,
         forums: null,
+        allPosts: null,
       };
     },
-    methods: {
-      loadNews() {
-        this.news = NewsForumsService.loadNews();
+    computed: {
+      posts() {
+        const newsPosts = (this.news).map(post => ({
+          type: 'News',
+          date: post.date,
+          link: post.link,
+          title: post.title.rendered,
+        }));
+
+        const forumPosts = (this.forums).map(post => ({
+          type: 'Forums',
+          date: post.timestampISO,
+          link: `https://forums.coderdojo.com/topic/${post.slug}`,
+          title: post.title,
+        }));
+
+        return newsPosts.concat(forumPosts);
       },
-      loadForums() {
-        this.forums = NewsForumsService.loadForums();
+    },
+    methods: {
+      async loadNews() {
+        const res = await NewsForumsService.loadNews();
+        this.news = res.body;
+      },
+      async loadForums() {
+        const res = await NewsForumsService.loadForums();
+        this.forums = res.body.topics;
       },
     },
     async created() {
-      this.loadNews();
-      this.loadForums();
+      await this.loadNews();
+      await this.loadForums();
     },
   };
 </script>

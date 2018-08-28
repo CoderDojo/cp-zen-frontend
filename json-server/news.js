@@ -10,7 +10,9 @@ module.exports = [
     status: 'publish',
     type: 'post',
     link: 'https://coderdojo.com/2018/08/09/what-we-discussed-on-the-july-open-community-call/',
-    title: {},
+    title: {
+      rendered: 'What we discussed on the July Open Community Call',
+    },
     content: {},
     excerpt: {},
     author: 54,
