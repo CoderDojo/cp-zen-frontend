@@ -1,6 +1,6 @@
 <template>
   <div class="column">
-    <div class="cd-dashboard-children">
+    <div v-if="isDisplayable" class="cd-dashboard-children">
       <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
       <div class="cd-dashboard-children__child" v-for="child in children">
         <h3 class="cd-dashboard-children__name">
@@ -17,6 +17,13 @@
         <p class="cd-dashboard-children__badges-none" v-else>{{ $t('{name} doesn\'t have any badges yet. Talk to the organisers of your Dojo to learn how {name} can be rewarded through badges.', { name: child.firstName }) }}</p>
       </div>
     </div>
+    <div v-else class="cd-dashboard-children">
+      <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
+      <div class="cd-dashboard-children__child cd-filler">
+        <h3 class="cd-dashboard-children__name cd-dashboard-children__name--filler"></h3>
+        <span class="cd-dashboard-children__badges cd-dashboard-children__badges--filler"></span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -28,6 +35,7 @@
     name: 'cd-dashboard-children',
     data() {
       return {
+        loadedChildren: false,
         userProfile: {},
         userChildren: [],
       };
@@ -39,6 +47,12 @@
           return this.userChildren;
         }
         return null;
+      },
+      hasChildren() {
+        return (this.userChildren && this.userChildren.length > 0);
+      },
+      isDisplayable() {
+        return this.hasChildren && this.loadedChildren;
       },
     },
     methods: {
@@ -52,6 +66,7 @@
               child => UserService.userProfileData(child))))
             .map(res => res.body);
         }
+        this.loadedChildren = true;
       },
     },
     async created() {
@@ -63,6 +78,7 @@
 
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
+  @import "../common/styles/cd-filler-loading";
 
   .cd-dashboard-children {
     background-color: #fff;
@@ -83,6 +99,11 @@
     &__name {
       margin: 16px 0 16px 0;
       display: flex;
+
+      &--filler {
+        background-color: @cd-very-light-grey;
+        height: 40px;
+      }
     }
 
     &__badges {
@@ -98,6 +119,11 @@
       &-none {
         margin: 16px 0 16px 0;
       }
+
+      &--filler {
+        background-color: @cd-very-light-grey;
+        height: 150px;
+      }
     }
 
     &__badge {
@@ -111,6 +137,7 @@
         width: 100px;
         margin-bottom: 8px;
       }
+
       &-text {
         text-align: center;
       }
