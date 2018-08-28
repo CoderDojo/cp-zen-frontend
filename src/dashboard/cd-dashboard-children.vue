@@ -3,11 +3,18 @@
     <div class="cd-dashboard-children">
       <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
       <div class="cd-dashboard-children__child" v-for="child in children">
-        <h3>{{ child.name }}</h3>
+        <h3 class="cd-dashboard-children__name">{{ child.name }}</h3>
+        <span class="cd-dashboard-children__badges" v-if="child.badges" >
+          <div class="cd-dashboard-children__badge" v-for="badge in child.badges.slice(0,2)">
+            <img class="cd-dashboard-children__badge-image" :src="badge.imageUrl" />
+            <span class="cd-dashboard-children__badge-text">{{ badge.name }}</span>
+          </div>
+          <a :href="`/dashboard/children/${child.userId}`" class="cd-dashboard-children__badges-link" v-if="child.badges.length > 2">{{ $t('See all {badgesAmount} badges', {badgesAmount: child.badges.length}) }}</a>
+        </span>
+        <p class="cd-dashboard-children__badges-none" v-else>{{ $t('{name} doesn\'t have any badges yet. Talk to the organisers of your Dojo to learn how {name} can be rewarded through badges.', { name: child.firstName }) }}</p>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -65,9 +72,43 @@
     }
 
     &__child {
-      margin: 16px 0 16px 0;
       display: flex;
       flex-direction: column;
+    }
+
+    &__name {
+      margin: 16px 0 16px 0;
+    }
+
+    &__badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      margin: 16px 0 16px 0;
+
+      &-link {
+        margin: 8px 0 0;
+      }
+
+      &-none {
+        margin: 16px 0 16px 0;
+      }
+    }
+
+    &__badge {
+      margin: 16px;
+      width: 105px;
+      height: 100%;
+      text-align: center;
+
+      &-image {
+        height: 100px;
+        width: 100px;
+        margin-bottom: 8px;
+      }
+      &-text {
+        text-align: center;
+      }
     }
   }
 </style>
