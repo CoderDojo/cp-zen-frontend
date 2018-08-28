@@ -17,10 +17,11 @@
         <p class="cd-dashboard-children__badges-none" v-else>{{ $t('{name} doesn\'t have any badges yet. Talk to the organisers of your Dojo to learn how {name} can be rewarded through badges.', { name: child.firstName }) }}</p>
       </div>
     </div>
-    <div v-else class="cd-dashboard-children cd-filler">
-      <h1 class="cd-dashboard-children__header cd-dashboard-children__header--filler"></h1>
-      <div class="cd-dashboard-children__child">
-        <div class="cd-dashboard-children__child cd-dashboard-children__child--filler"></div>
+    <div v-else class="cd-dashboard-children">
+      <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
+      <div class="cd-dashboard-children__child cd-filler">
+        <h3 class="cd-dashboard-children__name cd-dashboard-children__name--filler"></h3>
+        <span class="cd-dashboard-children__badges cd-dashboard-children__badges--filler"></span>
       </div>
     </div>
   </div>
@@ -86,25 +87,22 @@
 
     &__header {
       margin: 45px 0 16px 0;
-      &--filler {
-        background-color: @cd-very-light-grey;
-        height: 40px;
-      }
     }
 
     &__child {
       margin: 16px 0 16px 0;
       display: flex;
       flex-direction: column;
-      &--filler {
-        height: 150px;
-        background-color: @cd-very-light-grey;
-      }
     }
 
     &__name {
       margin: 16px 0 16px 0;
       display: flex;
+
+      &--filler {
+        background-color: @cd-very-light-grey;
+        height: 40px;
+      }
     }
 
     &__badges {
@@ -120,6 +118,11 @@
       &-none {
         margin: 16px 0 16px 0;
       }
+
+      &--filler {
+        background-color: @cd-very-light-grey;
+        height: 150px;
+      }
     }
 
     &__badge {
@@ -133,6 +136,7 @@
         width: 100px;
         margin-bottom: 8px;
       }
+
       &-text {
         text-align: center;
       }
