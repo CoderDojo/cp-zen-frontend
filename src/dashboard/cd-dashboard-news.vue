@@ -15,26 +15,21 @@
       return {
         news: null,
         forums: null,
-        allPosts: null,
       };
     },
     computed: {
-      posts() {
-        const newsPosts = (this.news).map(post => ({
+      allPosts() {
+        return (this.news).map(post => ({
           type: 'News',
           date: post.date,
           link: post.link,
           title: post.title.rendered,
-        }));
-
-        const forumPosts = (this.forums).map(post => ({
+        })).concat((this.forums).map(post => ({
           type: 'Forums',
           date: post.timestampISO,
           link: `https://forums.coderdojo.com/topic/${post.slug}`,
           title: post.title,
-        }));
-
-        return newsPosts.concat(forumPosts);
+        })));
       },
     },
     methods: {
