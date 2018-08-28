@@ -45,23 +45,6 @@ describe('Dashboard children component', () => {
   });
 
   describe('methods', () => {
-    describe('methods.loadCurrentUser', () => {
-      it('should load the current user', async () => {
-        // ARRANGE
-        const mockUser = {
-          id: 'foo',
-        };
-        MockUsersService.getCurrentUser.returns(Promise.resolve({ body: { user: mockUser } }));
-        const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
-
-        // ACT
-        await vm.loadCurrentUser();
-
-        // ASSERT
-        expect(vm.currentUser).to.deep.equal(mockUser);
-      });
-    });
-
     describe('methods.loadProfile', () => {
       it('should load the current user\'s profile', async () => {
         // ARRANGE
@@ -70,7 +53,7 @@ describe('Dashboard children component', () => {
         };
         MockUsersService.userProfileData.returns(Promise.resolve({ body: mockUserProfile }));
         const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
-        vm.currentUser = {
+        vm.loggedInUser = {
           id: '1',
         };
         // ACT
@@ -109,12 +92,10 @@ describe('Dashboard children component', () => {
       vm.loadCurrentUser = sinon.stub().resolves();
       vm.loadProfile = sinon.stub().resolves();
       vm.loadChildren = sinon.stub().resolves();
-      vm.currentUser = null;
       vm.userProfile = {};
       vm.userChildren = [];
 
       await vm.$lifecycleMethods.created();
-      expect(vm.loadCurrentUser).to.have.been.calledOnce;
       expect(vm.loadProfile).to.have.been.calledOnce;
       expect(vm.loadChildren).to.have.been.calledOnce;
     });
