@@ -3,7 +3,10 @@
     <div class="cd-dashboard-children">
       <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
       <div class="cd-dashboard-children__child" v-for="child in children">
-        <h3 class="cd-dashboard-children__name">{{ child.name }}</h3>
+        <h3 class="cd-dashboard-children__name">
+          {{ child.name }}
+          <a :href="`/dashboard/profile/${child.userId}/edit`" class="cd-dashboard-children__edit-child"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+        </h3>
         <span class="cd-dashboard-children__badges" v-if="child.badges" >
           <div class="cd-dashboard-children__badge" v-for="badge in child.badges.slice(0,2)">
             <img class="cd-dashboard-children__badge-image" :src="badge.imageUrl" />
@@ -72,12 +75,14 @@
     }
 
     &__child {
+      margin: 16px 0 16px 0;
       display: flex;
       flex-direction: column;
     }
 
     &__name {
       margin: 16px 0 16px 0;
+      display: flex;
     }
 
     &__badges {
@@ -109,6 +114,12 @@
       &-text {
         text-align: center;
       }
+    }
+
+    &__edit-child {
+      font-size: 14px;
+      align-self: flex-end;
+      padding: 0 0 0 5px;
     }
   }
 </style>
