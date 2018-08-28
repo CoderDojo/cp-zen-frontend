@@ -66,11 +66,12 @@
               child => UserService.userProfileData(child))))
             .map(res => res.body);
         }
+        this.loadedChildren = true;
       },
     },
     async created() {
       await this.loadProfile();
-      this.loadChildren().then(this.loadedChildren = true);
+      this.loadChildren();
     },
   };
 </script>
