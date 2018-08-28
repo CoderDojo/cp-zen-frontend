@@ -118,7 +118,6 @@
 
     &__edit-child {
       font-size: 14px;
-      display: flex;
       align-self: flex-end;
       padding: 0 0 0 5px;
     }
