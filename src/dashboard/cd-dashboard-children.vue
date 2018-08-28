@@ -59,8 +59,6 @@
     padding: 0 32px;
     margin-left: auto;
     min-height: 100%;
-    display:flex;
-    flex-direction: column;
 
     &__header {
       margin: 45px 0 16px 0;
