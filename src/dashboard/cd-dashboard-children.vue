@@ -5,7 +5,7 @@
       <div class="cd-dashboard-children__child" v-for="child in children">
         <h3 class="cd-dashboard-children__name">
           {{ child.name }}
-          <a :href="`/dashboard/profile/${userId}/edit`" class="cd-dashboard-children__edit-child"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+          <a :href="`/dashboard/profile/${child.userId}/edit`" class="cd-dashboard-children__edit-child"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
         </h3>
       </div>
     </div>
