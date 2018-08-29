@@ -1,7 +1,16 @@
 <template>
   <div class="column">
     <div class="cd-dashboard-news">
-      <h3 class="cd-dashboard-news__header">Community News and Forum Updates</h3>
+      <h2 class="cd-dashboard-news__header">Community News and Forum Updates</h2>
+      <div class="cd-dashboard-news__posts" v-for="post in allPosts">
+        <span class="cd-dashboard-news__posts-left">
+          <p class="cd-dashboard-news__post-type">{{ post.type }}</p>
+          <p class="cd-dashboard-news__post-date">{{ post.date }}</p>
+        </span>
+        <span class="cd-dashboard-news__posts-right">
+        <h4><a class="cd-dashboard-news__post-title" :href="`${post.link}`">{{ post.title }}</a></h4>
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -19,17 +28,20 @@
     },
     computed: {
       allPosts() {
-        return (this.news).map(post => ({
-          type: 'News',
-          date: post.date,
-          link: post.link,
-          title: post.title.rendered,
-        })).concat((this.forums).map(post => ({
-          type: 'Forums',
-          date: post.timestampISO,
-          link: `https://forums.coderdojo.com/topic/${post.slug}`,
-          title: post.title,
-        })));
+        if (this.news && this.forums) {
+          return ((this.news).map(post => ({
+            type: 'News',
+            date: post.date.split('T')[0],
+            link: post.link,
+            title: post.title.rendered,
+          })).concat((this.forums).map(post => ({
+            type: 'Forums',
+            date: post.timestampISO.split('T')[0],
+            link: `https://forums.coderdojo.com/topic/${post.slug}`,
+            title: post.title,
+          })))).splice(0, 6);
+        }
+        return null;
       },
     },
     methods: {
@@ -60,9 +72,47 @@
     min-height: 432px;
     width: 940px;
     display: flex;
+    flex-direction: column;
 
     &__header {
       margin: 45px 0 16px 0;
     }
+
+    &__posts {
+      margin: 16px 0;
+      display: flex;
+      flex-direction: row;
+      max-width: 75%;
+
+      &-left {
+        flex-direction: column;
+        margin: 0 16px 0 16px;
+        max-width: 30%;
+      }
+
+      &-right{
+        margin: 0 16px 0 16px;
+        align-self: center;
+        max-width: 70%;
+      }
+    }
+
+    &__post {
+      &-type {
+        font-weight: bold;
+      }
+
+      &-date {
+        color: #7b8082;
+      }
+
+      &-title {
+        color: @cd-purple;
+        &:hover {
+          color: #a57ec7;
+        }
+      }
+    }
+
   }
 </style>
