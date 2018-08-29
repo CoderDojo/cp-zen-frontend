@@ -31,17 +31,19 @@
     computed: {
       allPosts() {
         if (this.news && this.forums) {
-          return ((this.news).map(post => ({
+          const joinedPosts = ((this.news).map(post => ({
             type: 'News',
-            date: post.date.split('T')[0],
+            date: (post.date.split('T')[0]).split('-').join(''),
             link: post.link,
             title: post.title.rendered,
           })).concat((this.forums).map(post => ({
             type: 'Forums',
-            date: post.timestampISO.split('T')[0],
+            date: (post.timestampISO.split('T')[0]).split('-').join(''),
             link: `https://forums.coderdojo.com/topic/${post.slug}`,
             title: post.title,
-          })))).splice(0, 6);
+          }))));
+
+          return this.sortPostsByDate(joinedPosts).splice(0, 6);
         }
         return null;
       },
@@ -54,6 +56,16 @@
       async loadForums() {
         const res = await NewsForumsService.loadForums();
         this.forums = res.body.topics;
+      },
+      sortPostsByDate(posts) {
+        const sortedPosts = posts.sort((a, b) =>
+         a.date - b.date);
+        return (sortedPosts.map(post => (Object.assign({
+          type: post.type,
+          date: [post.date.slice(0, 4), post.date.slice(4, 6), post.date.slice(6, 8)].reverse().join('/'),
+          link: post.link,
+          title: post.title,
+        })))).reverse();
       },
     },
     async created() {
