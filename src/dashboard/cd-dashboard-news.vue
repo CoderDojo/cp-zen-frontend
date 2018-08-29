@@ -8,7 +8,9 @@
           <p class="cd-dashboard-news__post-date">{{ post.date }}</p>
         </span>
         <span class="cd-dashboard-news__posts-right">
-        <h4><a class="cd-dashboard-news__post-title" :href="`${post.link}`">{{ post.title }}</a></h4>
+          <h4 class="cd-dashboard-news__post-title">
+            <a class="cd-dashboard-news__post-title-link" :href="`${post.link}`">{{ post.title }}</a>
+          </h4>
         </span>
       </div>
     </div>
@@ -68,7 +70,7 @@
 
   .cd-dashboard-news {
     background-color: #f4f5f6;
-    padding: 0 32px;
+    padding: 0 32px 45px;
     min-height: 432px;
     width: 940px;
     display: flex;
@@ -92,7 +94,6 @@
 
       &-right{
         margin: 0 16px 0 16px;
-        align-self: center;
         max-width: 70%;
       }
     }
@@ -107,9 +108,13 @@
       }
 
       &-title {
-        color: @cd-purple;
-        &:hover {
-          color: #a57ec7;
+        margin: 0;
+
+        &-link {
+          color: @cd-purple;
+          &:hover {
+            color: #a57ec7;
+          }
         }
       }
     }
