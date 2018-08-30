@@ -92,7 +92,7 @@
 
   .cd-dashboard-news {
     background-color: #fff;
-    padding: 0 32px 45px;
+    padding: 0 32px;
     min-height: 432px;
     width: 940px;
     display: flex;
