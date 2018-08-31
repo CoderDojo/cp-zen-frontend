@@ -18,11 +18,11 @@
       };
     },
     methods: {
-      loadNews() {
-        this.news = NewsForumsService.loadNews();
+      async loadNews() {
+        this.news = await NewsForumsService.loadNews({ per_page: 6 });
       },
-      loadForums() {
-        this.forums = NewsForumsService.loadForums();
+      async loadForums() {
+        this.forums = await NewsForumsService.loadForums();
       },
     },
     async created() {

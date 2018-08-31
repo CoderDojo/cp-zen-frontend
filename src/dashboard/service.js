@@ -6,8 +6,8 @@ const NewsForumsService = {
     return Vue.http.get(`${Vue.config.forumsUrlBase}/api/recent/new`);
   },
   // load news
-  loadNews() {
-    return Vue.http.get(`${Vue.config.newsUrlBase}/wp-json/wp/v2/posts`);
+  loadNews(params) {
+    return Vue.http.get(`${Vue.config.newsUrlBase}/wp-json/wp/v2/posts`, { params });
   },
 };
 

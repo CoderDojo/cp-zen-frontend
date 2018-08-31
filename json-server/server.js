@@ -84,7 +84,8 @@ server.get('/api/recent/new', (req, res) => {
 });
 
 server.get('/wp-json/wp/v2/posts', (req, res) => {
-  res.send(news);
+  const selectNews = news.splice(0, req.query.per_page);
+  res.send(selectNews);
 });
 
 server.post('/api/2.0/profiles/youth/create', (req, res) => {
