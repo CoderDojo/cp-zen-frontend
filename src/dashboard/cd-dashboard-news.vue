@@ -2,7 +2,7 @@
   <div class="column">
     <div class="cd-dashboard-news">
       <h2 class="cd-dashboard-news__header">Community News and Forum Updates</h2>
-      <div class="cd-dashboard-news__posts" v-for="post in allUpdates">
+      <div class="cd-dashboard-news__posts" v-for="post in allPosts">
         <span class="cd-dashboard-news__posts-left">
           <p class="cd-dashboard-news__post-type">{{ post.type }}</p>
           <p class="cd-dashboard-news__post-date">{{ post.date }}</p>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+  import moment from 'moment';
   import NewsForumsService from './service';
 
   export default {
@@ -29,7 +30,7 @@
       };
     },
     computed: {
-      allUpdates() {
+      allPosts() {
         if (this.news && this.forums) {
           const joinedPosts = [...this.formattedNews, ...this.formattedForums];
           return this.sortPostsByDate(joinedPosts).splice(0, 6);
@@ -39,7 +40,7 @@
       formattedNews() {
         return (this.news).map(post => ({
           type: 'News',
-          date: post.date,
+          date: moment(post.date),
           link: post.link,
           title: post.title.rendered,
         }));
@@ -47,7 +48,7 @@
       formattedForums() {
         return (this.forums).map(post => ({
           type: 'Forums',
-          date: post.timestampISO,
+          date: moment(post.timestampISO),
           link: `https://forums.coderdojo.com/topic/${post.slug}`,
           title: post.title,
         }));
@@ -64,10 +65,10 @@
       },
       sortPostsByDate(posts) {
         const sortedPosts = posts.sort((a, b) =>
-         a.date - b.date);
+         b.date - a.date);
         return (sortedPosts.map(post => (Object.assign({
           type: post.type,
-          date: [post.date.slice(0, 4), post.date.slice(4, 6), post.date.slice(6, 8)].reverse().join('/'),
+          date: (post.date).utc().format('YYYY-MM-DD'),
           link: post.link,
           title: post.title,
         }))));
