@@ -68,7 +68,7 @@
          b.date - a.date);
         return (sortedPosts.map(post => (Object.assign({
           type: post.type,
-          date: (post.date).utc().format('DD-MM-YYYY'),
+          date: (post.date).utc().format('DD/MM/YYYY'),
           link: post.link,
           title: post.title,
         }))));
