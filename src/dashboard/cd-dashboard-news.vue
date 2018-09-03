@@ -1,7 +1,7 @@
 <template>
   <div class="column">
-    <div class="cd-dashboard-news">
-      <h2 class="cd-dashboard-news__header">Community News and Forum Updates</h2>
+    <div v-if="isDisplayable" class="cd-dashboard-news">
+      <h2 class="cd-dashboard-news__header">{{ $t('News Updates') }}</h2>
       <div class="cd-dashboard-news__posts" v-for="post in allPosts">
         <span class="cd-dashboard-news__posts-left">
           <p class="cd-dashboard-news__post-type">{{ post.type }}</p>
@@ -12,6 +12,12 @@
             <a class="cd-dashboard-news__post-title-link" :href="`${post.link}`">{{ post.title }}</a>
           </h4>
         </span>
+      </div>
+    </div>
+    <div v-else class="cd-dashboard-news">
+      <h2 class="cd-dashboard-news__header">{{ $t('News Updates') }}</h2>
+      <div class="cd-dashboard-news__posts cd-filler">
+        <div class="cd-dashboard-news__posts--filler"></div>
       </div>
     </div>
   </div>
@@ -26,13 +32,16 @@
     data() {
       return {
         news: null,
-        forums: null,
+        // forums: null,
+        loadedPosts: false,
       };
     },
     computed: {
       allPosts() {
-        if (this.news && this.forums) {
-          const joinedPosts = [...this.formattedNews, ...this.formattedForums];
+        // if (this.news && this.forums) {
+        //   const joinedPosts = [...this.formattedNews, ...this.formattedForums];
+        if (this.news) {
+          const joinedPosts = [...this.formattedNews];
           return this.sortPostsByDate(joinedPosts).splice(0, 6);
         }
         return null;
@@ -45,24 +54,29 @@
           title: post.title.rendered,
         }));
       },
-      formattedForums() {
-        return (this.forums).map(post => ({
-          type: 'Forums',
-          date: moment(post.timestampISO),
-          link: `https://forums.coderdojo.com/topic/${post.slug}`,
-          title: post.title,
-        }));
+      // formattedForums() {
+      //   return (this.forums).map(post => ({
+      //     type: 'Forums',
+      //     date: moment(post.timestampISO),
+      //     link: `https://forums.coderdojo.com/topic/${post.slug}`,
+      //     title: post.title,
+      //   }));
+      // },
+      isDisplayable() {
+        return this.loadedPosts;
       },
     },
     methods: {
       async loadNews() {
         const res = await NewsForumsService.loadNews({ per_page: 6 });
         this.news = res.body;
+        this.loadedPosts = true;
       },
-      async loadForums() {
-        const res = await NewsForumsService.loadForums();
-        this.forums = res.body.topics;
-      },
+      // async loadForums() {
+      //   const res = await NewsForumsService.loadForums();
+      //   this.forums = res.body.topics;
+      //   this.loadedPosts = true;
+      // },
       sortPostsByDate(posts) {
         const sortedPosts = posts.sort((a, b) =>
          b.date - a.date);
@@ -73,19 +87,18 @@
     },
     async created() {
       this.loadNews();
-      this.loadForums();
+      // this.loadForums();
     },
   };
 </script>
 
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
-  @import "../common/styles/cd-primary-button.less";
-  @import "../common/variables";
+  @import "../common/styles/cd-filler-loading";
 
   .cd-dashboard-news {
-    background-color: #f4f5f6;
-    padding: 0 32px 45px;
+    background-color: #fff;
+    padding: 0 32px;
     min-height: 432px;
     width: 940px;
     display: flex;
@@ -110,6 +123,31 @@
       &-right{
         margin: 0 16px 0 16px;
         max-width: 70%;
+      }
+    }
+
+    &__posts {
+      margin: 16px 0;
+      display: flex;
+      flex-direction: row;
+      max-width: 75%;
+
+      &-left {
+        flex-direction: column;
+        margin: 0 16px 0 16px;
+        max-width: 30%;
+      }
+
+      &-right{
+        margin: 0 16px 0 16px;
+        max-width: 70%;
+      }
+
+      &--filler {
+        background-color: @cd-very-light-grey;
+        width: 650px;
+        height: 60px;
+        width: 100%;
       }
     }
 
