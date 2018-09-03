@@ -10,7 +10,9 @@ module.exports = [
     status: 'publish',
     type: 'post',
     link: 'https://coderdojo.com/2018/08/09/what-we-discussed-on-the-july-open-community-call/',
-    title: {},
+    title: {
+      rendered: 'What we discussed on the July Open Community Call',
+    },
     content: {},
     excerpt: {},
     author: 54,
@@ -31,7 +33,7 @@ module.exports = [
     date_gmt: '2018-08-02T11:29:59',
     guid: {
       rendered: 'https://coderdojo.com/?p=16635'
-      },
+    },
     modified: '2018-08-02T15:29:23',
     modified_gmt: '2018-08-02T14:29:23',
     slug: 'what-you-need-to-know-about-scratch-3-0',
@@ -40,7 +42,7 @@ module.exports = [
     link: 'https://coderdojo.com/2018/08/02/what-you-need-to-know-about-scratch-3-0/',
     title: {
       rendered: 'What you need to know about Scratch 3.0'
-      },
+    },
     content: {},
     excerpt: {
       rendered: '<p>CoderDojo clubs around the world use Scratch both online and offline to enable young people to express themselves, create projects, try new things and learn along with their peers. Scratch has been a vital tool not only in developing creative learning, but in also teaching coding concepts and problem-solving skills. Yesterday the latest version of [&hellip;]</p>\n',
@@ -63,7 +65,7 @@ module.exports = [
     date: '2018-07-27T15:20:23',
     date_gmt: '2018-07-27T14:20:23',
     guid: {
-    rendered: 'https://coderdojo.com/?p=16619'
+      rendered: 'https://coderdojo.com/?p=16619'
     },
     modified: '2018-07-27T15:47:59',
     modified_gmt: '2018-07-27T14:47:59',
@@ -72,7 +74,7 @@ module.exports = [
     type: 'post',
     link: 'https://coderdojo.com/2018/07/27/attend-eudojo-on-october-17-in-the-european-parliament-brussels/',
     title: {
-    rendered: 'Attend EUDojo on October 17 in the European Parliament, Brussels!'
+      rendered: 'Attend EUDojo on October 17 in the European Parliament, Brussels!'
     },
     content: {},
     excerpt: {
@@ -96,7 +98,7 @@ module.exports = [
     date: '2018-07-18T17:02:09',
     date_gmt: '2018-07-18T16:02:09',
     guid: {
-    rendered: 'https://coderdojo.com/?p=16595'
+      rendered: 'https://coderdojo.com/?p=16595'
     },
     modified: '2018-07-18T17:03:31',
     modified_gmt: '2018-07-18T16:03:31',
@@ -105,7 +107,7 @@ module.exports = [
     type: 'post',
     link: 'https://coderdojo.com/2018/07/18/what-ive-learned-through-my-internship-with-coderdojo/',
     title: {
-    rendered: 'What I’ve learned through my internship with CoderDojo'
+      rendered: 'What I’ve learned through my internship with CoderDojo'
     },
     content: {},
     excerpt: {
@@ -129,7 +131,7 @@ module.exports = [
     date: '2018-07-18T16:47:39',
     date_gmt: '2018-07-18T15:47:39',
     guid: {
-    rendered: 'https://coderdojo.com/?p=16579'
+      rendered: 'https://coderdojo.com/?p=16579'
     },
     modified: '2018-08-01T14:49:47',
     modified_gmt: '2018-08-01T13:49:47',
@@ -138,7 +140,7 @@ module.exports = [
     type: 'post',
     link: 'https://coderdojo.com/2018/07/18/coderdojo-girls-initiative-our-birthday-commitment/',
     title: {
-    rendered: 'CoderDojo Girls Initiative: Our Birthday Commitment'
+      rendered: 'CoderDojo Girls Initiative: Our Birthday Commitment'
     },
     content: {},
     excerpt: {
@@ -162,7 +164,7 @@ module.exports = [
     date: '2018-07-17T14:27:51',
     date_gmt: '2018-07-17T13:27:51',
     guid: {
-    rendered: 'https://coderdojo.com/?p=16564'
+      rendered: 'https://coderdojo.com/?p=16564'
     },
     modified: '2018-07-17T14:28:19',
     modified_gmt: '2018-07-17T13:28:19',
@@ -171,7 +173,7 @@ module.exports = [
     type: 'post',
     link: 'https://coderdojo.com/2018/07/17/join-the-open-community-call-24th-of-july/',
     title: {
-    rendered: 'Join the Open Community Call &#8211; 24 July'
+      rendered: 'Join the Open Community Call &#8211; 24 July'
     },
     content: {},
     excerpt: {
@@ -195,7 +197,7 @@ module.exports = [
     date: '2018-07-15T20:59:00',
     date_gmt: '2018-07-15T19:59:00',
     guid: {
-    rendered: 'https://coderdojo.com/?p=16540'
+      rendered: 'https://coderdojo.com/?p=16540'
     },
     modified: '2018-07-15T20:59:00',
     modified_gmt: '2018-07-15T19:59:00',
@@ -204,7 +206,7 @@ module.exports = [
     type: 'post',
     link: 'https://coderdojo.com/2018/07/15/how-to-make-your-own-coderdojo-sign/',
     title: {
-    rendered: 'How to make your own CoderDojo Sign'
+      rendered: 'How to make your own CoderDojo Sign'
     },
     content: {},
     excerpt: {
