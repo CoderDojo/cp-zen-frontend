@@ -32,14 +32,16 @@
     data() {
       return {
         news: null,
-        forums: null,
+        // forums: null,
         loadedPosts: false,
       };
     },
     computed: {
       allPosts() {
-        if (this.news && this.forums) {
-          const joinedPosts = [...this.formattedNews, ...this.formattedForums];
+        // if (this.news && this.forums) {
+        //   const joinedPosts = [...this.formattedNews, ...this.formattedForums];
+        if (this.news) {
+          const joinedPosts = [...this.formattedNews];
           return this.sortPostsByDate(joinedPosts).splice(0, 6);
         }
         return null;
@@ -52,14 +54,14 @@
           title: post.title.rendered,
         }));
       },
-      formattedForums() {
-        return (this.forums).map(post => ({
-          type: 'Forums',
-          date: moment(post.timestampISO),
-          link: `https://forums.coderdojo.com/topic/${post.slug}`,
-          title: post.title,
-        }));
-      },
+      // formattedForums() {
+      //   return (this.forums).map(post => ({
+      //     type: 'Forums',
+      //     date: moment(post.timestampISO),
+      //     link: `https://forums.coderdojo.com/topic/${post.slug}`,
+      //     title: post.title,
+      //   }));
+      // },
       isDisplayable() {
         return this.loadedPosts;
       },
@@ -68,12 +70,13 @@
       async loadNews() {
         const res = await NewsForumsService.loadNews({ per_page: 6 });
         this.news = res.body;
-      },
-      async loadForums() {
-        const res = await NewsForumsService.loadForums();
-        this.forums = res.body.topics;
         this.loadedPosts = true;
       },
+      // async loadForums() {
+      //   const res = await NewsForumsService.loadForums();
+      //   this.forums = res.body.topics;
+      //   this.loadedPosts = true;
+      // },
       sortPostsByDate(posts) {
         const sortedPosts = posts.sort((a, b) =>
          b.date - a.date);
@@ -84,7 +87,7 @@
     },
     async created() {
       this.loadNews();
-      this.loadForums();
+      // this.loadForums();
     },
   };
 </script>
