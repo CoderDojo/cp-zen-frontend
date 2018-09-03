@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-const NewsForumsService = {
+const UpdatesService = {
   // load recent forums
   loadForums() {
     return Vue.http.get(`${Vue.config.forumsUrlBase}/api/recent/new`);
@@ -11,4 +11,4 @@ const NewsForumsService = {
   },
 };
 
-export default NewsForumsService;
+export default UpdatesService;

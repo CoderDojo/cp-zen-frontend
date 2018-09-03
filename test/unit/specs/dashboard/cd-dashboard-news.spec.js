@@ -4,16 +4,16 @@ import DashboardNewsComponent from '!!vue-loader?inject!@/dashboard/cd-dashboard
 describe.only('Dashboard children component', () => {
   let sandbox;
   let DashboardNewsComponentWithMocks;
-  let MockNewsForumsService;
+  let MockUpdatesService;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    MockNewsForumsService = {
+    MockUpdatesService = {
       loadForums: sandbox.stub(),
       loadNews: sandbox.stub(),
     };
     DashboardNewsComponentWithMocks = DashboardNewsComponent({
-      './service': MockNewsForumsService,
+      './service': MockUpdatesService,
     });
   });
 
@@ -92,7 +92,7 @@ describe.only('Dashboard children component', () => {
         { date: '2018-08-09T', link: 'blah1', title: { rendered: 'blah1' } },
         { date: '2018-08-10T', link: 'blah2', title: { rendered: 'blah2' } },
         { date: '2018-08-11T', link: 'blah3', title: { rendered: 'blah3' } }];
-        MockNewsForumsService.loadNews.returns(Promise.resolve({ body: mockNews }));
+        MockUpdatesService.loadNews.returns(Promise.resolve({ body: mockNews }));
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
 
         // ACT
@@ -111,7 +111,7 @@ describe.only('Dashboard children component', () => {
         { date: '2018-08-13T', slug: 'blah2', title: 'blah2' },
         { date: '2018-08-114T', slug: 'blah3', title: 'blah3' },
         { date: '2018-08-15T', slug: 'blah4', title: 'blah4' }];
-        MockNewsForumsService.loadForums.returns(Promise.resolve({ body: { topics: mockForums } }));
+        MockUpdatesService.loadForums.returns(Promise.resolve({ body: { topics: mockForums } }));
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
         vm.loadedPosts = false;
 

@@ -205,6 +205,7 @@ module.exports = [
     status: 'publish',
     type: 'post',
     link: 'https://coderdojo.com/2018/07/15/how-to-make-your-own-coderdojo-sign/',
+    title: {
       rendered: 'How to make your own CoderDojo Sign'
     },
     content: {},

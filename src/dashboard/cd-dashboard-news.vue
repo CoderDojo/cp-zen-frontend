@@ -25,7 +25,7 @@
 
 <script>
   import moment from 'moment';
-  import NewsForumsService from './service';
+  import UpdatesService from './service';
 
   export default {
     name: 'cd-dashboard-news',
@@ -68,12 +68,12 @@
     },
     methods: {
       async loadNews() {
-        const res = await NewsForumsService.loadNews({ per_page: 6 });
+        const res = await UpdatesService.loadNews({ per_page: 6 });
         this.news = res.body;
         this.loadedPosts = true;
       },
       // async loadForums() {
-      //   const res = await NewsForumsService.loadForums();
+      //   const res = await UpdatesService.loadForums();
       //   this.forums = res.body.topics;
       //   this.loadedPosts = true;
       // },
