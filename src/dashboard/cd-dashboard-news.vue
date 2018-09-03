@@ -40,6 +40,7 @@
       allPosts() {
         if (this.news && this.forums) {
           const joinedPosts = [...this.formattedNews, ...this.formattedForums];
+          this.loadedPosts = true;
           return this.sortPostsByDate(joinedPosts).splice(0, 6);
         }
         return null;
@@ -72,7 +73,6 @@
       async loadForums() {
         const res = await NewsForumsService.loadForums();
         this.forums = res.body.topics;
-        this.loadedPosts = true;
       },
       sortPostsByDate(posts) {
         const sortedPosts = posts.sort((a, b) =>
@@ -144,6 +144,7 @@
         background-color: @cd-very-light-grey;
         width: 650px;
         height: 60px;
+        width: 100%;
       }
     }
 
