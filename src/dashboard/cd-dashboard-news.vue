@@ -68,7 +68,7 @@
     display: flex;
 
     &__header {
-      padding: 16px;
+      margin: 45px 0 16px 0;
     }
   }
 </style>
