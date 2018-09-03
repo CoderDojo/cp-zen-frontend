@@ -49,6 +49,7 @@ export default {
     }
 
     &__left-column {
+      background-color: #f4f5f6;
       max-width: 340px;
       flex: 4;
     }

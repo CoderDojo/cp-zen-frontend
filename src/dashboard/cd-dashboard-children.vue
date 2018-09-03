@@ -19,7 +19,7 @@
   @import "~@coderdojo/cd-common/common/_colors";
 
   .cd-dashboard-children {
-    background-color: #fff;
+    background-color: #f4f5f6;
     padding: 0 32px;
     margin-left: auto;
     min-height: 100%;

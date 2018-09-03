@@ -18,7 +18,7 @@
   @import "../common/variables";
 
   .cd-dashboard-projects {
-    background-color: #f4f5f6;
+    background-color: #fff;
     padding: 0 32px;
     min-height: 432px;
     width: 940px;

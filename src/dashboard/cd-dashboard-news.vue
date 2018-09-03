@@ -1,7 +1,7 @@
 <template>
   <div class="column">
-    <div class="cd-dashboard-news">
-      <h2 class="cd-dashboard-news__header">Community News and Forum Updates</h2>
+    <div v-if="isDisplayable" class="cd-dashboard-news">
+      <h2 class="cd-dashboard-news__header">{{ $t('News and Community Forum Updates') }}</h2>
       <div class="cd-dashboard-news__posts" v-for="post in allPosts">
         <span class="cd-dashboard-news__posts-left">
           <p class="cd-dashboard-news__post-type">{{ post.type }}</p>
@@ -12,6 +12,12 @@
             <a class="cd-dashboard-news__post-title-link" :href="`${post.link}`">{{ post.title }}</a>
           </h4>
         </span>
+      </div>
+    </div>
+    <div v-else class="cd-dashboard-news">
+      <h2 class="cd-dashboard-news__header">{{ $t('News and Community Forum Updates') }}</h2>
+      <div class="cd-dashboard-news__posts cd-filler">
+        <div class="cd-dashboard-news__posts--filler"></div>
       </div>
     </div>
   </div>
@@ -27,6 +33,7 @@
       return {
         news: null,
         forums: null,
+        loadedPosts: false,
       };
     },
     computed: {
@@ -53,6 +60,9 @@
           title: post.title,
         }));
       },
+      isDisplayable() {
+        return this.loadedPosts;
+      },
     },
     methods: {
       async loadNews() {
@@ -62,6 +72,7 @@
       async loadForums() {
         const res = await NewsForumsService.loadForums();
         this.forums = res.body.topics;
+        this.loadedPosts = true;
       },
       sortPostsByDate(posts) {
         const sortedPosts = posts.sort((a, b) =>
@@ -75,20 +86,19 @@
       },
     },
     async created() {
-      this.loadNews();
-      this.loadForums();
+      await this.loadNews();
+      await this.loadForums();
     },
   };
 </script>
 
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
-  @import "../common/styles/cd-primary-button.less";
-  @import "../common/variables";
+  @import "../common/styles/cd-filler-loading";
 
   .cd-dashboard-news {
-    background-color: #f4f5f6;
-    padding: 0 32px 45px;
+    background-color: #fff;
+    padding: 0 32px;
     min-height: 432px;
     width: 940px;
     display: flex;
@@ -113,6 +123,12 @@
       &-right{
         margin: 0 16px 0 16px;
         max-width: 70%;
+      }
+
+      &--filler {
+        background-color: @cd-very-light-grey;
+        width: 650px;
+        height: 60px;
       }
     }
 
