@@ -5,7 +5,7 @@
       <div class="cd-dashboard-news__posts" v-for="post in allPosts">
         <span class="cd-dashboard-news__posts-left">
           <p class="cd-dashboard-news__post-type">{{ post.type }}</p>
-          <p class="cd-dashboard-news__post-date">{{ post.date }}</p>
+          <p class="cd-dashboard-news__post-date">{{ post.formattedDate }}</p>
         </span>
         <span class="cd-dashboard-news__posts-right">
           <h4 class="cd-dashboard-news__post-title">
@@ -77,17 +77,14 @@
       sortPostsByDate(posts) {
         const sortedPosts = posts.sort((a, b) =>
          b.date - a.date);
-        return (sortedPosts.map(post => (Object.assign({
-          type: post.type,
-          date: (post.date).utc().format('DD/MM/YYYY'),
-          link: post.link,
-          title: post.title,
-        }))));
+        return sortedPosts.map(post => Object.assign({
+          formattedDate: post.date.utc().format('DD/MM/YYYY'),
+        }, post));
       },
     },
     async created() {
-      await this.loadNews();
-      await this.loadForums();
+      this.loadNews();
+      this.loadForums();
     },
   };
 </script>
@@ -105,7 +102,25 @@
     flex-direction: column;
 
     &__header {
-      padding: 16px;
+      margin: 45px 0 16px 0;
+    }
+
+    &__posts {
+      margin: 16px 0;
+      display: flex;
+      flex-direction: row;
+      max-width: 75%;
+
+      &-left {
+        flex-direction: column;
+        margin: 0 16px 0 16px;
+        max-width: 30%;
+      }
+
+      &-right{
+        margin: 0 16px 0 16px;
+        max-width: 70%;
+      }
     }
 
     &__posts {
