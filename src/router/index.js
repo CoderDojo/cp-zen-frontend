@@ -79,6 +79,7 @@ const router = new Router({
           path: '/home',
           name: 'Home',
           component: Home,
+          beforeEnter: loggedInNavGuard,
         },
         {
           path: 'events/:eventId',
