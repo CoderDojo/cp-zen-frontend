@@ -1,7 +1,6 @@
-import basePage from '../pages/base';
-import homePage from '../pages/home';
+import homePage from '../../pages/home';
 
-describe('Homepage', () => {
+describe('Homepage children', () => {
   beforeEach(() => {
     cy.server();
   });
