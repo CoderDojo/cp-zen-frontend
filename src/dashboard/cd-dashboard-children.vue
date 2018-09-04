@@ -8,7 +8,7 @@
           <a :href="`/dashboard/profile/${child.userId}/edit`" class="cd-dashboard-children__edit-child"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
         </h3>
         <span class="cd-dashboard-children__badges" v-if="child.badges" >
-          <div class="cd-dashboard-children__badge" v-for="badge in child.badges.slice(0,2)">
+          <div class="cd-dashboard-children__badge" v-for="badge in child.badges.slice(0, 2)">
             <img class="cd-dashboard-children__badge-image" :src="badge.imageUrl" />
             <span class="cd-dashboard-children__badge-text">{{ badge.name }}</span>
           </div>
@@ -30,6 +30,7 @@
 <script>
   import UserService from '@/users/service';
   import { mapGetters } from 'vuex';
+  import moment from 'moment';
 
   export default {
     name: 'cd-dashboard-children',
@@ -56,6 +57,10 @@
       },
     },
     methods: {
+      orderedBadges(userBadges) {
+        const badges = userBadges || [];
+        return badges.sort((a, b) => moment(a.dateAccepted).isBefore(moment(b.dateAccepted)));
+      },
       async loadProfile() {
         this.userProfile = (await UserService.userProfileData(this.loggedInUser.id)).body;
       },
@@ -64,7 +69,10 @@
           this.userChildren = (await Promise.all(
             this.userProfile.children.map(
               child => UserService.userProfileData(child))))
-            .map(res => res.body);
+            .map(res => ({
+              ...res.body,
+              badges: this.orderedBadges(res.body.badges),
+            }));
         }
         this.loadedChildren = true;
       },
