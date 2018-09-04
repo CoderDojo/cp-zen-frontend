@@ -19,7 +19,7 @@
     </div>
     <div v-else class="cd-dashboard-children">
       <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
-      <div class="cd-dashboard-children__child cd-filler">
+      <div class="cd-dashboard-children__child cd-filler cd-filler--grey-bg">
         <h3 class="cd-dashboard-children__name cd-dashboard-children__name--filler"></h3>
         <span class="cd-dashboard-children__badges cd-dashboard-children__badges--filler"></span>
       </div>

@@ -9,4 +9,5 @@ module.exports = merge(prodEnv, {
   GOOGLE_MAPS_API_KEY: '"AIzaSyC3xF9XV91bS2R14Gjmx3UQaKbGgAfHbE4"',
   NEWS_URL_BASE: '""',
   FORUMS_URL_BASE: '""',
+  PROJECTS_URL_BASE: '""',
 })

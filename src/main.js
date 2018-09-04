@@ -21,6 +21,7 @@ Vue.config.buildBranch = process.env.GIT_BRANCH;
 Vue.config.googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
 Vue.config.newsUrlBase = process.env.NEWS_URL_BASE;
 Vue.config.forumsUrlBase = process.env.FORUMS_URL_BASE;
+Vue.config.projectsUrlBase = process.env.PROJECTS_URL_BASE;
 
 Vue.use(VueResource);
 Vue.use(VeeValidate);

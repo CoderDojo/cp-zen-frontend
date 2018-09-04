@@ -2,11 +2,11 @@
   <div class="cd-dashboard">
     <dashboard-events/>
     <div class="cd-dashboard__container">
-      <div class="cd-dashboard__right-column">
+      <div class="cd-dashboard__left-column">
         <dashboard-projects/>
         <dashboard-news />
       </div>
-      <dashboard-children class="cd-dashboard__left-column"/>
+      <dashboard-children class="cd-dashboard__right-column"/>
       <!-- <dashboard-stats class="cd-dashboard__left-column"/> -->
     </div>
   </div>
@@ -49,9 +49,13 @@ export default {
     }
 
     &__left-column {
+      flex: 1;
+    }
+
+    &__right-column {
       background-color: #f4f5f6;
       max-width: 340px;
-      flex: 4;
+      flex: 1;
     }
   }
 </style>
