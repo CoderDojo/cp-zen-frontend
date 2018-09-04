@@ -63,32 +63,32 @@ describe('Dashboard children component', () => {
     });
 
     describe('computed.isDisplayable', () => {
-      it('should return true if hasChildren and children are true', () => {
+      it('should return true if hasChildren and loadedChildren are true', () => {
         // ARRANGE
         const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
         vm.hasChildren = true;
-        vm.children = true;
+        vm.loadedChildren = true;
 
         // ASSERT
         expect(vm.isDisplayable).to.equal(true);
       });
-      it('should return false if hasChildren and children are null', () => {
+      it('should return false if hasChildren and loadedChildren are false', () => {
         // ARRANGE
         const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
         vm.hasChildren = null;
-        vm.children = null;
+        vm.loadedChildren = false;
 
         // ASSERT
         expect(vm.isDisplayable).to.equal(null);
       });
-      it('should return false if hasChildren is true and children is null', () => {
+      it('should return false if hasChildren is true and loadedChildren is false', () => {
         // ARRANGE
         const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
         vm.hasChildren = true;
-        vm.children = null;
+        vm.loadedChildren = false;
 
         // ASSERT
-        expect(vm.isDisplayable).to.equal(null);
+        expect(vm.isDisplayable).to.equal(false);
       });
     });
   });
@@ -122,6 +122,7 @@ describe('Dashboard children component', () => {
         };
         MockUsersService.userProfileData.returns(Promise.resolve({ body: mockChild }));
         const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
+        vm.loadedChildren = false;
         vm.userProfile = {
           id: '34',
           children: ['1'],
@@ -131,6 +132,26 @@ describe('Dashboard children component', () => {
 
         // ASSERT
         expect(vm.userChildren).to.deep.equal([mockChild]);
+        expect(vm.loadedChildren).to.equal(true);
+      });
+      it('should set withoutChildren to true if the user has no children', async () => {
+        // ARRANGE
+        const mockChild = {
+          userId: '1',
+          user: { id: '1' },
+        };
+        MockUsersService.userProfileData.returns(Promise.resolve({ body: mockChild }));
+        const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
+        vm.withoutChildren = false;
+        vm.userProfile = {
+          id: '34',
+          children: null,
+        };
+        // ACT
+        await vm.loadChildren();
+
+        // ASSERT
+        expect(vm.withoutChildren).to.equal(true);
       });
     });
   });
@@ -140,6 +161,8 @@ describe('Dashboard children component', () => {
       const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
       vm.loadProfile = sinon.stub().resolves();
       vm.loadChildren = sinon.stub().resolves();
+      vm.withoutChildren = false;
+      vm.loadedChildren = false;
       vm.userProfile = {};
       vm.userChildren = [];
 
