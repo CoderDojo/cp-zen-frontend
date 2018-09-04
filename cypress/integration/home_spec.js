@@ -7,8 +7,9 @@ describe('Homepage', () => {
   });
 
   it('should redirect to the login page if there is no logged in user', () => {
-    cy.route('/api/2.0/users/instance', 'fx:loggedOutUser');
+    cy.route('/api/2.0/users/instance', 'fx:loggedOutUser').as('notLoggedIn');
     cy.visit('/home');
+    cy.wait('@notLoggedIn');
     cy.url().should('include', '/login');
   });
 
