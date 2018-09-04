@@ -35,7 +35,6 @@
     name: 'cd-dashboard-children',
     data() {
       return {
-        loadedChildren: false,
         userProfile: {},
         userChildren: [],
       };
@@ -43,7 +42,7 @@
     computed: {
       ...mapGetters(['loggedInUser']),
       children() {
-        if (this.userChildren) {
+        if (this.userChildren.length > 0) {
           return this.userChildren;
         }
         return null;
@@ -52,7 +51,7 @@
         return (this.userChildren && this.userChildren.length > 0);
       },
       isDisplayable() {
-        return this.hasChildren && this.loadedChildren;
+        return this.hasChildren && this.children;
       },
     },
     methods: {
@@ -66,7 +65,6 @@
               child => UserService.userProfileData(child))))
             .map(res => res.body);
         }
-        this.loadedChildren = true;
       },
     },
     async created() {

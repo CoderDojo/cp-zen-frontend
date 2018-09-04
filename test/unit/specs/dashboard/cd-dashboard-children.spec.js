@@ -42,6 +42,55 @@ describe('Dashboard children component', () => {
         expect(vm.children).to.deep.equal([]);
       });
     });
+
+    describe('computed.hasChildren', () => {
+      it('should return true if userChildren is not empty and has a length greater than 0', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
+        vm.userChildren = [{ id: '1' }];
+
+        // ASSERT
+        expect(vm.hasChildren).to.equal(true);
+      });
+      it('should return false if the userChildren is empty and has a length greater than 0', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
+        vm.userChildren = [];
+
+        // ASSERT
+        expect(vm.hasChildren).to.equal(false);
+      });
+    });
+
+    describe('computed.isDisplayable', () => {
+      it('should return true if hasChildren and children are true', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
+        vm.hasChildren = true;
+        vm.children = true;
+
+        // ASSERT
+        expect(vm.isDisplayable).to.equal(true);
+      });
+      it('should return false if hasChildren and children are null', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
+        vm.hasChildren = null;
+        vm.children = null;
+
+        // ASSERT
+        expect(vm.isDisplayable).to.equal(null);
+      });
+      it('should return false if hasChildren is true and children is null', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
+        vm.hasChildren = true;
+        vm.children = null;
+
+        // ASSERT
+        expect(vm.isDisplayable).to.equal(null);
+      });
+    });
   });
 
   describe('methods', () => {
