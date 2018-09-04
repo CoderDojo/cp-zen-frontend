@@ -1,0 +1,23 @@
+{
+  "ok": true,
+  "user": {
+    "id": "u1",
+    "nick": "parent@example.com",
+    "email": "parent@example.com",
+    "name": "parent 1one",
+    "firstName": "parent",
+    "lastName": "1one",
+    "roles": "basic-user",
+    "phone": "+33612345678",
+    "mailingList": 1,
+    "termsConditionsAccepted": true,
+    "profileId": "p1"
+  },
+  "login": {
+    "id": "l1",
+    "nick": "parent@example.com",
+    "user": "u1",
+    "token": "t1",
+    "active": true
+  }
+}
