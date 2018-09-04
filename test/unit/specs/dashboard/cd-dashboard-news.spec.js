@@ -58,8 +58,7 @@ describe('Dashboard children component', () => {
       it('should return null if news is empty', () => {
         // ARRANGE
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
-        vm.news = null;
-        // vm.forums = null;
+        vm.news = [];
 
         // ASSERT
         expect(vm.allPosts).to.equal(null);
@@ -94,21 +93,23 @@ describe('Dashboard children component', () => {
     });
 
     describe('computed.isDisplayable', () => {
-      it('should return true if loadedPosts is true', () => {
+      it('should return true if allPosts is not empty and the length of news is greater than 0', () => {
         // ARRANGE
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
-        vm.loadedPosts = true;
+        vm.news = [{ id: '1' }];
+        vm.allPosts = [{ id: '1' }];
 
         // ASSERT
         expect(vm.isDisplayable).to.equal(true);
       });
-      it('should return false if loadedPosts is false', () => {
+      it('should return null if allPosts is empty and the length of news is not greater than 0', () => {
         // ARRANGE
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
-        vm.loadedPosts = false;
+        vm.news = [];
+        vm.allPosts = null;
 
         // ASSERT
-        expect(vm.isDisplayable).to.equal(false);
+        expect(vm.isDisplayable).to.equal(null);
       });
     });
   });
@@ -121,16 +122,14 @@ describe('Dashboard children component', () => {
         { date: '2018-08-09T', link: 'blah1', title: { rendered: 'blah1' } },
         { date: '2018-08-10T', link: 'blah2', title: { rendered: 'blah2' } },
         { date: '2018-08-11T', link: 'blah3', title: { rendered: 'blah3' } }];
-        MockUpdatesService.loadNews.returns(Promise.resolve({ body: mockNews }));
+        MockUpdatesService.loadNews.resolves({ body: mockNews });
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
-        vm.loadedPosts = false;
 
         // ACT
         await vm.loadNews(3);
 
         // ASSERT
         expect(vm.news).to.equal(mockNews);
-        expect(vm.loadedPosts).to.equal(true);
       });
     });
 
@@ -138,9 +137,11 @@ describe('Dashboard children component', () => {
       it('should sort the list of posts by date', async () => {
         // ARRANGE
         const posts = [
+        { type: 'News', date: moment('2018-08-10T10:00:00.000Z'), link: 'blah2', title: 'blah2' },
         { type: 'News', date: moment('2018-08-12T10:00:00.000Z'), link: 'blah1', title: 'blah1' },
-        { type: 'News', date: moment('2018-08-10T10:00:00.000Z'), link: 'blah2', title: 'blah2' }];
+        { type: 'News', date: moment('2018-08-15T10:00:00.000Z'), link: 'blah3', title: 'blah3' }];
         const sortedPosts = [
+        { formattedDate: '15/08/2018', type: 'News', date: moment('2018-08-15T10:00:00.000Z').utc(), link: 'blah3', title: 'blah3' },
         { formattedDate: '12/08/2018', type: 'News', date: moment('2018-08-12T10:00:00.000Z').utc(), link: 'blah1', title: 'blah1' },
         { formattedDate: '10/08/2018', type: 'News', date: moment('2018-08-10T10:00:00.000Z').utc(), link: 'blah2', title: 'blah2' }];
 
@@ -159,9 +160,8 @@ describe('Dashboard children component', () => {
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
         vm.loadNews = sinon.stub().resolves();
         // vm.loadForums = sinon.stub().resolves();
-        vm.news = null;
-        // vm.forums = null;
-        vm.loadedPosts = false;
+        vm.news = [];
+        // vm.forums = [];
 
         await vm.$lifecycleMethods.created();
         expect(vm.loadNews).to.have.been.calledOnce;

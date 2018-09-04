@@ -31,16 +31,15 @@
     name: 'cd-dashboard-news',
     data() {
       return {
-        news: null,
-        // forums: null,
-        loadedPosts: false,
+        news: [],
+        // forums: [],
       };
     },
     computed: {
       allPosts() {
         // if (this.news && this.forums) {
         //   const joinedPosts = [...this.formattedNews, ...this.formattedForums];
-        if (this.news) {
+        if (this.news.length > 0) {
           const joinedPosts = [...this.formattedNews];
           return this.sortPostsByDate(joinedPosts).splice(0, 6);
         }
@@ -63,19 +62,17 @@
       //   }));
       // },
       isDisplayable() {
-        return this.loadedPosts;
+        return (this.allPosts && this.news.length > 0);
       },
     },
     methods: {
       async loadNews() {
         const res = await UpdatesService.loadNews({ per_page: 6 });
         this.news = res.body;
-        this.loadedPosts = true;
       },
       // async loadForums() {
       //   const res = await UpdatesService.loadForums();
       //   this.forums = res.body.topics;
-      //   this.loadedPosts = true;
       // },
       sortPostsByDate(posts) {
         const sortedPosts = posts.sort((a, b) =>
