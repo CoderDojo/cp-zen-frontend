@@ -3,6 +3,7 @@
     <div v-if="!withoutChildren">
       <div v-if="isDisplayable" class="cd-dashboard-children">
         <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
+        <hr class ="cd-dashboard-children__divider visible-xs">
         <div class="cd-dashboard-children__child" v-for="child in children">
           <h3 class="cd-dashboard-children__name">
             {{ child.name }}
@@ -161,6 +162,20 @@
   @media (max-width: @screen-xs-max) {
     .cd-dashboard-children {
       max-width: 100%;
+
+      &__divider {
+        border-color: #CAC4CE; ;
+      }
+
+      &__badge {
+        width: 95px;
+        height: 100%;
+
+        &-image {
+          height: 90px;
+          width: 90px;
+        }
+      }
     }
   }
 </style>
