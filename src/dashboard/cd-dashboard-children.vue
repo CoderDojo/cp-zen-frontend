@@ -9,7 +9,7 @@
             {{ child.name }}
             <a :href="`/dashboard/profile/${child.userId}/edit`" class="cd-dashboard-children__edit-child"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
           </h3>
-          <span class="cd-dashboard-children__badges" v-if="child.badges" >
+          <span class="cd-dashboard-children__badges" v-if="child.badges.length > 0" >
             <div class="cd-dashboard-children__badge" v-for="badge in child.badges.slice(0,2)">
               <img class="cd-dashboard-children__badge-image" :src="badge.imageUrl" />
               <span class="cd-dashboard-children__badge-text">{{ badge.name }}</span>
@@ -34,6 +34,7 @@
 <script>
   import UserService from '@/users/service';
   import { mapGetters } from 'vuex';
+  import moment from 'moment';
 
   export default {
     name: 'cd-dashboard-children',
@@ -61,6 +62,10 @@
       },
     },
     methods: {
+      orderedBadges(userBadges) {
+        const badges = userBadges || [];
+        return badges.sort((a, b) => moment(a.dateAccepted).isBefore(moment(b.dateAccepted)));
+      },
       async loadProfile() {
         this.userProfile = (await UserService.userProfileData(this.loggedInUser.id)).body;
       },
@@ -69,7 +74,10 @@
           this.userChildren = (await Promise.all(
             this.userProfile.children.map(
               child => UserService.userProfileData(child))))
-            .map(res => res.body);
+            .map(res => ({
+              ...res.body,
+              badges: this.orderedBadges(res.body.badges),
+            }));
           this.loadedChildren = true;
         } else {
           this.withoutChildren = true;
@@ -89,7 +97,7 @@
   @import "../common/variables";
 
   .cd-dashboard-children {
-    background-color: #f4f5f6;
+    background-color: @side-column-grey;
     padding: 0 32px;
     margin-left: auto;
     min-height: 100%;
@@ -166,7 +174,7 @@
       max-width: 100%;
 
       &__divider {
-        border-color: #CAC4CE;
+        border-color: @divider-grey;
       }
 
       &__badge {
