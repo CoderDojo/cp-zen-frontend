@@ -20,7 +20,7 @@
   @import "../common/variables";
 
   .cd-dashboard-stats {
-    background-color: #f4f5f6;
+    background-color: @side-column-grey;
     padding: 0 32px;
     margin-left: auto;
     min-height: 100%;

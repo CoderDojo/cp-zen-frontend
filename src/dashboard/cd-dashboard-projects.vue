@@ -118,7 +118,7 @@
       max-width: 100%;
 
       &__divider {
-        border-color: #CAC4CE; ;
+        border-color: @divider-grey;
       }
 
       &__cards {

@@ -8,4 +8,7 @@ export default {
   newsEntryTitle: '.cd-dashboard-news__post-title',
   newsEntryDate : '.cd-dashboard-news__post-date',
   newsEntryCategory: '.cd-dashboard-news__post-type',
+  projectTitle: '.cd-dashboard-projects__header',
+  projectCards: '.cd-dashboard-projects__cards',
+  projectCard: '.cd-dashboard-projects__card',
 };

@@ -14,21 +14,27 @@ module.exports = {
     badges: [{
       name: 'Coolest Projects 2016',
       imageUrl: 'http://badgekit.coderdojo.com:80/images/badge/57',
+      dateAccepted: "2018-05-03T15:48:47.453Z",
     }, {
       name: 'CoderDojo Ethos: Implementation and Practice',
       imageUrl: 'http://badgekit.coderdojo.com:80/images/badge/62',
+      dateAccepted: "2017-05-03T15:48:47.453Z",
     }, {
       name: 'Mentor Badge',
       imageUrl: 'http://badgekit.coderdojo.com:80/images/badge/50',
+      dateAccepted: "2016-05-03T15:48:47.453Z",
     }, {
       name: 'Sample Badge 3',
       imageUrl: 'http://badgekit.coderdojo.com:80/images/badge/3',
+      dateAccepted: "2016-05-03T15:48:47.453Z",
     }, {
       name: 'Sample Badge 4',
       imageUrl: 'http://badgekit.coderdojo.com:80/images/badge/4',
+      dateAccepted: "2016-05-03T15:48:47.453Z",
     }, {
       name: 'Sample Badge 5',
       imageUrl: 'http://badgekit.coderdojo.com:80/images/badge/5',
+      dateAccepted: "2016-05-03T15:48:47.453Z",
     }],
   },
   'child2@example.com': {
@@ -40,12 +46,15 @@ module.exports = {
     badges: [{
       name: 'Coolest Projects 2016',
       imageUrl: 'http://badgekit.coderdojo.com:80/images/badge/57',
+      dateAccepted: "2018-05-03T15:48:47.453Z",
     }, {
       name: 'CoderDojo Ethos: Implementation and Practice',
       imageUrl: 'http://badgekit.coderdojo.com:80/images/badge/62',
+      dateAccepted: "2018-05-03T15:48:47.453Z",
     }, {
       name: 'Mentor Badge',
       imageUrl: 'http://badgekit.coderdojo.com:80/images/badge/50',
+      dateAccepted: "2018-05-03T15:48:47.453Z",
     }],
   },
   'parent2@example.com': {

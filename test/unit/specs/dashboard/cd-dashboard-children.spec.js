@@ -119,9 +119,11 @@ describe('Dashboard children component', () => {
         const mockChild = {
           userId: '1',
           user: { id: '1' },
+          badges: [],
         };
         MockUsersService.userProfileData.returns(Promise.resolve({ body: mockChild }));
         const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
+        vm.orderedBadges = sandbox.stub().returns([]);
         vm.loadedChildren = false;
         vm.userProfile = {
           id: '34',
@@ -133,6 +135,7 @@ describe('Dashboard children component', () => {
         // ASSERT
         expect(vm.userChildren).to.deep.equal([mockChild]);
         expect(vm.loadedChildren).to.equal(true);
+        expect(vm.orderedBadges).to.have.been.calledOnce;
       });
       it('should set withoutChildren to true if the user has no children', async () => {
         // ARRANGE
@@ -152,6 +155,27 @@ describe('Dashboard children component', () => {
 
         // ASSERT
         expect(vm.withoutChildren).to.equal(true);
+      });
+    });
+    describe('methods.orderedBadges', () => {
+      it('should order the children badges latest first', async () => {
+        // ARRANGE
+        const badges = [{
+          dateAccepted: '2016-05-03T15:48:47.453Z',
+        }, {
+          dateAccepted: '2018-05-03T15:48:47.453Z',
+        }];
+        const expectedBadges = [{
+          dateAccepted: '2018-05-03T15:48:47.453Z',
+        }, {
+          dateAccepted: '2016-05-03T15:48:47.453Z',
+        }];
+        const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
+        // ACT
+        const ordered = vm.orderedBadges(badges);
+
+        // ASSERT
+        expect(ordered).to.deep.equal(expectedBadges);
       });
     });
   });
