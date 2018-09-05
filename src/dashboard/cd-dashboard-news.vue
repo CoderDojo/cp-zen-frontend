@@ -178,7 +178,7 @@
       max-width: 100%;
 
       &__divider {
-        margin: auto 0;
+        margin: 4px 0;
         border-color: #CAC4CE;
       }
     }
