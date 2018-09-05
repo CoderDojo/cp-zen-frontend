@@ -5,7 +5,7 @@
       <hr class ="cd-dashboard-news__divider visible-xs">
       <div class="cd-dashboard-news__posts" v-for="post in allPosts">
         <span class="cd-dashboard-news__posts-left">
-          <p class="cd-dashboard-news__post-type">{{ post.type }}</p>
+          <p class="cd-dashboard-news__post-type hidden-xs">{{ post.type }}</p>
           <p class="cd-dashboard-news__post-date">{{ post.formattedDate }}</p>
         </span>
         <span class="cd-dashboard-news__posts-right">
@@ -202,6 +202,13 @@
 
       &__posts {
         max-width: 100%;
+        flex-direction: column-reverse;
+      }
+
+      &__post {
+        &-date {
+          margin-top: 8px;
+        }
       }
     }
   }
