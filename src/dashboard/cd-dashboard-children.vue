@@ -142,8 +142,8 @@
       text-align: center;
 
       &-image {
-        height: 100px;
-        width: 100px;
+        height: 100%;
+        width: 100%;
         margin-bottom: 8px;
       }
 
@@ -172,8 +172,8 @@
         height: 100%;
 
         &-image {
-          height: 90px;
-          width: 90px;
+          height: 100%;
+          width: 100%;
         }
       }
     }
