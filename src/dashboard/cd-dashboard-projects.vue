@@ -110,4 +110,10 @@
       margin: 32px 0;
     }
   }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-dashboard-projects {
+      max-width: 100%;
+    }
+  }
 </style>
