@@ -117,10 +117,6 @@
     .cd-dashboard-projects {
       max-width: 100%;
 
-      &__header {
-        text-align: center;
-      }
-
       &__divider {
         border-color: #CAC4CE; ;
       }
