@@ -164,7 +164,7 @@
       max-width: 100%;
 
       &__divider {
-        border-color: #CAC4CE; ;
+        border-color: #CAC4CE;
       }
 
       &__badge {
