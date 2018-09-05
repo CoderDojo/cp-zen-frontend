@@ -1,6 +1,8 @@
 <template>
   <div class="cd-dashboard-projects">
-    <h3 class="cd-dashboard-projects__header">Before your next event, here are some projects you can try</h3>
+    <h2 class="cd-dashboard-projects__header hidden-xs">Before your next event, here are some projects you can try</h2>
+    <h2 class="cd-dashboard-projects__header visible-xs">Here are some projects you can try</h2>
+    <hr class ="cd-dashboard-projects__divider visible-xs">
     <div v-show="isDisplayable" class="cd-dashboard-projects__cards">
       <a class="cd-dashboard-projects__card" v-for="project in projects" :key="project.id" :href="`https://projects.raspberrypi.org/en/projects/${project.attributes.repositoryName}`">
         <img :src="project.attributes.content.heroImage" />
@@ -114,6 +116,22 @@
   @media (max-width: @screen-xs-max) {
     .cd-dashboard-projects {
       max-width: 100%;
+
+      &__header {
+        text-align: center;
+      }
+
+      &__divider {
+        border-color: #CAC4CE; ;
+      }
+
+      &__cards {
+        flex-direction: column;
+      }
+
+      &__card {
+        margin: 12px 32px;
+      }
     }
   }
 </style>
