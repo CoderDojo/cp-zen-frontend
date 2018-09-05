@@ -73,4 +73,5 @@ errorShots/
 
 # Cypress files
 cypress/videos/
+cypress/screenshots/
 .Trash*/
