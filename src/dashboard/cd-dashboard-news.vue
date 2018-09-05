@@ -182,7 +182,7 @@
     &__view-all {
       color: @cd-purple;
       border: 1px solid @cd-purple;
-      font-size: 16px;
+      font-size: @font-size-medium;
       font-weight: bold;
       padding: 14px;
       display: inline-block;
