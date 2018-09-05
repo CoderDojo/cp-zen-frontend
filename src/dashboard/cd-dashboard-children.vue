@@ -33,6 +33,7 @@
 <script>
   import UserService from '@/users/service';
   import { mapGetters } from 'vuex';
+  import moment from 'moment';
 
   export default {
     name: 'cd-dashboard-children',
@@ -60,6 +61,10 @@
       },
     },
     methods: {
+      orderedBadges(userBadges) {
+        const badges = userBadges || [];
+        return badges.sort((a, b) => moment(a.dateAccepted).isBefore(moment(b.dateAccepted)));
+      },
       async loadProfile() {
         this.userProfile = (await UserService.userProfileData(this.loggedInUser.id)).body;
       },
@@ -68,7 +73,10 @@
           this.userChildren = (await Promise.all(
             this.userProfile.children.map(
               child => UserService.userProfileData(child))))
-            .map(res => res.body);
+            .map(res => ({
+              ...res.body,
+              badges: this.orderedBadges(res.body.badges),
+            }));
           this.loadedChildren = true;
         } else {
           this.withoutChildren = true;

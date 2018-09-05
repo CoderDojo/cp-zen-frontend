@@ -9,16 +9,19 @@
   ],
   "badges":[
     {
+      "name": "Mentor Badge",
+      "imageUrl": "http://badgekit.coderdojo.com:80/images/badge/50",
+      "dateAccepted": "2016-05-03T15:48:47.453Z"
+    },
+    {
       "name": "Coolest Projects 2016",
-      "imageUrl": "http://badgekit.coderdojo.com:80/images/badge/57"
+      "imageUrl": "http://badgekit.coderdojo.com:80/images/badge/57",
+      "dateAccepted": "2018-05-03T15:48:47.453Z"
     },
     {
       "name": "CoderDojo Ethos: Implementation and Practice",
-      "imageUrl": "http://badgekit.coderdojo.com:80/images/badge/62"
-    },
-    {
-      "name": "Mentor Badge",
-      "imageUrl": "http://badgekit.coderdojo.com:80/images/badge/50"
+      "imageUrl": "http://badgekit.coderdojo.com:80/images/badge/62",
+      "dateAccepted": "2017-05-03T15:48:47.453Z"
     }
   ]
 }
