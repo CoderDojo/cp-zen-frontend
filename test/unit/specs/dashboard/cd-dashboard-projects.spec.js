@@ -46,13 +46,13 @@ describe('Dashboard children component', () => {
         expect(vm.isDisplayable).to.deep.equal(false);
       });
     });
-    describe('locale', () => {
+    describe('userLocale', () => {
       it('should return the default valid locale for projects API (en)', () => {
         // ARRANGE 
         MockLocaleService.getUserLocale.returns(undefined);
 
         // EXECUTE
-        const res = vm.locale;
+        const res = vm.userLocale;
 
         // ASSERT
         expect(MockLocaleService.getUserLocale).to.have.been.calledOnce;
@@ -63,7 +63,7 @@ describe('Dashboard children component', () => {
         MockLocaleService.getUserLocale.returns('"fr_FR"');
 
         // EXECUTE
-        const res = vm.locale;
+        const res = vm.userLocale;
 
         // ASSERT
         expect(MockLocaleService.getUserLocale).to.have.been.calledOnce;
@@ -107,20 +107,21 @@ describe('Dashboard children component', () => {
       // ARRANGE
       sandbox.stub(vm, 'loadProjects');
       vm.projects = [{}];
-      vm.locale = 'en';
+      vm.userLocale = 'fr-FR';
 
       // ACT
       await vm.$lifecycleMethods.created();
 
       // ASSERT
       expect(vm.loadProjects).to.have.been.calledOnce;
-      expect(vm.loadProjects).to.have.been.calledWith('en');
+      expect(vm.loadProjects).to.have.been.calledWith('fr-FR');
+      expect(vm.locale).to.eq('fr-FR');
     });
     it('should call loadProjects twice when the localized call returned nothing', async () => {
       // ARRANGE
       sandbox.stub(vm, 'loadProjects').return;
       vm.projects = undefined;
-      vm.locale = 'fr-FR';
+      vm.userLocale = 'fr-FR';
 
       // ACT
       await vm.$lifecycleMethods.created();
@@ -129,6 +130,7 @@ describe('Dashboard children component', () => {
       expect(vm.loadProjects).to.have.been.calledTwice;
       expect(vm.loadProjects.getCall(0).args).to.deep.equal(['fr-FR']);
       expect(vm.loadProjects.getCall(1).args).to.deep.equal([]);
+      expect(vm.locale).to.eq('en');
     });
   });
 });

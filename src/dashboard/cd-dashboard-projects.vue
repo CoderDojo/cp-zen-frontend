@@ -2,7 +2,7 @@
   <div class="cd-dashboard-projects">
     <h3 class="cd-dashboard-projects__header">{{ $t('Before your next event, here are some projects you can try') }}</h3>
     <div v-show="isDisplayable" class="cd-dashboard-projects__cards">
-      <a class="cd-dashboard-projects__card" v-for="project in projects" :key="project.id" :href="`https://projects.raspberrypi.org/{locale}/projects/${project.attributes.repositoryName}`">
+      <a class="cd-dashboard-projects__card" v-for="project in projects" :key="project.id" :href="`https://projects.raspberrypi.org/${locale}/projects/${project.attributes.repositoryName}`">
         <img :src="project.attributes.content.heroImage" />
         <h4>{{ project.attributes.content.title }}</h4>
       </a>
@@ -27,16 +27,17 @@
     data() {
       return {
         projects: null,
+        locale: 'en',
       };
     },
     computed: {
       isDisplayable() {
         return this.projects !== null;
       },
-      locale() {
+      userLocale() {
         const langCookie = LocaleService.getUserLocale();
         if (langCookie) {
-          return langCookie.replace(/\"/g, '').replace('_', '-');
+          return langCookie.replace(/"/g, '').replace('_', '-');
         }
         return 'en';
       },
@@ -50,10 +51,13 @@
       },
     },
     async created() {
-      await this.loadProjects(this.locale);
+      await this.loadProjects(this.userLocale);
       // Retry with "en" as a language
       if (!this.projects || !this.projects.length) {
         await this.loadProjects();
+      } else {
+        // Set the projects urls to the valid zen locale
+        this.locale = this.userLocale;
       }
     },
   };
