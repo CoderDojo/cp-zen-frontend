@@ -21,6 +21,9 @@
         <div class="cd-dashboard-news__posts--filler"></div>
       </div>
     </div>
+    <div class="cd-dashboard-news__cta">
+      <a class="cd-dashboard-news__view-all" href="#">View all news</a>
+    </div>
   </div>
 </template>
 
@@ -170,6 +173,21 @@
           }
         }
       }
+    }
+
+    &__cta {
+      text-align: center;
+    }
+
+    &__view-all {
+      color: @cd-purple;
+      border: 1px solid @cd-purple;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 14px;
+      display: inline-block;
+      border-radius: 4px;
+      margin: 16px 0 32px 0;
     }
   }
 
