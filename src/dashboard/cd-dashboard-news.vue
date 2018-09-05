@@ -181,6 +181,10 @@
         margin: 4px 0;
         border-color: #CAC4CE;
       }
+
+      &__posts {
+        max-width: 100%;
+      }
     }
   }
 </style>
