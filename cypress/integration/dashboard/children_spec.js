@@ -34,6 +34,11 @@ describe('Homepage children', () => {
     cy.route('POST', '/api/2.0/profiles/user-profile-data', 'fx:profiles/parent1WithBadges').as('parentProfile');
     cy.visit('/home');
     cy.wait('@loggedIn');
+    // Parent profile: list children ids
+    cy.wait('@parentProfile');
+    // Children profile: list children badges
+    cy.wait('@parentProfile');
+    cy.wait('@parentProfile');
     cy.wait('@parentProfile');
     let child1 = cy.get(homePage.children).first();
     child1.within((child) => {
