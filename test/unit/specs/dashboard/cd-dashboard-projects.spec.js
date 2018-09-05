@@ -48,7 +48,7 @@ describe('Dashboard children component', () => {
     });
     describe('userLocale', () => {
       it('should return the default valid locale for projects API (en)', () => {
-        // ARRANGE 
+        // ARRANGE
         MockLocaleService.getUserLocale.returns(undefined);
 
         // EXECUTE
@@ -57,9 +57,9 @@ describe('Dashboard children component', () => {
         // ASSERT
         expect(MockLocaleService.getUserLocale).to.have.been.calledOnce;
         expect(res).to.equal('en');
-      })
+      });
       it('should return the formatted locale from the cookie', () => {
-        // ARRANGE 
+        // ARRANGE
         MockLocaleService.getUserLocale.returns('"fr_FR"');
 
         // EXECUTE
@@ -68,7 +68,7 @@ describe('Dashboard children component', () => {
         // ASSERT
         expect(MockLocaleService.getUserLocale).to.have.been.calledOnce;
         expect(res).to.equal('fr-FR');
-      })
+      });
     });
   });
 
