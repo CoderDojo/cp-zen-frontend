@@ -56,7 +56,7 @@ export default {
     }
 
     &__right-column {
-      background-color: #f4f5f6;
+      background-color: @side-column-grey;
       flex: 1;
     }
   }
