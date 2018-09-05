@@ -11,6 +11,7 @@ const events = require('./events');
 const orders = {};
 const news = require('./news');
 const forums = require('./forums');
+const projects = require('./projects');
 
 const server = jsonServer.create();
 const router = jsonServer.router(require('./db'));
@@ -89,6 +90,10 @@ server.get('/wp-json/wp/v2/posts', (req, res) => {
   res.send(filteredNews);
 });
 
+server.get('/api/v1/en/projects', (req, res) => {
+  res.send(projects);
+});
+
 server.post('/api/2.0/profiles/youth/create', (req, res) => {
   const child = req.body.profile;
   child.id = uuidv1();
@@ -105,7 +110,7 @@ server.post('/api/2.0/profiles/create', (req, res) => {
 
 server.post('/api/3.0/events/:eventId/orders', (req, res) => {
   const order = req.body;
-  const parentApplication = (req.body.applications.filter(a => a.ticketType === 'parent-guardian'))[0]; 
+  const parentApplication = (req.body.applications.filter(a => a.ticketType === 'parent-guardian'))[0];
   const userId = parentApplication ? parentApplication.userId : req.body.applications[0].userId;
   order.id = uuidv1();
   orders[userId] = orders[userId] || [];

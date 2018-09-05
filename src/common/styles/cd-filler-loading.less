@@ -8,16 +8,24 @@
     position: absolute;
     height: 100%;
     width: 100%;
-    animation: fillerLoading .8s linear infinite;
-    background: linear-gradient(to right, transparent 42%, fade(@cd-white, 50%) 50%, transparent 58%) 50% 50%;
+    animation: fillerLoading .8s ease-in infinite;
+    background: linear-gradient(to right, transparent calc(~"50% - 30px"), fade(@cd-white, 50%) 50%, transparent calc(~"50% + 30px")) 50% 50%;
+  }
+  &--grey-bg {
+    &::before {
+      background: linear-gradient(to right, transparent calc(~"50% - 30px"), #f4f5f6 50%, transparent calc(~"50% + 30px")) 50% 50%;
+    }
   }
 }
 
 @keyframes fillerLoading {
   0% {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(calc(~"-50% - 30px"), 0, 0);
+  }
+  66% {
+    transform: translate3d(calc(~"50% + 30px"), 0, 0);
   }
   100% {
-    transform: translate3d(50%, 0, 0);
+    transform: translate3d(calc(~"50% + 30px"), 0, 0);
   }
 }
