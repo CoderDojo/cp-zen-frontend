@@ -140,9 +140,10 @@
       width: 105px;
       height: 100%;
       text-align: center;
+      align-items: center;
 
       &-image {
-        height: 100%;
+        height: 105px;
         width: 100%;
         margin-bottom: 8px;
       }
@@ -170,9 +171,10 @@
       &__badge {
         width: 95px;
         height: 100%;
+        align-items: center;
 
         &-image {
-          height: 100%;
+          height: 95px;
           width: 100%;
         }
       }
