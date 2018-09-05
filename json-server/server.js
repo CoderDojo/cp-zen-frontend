@@ -90,8 +90,9 @@ server.get('/wp-json/wp/v2/posts', (req, res) => {
   res.send(filteredNews);
 });
 
-server.get('/api/v1/en/projects', (req, res) => {
-  res.send(projects);
+server.get('/api/v1/:lang/projects', (req, res) => {
+  const lang = req.params.lang;
+  res.send(projects[lang]);
 });
 
 server.post('/api/2.0/profiles/youth/create', (req, res) => {
