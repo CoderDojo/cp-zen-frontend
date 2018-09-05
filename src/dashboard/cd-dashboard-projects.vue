@@ -1,7 +1,7 @@
 <template>
   <div class="cd-dashboard-projects">
-    <h2 class="cd-dashboard-projects__header hidden-xs">Before your next event, here are some projects you can try</h2>
-    <h2 class="cd-dashboard-projects__header visible-xs">Here are some projects you can try</h2>
+    <h2 class="cd-dashboard-projects__header hidden-xs">{{ $t('Before your next event, here are some projects you can try') }}</h2>
+    <h2 class="cd-dashboard-projects__header visible-xs">{{ $t('Here are some projects you can try') }}</h2>
     <hr class ="cd-dashboard-projects__divider visible-xs">
     <div v-show="isDisplayable" class="cd-dashboard-projects__cards">
       <a class="cd-dashboard-projects__card" v-for="project in projects" :key="project.id" :href="`https://projects.raspberrypi.org/en/projects/${project.attributes.repositoryName}`">
@@ -15,7 +15,7 @@
       <div class="cd-dashboard-projects__card cd-dashboard-projects__card--filler cd-filler"></div>
     </div>
     <div class="cd-dashboard-projects__cta">
-      <a class="cd-dashboard-projects__view-all" href="https://projects.raspberrypi.org">View all projects</a>
+      <a class="cd-dashboard-projects__view-all" href="https://projects.raspberrypi.org">{{ $t('View all projects') }}</a>
     </div>
   </div>
 </template>
