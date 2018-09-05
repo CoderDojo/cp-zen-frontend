@@ -67,6 +67,14 @@ export default {
       &__container {
         flex-direction: column;
       }
+
+      &__left-column {
+        order:2;
+      }
+
+      &__right-column{
+        order:1;
+      }
     }
   }
 </style>
