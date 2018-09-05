@@ -45,7 +45,7 @@ describe('Dashboard children component', () => {
 
   describe('methods', () => {
     describe('loadProjects', () => {
-      it('should load the current user\'s profile', async () => {
+      it('should load the latest projects and keep only the first three', async () => {
         // ARRANGE
         const mockProjects = {
           data: [
