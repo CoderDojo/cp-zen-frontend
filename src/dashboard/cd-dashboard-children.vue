@@ -85,12 +85,14 @@
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
   @import "../common/styles/cd-filler-loading";
+  @import "../common/variables";
 
   .cd-dashboard-children {
     background-color: #f4f5f6;
     padding: 0 32px;
     margin-left: auto;
     min-height: 100%;
+    max-width: 340px;
 
     &__header {
       margin: 45px 0 16px 0;
@@ -153,6 +155,12 @@
       font-size: 14px;
       align-self: flex-end;
       padding: 0 0 0 5px;
+    }
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-dashboard-children {
+      max-width: 100%;
     }
   }
 </style>

@@ -6,8 +6,11 @@
         <dashboard-projects/>
         <dashboard-news />
       </div>
-      <dashboard-children class="cd-dashboard__left-column"/>
-      <!-- <dashboard-stats class="cd-dashboard__left-column"/> -->
+      <div class="cd-dashboard__left-column">
+        <dashboard-children/>
+        <!-- <dashboard-stats/> -->
+      </div>
+
     </div>
   </div>
 </template>
@@ -38,6 +41,7 @@ export default {
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
   @import "../common/styles/cd-primary-button.less";
+  @import "../common/variables";
 
   .cd-dashboard {
     display: flex;
@@ -50,8 +54,16 @@ export default {
 
     &__left-column {
       background-color: #f4f5f6;
-      max-width: 340px;
       flex: 4;
+    }
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-dashboard {
+
+      &__container {
+        flex-direction: column;
+      }
     }
   }
 </style>
