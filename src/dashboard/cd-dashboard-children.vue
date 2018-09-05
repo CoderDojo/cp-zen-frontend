@@ -145,6 +145,7 @@
       &-image {
         height: 105px;
         width: 100%;
+        object-fit: contain;
         margin-bottom: 8px;
       }
 
@@ -176,6 +177,7 @@
         &-image {
           height: 95px;
           width: 100%;
+          object-fit: contain;
         }
       }
     }
