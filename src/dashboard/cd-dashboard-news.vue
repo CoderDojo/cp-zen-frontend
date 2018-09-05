@@ -2,6 +2,7 @@
   <div class="column">
     <div v-if="isDisplayable" class="cd-dashboard-news">
       <h2 class="cd-dashboard-news__header">{{ $t('News Updates') }}</h2>
+      <hr class ="cd-dashboard-news__divider visible-xs">
       <div class="cd-dashboard-news__posts" v-for="post in allPosts">
         <span class="cd-dashboard-news__posts-left">
           <p class="cd-dashboard-news__post-type">{{ post.type }}</p>
@@ -175,6 +176,11 @@
   @media (max-width: @screen-xs-max) {
     .cd-dashboard-news {
       max-width: 100%;
+
+      &__divider {
+        margin: auto 0;
+        border-color: #CAC4CE;
+      }
     }
   }
 </style>
