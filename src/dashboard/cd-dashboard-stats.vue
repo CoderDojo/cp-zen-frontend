@@ -53,9 +53,11 @@
   @import "../common/variables";
 
   .cd-dashboard-stats {
+    background-color: @side-column-grey;
     padding: 0 32px;
     margin-left: auto;
     min-height: 100%;
+    max-width: 340px;
     display:flex;
     flex-direction: column;
 
@@ -73,6 +75,12 @@
     }
     &__description {
     
+    }
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-dashboard-stats {
+      max-width: 100%;
     }
   }
 </style>

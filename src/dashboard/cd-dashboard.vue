@@ -7,7 +7,7 @@
         <dashboard-news />
       </div>
       <div class="cd-dashboard__right-column">
-        <dashboard-children />
+        <dashboard-children/>
         <dashboard-stats />
       </div>
     </div>
@@ -40,6 +40,7 @@ export default {
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
   @import "../common/styles/cd-primary-button.less";
+  @import "../common/variables";
 
   .cd-dashboard {
     display: flex;
@@ -55,9 +56,17 @@ export default {
     }
 
     &__right-column {
-      background-color: #f4f5f6;
-      max-width: 340px;
+      background-color: @side-column-grey;
       flex: 1;
+    }
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-dashboard {
+
+      &__container {
+        flex-direction: column-reverse;
+      }
     }
   }
 </style>
