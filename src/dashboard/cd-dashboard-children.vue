@@ -4,7 +4,7 @@
       <div v-if="isDisplayable" class="cd-dashboard-children">
         <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
         <hr class ="cd-dashboard-children__divider visible-xs">
-        <div class="cd-dashboard-children__child" v-for="child in children">
+        <div class="cd-dashboard-children__child" v-for="child in children.slice(0,3)">
           <h3 class="cd-dashboard-children__name">
             {{ child.name }}
             <a :href="`/dashboard/profile/${child.userId}/edit`" class="cd-dashboard-children__edit-child"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
@@ -17,6 +17,9 @@
             <a :href="`/dashboard/children/${child.userId}`" class="cd-dashboard-children__badges-link" v-if="child.badges.length > 2">{{ $t('See all {badgesAmount} badges', {badgesAmount: child.badges.length}) }}</a>
           </span>
           <p class="cd-dashboard-children__badges-none" v-else>{{ $t('{name} doesn\'t have any badges yet. Talk to the organisers of your Dojo to learn how {name} can be rewarded through badges.', { name: child.firstName }) }}</p>
+        </div>
+        <div v-show="children.length > 3" class="cd-dashboard-children__cta">
+          <a class="cd-dashboard-children__view-all" href="/dashboard/children/">View all children</a>
         </div>
       </div>
       <div v-else class="cd-dashboard-children">
@@ -166,6 +169,19 @@
       font-size: 14px;
       align-self: flex-end;
       padding: 0 0 0 5px;
+    }
+
+    &__cta {
+      text-align: center;
+    }
+
+    &__view-all {
+      border: 1px solid;
+      font-size: @font-size-medium;
+      font-weight: bold;
+      padding: 14px;
+      display: inline-block;
+      border-radius: 4px;
     }
   }
 
