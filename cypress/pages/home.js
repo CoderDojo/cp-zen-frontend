@@ -3,6 +3,7 @@ export default {
   children: '.cd-dashboard-children .cd-dashboard-children__child',
   childrenNames: '.cd-dashboard-children__name',
   childrenBadges: '.cd-dashboard-children__badge',
+  childrenLink: '.cd-dashboard-children__cta',
   newsTitle: '.cd-dashboard-news__header',
   newsEntries: '.cd-dashboard-news__posts',
   newsEntryTitle: '.cd-dashboard-news__post-title',
