@@ -197,7 +197,7 @@
 
       &__divider {
         margin: 4px 0;
-        border-color: #CAC4CE;
+        border-color: @divider-grey;
       }
 
       &__posts {
