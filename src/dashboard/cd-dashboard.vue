@@ -6,8 +6,10 @@
         <dashboard-projects/>
         <dashboard-news />
       </div>
-      <dashboard-children class="cd-dashboard__right-column"/>
-      <!-- <dashboard-stats class="cd-dashboard__left-column"/> -->
+      <div class="cd-dashboard__right-column">
+        <dashboard-children />
+        <dashboard-stats />
+      </div>
     </div>
   </div>
 </template>

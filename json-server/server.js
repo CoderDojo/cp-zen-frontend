@@ -169,6 +169,10 @@ server.get('/api/2.0/user/events/:id/applications', (req, res) => {
   }
 });
 
+server.post('/api/2.0/events/applications/search', (req, res) => {
+  res.send(applications['parent2@example.com']['d206004a-b0ce-4267-bf07-133e8113aa1b']);
+});
+
 server.get('/api/2.0/users/instance', (req, res) => {
   if (req.cookies.loggedIn) {
     res.send({
