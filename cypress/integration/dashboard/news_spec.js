@@ -21,7 +21,7 @@ describe('Dashboard news', () => {
     cy.get(homePage.newsEntries).should('have.length', 6);
   });
 
-  it('should display its category, its date and its title', () => {
+  it('should display its date and its title', () => {
     cy.visit('/home');
     cy.wait('@loggedIn');
     cy.wait('@blogArticles');
@@ -29,7 +29,7 @@ describe('Dashboard news', () => {
       .within((el) => {
         cy.get(homePage.newsEntryTitle).invoke('text').should('eq', 'What we discussed on the July Open Community Call');
         cy.get(homePage.newsEntryDate).invoke('text').should('eq', '09/08/2018');
-        cy.get(homePage.newsEntryCategory).invoke('text').should('eq', 'News');
+        // cy.get(homePage.newsEntryCategory).invoke('text').should('eq', 'News');
       });
   });
   it('should display the oldest as last', () => {

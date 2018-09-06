@@ -2,9 +2,10 @@
   <div class="column">
     <div v-if="isDisplayable" class="cd-dashboard-news">
       <h2 class="cd-dashboard-news__header">{{ $t('News Updates') }}</h2>
+      <hr class ="cd-dashboard-news__divider visible-xs">
       <div class="cd-dashboard-news__posts" v-for="post in allPosts">
         <span class="cd-dashboard-news__posts-left">
-          <p class="cd-dashboard-news__post-type">{{ post.type }}</p>
+          <!-- <p class="cd-dashboard-news__post-type hidden-xs">{{ post.type }}</p> -->
           <p class="cd-dashboard-news__post-date">{{ post.formattedDate }}</p>
         </span>
         <span class="cd-dashboard-news__posts-right">
@@ -19,6 +20,9 @@
       <div class="cd-dashboard-news__posts cd-filler">
         <div class="cd-dashboard-news__posts--filler"></div>
       </div>
+    </div>
+    <div class="cd-dashboard-news__cta">
+      <a class="cd-dashboard-news__view-all" href="https://coderdojo.com/news/">{{ $t('View all news') }}</a>
     </div>
   </div>
 </template>
@@ -170,11 +174,42 @@
         }
       }
     }
+
+    &__cta {
+      text-align: center;
+    }
+
+    &__view-all {
+      color: @cd-purple;
+      border: 1px solid @cd-purple;
+      font-size: @font-size-medium;
+      font-weight: bold;
+      padding: 14px;
+      display: inline-block;
+      border-radius: 4px;
+      margin: 16px 0 32px 0;
+    }
   }
 
   @media (max-width: @screen-xs-max) {
     .cd-dashboard-news {
       max-width: 100%;
+
+      &__divider {
+        margin: 4px 0;
+        border-color: @divider-grey;
+      }
+
+      &__posts {
+        max-width: 100%;
+        flex-direction: column-reverse;
+      }
+
+      &__post {
+        &-date {
+          margin-top: 8px;
+        }
+      }
     }
   }
 </style>
