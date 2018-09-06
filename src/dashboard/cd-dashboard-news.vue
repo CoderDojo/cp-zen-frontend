@@ -92,6 +92,7 @@
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
   @import "../common/styles/cd-filler-loading";
+  @import "../common/variables";
 
   .cd-dashboard-news {
     background-color: #fff;
@@ -169,6 +170,11 @@
         }
       }
     }
+  }
 
+  @media (max-width: @screen-xs-max) {
+    .cd-dashboard-news {
+      max-width: 100%;
+    }
   }
 </style>

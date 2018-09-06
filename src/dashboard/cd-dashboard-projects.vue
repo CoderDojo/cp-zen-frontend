@@ -1,6 +1,8 @@
 <template>
   <div class="cd-dashboard-projects">
-    <h3 class="cd-dashboard-projects__header">{{ $t('Before your next event, here are some projects you can try') }}</h3>
+    <h2 class="cd-dashboard-projects__header hidden-xs">{{ $t('Before your next event, here are some projects you can try') }}</h2>
+    <h2 class="cd-dashboard-projects__header visible-xs">{{ $t('Here are some projects you can try') }}</h2>
+    <hr class ="cd-dashboard-projects__divider visible-xs">
     <div v-show="isDisplayable" class="cd-dashboard-projects__cards">
       <a class="cd-dashboard-projects__card" v-for="project in projects" :key="project.id" :href="`https://projects.raspberrypi.org/${locale}/projects/${project.attributes.repositoryName}`">
         <img :src="project.attributes.content.heroImage" />
@@ -121,12 +123,30 @@
     &__view-all {
       color: @cd-purple;
       border: 1px solid @cd-purple;
-      font-size: 16px;
+      font-size: @font-size-medium;
       font-weight: bold;
       padding: 14px;
       display: inline-block;
       border-radius: 4px;
       margin: 32px 0;
+    }
+  }
+
+  @media (max-width: @screen-xs-max) {
+    .cd-dashboard-projects {
+      max-width: 100%;
+
+      &__divider {
+        border-color: @divider-grey;
+      }
+
+      &__cards {
+        flex-direction: column;
+      }
+
+      &__card {
+        margin: 12px 32px;
+      }
     }
   }
 </style>
