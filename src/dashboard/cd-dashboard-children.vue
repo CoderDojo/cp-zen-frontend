@@ -3,12 +3,13 @@
     <div v-if="!withoutChildren">
       <div v-if="isDisplayable" class="cd-dashboard-children">
         <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
-        <div class="cd-dashboard-children__child" v-for="child in children">
+        <hr class ="cd-dashboard-children__divider visible-xs">
+        <div class="cd-dashboard-children__child" v-for="child in children.slice(0,3)">
           <h3 class="cd-dashboard-children__name">
             {{ child.name }}
             <a :href="`/dashboard/profile/${child.userId}/edit`" class="cd-dashboard-children__edit-child"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
           </h3>
-          <span class="cd-dashboard-children__badges" v-if="child.badges" >
+          <span class="cd-dashboard-children__badges" v-if="child.badges.length > 0" >
             <div class="cd-dashboard-children__badge" v-for="badge in child.badges.slice(0,2)">
               <img class="cd-dashboard-children__badge-image" :src="badge.imageUrl" />
               <span class="cd-dashboard-children__badge-text">{{ badge.name }}</span>
@@ -16,6 +17,9 @@
             <a :href="`/dashboard/children/${child.userId}`" class="cd-dashboard-children__badges-link" v-if="child.badges.length > 2">{{ $t('See all {badgesAmount} badges', {badgesAmount: child.badges.length}) }}</a>
           </span>
           <p class="cd-dashboard-children__badges-none" v-else>{{ $t('{name} doesn\'t have any badges yet. Talk to the organisers of your Dojo to learn how {name} can be rewarded through badges.', { name: child.firstName }) }}</p>
+        </div>
+        <div v-show="children.length > 3" class="cd-dashboard-children__cta">
+          <a class="cd-dashboard-children__view-all" href="/dashboard/children/">{{ $t('View all children') }}</a>
         </div>
       </div>
       <div v-else class="cd-dashboard-children">
@@ -147,10 +151,12 @@
       width: 105px;
       height: 100%;
       text-align: center;
+      align-items: center;
 
       &-image {
-        height: 100px;
-        width: 100px;
+        height: 105px;
+        width: 100%;
+        object-fit: contain;
         margin-bottom: 8px;
       }
 
@@ -164,11 +170,39 @@
       align-self: flex-end;
       padding: 0 0 0 5px;
     }
+
+    &__cta {
+      text-align: center;
+    }
+
+    &__view-all {
+      font-size: @font-size-medium;
+      font-weight: bold;
+      text-decoration: underline;
+      padding: 14px;
+      display: inline-block;
+    }
   }
 
   @media (max-width: @screen-xs-max) {
     .cd-dashboard-children {
       max-width: 100%;
+
+      &__divider {
+        border-color: @divider-grey;
+      }
+
+      &__badge {
+        width: 95px;
+        height: 100%;
+        align-items: center;
+
+        &-image {
+          height: 95px;
+          width: 100%;
+          object-fit: contain;
+        }
+      }
     }
   }
 </style>
