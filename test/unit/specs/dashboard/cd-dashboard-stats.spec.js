@@ -32,7 +32,7 @@ describe('Dashboard stats component', () => {
     describe('getDojos', () => {
       it('should load the users Dojos into dojos and define the current DojoId', async () => {
         // ARRANGE
-        const mockUserDojos= [{ dojoId: 'd1', userId: 'u1' }];
+        const mockUserDojos = [{ dojoId: 'd1', userId: 'u1' }];
         MockDojoService.getUsersDojos.resolves({ body: mockUserDojos });
         vm.loggedInUser = { id: 'u1' };
         // ACT
@@ -47,7 +47,7 @@ describe('Dashboard stats component', () => {
       });
     });
     describe('getBookedChildren', () => {
-      it('should load the dojos applications', async () => { 
+      it('should load the dojos applications', async () => {
         // ARRANGE
         const mockApplications = [{ id: 'a1', ticketType: 'ninja' }];
         MockEventService.searchApplicationsByDojo.resolves({ body: mockApplications });
