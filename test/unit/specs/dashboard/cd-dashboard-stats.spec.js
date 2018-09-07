@@ -54,12 +54,11 @@ describe('Dashboard stats component', () => {
           perc: 50,
           prevValue: 50,
         }];
-        console.log(vm.genderStats); 
         expect(vm.genderStats).to.deep.equal(expectedData);
       });
     });
   });
-  
+
   describe('methods', () => {
     describe('getDojos', () => {
       it('should load the users Dojos into dojos and define the current DojoId', async () => {
