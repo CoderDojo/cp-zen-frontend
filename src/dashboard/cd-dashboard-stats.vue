@@ -59,8 +59,7 @@
     margin-left: auto;
     min-height: 100%;
     max-width: 340px;
-    display:flex;
-    flex-direction: column;
+    display: block; 
 
     &__header {
       margin: 45px 0 16px 0;
@@ -73,9 +72,6 @@
         }
         font-size: @font-size-h3;  
       }
-    }
-    &__description {
-    
     }
   }
 
