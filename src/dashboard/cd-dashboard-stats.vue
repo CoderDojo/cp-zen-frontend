@@ -42,16 +42,14 @@
         dojos: null,
         dojoId: null,
         dojoUsers: null,
-        p: 50,
         genders: [],
         bookedChildren: 0,
-
       };
     },
     computed: {
       ...mapGetters(['loggedInUser']),
       totalChildren() {
-        return this.dojoUsers.length || 1;
+        return this.dojoUsers ? this.dojoUsers.length : 1;
       },
       genderStats() {
         let prevValue = 0;
