@@ -221,6 +221,10 @@ server.post('/api/2.0/dojos/users', (req, res) => {
   }
 });
 
+server.post('/api/2.0/dojos/load-dojo-users', (req, res) => {
+  res.send({ response: Object.values(usersProfile) });
+});
+
 server.get('/api/3.0/dojos/:dojoId/events', (req, res) => {
   const dojoId = req.params.dojoId;
   const { afterDate, beforeDate } = req.query.query;
