@@ -177,6 +177,10 @@
       &__posts {
         max-width: 100%;
         flex-direction: column-reverse;
+
+        &-left {
+          margin: 0 16px 0 16px;
+        }
       }
 
       &__post {
