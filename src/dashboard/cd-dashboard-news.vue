@@ -112,36 +112,15 @@
       margin: 16px 0;
       display: flex;
       flex-direction: row;
-      max-width: 75%;
 
       &-left {
         flex-direction: column;
-        margin: 0 16px 0 16px;
-        max-width: 30%;
+        max-width: 75px;
       }
 
       &-right{
         margin: 0 16px 0 16px;
-        max-width: 70%;
-      }
-
-    }
-
-    &__posts {
-      margin: 16px 0;
-      display: flex;
-      flex-direction: row;
-      max-width: 75%;
-
-      &-left {
-        flex-direction: column;
-        margin: 0 16px 0 16px;
-        max-width: 30%;
-      }
-
-      &-right{
-        margin: 0 16px 0 16px;
-        max-width: 70%;
+        max-width: 425px;
       }
 
       &--filler {
