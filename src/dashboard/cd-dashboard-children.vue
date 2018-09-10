@@ -7,7 +7,6 @@
         <div class="cd-dashboard-children__child" v-for="child in children.slice(0,3)">
           <h3 class="cd-dashboard-children__name">
             {{ child.name }}
-            <a :href="`/dashboard/profile/${child.userId}/edit`" class="cd-dashboard-children__edit-child"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
           </h3>
           <span class="cd-dashboard-children__badges" v-if="child.badges.length > 0" >
             <div class="cd-dashboard-children__badge" v-for="badge in child.badges.slice(0,2)">
@@ -18,8 +17,8 @@
           </span>
           <p class="cd-dashboard-children__badges-none" v-else>{{ $t('{name} doesn\'t have any badges yet. Talk to the organisers of your Dojo to learn how {name} can be rewarded through badges.', { name: child.firstName }) }}</p>
         </div>
-        <div v-show="children.length > 3" class="cd-dashboard-children__cta">
-          <a class="cd-dashboard-children__view-all" href="/dashboard/children/">{{ $t('View all children') }}</a>
+        <div class="cd-dashboard-children__cta">
+          <a class="cd-dashboard-children__view-all" href="/dashboard/children/">{{ $t('View my children') }}</a>
         </div>
       </div>
       <div v-else class="cd-dashboard-children">
@@ -163,12 +162,6 @@
       &-text {
         text-align: center;
       }
-    }
-
-    &__edit-child {
-      font-size: 14px;
-      align-self: flex-end;
-      padding: 0 0 0 5px;
     }
 
     &__cta {
