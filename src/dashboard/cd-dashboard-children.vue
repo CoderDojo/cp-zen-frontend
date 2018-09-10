@@ -7,7 +7,6 @@
         <div class="cd-dashboard-children__child" v-for="child in children.slice(0,3)">
           <h4 class="cd-dashboard-children__name">
             {{ child.name }}
-            <a :href="`/dashboard/profile/${child.userId}/edit`" class="cd-dashboard-children__edit-child"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
           </h4>
           <span class="cd-dashboard-children__badges" v-if="child.badges.length > 0" >
             <div class="cd-dashboard-children__badge" v-for="badge in child.badges.slice(0,3)">
