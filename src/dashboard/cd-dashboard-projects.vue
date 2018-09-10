@@ -4,7 +4,7 @@
     <h2 class="cd-dashboard-projects__header visible-xs">{{ $t('Here are some projects you can try') }}</h2>
     <hr class ="cd-dashboard-projects__divider visible-xs">
     <div v-show="isDisplayable" class="cd-dashboard-projects__cards">
-      <a class="cd-dashboard-projects__card" v-for="project in projects" :key="project.id" :href="`https://projects.raspberrypi.org/en/projects/${project.attributes.repositoryName}`">
+      <a class="cd-dashboard-projects__card" v-for="project in projects" :key="project.id" :href="`https://projects.raspberrypi.org/${locale}/projects/${project.attributes.repositoryName}`">
         <img :src="project.attributes.content.heroImage" />
         <h4>{{ project.attributes.content.title }}</h4>
       </a>
@@ -22,26 +22,45 @@
 
 <script>
   import ProjectsService from '@/projects/service';
+  import LocaleService from '@/locale/service';
 
   export default {
     name: 'cd-dashboard-projects',
     data() {
       return {
         projects: null,
+        locale: 'en',
       };
     },
     computed: {
       isDisplayable() {
         return this.projects !== null;
       },
-    },
-    methods: {
-      async loadProjects() {
-        this.projects = (await ProjectsService.list({ order: 'asc' })).body.data.slice(0, 3);
+      userLocale() {
+        const langCookie = LocaleService.getUserLocale();
+        if (langCookie) {
+          return langCookie.replace(/"/g, '').replace('_', '-');
+        }
+        return 'en';
       },
     },
-    created() {
-      this.loadProjects();
+    methods: {
+      async loadProjects(locale = 'en') {
+        const projects = (await ProjectsService.list(locale, { order: 'asc' })).body;
+        if (projects) {
+          this.projects = projects.data.slice(0, 3);
+        }
+      },
+    },
+    async created() {
+      await this.loadProjects(this.userLocale);
+      // Retry with "en" as a language
+      if (!this.projects || !this.projects.length) {
+        await this.loadProjects();
+      } else {
+        // Set the projects urls to the valid zen locale
+        this.locale = this.userLocale;
+      }
     },
   };
 </script>

@@ -69,9 +69,10 @@
     },
     methods: {
       async getDojos() {
-        this.dojos = (await DojoService.getUsersDojos(this.loggedInUser.id)).body;
+        const dojos = (await DojoService.getUsersDojos(this.loggedInUser.id)).body;
+        this.dojos = dojos.filter(dojo => dojo.userTypes.includes('champion'));
         // TODO : drop-down dojo selection
-        this.dojoId = (this.dojos[0]).dojoId;
+        this.dojoId = this.dojos.length ? this.dojos[0].dojoId : null;
       },
       async getBookedChildren() {
         this.bookedChildren = (await EventsService.searchApplicationsByDojo(
@@ -115,8 +116,7 @@
     margin-left: auto;
     min-height: 100%;
     max-width: 340px;
-    display:flex;
-    flex-direction: column;
+    display: block; 
 
     &__header {
       margin: 45px 0 16px 0;
