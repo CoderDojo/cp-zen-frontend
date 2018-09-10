@@ -41,16 +41,12 @@ describe('Homepage children', () => {
     let child1 = cy.get(homePage.children).first();
     child1.within((child) => {
       let badges = cy.get(homePage.childrenBadges);
-      badges.should('have.length', 2);
+      badges.should('have.length', 3);
       badges.first().find('img').should('have.attr', 'src', 'http://badgekit.coderdojo.com:80/images/badge/57');
       // first() mutates the var to its result, so we need to re-pull the selector
       badges = cy.get(homePage.childrenBadges);
-      badges.first().invoke('text').then((badgeText) => cy.wrap(badgeText.toString().trim()).should('eq','Coolest Projects 2016'));
-      badges = cy.get(homePage.childrenBadges);
       // Check the badge img url
-      badges.last().find('img').should('have.attr', 'src', 'http://badgekit.coderdojo.com:80/images/badge/62');
-      badges = cy.get(homePage.childrenBadges);
-      badges.last().invoke('text').then((badgeText) => cy.wrap(badgeText.toString().trim()).should('eq','CoderDojo Ethos: Implementation and Practice'));
+      badges.last().find('img').should('have.attr', 'src', 'http://badgekit.coderdojo.com:80/images/badge/50');
     });
     child1 = cy.get(homePage.children).first();
     child1.find('.cd-dashboard-children__badges > a')
