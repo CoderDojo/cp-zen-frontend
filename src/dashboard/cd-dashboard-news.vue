@@ -9,9 +9,7 @@
           <p class="cd-dashboard-news__post-date">{{ post.formattedDate }}</p>
         </span>
         <span class="cd-dashboard-news__posts-right">
-          <h4 class="cd-dashboard-news__post-title">
-            <a class="cd-dashboard-news__post-title-link" :href="`${post.link}`">{{ post.title }}</a>
-          </h4>
+          <a class="cd-dashboard-news__post-title" :href="`${post.link}`" v-html="post.title"></a>
         </span>
       </div>
     </div>
@@ -22,7 +20,7 @@
       </div>
     </div>
     <div class="cd-dashboard-news__cta">
-      <a class="cd-dashboard-news__view-all" href="https://coderdojo.com/news/">{{ $t('View all news') }}</a>
+      <a class="cd-dashboard-news__view-all" href="https://coderdojo.com/news/">{{ $t('View more news') }}</a>
     </div>
   </div>
 </template>
@@ -114,36 +112,15 @@
       margin: 16px 0;
       display: flex;
       flex-direction: row;
-      max-width: 75%;
 
       &-left {
         flex-direction: column;
-        margin: 0 16px 0 16px;
-        max-width: 30%;
+        max-width: 75px;
       }
 
       &-right{
         margin: 0 16px 0 16px;
-        max-width: 70%;
-      }
-
-    }
-
-    &__posts {
-      margin: 16px 0;
-      display: flex;
-      flex-direction: row;
-      max-width: 75%;
-
-      &-left {
-        flex-direction: column;
-        margin: 0 16px 0 16px;
-        max-width: 30%;
-      }
-
-      &-right{
-        margin: 0 16px 0 16px;
-        max-width: 70%;
+        max-width: 425px;
       }
 
       &--filler {
@@ -164,14 +141,11 @@
       }
 
       &-title {
-        margin: 0;
-
-        &-link {
+        font-weight: bold;
           color: @cd-purple;
           &:hover {
             color: #a57ec7;
           }
-        }
       }
     }
 
@@ -203,6 +177,10 @@
       &__posts {
         max-width: 100%;
         flex-direction: column-reverse;
+
+        &-left {
+          margin: 0 16px 0 16px;
+        }
       }
 
       &__post {
