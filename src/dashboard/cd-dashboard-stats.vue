@@ -20,7 +20,7 @@
             <div class="cd-dashboard-stats__circle-legends">
               <div v-for="gender in genderStats" class="cd-dashboard-stats__circle-legend">
                 <div class="cd-dashboard-stats__circle-legend-color" :class="['cd-dashboard-stats__circle--' + gender.name]"></div>
-                <div stroke="#51c5cf" stroke-width="2px" text-anchor="middle" alignment-baseline="middle"> {{ gender.name }}</div>
+                <div> {{ gender.name }}</div>
               </div>
             </div>
           </div>
