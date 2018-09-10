@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="cd-dashboard-news__cta">
-      <a class="cd-dashboard-news__view-all" href="https://coderdojo.com/news/">{{ $t('View all news') }}</a>
+      <a class="cd-dashboard-news__view-all" href="https://coderdojo.com/news/">{{ $t('View more news') }}</a>
     </div>
   </div>
 </template>
