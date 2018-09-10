@@ -45,7 +45,7 @@
         dojos: null,
         dojoId: null,
         dojoUsers: null,
-        genders: null, 
+        genders: null,
         bookedChildren: null,
       };
     },
