@@ -1,6 +1,6 @@
 import homePage from '../../pages/home';
 
-describe('Homepage children', () => {
+describe'Homepage children', () => {
   beforeEach(() => {
     cy.server();
   });
@@ -25,8 +25,6 @@ describe('Homepage children', () => {
     // Check the first username
     child1.invoke('text').then((childText) => cy.wrap(childText.toString().trim()).should('eq','parent 1one'));
     child1 = cy.get(homePage.childrenNames).first();
-    // Check the edit link is present
-    child1.find('a').should('have.attr', 'href', '/dashboard/profile/u1/edit');
   });
   it('should show the user children badges', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
@@ -59,7 +57,7 @@ describe('Homepage children', () => {
       .should('have.attr', 'href', '/dashboard/children/u1')
       .invoke('text').should('eq', 'See all 3 badges');
   });
-  it('should not show the view all children link if they have <=3 children', () => {
+  it('should show the view all children link', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
     cy.route('POST', '/api/2.0/profiles/user-profile-data', 'fx:profiles/parent1').as('parentProfile');
     cy.visit('/home');
@@ -69,18 +67,6 @@ describe('Homepage children', () => {
     let children = cy.get(homePage.children);
     children.should('have.length', 3);
     let link = cy.get(homePage.childrenLink);
-    link.should('not.be.visible');
-  });
-  it('should show the view all children link if they have >3 children', () => {
-    cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-    cy.route('POST', '/api/2.0/profiles/user-profile-data', 'fx:profiles/parent2').as('parentProfile');
-    cy.visit('/home');
-    cy.wait('@loggedIn');
-    // Parent profile: list children ids
-    cy.wait('@parentProfile');
-    let children = cy.get(homePage.children);
-    children.should('have.length', 3);
-    let link = cy.get(homePage.childrenLink);
-    link.invoke('text').should('eq', 'View all children');
+    link.invoke('text').should('eq', 'View my children');
   });
 });

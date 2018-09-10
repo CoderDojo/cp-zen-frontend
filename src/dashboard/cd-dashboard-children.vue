@@ -17,8 +17,8 @@
           </span>
           <p class="cd-dashboard-children__badges-none" v-else>{{ $t('{name} doesn\'t have any badges yet. Talk to the organisers of your Dojo to learn how {name} can be rewarded through badges.', { name: child.firstName }) }}</p>
         </div>
-        <div v-show="children.length > 3" class="cd-dashboard-children__cta">
-          <a class="cd-dashboard-children__view-all" href="/dashboard/children/">{{ $t('View all children') }}</a>
+        <div class="cd-dashboard-children__cta">
+          <a class="cd-dashboard-children__view-all" href="/dashboard/children/">{{ $t('View my children') }}</a>
         </div>
       </div>
       <div v-else class="cd-dashboard-children">
@@ -154,12 +154,6 @@
         width: 100%;
         object-fit: contain;
       }
-    }
-
-    &__edit-child {
-      font-size: 14px;
-      align-self: flex-end;
-      padding: 0 0 0 5px;
     }
 
     &__cta {
