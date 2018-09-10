@@ -1,6 +1,6 @@
 import homePage from '../../pages/home';
 
-describe('Homepage children', () => {
+describe'Homepage children', () => {
   beforeEach(() => {
     cy.server();
   });
@@ -25,8 +25,6 @@ describe('Homepage children', () => {
     // Check the first username
     child1.invoke('text').then((childText) => cy.wrap(childText.toString().trim()).should('eq','parent 1one'));
     child1 = cy.get(homePage.childrenNames).first();
-    // Check the edit link is present
-    child1.find('a').should('have.attr', 'href', '/dashboard/profile/u1/edit');
   });
   it('should show the user children badges', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
