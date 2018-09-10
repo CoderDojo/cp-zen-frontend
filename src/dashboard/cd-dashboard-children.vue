@@ -2,17 +2,16 @@
   <div class="column">
     <div v-if="!withoutChildren">
       <div v-if="isDisplayable" class="cd-dashboard-children">
-        <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
+        <h2 class="cd-dashboard-children__header">{{ $t('My Children') }}</h2>
         <hr class ="cd-dashboard-children__divider visible-xs">
         <div class="cd-dashboard-children__child" v-for="child in children.slice(0,3)">
-          <h3 class="cd-dashboard-children__name">
+          <h4 class="cd-dashboard-children__name">
             {{ child.name }}
             <a :href="`/dashboard/profile/${child.userId}/edit`" class="cd-dashboard-children__edit-child"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-          </h3>
+          </h4>
           <span class="cd-dashboard-children__badges" v-if="child.badges.length > 0" >
-            <div class="cd-dashboard-children__badge" v-for="badge in child.badges.slice(0,2)">
+            <div class="cd-dashboard-children__badge" v-for="badge in child.badges.slice(0,3)">
               <img class="cd-dashboard-children__badge-image" :src="badge.imageUrl" />
-              <span class="cd-dashboard-children__badge-text">{{ badge.name }}</span>
             </div>
             <a :href="`/dashboard/children/${child.userId}`" class="cd-dashboard-children__badges-link" v-if="child.badges.length > 2">{{ $t('See all {badgesAmount} badges', {badgesAmount: child.badges.length}) }}</a>
           </span>
@@ -130,14 +129,12 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-evenly;
-      margin: 16px 0 16px 0;
 
       &-link {
-        margin: 8px 0 0;
+        margin: 16px 0 0;
       }
 
       &-none {
-        margin: 16px 0 16px 0;
       }
 
       &--filler {
@@ -147,21 +144,15 @@
     }
 
     &__badge {
-      margin: 16px;
-      width: 105px;
+      width: 72px;
       height: 100%;
       text-align: center;
       align-items: center;
 
       &-image {
-        height: 105px;
+        height: 72px;
         width: 100%;
         object-fit: contain;
-        margin-bottom: 8px;
-      }
-
-      &-text {
-        text-align: center;
       }
     }
 
@@ -193,12 +184,12 @@
       }
 
       &__badge {
-        width: 95px;
+        width: 72px;
         height: 100%;
         align-items: center;
 
         &-image {
-          height: 95px;
+          height: 72px;
           width: 100%;
           object-fit: contain;
         }
