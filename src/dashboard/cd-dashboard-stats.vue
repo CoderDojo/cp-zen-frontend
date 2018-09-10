@@ -30,7 +30,7 @@
       </div>
       <div v-else>
         <p>{{ $t('No statistics are available at the moment.') }}
-        {{ $t('The more Zen will be used, the more you\'ll find about your Dojo!') }}</p>
+        {{ $t('The more Zen is used, the more you\'ll find about your Dojo!') }}</p>
       </div>
     </div>
   </div>
