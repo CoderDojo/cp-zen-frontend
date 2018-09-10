@@ -1,10 +1,10 @@
 <template>
   <div class="column">
     <div class="cd-dashboard-stats">
-      <h1 class="cd-dashboard-stats__header">{{ $t('Dojo Stats') }}</h1>
+      <h3 class="cd-dashboard-stats__header">{{ $t('Dojo Stats') }}</h3>
+      <h4 class="cd-dashboard-stats__category">Youth</h4>
       <div class="cd-dashboard-stats__number">
-        <div class="cd-dashboard-stats__number-value"><span>{{ bookedChildren }}</span></div>
-        <div class="cd-dashboard-stats__description">{{ $t('kids attended your events') }}</div>
+        <span class="cd-dashboard-stats__description" v-html="numberStatText"></span>
       </div>
       <div class="cd-dashboard-stats__pie">
         <div class="cd-dashboard-stats__circle">
@@ -22,7 +22,6 @@
             </div>
           </div>
         </div>
-        <h4>Gender repartition</h4>
       </div>
     </div>
     </div>
@@ -48,6 +47,9 @@
     },
     computed: {
       ...mapGetters(['loggedInUser']),
+      numberStatText() {
+        return this.$t('{nbKids} kids attended your events', { nbKids: `<span class="cd-dashboard-stats__number-value">${this.bookedChildren}</span>` });
+      },
       totalChildren() {
         return this.dojoUsers ? this.dojoUsers.length : 1;
       },
@@ -121,18 +123,6 @@
     &__header {
       margin: 45px 0 16px 0;
     }
-    &__number {
-      text-align: center;
-      &-value {
-        span {
-          padding: 8px;
-        }
-        font-size: @font-size-h3;  
-      }
-    }
-    &__description {
-    
-    }
     &__pie {
       margin-top: 16px;
     }
@@ -182,4 +172,12 @@
     }
   }
 </style>
-
+<style lang="less">
+  .cd-dashboard-stats {
+     &__number {
+      &-value {
+        font-weight: bold;
+      }
+    }
+  }
+</style>
