@@ -2,25 +2,25 @@
   <div class="column">
     <div class="cd-dashboard-stats">
       <h3 class="cd-dashboard-stats__header">{{ $t('Dojo Stats') }}</h3>
-      <h4 class="cd-dashboard-stats__category">Youth</h4>
+      <h4 class="cd-dashboard-stats__category">{{ $t('Youth') }}</h4>
       <div class="cd-dashboard-stats__charts" 
-        v-if="(bookedChildren === null || bookedChildren.length !== 0) && ((dojoUsers === null || dojoUsers.length !== 0) && (genders === null || genders.length !== 0))">
-        <div class="cd-dashboard-stats__chart-number" v-if="bookedChildren !== null">
-          <span class="cd-dashboard-stats__description" v-html="$t('{nbKids} kids attended your events', { nbKids: numberStatText })"></span>
+        v-if="chartsAreVisible">
+        <div class="cd-dashboard-stats__chart-number" v-if="numberChartIsReady">
+          <span class="cd-dashboard-stats__description" v-html="$t('{numKids} kids attended your events', { numKids: numberStatText })"></span>
         </div>
         <div v-else class="cd-dashboard-stats__chart-number--filler cd-filler cd-filler--grey-bg"/>
-        <div class="cd-dashboard-stats__chart-pie" v-if="(dojoUsers !== null && dojoUsers.length > 0) || (genders !== null && genders.length > 0)">
+        <div class="cd-dashboard-stats__chart-pie" v-if="pieChartIsReady">
           <div class="cd-dashboard-stats__circle">
             <svg viewBox="0 0 32 32">
               <g v-for="gender in genderStats">
                 <circle r="16" cx="16" cy="16" :style="{ strokeDashoffset: -gender.prevValue, strokeDasharray: `${gender.perc} 100`}"
-                  :class="['cd-dashboard-stats__circle--' + gender.name]">
+                   :class="[`cd-dashboard-stats__circle--${gender.name}`]">
                 </circle>
               </g>
             </svg>
             <div class="cd-dashboard-stats__circle-legends">
               <div v-for="gender in genderStats" class="cd-dashboard-stats__circle-legend">
-                <div class="cd-dashboard-stats__circle-legend-color" :class="['cd-dashboard-stats__circle--' + gender.name]"></div>
+                <div class="cd-dashboard-stats__circle-legend-color" :class="[`cd-dashboard-stats__circle--${gender.name}`]"></div>
                 <div stroke="#51c5cf" stroke-width="2px" text-anchor="middle" alignment-baseline="middle"> {{ gender.name }}</div>
               </div>
             </div>
@@ -55,6 +55,18 @@
     },
     computed: {
       ...mapGetters(['loggedInUser']),
+      chartsAreVisible() {
+        return (this.bookedChildren === null || this.bookedChildren.length !== 0) &&
+          ((this.dojoUsers === null || this.dojoUsers.length !== 0) &&
+            (this.genders === null || this.genders.length !== 0));
+      },
+      pieChartIsReady() {
+        return (this.dojoUsers !== null && this.dojoUsers.length > 0) ||
+          (this.genders !== null && this.genders.length > 0);
+      },
+      numberChartIsReady() {
+        return this.bookedChildren !== null;
+      },
       numberStatText() {
         return `<span class="cd-dashboard-stats__chart-number-value">${this.bookedChildren}</span>`;
       },
