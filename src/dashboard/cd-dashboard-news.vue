@@ -9,9 +9,7 @@
           <p class="cd-dashboard-news__post-date">{{ post.formattedDate }}</p>
         </span>
         <span class="cd-dashboard-news__posts-right">
-          <h4 class="cd-dashboard-news__post-title">
-            <a class="cd-dashboard-news__post-title-link" :href="`${post.link}`">{{ post.title }}</a>
-          </h4>
+          <a class="cd-dashboard-news__post-title" :href="`${post.link}`" v-html="post.title"></a>
         </span>
       </div>
     </div>
@@ -164,14 +162,11 @@
       }
 
       &-title {
-        margin: 0;
-
-        &-link {
+        font-weight: bold;
           color: @cd-purple;
           &:hover {
             color: #a57ec7;
           }
-        }
       }
     }
 
