@@ -18,6 +18,14 @@ const DojosService = {
     });
   },
 
+  getDojoUsers(dojoId, params) {
+    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/load-dojo-users`,
+      {
+        query: { dojoId, ...params },
+      },
+    );
+  },
+
   getByUrlSlug(urlSlug) {
     return Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/find`,
       {
