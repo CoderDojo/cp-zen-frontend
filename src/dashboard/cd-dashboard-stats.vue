@@ -2,7 +2,7 @@
   <div class="column">
     <div class="cd-dashboard-stats">
       <h2 class="cd-dashboard-stats__header">{{ $t('Dojo Stats') }}</h2>
-      <hr class ="cd-dashboard-stats__divider visible-xs">
+      <hr class="cd-dashboard-stats__divider visible-xs"/>
       <h4 class="cd-dashboard-stats__category">{{ $t('Youth') }}</h4>
       <div class="cd-dashboard-stats__charts" v-if="chartsAreVisible">
         <div class="cd-dashboard-stats__chart-number" v-if="numberChartIsReady">
