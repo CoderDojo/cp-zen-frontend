@@ -3,25 +3,29 @@
     <div class="cd-dashboard-stats">
       <h3 class="cd-dashboard-stats__header">{{ $t('Dojo Stats') }}</h3>
       <h4 class="cd-dashboard-stats__category">Youth</h4>
-      <div class="cd-dashboard-stats__number">
-        <span class="cd-dashboard-stats__description" v-html="numberStatText"></span>
-      </div>
-      <div class="cd-dashboard-stats__pie">
-        <div class="cd-dashboard-stats__circle">
-          <svg viewBox="0 0 32 32">
-            <g v-for="gender in genderStats" >
-              <circle r="16" cx="16" cy="16" :style="{ strokeDashoffset: -gender.prevValue, strokeDasharray: `${gender.perc} 100`}"
-                :class="['cd-dashboard-stats__circle--' + gender.name]">
-              </circle>
-            </g>
-          </svg>
-          <div class="cd-dashboard-stats__circle-legends">
-            <div v-for="gender in genderStats" class="cd-dashboard-stats__circle-legend">
-              <div class="cd-dashboard-stats__circle-legend-color" :class="['cd-dashboard-stats__circle--' + gender.name]"></div>
-              <div stroke="#51c5cf" stroke-width="2px" text-anchor="middle" alignment-baseline="middle"> {{ gender.name }}</div>
+      <div class="cd-dashboard-stats__charts">
+        <div class="cd-dashboard-stats__chart-number" v-if="bookedChildren != null">
+          <span class="cd-dashboard-stats__description" v-html="numberStatText"></span>
+        </div>
+        <div v-else class="cd-dashboard-stats__chart-number--filler cd-filler cd-filler--grey-bg"/>
+        <div class="cd-dashboard-stats__chart-pie" v-if="dojoUsers && genders">
+          <div class="cd-dashboard-stats__circle">
+            <svg viewBox="0 0 32 32">
+              <g v-for="gender in genderStats" >
+                <circle r="16" cx="16" cy="16" :style="{ strokeDashoffset: -gender.prevValue, strokeDasharray: `${gender.perc} 100`}"
+                  :class="['cd-dashboard-stats__circle--' + gender.name]">
+                </circle>
+              </g>
+            </svg>
+            <div class="cd-dashboard-stats__circle-legends">
+              <div v-for="gender in genderStats" class="cd-dashboard-stats__circle-legend">
+                <div class="cd-dashboard-stats__circle-legend-color" :class="['cd-dashboard-stats__circle--' + gender.name]"></div>
+                <div> {{ gender.name }}</div>
+              </div>
             </div>
           </div>
         </div>
+        <div v-else class="cd-dashboard-stats__chart-pie--filler cd-filler cd-filler--grey-bg"/>
       </div>
     </div>
     </div>
@@ -41,14 +45,14 @@
         dojos: null,
         dojoId: null,
         dojoUsers: null,
-        genders: [],
-        bookedChildren: 0,
+        genders: null,
+        bookedChildren: null,
       };
     },
     computed: {
       ...mapGetters(['loggedInUser']),
       numberStatText() {
-        return this.$t('{nbKids} kids attended your events', { nbKids: `<span class="cd-dashboard-stats__number-value">${this.bookedChildren}</span>` });
+        return this.$t('{nbKids} kids attended your events', { nbKids: `<span class="cd-dashboard-stats__chart-number-value">${this.bookedChildren}</span>` });
       },
       totalChildren() {
         return this.dojoUsers ? this.dojoUsers.length : 1;
@@ -110,6 +114,7 @@
 
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
+  @import "../common/styles/cd-filler-loading";
   @import "../common/variables";
 
   .cd-dashboard-stats {
@@ -123,8 +128,21 @@
     &__header {
       margin: 45px 0 16px 0;
     }
-    &__pie {
-      margin-top: 16px;
+    &__chart {
+      &-pie {
+        margin-top: 16px;
+        &--filler {
+          margin-top: 16px;
+          background-color: @cd-very-light-grey;
+          height: 100px;
+          width: 100px;
+          border-radius: 50%;
+        }
+      }
+      &-number--filler {
+        background-color: @cd-very-light-grey;
+        height: @font-size-large;
+      }
     }
     &__circle {
       display: flex;
@@ -173,8 +191,9 @@
   }
 </style>
 <style lang="less">
+  @import "../common/variables";
   .cd-dashboard-stats {
-     &__number {
+     &__chart-number {
       &-value {
         font-weight: bold;
       }
