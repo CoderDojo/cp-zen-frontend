@@ -25,8 +25,6 @@ describe('Homepage children', () => {
     // Check the first username
     child1.invoke('text').then((childText) => cy.wrap(childText.toString().trim()).should('eq','parent 1one'));
     child1 = cy.get(homePage.childrenNames).first();
-    // Check the edit link is present
-    child1.find('a').should('have.attr', 'href', '/dashboard/profile/u1/edit');
   });
   it('should show the user children badges', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
@@ -43,23 +41,19 @@ describe('Homepage children', () => {
     let child1 = cy.get(homePage.children).first();
     child1.within((child) => {
       let badges = cy.get(homePage.childrenBadges);
-      badges.should('have.length', 2);
+      badges.should('have.length', 3);
       badges.first().find('img').should('have.attr', 'src', 'http://badgekit.coderdojo.com:80/images/badge/57');
       // first() mutates the var to its result, so we need to re-pull the selector
       badges = cy.get(homePage.childrenBadges);
-      badges.first().invoke('text').then((badgeText) => cy.wrap(badgeText.toString().trim()).should('eq','Coolest Projects 2016'));
-      badges = cy.get(homePage.childrenBadges);
       // Check the badge img url
-      badges.last().find('img').should('have.attr', 'src', 'http://badgekit.coderdojo.com:80/images/badge/62');
-      badges = cy.get(homePage.childrenBadges);
-      badges.last().invoke('text').then((badgeText) => cy.wrap(badgeText.toString().trim()).should('eq','CoderDojo Ethos: Implementation and Practice'));
+      badges.last().find('img').should('have.attr', 'src', 'http://badgekit.coderdojo.com:80/images/badge/50');
     });
     child1 = cy.get(homePage.children).first();
     child1.find('.cd-dashboard-children__badges > a')
       .should('have.attr', 'href', '/dashboard/children/u1')
       .invoke('text').should('eq', 'See all 3 badges');
   });
-  it('should not show the view all children link if they have <=3 children', () => {
+  it('should show the view all children link', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
     cy.route('POST', '/api/2.0/profiles/user-profile-data', 'fx:profiles/parent1').as('parentProfile');
     cy.visit('/home');
@@ -69,18 +63,6 @@ describe('Homepage children', () => {
     let children = cy.get(homePage.children);
     children.should('have.length', 3);
     let link = cy.get(homePage.childrenLink);
-    link.should('not.be.visible');
-  });
-  it('should show the view all children link if they have >3 children', () => {
-    cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-    cy.route('POST', '/api/2.0/profiles/user-profile-data', 'fx:profiles/parent2').as('parentProfile');
-    cy.visit('/home');
-    cy.wait('@loggedIn');
-    // Parent profile: list children ids
-    cy.wait('@parentProfile');
-    let children = cy.get(homePage.children);
-    children.should('have.length', 3);
-    let link = cy.get(homePage.childrenLink);
-    link.invoke('text').should('eq', 'View all children');
+    link.invoke('text').should('eq', 'View my children');
   });
 });
