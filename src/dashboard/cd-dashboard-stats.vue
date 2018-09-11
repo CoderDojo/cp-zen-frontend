@@ -21,9 +21,12 @@
             <div class="cd-dashboard-stats__circle-legends">
               <div v-for="gender in genderStats" class="cd-dashboard-stats__circle-legend">
                 <div class="cd-dashboard-stats__circle-legend-color" :class="[`cd-dashboard-stats__circle--${gender.name}`]"></div>
-                <div> {{ gender.name }}</div>
+                <div> {{ $t(gender.name) }}</div>
               </div>
             </div>
+          </div>
+          <div v-if="femaleHintIsVisible" class="cd-dashboard-stats__chart-pie-hint">
+            <a href="https://help.coderdojo.com/hc/en-us/articles/360001143123-Increasing-the-percentage-of-girls-in-your-Dojo-">{{ $t('More informations about girls in Dojos') }}</a>
           </div>
         </div>
         <div v-else class="cd-dashboard-stats__chart-pie--filler cd-filler cd-filler--grey-bg"/>
@@ -69,6 +72,10 @@
       },
       numberStatText() {
         return `<span class="cd-dashboard-stats__chart-number-value">${this.bookedChildren}</span>`;
+      },
+      femaleHintIsVisible() {
+        const femaleStats = this.genderStats.find(g => g.name === 'Female');
+        return (femaleStats && femaleStats.perc ? femaleStats.perc : 0) < 30;
       },
       totalChildren() {
         return this.dojoUsers ? this.dojoUsers.length : 1;
@@ -154,6 +161,9 @@
           height: 100px;
           width: 100px;
           border-radius: 50%;
+        }
+        &-hint {
+          margin-top: 8px;
         }
       }
       &-number--filler {
