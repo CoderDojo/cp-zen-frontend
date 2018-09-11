@@ -2,24 +2,24 @@
   <div class="column">
     <div class="cd-dashboard-stats">
       <h3 class="cd-dashboard-stats__header">{{ $t('Dojo Stats') }}</h3>
-      <h4 class="cd-dashboard-stats__category">Youth</h4>
-      <div class="cd-dashboard-stats__charts">
-        <div class="cd-dashboard-stats__chart-number" v-if="bookedChildren != null">
-          <span class="cd-dashboard-stats__description" v-html="numberStatText"></span>
+      <h4 class="cd-dashboard-stats__category">{{ $t('Youth') }}</h4>
+      <div class="cd-dashboard-stats__charts" v-if="chartsAreVisible">
+        <div class="cd-dashboard-stats__chart-number" v-if="numberChartIsReady">
+          <span class="cd-dashboard-stats__description" v-html="$t('{numKids} kids attended your events', { numKids: numberStatText })"></span>
         </div>
         <div v-else class="cd-dashboard-stats__chart-number--filler cd-filler cd-filler--grey-bg"/>
-        <div class="cd-dashboard-stats__chart-pie" v-if="dojoUsers && genders">
+        <div class="cd-dashboard-stats__chart-pie" v-if="pieChartIsReady">
           <div class="cd-dashboard-stats__circle">
             <svg viewBox="0 0 32 32">
-              <g v-for="gender in genderStats" >
+              <g v-for="gender in genderStats">
                 <circle r="16" cx="16" cy="16" :style="{ strokeDashoffset: -gender.prevValue, strokeDasharray: `${gender.perc} 100`}"
-                  :class="['cd-dashboard-stats__circle--' + gender.name]">
+                   :class="[`cd-dashboard-stats__circle--${gender.name}`]">
                 </circle>
               </g>
             </svg>
             <div class="cd-dashboard-stats__circle-legends">
               <div v-for="gender in genderStats" class="cd-dashboard-stats__circle-legend">
-                <div class="cd-dashboard-stats__circle-legend-color" :class="['cd-dashboard-stats__circle--' + gender.name]"></div>
+                <div class="cd-dashboard-stats__circle-legend-color" :class="[`cd-dashboard-stats__circle--${gender.name}`]"></div>
                 <div> {{ gender.name }}</div>
               </div>
             </div>
@@ -27,7 +27,10 @@
         </div>
         <div v-else class="cd-dashboard-stats__chart-pie--filler cd-filler cd-filler--grey-bg"/>
       </div>
-    </div>
+      <div v-else>
+        <p>{{ $t('No statistics are available at the moment.') }}
+        {{ $t('The more Zen is used, the more you\'ll find about your Dojo!') }}</p>
+      </div>
     </div>
   </div>
 </div>
@@ -51,8 +54,20 @@
     },
     computed: {
       ...mapGetters(['loggedInUser']),
+      chartsAreVisible() {
+        return (this.bookedChildren === null || this.bookedChildren.length !== 0) &&
+          ((this.dojoUsers === null || this.dojoUsers.length !== 0) &&
+            (this.genders === null || this.genders.length !== 0));
+      },
+      pieChartIsReady() {
+        return (this.dojoUsers !== null && this.dojoUsers.length > 0) ||
+          (this.genders !== null && this.genders.length > 0);
+      },
+      numberChartIsReady() {
+        return this.bookedChildren !== null;
+      },
       numberStatText() {
-        return this.$t('{nbKids} kids attended your events', { nbKids: `<span class="cd-dashboard-stats__chart-number-value">${this.bookedChildren}</span>` });
+        return `<span class="cd-dashboard-stats__chart-number-value">${this.bookedChildren}</span>`;
       },
       totalChildren() {
         return this.dojoUsers ? this.dojoUsers.length : 1;
@@ -87,9 +102,9 @@
         )).body.length;
       },
       async getDojoUsers() {
-        this.dojoUsers = (await DojoService.getDojoUsers(this.dojoId, { userType: 'attendee-u13', fields: ['gender'] })).body.response;
-        this.dojoUsers = this.dojoUsers.concat((await DojoService.getDojoUsers(this.dojoId, { userType: 'attendee-o13', fields: ['gender'] })).body.response);
-        this.genders = this.dojoUsers.reduce((red, user) => {
+        let dojoUsers = (await DojoService.getDojoUsers(this.dojoId, { userType: 'attendee-u13', fields: ['gender'] })).body.response;
+        dojoUsers = dojoUsers.concat((await DojoService.getDojoUsers(this.dojoId, { userType: 'attendee-o13', fields: ['gender'] })).body.response);
+        this.genders = dojoUsers.reduce((red, user) => {
           const gender = user.gender === null ? 'Undisclosed' : user.gender;
           if (!red[gender]) {
             // eslint-disable-next-line no-param-reassign
@@ -100,6 +115,7 @@
           }
           return red;
         }, {});
+        this.dojoUsers = dojoUsers;
       },
     },
     async created() {
