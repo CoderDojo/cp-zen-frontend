@@ -1,7 +1,8 @@
 <template>
   <div class="column">
     <div class="cd-dashboard-stats">
-      <h3 class="cd-dashboard-stats__header">{{ $t('Dojo Stats') }}</h3>
+      <h2 class="cd-dashboard-stats__header">{{ $t('Dojo Stats') }}</h2>
+      <hr class="cd-dashboard-stats__divider visible-xs"/>
       <h4 class="cd-dashboard-stats__category">{{ $t('Youth') }}</h4>
       <div class="cd-dashboard-stats__charts" v-if="chartsAreVisible">
         <div class="cd-dashboard-stats__chart-number" v-if="numberChartIsReady">
@@ -203,6 +204,14 @@
   @media (max-width: @screen-xs-max) {
     .cd-dashboard-stats {
       max-width: 100%;
+      &__divider {
+        border-color: @divider-grey;
+      }
+      &__chart {
+        &-pie {
+          margin: 16px 0;
+        }
+      }
     }
   }
 </style>
