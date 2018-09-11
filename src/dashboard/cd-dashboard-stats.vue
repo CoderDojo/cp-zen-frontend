@@ -1,7 +1,7 @@
 <template>
   <div class="column">
     <div class="cd-dashboard-stats">
-      <h3 class="cd-dashboard-stats__header">{{ $t('Dojo Stats') }}</h3>
+      <h3 class="cd-dashboard-stats__header">{{ $t('Dojo stats') }}</h3>
       <h4 class="cd-dashboard-stats__category">{{ $t('Youth') }}</h4>
       <div class="cd-dashboard-stats__charts" v-if="chartsAreVisible">
         <div class="cd-dashboard-stats__chart-number" v-if="numberChartIsReady">
