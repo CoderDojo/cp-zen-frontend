@@ -169,7 +169,6 @@ workflows:
       - publish:
           requires:
             - test-unit
-            - test-e2e
             - test-lint
             - test-cypress
           filters:
