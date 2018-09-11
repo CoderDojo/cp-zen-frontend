@@ -9,13 +9,13 @@
         <h4>{{ project.attributes.content.title }}</h4>
       </a>
     </div>
-    <div v-show="!isDisplayable" class="cd-dashboard-projects__cards">
-      <div class="cd-dashboard-projects__card cd-dashboard-projects__card--filler cd-filler"></div>
-      <div class="cd-dashboard-projects__card cd-dashboard-projects__card--filler cd-filler"></div>
-      <div class="cd-dashboard-projects__card cd-dashboard-projects__card--filler cd-filler"></div>
+    <div v-show="!isDisplayable" class="cd-dashboard-projects__cards cd-filler">
+      <div class="cd-dashboard-projects__card cd-dashboard-projects__card--filler"></div>
+      <div class="cd-dashboard-projects__card cd-dashboard-projects__card--filler"></div>
+      <div class="cd-dashboard-projects__card cd-dashboard-projects__card--filler"></div>
     </div>
     <div class="cd-dashboard-projects__cta">
-      <a class="cd-dashboard-projects__view-all" href="https://projects.raspberrypi.org">{{ $t('View all projects') }}</a>
+      <a class="cd-dashboard-projects__view-all" href="https://projects.raspberrypi.org">{{ $t('View more projects') }}</a>
     </div>
   </div>
 </template>
@@ -86,7 +86,7 @@
 
     &__card {
       flex: 1;
-      margin: 0 12px;
+      margin: 16px 12px;
       border-radius: 4px;
       overflow: hidden;
       border: 1px solid #979797;

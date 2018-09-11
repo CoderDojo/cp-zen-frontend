@@ -8,7 +8,7 @@
       </div>
       <div class="cd-dashboard__right-column">
         <dashboard-children/>
-        <!-- <dashboard-stats/> -->
+        <dashboard-stats />
       </div>
     </div>
   </div>
