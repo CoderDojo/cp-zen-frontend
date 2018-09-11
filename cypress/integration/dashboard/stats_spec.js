@@ -34,13 +34,13 @@ describe('Homepage stats', () => {
         { gender: 'Male' },
         { gender: 'Male' }
       ] }).as('dojoUsers');
-      cy.route('POST', '/api/2.0/events/applications/search', []).as('bookedChildren');;
+      cy.route('POST', '/api/2.0/events/applications/search', [{}]).as('bookedChildren');;
       cy.visit('/home');
       cy.wait('@loggedIn');
       cy.wait('@bookedChildren');
       cy.wait('@userDojos');
       cy.wait('@dojoUsers');
-      cy.get(homePage.statsNbYouthChart).invoke('text').should('eq', '{numKids} kids attended your events');
+      cy.get(homePage.statsNbYouthChart).invoke('text').should('eq', '1 kids attended your events');
     });
     it('should show the stats chart of youth gender', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
