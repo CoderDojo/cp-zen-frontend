@@ -94,25 +94,6 @@ describe('Dashboard children component', () => {
   });
 
   describe('methods', () => {
-    describe('methods.loadProfile', () => {
-      it('should load the current user\'s profile', async () => {
-        // ARRANGE
-        const mockUserProfile = {
-          id: '1',
-        };
-        MockUsersService.userProfileData.returns(Promise.resolve({ body: mockUserProfile }));
-        const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
-        vm.loggedInUser = {
-          id: '1',
-        };
-        // ACT
-        await vm.loadProfile();
-
-        // ASSERT
-        expect(vm.userProfile).to.equal(mockUserProfile);
-      });
-    });
-
     describe('methods.loadChildren', () => {
       it('should load the current user\'s children', async () => {
         // ARRANGE
@@ -121,7 +102,7 @@ describe('Dashboard children component', () => {
           user: { id: '1' },
           badges: [],
         };
-        MockUsersService.userProfileData.returns(Promise.resolve({ body: mockChild }));
+        MockUsersService.userProfileData.resolves({ body: mockChild });
         const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
         vm.orderedBadges = sandbox.stub().returns([]);
         vm.loadedChildren = false;
@@ -136,25 +117,6 @@ describe('Dashboard children component', () => {
         expect(vm.userChildren).to.deep.equal([mockChild]);
         expect(vm.loadedChildren).to.equal(true);
         expect(vm.orderedBadges).to.have.been.calledOnce;
-      });
-      it('should set withoutChildren to true if the user has no children', async () => {
-        // ARRANGE
-        const mockChild = {
-          userId: '1',
-          user: { id: '1' },
-        };
-        MockUsersService.userProfileData.returns(Promise.resolve({ body: mockChild }));
-        const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
-        vm.withoutChildren = false;
-        vm.userProfile = {
-          id: '34',
-          children: null,
-        };
-        // ACT
-        await vm.loadChildren();
-
-        // ASSERT
-        expect(vm.withoutChildren).to.equal(true);
       });
     });
     describe('methods.orderedBadges', () => {
@@ -183,15 +145,12 @@ describe('Dashboard children component', () => {
   describe('created', () => {
     it('should call each method to load the data', async () => {
       const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
-      vm.loadProfile = sinon.stub().resolves();
       vm.loadChildren = sinon.stub().resolves();
-      vm.withoutChildren = false;
       vm.loadedChildren = false;
       vm.userProfile = {};
       vm.userChildren = [];
 
       await vm.$lifecycleMethods.created();
-      expect(vm.loadProfile).to.have.been.calledOnce;
       expect(vm.loadChildren).to.have.been.calledOnce;
     });
   });

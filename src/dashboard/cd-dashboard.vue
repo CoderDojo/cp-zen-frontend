@@ -7,8 +7,8 @@
         <dashboard-news />
       </div>
       <div class="cd-dashboard__right-column">
-        <dashboard-children/>
-        <dashboard-stats v-if="userDojos && statsAreVisible" user-dojos="championUserDojos"/>
+        <dashboard-children v-if="userProfile && childrenAreVisible" :user-profile="userProfile"/>
+        <dashboard-stats v-if="userDojos && statsAreVisible" :user-dojos="championUserDojos"/>
       </div>
     </div>
   </div>
@@ -17,6 +17,7 @@
 <script>
   import { mapGetters } from 'vuex';
   import DojoService from '@/dojos/service';
+  import UserService from '@/users/service';
   import DashboardEvents from '@/dashboard/cd-dashboard-events';
   import DashboardProjects from '@/dashboard/cd-dashboard-projects';
   import DashboardChildren from '@/dashboard/cd-dashboard-children';
@@ -28,6 +29,7 @@
     data() {
       return {
         userDojos: null,
+        userProfile: null,
       };
     },
     components: {
@@ -42,6 +44,11 @@
       statsAreVisible() {
         return this.championUserDojos.length > 0;
       },
+      childrenAreVisible() {
+        return !!(this.userProfile &&
+          this.userProfile.children &&
+          this.userProfile.children.length > 0);
+      },
       championUserDojos() {
         return this.userDojos.filter(ud => ud.userTypes.includes('champion'));
       },
@@ -50,9 +57,13 @@
       async getUserDojos() {
         this.userDojos = (await DojoService.getUsersDojos(this.loggedInUser.id)).body;
       },
+      async loadProfile() {
+        this.userProfile = (await UserService.userProfileData(this.loggedInUser.id)).body;
+      },
     },
-    async created() {
-      await this.getUserDojos();
+    created() {
+      this.getUserDojos();
+      this.loadProfile();
     },
   };
 </script>

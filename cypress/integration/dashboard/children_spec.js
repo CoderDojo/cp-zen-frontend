@@ -58,4 +58,13 @@ describe('Homepage children', () => {
     let link = cy.get(homePage.childrenLink);
     link.invoke('text').should('eq', 'View my children');
   });
+  it('should hide the children component if the user has no child', () => {
+    cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
+    cy.route('POST', '/api/2.0/profiles/user-profile-data', 'fx:profiles/adultWithoutChildren').as('adultProfile');
+    cy.visit('/home');
+    cy.wait('@loggedIn');
+    // Parent profile: list children ids
+    cy.wait('@adultProfile');
+    cy.get(homePage.children).should('not.be.visible');
+  });
 });
