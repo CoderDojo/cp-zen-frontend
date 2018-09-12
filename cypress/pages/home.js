@@ -17,4 +17,5 @@ export default {
   statsNbYouthChart: '.cd-dashboard-stats__description',
   statsYouthGenderChart: '.cd-dashboard-stats__circle',
   statsUseZenMessage: '.cd-dashboard-stats p',
+  statsYouthGirlsHint: '.cd-dashboard-stats__chart-pie-hint',
 };

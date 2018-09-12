@@ -29,6 +29,20 @@ describe('Dashboard stats component', () => {
   });
 
   describe('computed', () => {
+    describe('femaleHintIsVisible', () => {
+      it('should return true', () => {
+        vm.genderStats = [{ name: 'Female', perc: 20 }];
+        expect(vm.femaleHintIsVisible).to.be.true;
+      });
+      it('should return false', () => {
+        vm.genderStats = [{ name: 'Female', perc: 31 }];
+        expect(vm.femaleHintIsVisible).to.be.false;
+      });
+      it('should return true if not found', () => {
+        vm.genderStats = [];
+        expect(vm.femaleHintIsVisible).to.be.true;
+      });
+    });
     describe('totalChildren', () => {
       it('should return the length of userDojos', () => {
         vm.dojoUsers = [{}, {}];
