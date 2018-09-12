@@ -65,7 +65,7 @@ describe('Dashboard stats component', () => {
         }, {
           nb: 1,
           name: 'Female',
-          perc: 50,
+          perc: 51,
           prevValue: 50,
         }];
         expect(vm.genderStats).to.deep.equal(expectedData);

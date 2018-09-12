@@ -82,18 +82,20 @@
       },
       genderStats() {
         let prevValue = 0;
-        return Object.entries(this.genders)
-          .reduce((acc, gender) => {
-            const perc = (gender[1] / this.totalChildren) * 100;
-            acc.push({
-              nb: gender[1],
-              name: gender[0],
-              perc,
-              prevValue,
-            });
-            prevValue += perc;
-            return acc;
-          }, []);
+        const gendersEntries = Object.entries(this.genders);
+        return gendersEntries.reduce((acc, gender, index) => {
+          let perc = (gender[1] / this.totalChildren) * 100;
+          // NOTE : total hax to complete the circle ? |:
+          if ((index + 1) === gendersEntries.length) perc += 1;
+          acc.push({
+            nb: gender[1],
+            name: gender[0],
+            perc,
+            prevValue,
+          });
+          prevValue += perc;
+          return acc;
+        }, []);
       },
     },
     methods: {
