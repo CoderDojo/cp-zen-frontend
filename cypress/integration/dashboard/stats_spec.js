@@ -90,7 +90,7 @@ describe('Homepage stats', () => {
       cy.wait('@userDojos');
       cy.wait('@dojoUsers');
       cy.wait('@dojoUsers');
-      cy.get(homePage.statsYouthGirlsHint).invoke('text').should('eq', 'More informations about girls in Dojos');
+      cy.get(homePage.statsYouthGirlsHint).invoke('text').should('eq', 'More information about girls in Dojos');
     });
   });
 });
