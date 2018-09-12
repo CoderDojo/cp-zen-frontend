@@ -12,4 +12,10 @@ export default {
   projectTitle: '.cd-dashboard-projects__header',
   projectCards: '.cd-dashboard-projects__cards',
   projectCard: '.cd-dashboard-projects__card',
+  statsTitle: '.cd-dashboard-stats__header',
+  statsCategory: '.cd-dashboard-stats__category',
+  statsNbYouthChart: '.cd-dashboard-stats__description',
+  statsYouthGenderChart: '.cd-dashboard-stats__circle',
+  statsUseZenMessage: '.cd-dashboard-stats p',
+  statsYouthGirlsHint: '.cd-dashboard-stats__chart-pie-hint',
 };
