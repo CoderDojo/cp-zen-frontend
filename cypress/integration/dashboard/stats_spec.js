@@ -6,14 +6,6 @@ describe('Homepage stats', () => {
     cy.route('POST', '/api/2.0/dojos/users', [{ userTypes: ['champion'] }]).as('userDojos');
   });
 
-  it('should show the stats component with its default category: Youth', () => {
-    cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-    cy.visit('/home');
-    cy.wait('@loggedIn');
-    cy.get(homePage.statsTitle).invoke('text').should('eq', 'Dojo stats');
-    cy.get(homePage.statsCategory).invoke('text').should('eq', 'Youth');
-  });
-
   it('should show a message pushing champions to use Zen when no stats is available', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
     cy.route('POST', '/api/2.0/dojos/load-dojo-users', { response: [] }).as('dojoUsers');

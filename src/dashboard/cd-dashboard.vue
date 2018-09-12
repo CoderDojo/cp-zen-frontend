@@ -8,33 +8,53 @@
       </div>
       <div class="cd-dashboard__right-column">
         <dashboard-children/>
-        <dashboard-stats />
+        <dashboard-stats v-if="userDojos && statsAreVisible" user-dojos="championUserDojos"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import DashboardEvents from '@/dashboard/cd-dashboard-events';
-import DashboardProjects from '@/dashboard/cd-dashboard-projects';
-import DashboardChildren from '@/dashboard/cd-dashboard-children';
-import DashboardNews from '@/dashboard/cd-dashboard-news';
-import DashboardStats from '@/dashboard/cd-dashboard-stats';
+  import { mapGetters } from 'vuex';
+  import DojoService from '@/dojos/service';
+  import DashboardEvents from '@/dashboard/cd-dashboard-events';
+  import DashboardProjects from '@/dashboard/cd-dashboard-projects';
+  import DashboardChildren from '@/dashboard/cd-dashboard-children';
+  import DashboardNews from '@/dashboard/cd-dashboard-news';
+  import DashboardStats from '@/dashboard/cd-dashboard-stats';
 
-export default {
-  name: 'Home',
-  data() {
-    return {
-    };
-  },
-  components: {
-    DashboardEvents,
-    DashboardProjects,
-    DashboardChildren,
-    DashboardNews,
-    DashboardStats,
-  },
-};
+  export default {
+    name: 'Home',
+    data() {
+      return {
+        userDojos: null,
+      };
+    },
+    components: {
+      DashboardEvents,
+      DashboardProjects,
+      DashboardChildren,
+      DashboardNews,
+      DashboardStats,
+    },
+    computed: {
+      ...mapGetters(['loggedInUser']),
+      statsAreVisible() {
+        return this.championUserDojos.length > 0;
+      },
+      championUserDojos() {
+        return this.userDojos.filter(ud => ud.userTypes.includes('champion'));
+      },
+    },
+    methods: {
+      async getUserDojos() {
+        this.userDojos = (await DojoService.getUsersDojos(this.loggedInUser.id)).body;
+      },
+    },
+    async created() {
+      await this.getUserDojos();
+    },
+  };
 </script>
 
 <style scoped lang="less">

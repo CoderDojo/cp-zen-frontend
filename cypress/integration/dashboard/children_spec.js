@@ -5,13 +5,6 @@ describe('Homepage children', () => {
     cy.server();
   });
 
-  it('should redirect to the login page if there is no logged in user', () => {
-    cy.route('/api/2.0/users/instance', 'fx:loggedOutUser').as('notLoggedIn');
-    cy.visit('/home');
-    cy.wait('@notLoggedIn');
-    cy.url().should('include', '/login');
-  });
-
   it('should show the user children info', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
     cy.route('POST', '/api/2.0/profiles/user-profile-data', 'fx:profiles/parent1').as('parentProfile');
