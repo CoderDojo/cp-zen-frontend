@@ -1,41 +1,50 @@
 <template>
-  <div class="cd-dashboard-upcoming-event" :class="{ 'cd-dashboard-upcoming-event--booked': event.order}">
-    <div class="cd-dashboard-upcoming-event__main">
-      <h4 v-if="order">{{ $t('Your next event is "{name}"', { name: event.name }) }}</h4>
-      <h4 v-else>{{ $t('"{name}" is the next session avaiable on the {startTime}', { name: event.name, startTime: eventDate }) }}</h4>
-      <router-link v-if="!order && remainingTickets > 0" :to="{ name: 'EventSessions', params: { eventId: event.id } }">{{ $t('Tickets still available') }}</router-link>
-    </div>
-    <div class="cd-dashboard-upcoming-event__dojo">
-      <div class="cd-dashboard-upcoming-event__dojo-logo">
-        <img v-img-fallback="{ src: dojoImageUrl, fallback: dojoImageFallbackImage }" />
+  <div class="cd-dashboard-upcoming-event">
+    <div v-if="event && event.id && dojo && dojo.id && orders !== null" class="cd-dashboard-upcoming-event__content" :class="{ 'cd-dashboard-upcoming-event__content--booked': hasOrder}">
+      <div class="cd-dashboard-upcoming-event__main">
+        <h4 v-if="hasOrder">{{ $t('Your next event is "{name}"', { name: event.name }) }}</h4>
+        <h4 v-else>{{ $t('"{name}" is the next session available', { name: event.name }) }}</h4>
+        <router-link v-if="!isChampion && !hasOrder && remainingTickets > 0" class="cd-dashboard-upcoming-event__book" :to="{ name: 'EventSessions', params: { eventId: event.id } }">{{ $t('Book now') }}</router-link>
+        <router-link v-if="hasOrder"  class="cd-dashboard-upcoming-event__link" :to="{ name: 'EventSessions', params: { eventId: event.id } }">
+          <span v-if="ninjaTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: ninjaTickets, type: $t('Youth') }) }}</span>
+          <span v-if="mentorTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: mentorTickets, type: $t('Mentor') }) }}</span>
+        </router-link>
+        <a v-if="isChampion" class="cd-dashboard-upcoming-event__link" href="#">
+          <span>{{ $t('{booked}/{total} {type} booked', { booked: bookedNinjaTickets, total: totalNinjaTickets, type: 'Youth' }) }}</span>
+          <span>{{ $t('{booked}/{total} {type} booked', { booked: bookedMentorTickets, total: totalMentorTickets, type: 'Mentor' }) }}</span>
+        </a>
       </div>
-      <div class="cd-dashboard-upcoming-event__dojo-details">
-        <h4>{{ dojo.name }}</h4>
-        <p>{{ dojo.address1 }}</p>
+      <div class="cd-dashboard-upcoming-event__dojo">
+          <h4>{{ dojo.name }}</h4>
+          <p>{{ eventDate | cdDateFormatter }}, {{ formattedStartTime }} - {{ formattedEndTime }}</p>
       </div>
     </div>
+    <div v-else class="cd-dashboard-upcoming-event__filler cd-filler"></div>
   </div>
 </template>
 
 <script>
   import { mapGetters } from 'vuex';
   import ImgFallback from '@/common/directives/cd-img-fallback';
+  import cdDateFormatter from '@/common/filters/cd-date-formatter';
+  import cdTimeFormatter from '@/common/filters/cd-time-formatter';
+  import EventsService from '@/events/service';
   import EventUtils from '@/events/util';
 
   export default {
     name: 'cd-dashboard-upcoming-event',
-    props: {
-      event: {
-        required: true,
-        type: Object,
-      },
-      dojo: {
-        required: true,
-        type: Object,
-      },
-    },
+    props: ['event', 'dojo'],
     directives: {
       ImgFallback,
+    },
+    filters: {
+      cdDateFormatter,
+      cdTimeFormatter,
+    },
+    data() {
+      return {
+        orders: null,
+      };
     },
     computed: {
       ...mapGetters(['loggedInUser']),
@@ -43,11 +52,27 @@
         return EventUtils.getNextStartTime(this.event);
       },
       remainingTickets() {
-        return this.event.sessions.reduce((acc1, session) => {
-          return acc1 + session.tickets.reduce((acc2, ticket) => {
-            return acc2 + ticket.quantity - ticket.approvedApplications;
-          }, 0);
-        }, 0);
+        return this.totalNinjaTickets - this.bookedNinjaTickets;
+      },
+      bookedNinjaTickets() {
+        return this.event.sessions.reduce((acc1, session) =>
+          acc1 + session.tickets.filter(ticket => ticket.type === 'ninja').reduce((acc2, ticket) =>
+            acc2 + ticket.approvedApplications, 0), 0);
+      },
+      totalNinjaTickets() {
+        return this.event.sessions.reduce((acc1, session) =>
+          acc1 + session.tickets.filter(ticket => ticket.type === 'ninja').reduce((acc2, ticket) =>
+            acc2 + ticket.quantity, 0), 0);
+      },
+      bookedMentorTickets() {
+        return this.event.sessions.reduce((acc1, session) =>
+          acc1 + session.tickets.filter(ticket => ticket.type === 'mentor').reduce((acc2, ticket) =>
+            acc2 + ticket.approvedApplications, 0), 0);
+      },
+      totalMentorTickets() {
+        return this.event.sessions.reduce((acc1, session) =>
+          acc1 + session.tickets.filter(ticket => ticket.type === 'mentor').reduce((acc2, ticket) =>
+            acc2 + ticket.quantity, 0), 0);
       },
       dojoImageUrl() {
         return `https://s3-eu-west-1.amazonaws.com/zen-dojo-images/${this.dojo.id}`;
@@ -57,14 +82,47 @@
         return require('../../assets/avatars/dojo-default-logo.png');
         /* eslint-enable global-require */
       },
+      hasOrder() {
+        return this.orders && this.orders.length > 0;
+      },
+      formattedStartTime() {
+        return this.$options.filters.cdTimeFormatter(this.event.dates[0].startTime);
+      },
+      formattedEndTime() {
+        return this.$options.filters.cdTimeFormatter(this.event.dates[0].endTime);
+      },
+      ninjaTickets() {
+        return this.orders.reduce((acc, order) =>
+          acc + order.applications.filter(application => application.ticketType === 'ninja').length, 0);
+      },
+      mentorTickets() {
+        return this.orders.reduce((acc, order) =>
+          acc + order.applications.filter(application => application.ticketType === 'mentor').length, 0);
+      },
+      isChampion() {
+        return this.event.usersDojos.filter(usersDojo => usersDojo.userTypes.indexOf('champion') !== -1).length > 0;
+      },
     },
     methods: {
       async loadOrders() {
-        const res = await EventService.v3.getOrder(this.loggedInUser.id, {
-          params: { eventId: this.event.id },
+        const res = await EventsService.v3.getOrder(this.loggedInUser.id, {
+          params: {
+            query: { eventId: this.event.id },
+          },
         });
         this.orders = res.body.results;
+        this.$emit('loaded');
       },
+    },
+    watch: {
+      event() {
+        this.loadOrders();
+      },
+    },
+    created() {
+      if (this.event && this.event.id) {
+        this.loadOrders();
+      }
     },
   };
 </script>
@@ -72,42 +130,46 @@
 <style scoped lang="less">
   @import "~@coderdojo/cd-common/common/_colors";
   @import "../../common/variables";
+  @import "../../common/styles/cd-filler-loading";
 
   .cd-dashboard-upcoming-event {
-    background: @cd-white;
-    display: flex;
     margin: 32px 0;
-    padding: 0 20px;
+
+    &__content {
+      background: @cd-white;
+      display: flex;
+      padding: 0 20px;
+    }
 
     &__main {
       flex: 2 2 66.6%;
-      padding: 10px;
+      padding: 10px 10px 20px 10px;
     }
 
     &__dojo {
-      display: flex;
       padding: 10px;
       flex: 1 1 33.3%;
 
-      &-logo {
-        width: 64px;
-        padding: 10px;
-
-        img {
-          width: 100%;
-        }
-      }
-
-      &-details {
-        flex: 1;
-
-        p {
-          margin: 0;
-        }
+      p {
+        margin: 0;
       }
     }
 
-    &--booked {
+    &__book {
+      display: inline-block;
+      border: 1px solid #0093D5;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+
+    &__link {
+      span {
+        margin-right: 8px;
+      }
+    }
+
+    &__content--booked, &:first-child &__content {
       border: 1px solid #ED684A;
       position: relative;
 
@@ -128,13 +190,27 @@
 
       .cd-dashboard-upcoming-event {
         &__main {
-          background-image: url(../../assets/characters/ninjas/CD-Character-Female-1-1.png);
+          background-image: url(../../assets/characters/ninjas/CD-Character-Female-2-3.png);
           background-repeat: no-repeat;
-          background-position: bottom -60px left;
+          background-position: bottom left;
           background-size: 80px auto;
           padding-left: 100px;
         }
       }
+    }
+
+    &:first-child &__content--booked {
+      .cd-dashboard-upcoming-event {
+        &__main {
+          background-image: url(../../assets/characters/ninjas/CD-Character-Female-1-1.png);
+          background-position: bottom -60px left;
+        }
+      }
+    }
+
+    &__filler {
+      height: 90px;
+      background: @cd-very-light-grey;
     }
   }
 </style>

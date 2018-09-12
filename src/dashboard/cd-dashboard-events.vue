@@ -3,7 +3,7 @@
     <div class="cd-dashboard-events">
       <div class="cd-dashboard-events__content">
         <h1 class="cd-dashboard-events__header">{{ $t('Hey {name}, here\'s what\'s most important...', { name: loggedInUser.firstName }) }}</h1>
-        <div v-if="loaded" class="cd-dashboard-events__list">
+        <div class="cd-dashboard-events__list">
           <upcoming-event v-for="event in events" :key="event.id" :event="event" :dojo="dojos[event.dojoId]"></upcoming-event>
         </div>
         <div class="cd-dashboard-events__cta">
@@ -29,9 +29,8 @@
     },
     data() {
       return {
-        events: [],
+        events: [{}, {}],
         usersDojos: [],
-        orders: [],
         dojos: {},
         loaded: false,
       };
@@ -89,6 +88,7 @@
   @import "~@coderdojo/cd-common/common/_colors";
   @import "../common/styles/cd-primary-button.less";
   @import "../common/variables";
+  @import "../common/styles/cd-filler-loading";
 
   .cd-dashboard-events {
     background-color: @cd-purple;
@@ -103,6 +103,12 @@
     &__header {
       color: @cd-white;
       margin: 0 0 48px 0;
+    }
+
+    &__list-filler {
+      background: @cd-very-light-grey;
+      height: 90px;
+      margin: 32px 0;
     }
 
     &__cta {

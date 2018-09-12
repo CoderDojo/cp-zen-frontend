@@ -23,6 +23,7 @@ services:
       - '8080:8080'
     volumes:
       - .:/usr/src/app:Z
+      - ../cp-translations:/usr/src/app/node_modules/cp-translations:ro
   cypress:
     image: cypress/base:8
     command: yarn cypress
