@@ -6,12 +6,12 @@
         <h4 v-else>{{ $t('"{name}" is the next session available', { name: event.name }) }}</h4>
         <router-link v-if="canBook" class="cd-dashboard-upcoming-event__book" :to="{ name: 'EventSessions', params: { eventId: event.id } }">{{ $t('Book now') }}</router-link>
         <router-link v-if="hasOrder"  class="cd-dashboard-upcoming-event__link" :to="{ name: 'EventSessions', params: { eventId: event.id } }">
-          <span v-if="ninjaTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: ninjaTickets, type: $t('Youth') }) }}</span>
-          <span v-if="mentorTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: mentorTickets, type: $t('Mentor') }) }}</span>
+          <span v-if="ninjaTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedNinjaTickets, type: $t('Youth') }) }}</span>
+          <span v-if="mentorTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedMentorTickets, type: $t('Mentor') }) }}</span>
         </router-link>
         <a v-if="isChampion || isTicketingAdmin" class="cd-dashboard-upcoming-event__link" href="#">
-          <span>{{ $t('{booked}/{total} {type} booked', { booked: bookedNinjaTickets, total: totalNinjaTickets, type: 'Youth' }) }}</span>
-          <span>{{ $t('{booked}/{total} {type} booked', { booked: bookedMentorTickets, total: totalMentorTickets, type: 'Mentor' }) }}</span>
+          <span>{{ $t('{booked}/{total} {type} booked', { booked: approvedNinjaTickets, total: totalNinjaTickets, type: 'Youth' }) }}</span>
+          <span>{{ $t('{booked}/{total} {type} booked', { booked: approvedMentorTickets, total: totalMentorTickets, type: 'Mentor' }) }}</span>
         </a>
       </div>
       <div class="cd-dashboard-upcoming-event__dojo">
@@ -59,15 +59,15 @@
         return EventUtils.getNextStartTime(this.event);
       },
       remainingTickets() {
-        return this.totalNinjaTickets - this.bookedNinjaTickets;
+        return this.totalNinjaTickets - this.approvedNinjaTickets;
       },
-      bookedNinjaTickets() {
+      approvedNinjaTickets() {
         return this.ticketReduction('ninja', 'approvedApplications');
       },
       totalNinjaTickets() {
         return this.ticketReduction('ninja', 'quantity');
       },
-      bookedMentorTickets() {
+      approvedMentorTickets() {
         return this.ticketReduction('mentor', 'approvedApplications');
       },
       totalMentorTickets() {
@@ -90,11 +90,11 @@
       formattedEndTime() {
         return this.$options.filters.cdTimeFormatter(this.event.dates[0].endTime);
       },
-      ninjaTickets() {
+      bookedNinjaTickets() {
         return this.orders.reduce((acc, order) =>
           acc + order.applications.filter(application => application.ticketType === 'ninja').length, 0);
       },
-      mentorTickets() {
+      bookedMentorTickets() {
         return this.orders.reduce((acc, order) =>
           acc + order.applications.filter(application => application.ticketType === 'mentor').length, 0);
       },
@@ -118,7 +118,6 @@
           },
         });
         this.orders = res.body.results;
-        this.$emit('loaded');
       },
     },
     watch: {
