@@ -100,7 +100,7 @@
     background-color: #fff;
     padding: 0 32px;
     min-height: 432px;
-    width: 940px;
+    max-width: 940px;
     display: flex;
     flex-direction: column;
 
