@@ -4,7 +4,9 @@
     <h2 class="cd-dashboard-projects__header visible-xs">{{ $t('Here are some projects you can try') }}</h2>
     <hr class ="cd-dashboard-projects__divider visible-xs">
     <div v-show="isDisplayable" class="cd-dashboard-projects__cards">
-      <a class="cd-dashboard-projects__card" v-for="project in projects" :key="project.id" :href="`https://projects.raspberrypi.org/${locale}/projects/${project.attributes.repositoryName}`">
+      <a class="cd-dashboard-projects__card" v-for="project in projects" :key="project.id" 
+        :href="`https://projects.raspberrypi.org/${locale}/projects/${project.attributes.repositoryName}`"
+        v-ga-track-exit-nav>
         <img :src="project.attributes.content.heroImage" />
         <h4>{{ project.attributes.content.title }}</h4>
       </a>
@@ -15,7 +17,7 @@
       <div class="cd-dashboard-projects__card cd-dashboard-projects__card--filler"></div>
     </div>
     <div class="cd-dashboard-projects__cta">
-      <a class="cd-dashboard-projects__view-all" href="https://projects.raspberrypi.org">{{ $t('View more projects') }}</a>
+      <a class="cd-dashboard-projects__view-all" href="https://projects.raspberrypi.org" v-ga-track-exit-nav>{{ $t('View more projects') }}</a>
     </div>
   </div>
 </template>

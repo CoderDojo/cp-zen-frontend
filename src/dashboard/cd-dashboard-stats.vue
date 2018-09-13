@@ -26,7 +26,7 @@
             </div>
           </div>
           <div v-if="femaleHintIsVisible" class="cd-dashboard-stats__chart-pie-hint">
-            <a href="https://help.coderdojo.com/hc/en-us/articles/360001143123-Increasing-the-percentage-of-girls-in-your-Dojo-">{{ $t('More information about girls in Dojos') }}</a>
+            <a href="https://help.coderdojo.com/hc/en-us/articles/360001143123-Increasing-the-percentage-of-girls-in-your-Dojo-" v-ga-track-exit-nav>{{ $t('More information about girls in Dojos') }}</a>
           </div>
         </div>
         <div v-else class="cd-dashboard-stats__chart-pie--filler cd-filler cd-filler--grey-bg"/>
