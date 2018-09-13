@@ -37,6 +37,15 @@
     },
     computed: {
       ...mapGetters(['loggedInUser']),
+      usersDojosMap() {
+        return this.usersDojos.reduce((map, usersDojo) => {
+          const dojoId = usersDojo.dojoId;
+          // eslint-disable-next-line no-param-reassign
+          if (!map[dojoId]) map[dojoId] = [];
+          map[dojoId].push(usersDojo);
+          return map;
+        }, {});
+      },
     },
     methods: {
       async loadEvents() {
@@ -53,21 +62,22 @@
         ));
         this.events = events
           .reduce((acc, dojoEvents) => acc.concat(dojoEvents.body.results), [])
+          .sort(EventUtils.orderByStartTime)
+          .slice(0, 2)
           .map(event => ({
             ...event,
-            usersDojos: this.usersDojos.filter(usersDojo => usersDojo.dojoId === event.dojoId),
-          }))
-          .sort(EventUtils.orderByStartTime)
-          .slice(0, 2);
+            usersDojos: this.usersDojosMap[event.dojoId],
+          }));
       },
       async loadUserDojos() {
         const res = await DojosService.getUsersDojos(this.loggedInUser.id);
         this.usersDojos = res.body;
       },
       async loadDojos() {
-        const dojoIds = this.events
-          .map(event => event.dojoId)
-          .filter((dojoId, index, ids) => ids.indexOf(dojoId) === index);
+        const dojoIds = this.events.reduce((acc, event) => {
+          if (acc.indexOf(event.dojoId) === -1) acc.push(event.dojoId);
+          return acc;
+        }, []);
         const res = await Promise.all(dojoIds.map(dojoId => DojosService.getDojoById(dojoId)));
         this.dojos = {};
         dojoIds.forEach((dojoId, index) => {

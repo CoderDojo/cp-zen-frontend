@@ -1,15 +1,15 @@
 <template>
   <div class="cd-dashboard-upcoming-event">
-    <div v-if="event && event.id && dojo && dojo.id && orders !== null" class="cd-dashboard-upcoming-event__content" :class="{ 'cd-dashboard-upcoming-event__content--booked': hasOrder}">
+    <div v-if="isLoaded" class="cd-dashboard-upcoming-event__content" :class="{ 'cd-dashboard-upcoming-event__content--booked': hasOrder}">
       <div class="cd-dashboard-upcoming-event__main">
         <h4 v-if="hasOrder">{{ $t('Your next event is "{name}"', { name: event.name }) }}</h4>
         <h4 v-else>{{ $t('"{name}" is the next session available', { name: event.name }) }}</h4>
-        <router-link v-if="!isChampion && !hasOrder && remainingTickets > 0" class="cd-dashboard-upcoming-event__book" :to="{ name: 'EventSessions', params: { eventId: event.id } }">{{ $t('Book now') }}</router-link>
+        <router-link v-if="canBook" class="cd-dashboard-upcoming-event__book" :to="{ name: 'EventSessions', params: { eventId: event.id } }">{{ $t('Book now') }}</router-link>
         <router-link v-if="hasOrder"  class="cd-dashboard-upcoming-event__link" :to="{ name: 'EventSessions', params: { eventId: event.id } }">
           <span v-if="ninjaTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: ninjaTickets, type: $t('Youth') }) }}</span>
           <span v-if="mentorTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: mentorTickets, type: $t('Mentor') }) }}</span>
         </router-link>
-        <a v-if="isChampion" class="cd-dashboard-upcoming-event__link" href="#">
+        <a v-if="isChampion || isTicketingAdmin" class="cd-dashboard-upcoming-event__link" href="#">
           <span>{{ $t('{booked}/{total} {type} booked', { booked: bookedNinjaTickets, total: totalNinjaTickets, type: 'Youth' }) }}</span>
           <span>{{ $t('{booked}/{total} {type} booked', { booked: bookedMentorTickets, total: totalMentorTickets, type: 'Mentor' }) }}</span>
         </a>
@@ -48,6 +48,13 @@
     },
     computed: {
       ...mapGetters(['loggedInUser']),
+      isLoaded() {
+        return this.event && this.event.id && this.dojo && this.dojo.id && this.orders !== null;
+      },
+      canBook() {
+        return !this.isChampion && !this.isTicketingAdmin &&
+          !this.hasOrder && this.remainingTickets > 0;
+      },
       eventDate() {
         return EventUtils.getNextStartTime(this.event);
       },
@@ -55,24 +62,16 @@
         return this.totalNinjaTickets - this.bookedNinjaTickets;
       },
       bookedNinjaTickets() {
-        return this.event.sessions.reduce((acc1, session) =>
-          acc1 + session.tickets.filter(ticket => ticket.type === 'ninja').reduce((acc2, ticket) =>
-            acc2 + ticket.approvedApplications, 0), 0);
+        return this.ticketReduction('ninja', 'approvedApplications');
       },
       totalNinjaTickets() {
-        return this.event.sessions.reduce((acc1, session) =>
-          acc1 + session.tickets.filter(ticket => ticket.type === 'ninja').reduce((acc2, ticket) =>
-            acc2 + ticket.quantity, 0), 0);
+        return this.ticketReduction('ninja', 'quantity');
       },
       bookedMentorTickets() {
-        return this.event.sessions.reduce((acc1, session) =>
-          acc1 + session.tickets.filter(ticket => ticket.type === 'mentor').reduce((acc2, ticket) =>
-            acc2 + ticket.approvedApplications, 0), 0);
+        return this.ticketReduction('mentor', 'approvedApplications');
       },
       totalMentorTickets() {
-        return this.event.sessions.reduce((acc1, session) =>
-          acc1 + session.tickets.filter(ticket => ticket.type === 'mentor').reduce((acc2, ticket) =>
-            acc2 + ticket.quantity, 0), 0);
+        return this.ticketReduction('mentor', 'quantity');
       },
       dojoImageUrl() {
         return `https://s3-eu-west-1.amazonaws.com/zen-dojo-images/${this.dojo.id}`;
@@ -102,8 +101,16 @@
       isChampion() {
         return this.event.usersDojos.filter(usersDojo => usersDojo.userTypes.indexOf('champion') !== -1).length > 0;
       },
+      isTicketingAdmin() {
+        return this.event.usersDojos.filter(usersDojo => usersDojo.userPermissions.find(perm => perm.name === 'ticketing-admin')).length > 0;
+      },
     },
     methods: {
+      ticketReduction(type, field) {
+        return this.event.sessions.reduce((acc1, session) =>
+          acc1 + session.tickets.filter(ticket => ticket.type === type).reduce((acc2, ticket) =>
+            acc2 + ticket[field], 0), 0);
+      },
       async loadOrders() {
         const res = await EventsService.v3.getOrder(this.loggedInUser.id, {
           params: {
@@ -157,7 +164,7 @@
 
     &__book {
       display: inline-block;
-      border: 1px solid #0093D5;
+      border: 1px solid @link-color;
       padding: 4px 8px;
       border-radius: 4px;
       margin-top: 4px;
@@ -170,7 +177,7 @@
     }
 
     &__content--booked, &:first-child &__content {
-      border: 1px solid #ED684A;
+      border: 1px solid @cd-orange;
       position: relative;
 
       &::after {
@@ -179,9 +186,9 @@
         position: absolute;
         width: 11px;
         height: 22px;
-        background-color: #73449B;
+        background-color: @cd-purple;
         border-style: solid;
-        border-color: #ED684A;
+        border-color: @cd-orange;
         border-width: 1px 1px 1px 0;
         border-radius: 0 11px 11px 0;
         top: 12px;

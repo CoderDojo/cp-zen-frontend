@@ -15,7 +15,7 @@
       <div class="cd-dashboard-projects__card cd-dashboard-projects__card--filler"></div>
     </div>
     <div class="cd-dashboard-projects__cta">
-      <a class="cd-dashboard-projects__view-all" href="https://projects.raspberrypi.org">{{ $t('View more projects') }}</a>
+      <router-link class="cd-dashboard-projects__view-all" to="https://projects.raspberrypi.org">{{ $t('View more projects') }}</router-link>
     </div>
   </div>
 </template>
