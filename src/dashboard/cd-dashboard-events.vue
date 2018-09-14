@@ -58,7 +58,8 @@
             params: {
               query,
               related: 'sessions.tickets',
-            } }),
+            }
+          }),
         ));
         this.events = events
           .reduce((acc, dojoEvents) => acc.concat(dojoEvents.body.results), [])
