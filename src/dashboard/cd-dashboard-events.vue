@@ -58,7 +58,7 @@
             params: {
               query,
               related: 'sessions.tickets',
-            }
+            },
           }),
         ));
         this.events = events
