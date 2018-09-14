@@ -8,6 +8,7 @@ import VueAnalytics from 'vue-analytics';
 import PasswordValidator from '@/common/directives/cd-password-validator';
 import titleDirective from '@/common/directives/title';
 import gaTrackClickDirective from '@/common/directives/cd-ga-track-click';
+import gaTrackExitNavDirective from '@/common/directives/cd-ga-track-exit-nav';
 import 'font-awesome/css/font-awesome.min.css';
 import 'vue-dob-picker/dist/static/vue-dob-picker.css';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
@@ -36,6 +37,7 @@ Vue.use(VueAnalytics, {
 });
 Vue.directive('title', titleDirective);
 Vue.directive('ga-track-click', gaTrackClickDirective);
+Vue.directive('ga-track-exit-nav', gaTrackExitNavDirective);
 
 /* eslint-disable no-new */
 new Vue({

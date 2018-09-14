@@ -8,7 +8,7 @@
       </div>
       <div class="cd-dashboard__right-column">
         <dashboard-children v-if="userProfile && childrenAreVisible" :user-profile="userProfile"/>
-        <dashboard-stats v-if="userDojos && statsAreVisible" :user-dojos="championUserDojos"/>
+        <dashboard-stats v-if="userDojos && statsAreVisible" :user-dojos="filterUserDojos('champion')"/>
       </div>
     </div>
   </div>
@@ -42,28 +42,40 @@
     computed: {
       ...mapGetters(['loggedInUser']),
       statsAreVisible() {
-        return this.championUserDojos.length > 0;
+        return this.filterUserDojos('champion').length > 0;
       },
       childrenAreVisible() {
         return !!(this.userProfile &&
           this.userProfile.children &&
           this.userProfile.children.length > 0);
       },
-      championUserDojos() {
-        return this.userDojos.filter(ud => ud.userTypes.includes('champion'));
+      highestUserRole() {
+        /* eslint-disable no-nested-ternary */
+        return this.filterUserDojos('champion').length ? 'champion' :
+          this.filterUserDojos('mentor').length ? 'mentor' :
+            this.filterUserDojos('parent-guardian').length ? 'parent-guardian' :
+              'ninja';
+        /* eslint-enable no-nested-ternary */
       },
     },
     methods: {
+      filterUserDojos(role) {
+        return this.userDojos.filter(ud => ud.userTypes.includes(role));
+      },
       async getUserDojos() {
         this.userDojos = (await DojoService.getUsersDojos(this.loggedInUser.id)).body;
       },
       async loadProfile() {
         this.userProfile = (await UserService.userProfileData(this.loggedInUser.id)).body;
       },
+      setUserDimension() {
+        this.$ga.set('dimension1', this.highestUserRole);
+      },
     },
-    created() {
-      this.getUserDojos();
+    async created() {
       this.loadProfile();
+      await this.getUserDojos();
+      this.setUserDimension();
     },
   };
 </script>

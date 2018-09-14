@@ -7,7 +7,7 @@
           <upcoming-event v-for="event in events" :key="event.id" :event="event" :dojo="dojos[event.dojoId]"></upcoming-event>
         </div>
         <div class="cd-dashboard-events__cta">
-          <router-link class="cd-dashboard-events__cta-link" :to="{ name: 'MyTickets' }">{{ $t('Your Events') }}</router-link>
+          <router-link class="cd-dashboard-events__cta-link" :to="{ name: 'MyTickets' }" v-ga-track-click="'your_events'">{{ $t('Your Events') }}</router-link>
         </div>
       </div>
     </div>

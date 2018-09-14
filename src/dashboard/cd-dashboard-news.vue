@@ -9,7 +9,7 @@
           <p class="cd-dashboard-news__post-date">{{ post.formattedDate }}</p>
         </span>
         <span class="cd-dashboard-news__posts-right">
-          <a class="cd-dashboard-news__post-title" :href="`${post.link}`" v-html="post.title"></a>
+          <a class="cd-dashboard-news__post-title" :href="`${post.link}`" v-html="post.title" v-ga-track-exit-nav></a>
         </span>
       </div>
     </div>
@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="cd-dashboard-news__cta">
-      <a class="cd-dashboard-news__view-all" href="https://coderdojo.com/news/">{{ $t('View more news') }}</a>
+      <a class="cd-dashboard-news__view-all" href="https://coderdojo.com/news/" v-ga-track-exit-nav>{{ $t('View more news') }}</a>
     </div>
   </div>
 </template>

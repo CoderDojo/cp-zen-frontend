@@ -27,21 +27,39 @@ describe('Dashboard component', () => {
 
 
   describe('computed', () => {
-    describe('computed.championUserDojos', () => {
-      it('should filter the user dojos with usertype "champion"', () => {
+    describe('computed.highestUserRole', () => {
+      it('should return champion first', () => {
         // ARRANGE
         const vm = vueUnitHelper(DashboardComponentWithMocks);
-        vm.userDojos = [{ dojoId: 'd1', userTypes: ['banana'] }, { dojoId: 'd2', userTypes: ['banana', 'champion'] }];
+        vm.filterUserDojos = sinon.stub().withArgs('champion').returns([{ userTypes: ['champion'] }]);
 
         // ASSERT
-        expect(vm.championUserDojos).to.eql([{ dojoId: 'd2', userTypes: ['banana', 'champion'] }]);
+        expect(vm.highestUserRole).to.equal('champion');
+      });
+      it('should return mentor when champion isn\'t available', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(DashboardComponentWithMocks);
+        vm.filterUserDojos = sinon.stub();
+        vm.filterUserDojos.withArgs('champion').returns([]);
+        vm.filterUserDojos.withArgs('mentor').returns([{ userType: ['mentor'] }]);
+
+        // ASSERT
+        expect(vm.highestUserRole).to.equal('mentor');
+      });
+      it('should return ninja as a fallback', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(DashboardComponentWithMocks);
+        vm.filterUserDojos = sinon.stub().returns([]);
+
+        // ASSERT
+        expect(vm.highestUserRole).to.equal('ninja');
       });
     });
     describe('computed.statsAreVisible', () => {
       it('should return true if the user is a champion of a Dojo', () => {
         // ARRANGE
         const vm = vueUnitHelper(DashboardComponentWithMocks);
-        vm.championUserDojos = [{ dojoId: 'd2', userTypes: ['banana', 'champion'] }];
+        vm.filterUserDojos = sinon.stub().returns([{ dojoId: 'd2', userTypes: ['banana', 'champion'] }]);
 
         // ASSERT
         expect(vm.statsAreVisible).to.be.true;
@@ -49,7 +67,7 @@ describe('Dashboard component', () => {
       it('should return false if the user is not a champion', () => {
         // ARRANGE
         const vm = vueUnitHelper(DashboardComponentWithMocks);
-        vm.championUserDojos = [];
+        vm.filterUserDojos = sinon.stub().returns([]);
 
         // ASSERT
         expect(vm.statsAreVisible).to.be.false;
@@ -84,6 +102,16 @@ describe('Dashboard component', () => {
   });
 
   describe('methods', () => {
+    describe('mehtods.filterUserDojos', () => {
+      it('should filter the user dojos with usertype "champion"', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(DashboardComponentWithMocks);
+        vm.userDojos = [{ dojoId: 'd1', userTypes: ['banana'] }, { dojoId: 'd2', userTypes: ['banana', 'champion'] }];
+
+        // ASSERT
+        expect(vm.filterUserDojos('champion')).to.eql([{ dojoId: 'd2', userTypes: ['banana', 'champion'] }]);
+      });
+    });
     describe('methods.getUserDojos', () => {
       it('should load the current user\'s dojos', async () => {
         // ARRANGE
@@ -127,9 +155,11 @@ describe('Dashboard component', () => {
       const vm = vueUnitHelper(DashboardComponentWithMocks);
       vm.getUserDojos = sinon.stub().resolves();
       vm.loadProfile = sinon.stub().resolves();
+      vm.setUserDimension = sinon.stub();
 
       await vm.$lifecycleMethods.created();
       expect(vm.getUserDojos).to.have.been.calledOnce;
+      expect(vm.setUserDimension).to.have.been.calledOnce;
       expect(vm.loadProfile).to.have.been.calledOnce;
     });
   });

@@ -4,12 +4,12 @@
       <div class="cd-dashboard-upcoming-event__main">
         <h4 v-if="hasOrder">{{ $t('Your next event is "{name}"', { name: event.name }) }}</h4>
         <h4 v-else>{{ $t('"{name}" is the next session available', { name: event.name }) }}</h4>
-        <router-link v-if="canBook" class="cd-dashboard-upcoming-event__book" :to="{ name: 'EventSessions', params: { eventId: event.id } }">{{ $t('Book now') }}</router-link>
-        <router-link v-if="hasOrder"  class="cd-dashboard-upcoming-event__link" :to="{ name: 'EventSessions', params: { eventId: event.id } }">
+        <router-link v-if="canBook" class="cd-dashboard-upcoming-event__book" :to="{ name: 'EventSessions', params: { eventId: event.id } }" v-ga-track-click="'book_now'">{{ $t('Book now') }}</router-link>
+        <router-link v-if="hasOrder"  class="cd-dashboard-upcoming-event__link" :to="{ name: 'EventSessions', params: { eventId: event.id } }" v-ga-track-click="'booked_tickets'">
           <span v-if="ninjaTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedNinjaTickets, type: $t('Youth') }) }}</span>
           <span v-if="mentorTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedMentorTickets, type: $t('Mentor') }) }}</span>
         </router-link>
-        <a v-if="isChampion || isTicketingAdmin" class="cd-dashboard-upcoming-event__link" href="#">
+        <a v-if="isChampion || isTicketingAdmin" class="cd-dashboard-upcoming-event__link" href="#" v-ga-track-click="'manage_tickets'">
           <span>{{ $t('{booked}/{total} {type} booked', { booked: approvedNinjaTickets, total: totalNinjaTickets, type: 'Youth' }) }}</span>
           <span>{{ $t('{booked}/{total} {type} booked', { booked: approvedMentorTickets, total: totalMentorTickets, type: 'Mentor' }) }}</span>
         </a>
