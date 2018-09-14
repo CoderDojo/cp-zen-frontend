@@ -38,6 +38,7 @@ module.exports = {
       imageUrl: 'http://badgekit.coderdojo.com:80/images/badge/5',
       dateAccepted: "2016-05-03T15:48:47.453Z",
     }],
+    dob: new Date((new Date().getFullYear() - 14).toString()),
   },
   'child2@example.com': {
     id: 'pchild2',
@@ -59,9 +60,13 @@ module.exports = {
       imageUrl: 'http://badgekit.coderdojo.com:80/images/badge/50',
       dateAccepted: "2018-05-03T15:48:47.453Z",
     }],
+    dob: new Date((new Date().getFullYear() - 8).toString()),
   },
   'parent2@example.com': {
+    name: 'parent 2two',
+    userId: 'parent2',
     dob: '1969-11-26T00:00:00.000Z',
+    children: [],
     gender: null,
   },
   'parent3@example.com': {
@@ -81,14 +86,14 @@ module.exports = {
     dob: '1969-11-26T00:00:00.000Z',
     gender: 'Female',
   },
-  'child1o13@example.com':{
+  'child1o13@example.com': {
     userId: 'child1o13',
     dob: new Date((new Date().getFullYear() - 15).toString()),
     firstName: 'child',
     lastName: '1o13',
     gender: 'Male',
   },
-  'child3@example.com':{
+  'child3@example.com': {
     userId: 'child3',
     dob: new Date((new Date().getFullYear() - 10).toString()),
     name: 'child 3three',

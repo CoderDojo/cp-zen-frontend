@@ -114,6 +114,7 @@ server.post('/api/3.0/events/:eventId/orders', (req, res) => {
   const parentApplication = (req.body.applications.filter(a => a.ticketType === 'parent-guardian'))[0];
   const userId = parentApplication ? parentApplication.userId : req.body.applications[0].userId;
   order.id = uuidv1();
+  order.eventId = req.params.eventId;
   orders[userId] = orders[userId] || [];
   orders[userId].push(order);
   res.send(order);
@@ -121,7 +122,9 @@ server.post('/api/3.0/events/:eventId/orders', (req, res) => {
 
 server.get('/api/3.0/users/:userId/orders', (req, res) => {
   const userId = req.params.userId;
-  res.send({ results: orders[userId] || [] });
+  const eventId = req.query.query.eventId;
+  const ordersForUser = orders[userId] || [];
+  res.send({ results: ordersForUser.filter(order => order.eventId === eventId) || [] });
 });
 
 server.put('/api/3.0/users/:userId/orders/:orderId', (req, res) => {
@@ -153,7 +156,7 @@ server.post('/api/2.0/users/register', (req, res) => {
 
 server.post('/api/2.0/users/login', (req, res) => {
   if (users[req.body.email]) {
-    res.cookie('loggedIn', req.body.email, { maxAge: 900000, httpOnly: true });
+    res.cookie('loggedIn', req.body.email, { maxAge: 12 * 60 * 60 * 1000, httpOnly: true });
     res.send();
   } else if (req.body.email === 'failure@example.com') {
     res.send({ ok: false, why: 'invalid-password' });
@@ -215,7 +218,7 @@ server.post('/api/2.0/dojos/users', (req, res) => {
         res.send([]);
       }
     } else {
-      res.send(Object.values(dojos)[0]);
+      res.send(Object.values(dojos).reduce((acc, val) => [...acc, ...val], []));
     }
   } else {
     res.send([]);
