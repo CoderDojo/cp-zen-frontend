@@ -9,7 +9,7 @@
           <span v-if="ninjaTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedNinjaTickets, type: $t('Youth') }) }}</span>
           <span v-if="mentorTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedMentorTickets, type: $t('Mentor') }) }}</span>
         </router-link>
-        <a v-if="isChampion || isTicketingAdmin" class="cd-dashboard-upcoming-event__link" href="#" v-ga-track-click="'manage_tickets">
+        <a v-if="isChampion || isTicketingAdmin" class="cd-dashboard-upcoming-event__link" href="#" v-ga-track-click="'manage_tickets'">
           <span>{{ $t('{booked}/{total} {type} booked', { booked: approvedNinjaTickets, total: totalNinjaTickets, type: 'Youth' }) }}</span>
           <span>{{ $t('{booked}/{total} {type} booked', { booked: approvedMentorTickets, total: totalMentorTickets, type: 'Mentor' }) }}</span>
         </a>
