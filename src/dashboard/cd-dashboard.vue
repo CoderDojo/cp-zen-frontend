@@ -95,7 +95,7 @@
     }
 
     &__left-column {
-      flex: 1;
+      flex: 3;
     }
 
     &__right-column {
