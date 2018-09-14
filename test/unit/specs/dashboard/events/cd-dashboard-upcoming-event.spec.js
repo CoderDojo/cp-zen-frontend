@@ -123,15 +123,15 @@ describe('Dashboard upcoming event component', () => {
               tickets: [
                 { type: 'ninja', approvedApplications: 4, quantity: 10 },
                 { type: 'mentor', approvedApplications: 2, quantity: 5 },
-              ]
+              ],
             },
             {
               tickets: [
                 { type: 'ninja', approvedApplications: 10, quantity: 15 },
                 { type: 'mentor', approvedApplications: 4, quantity: 5 },
-              ]
+              ],
             },
-          ]
+          ],
         };
 
         // ASSERT
