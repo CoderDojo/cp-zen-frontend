@@ -1,34 +1,31 @@
 <template>
   <div class="column">
-    <div v-if="!withoutChildren">
-      <div v-if="isDisplayable" class="cd-dashboard-children">
-        <h2 class="cd-dashboard-children__header">{{ $t('My Children') }}</h2>
-        <hr class ="cd-dashboard-children__divider visible-xs">
-        <div class="cd-dashboard-children__child" v-for="child in children.slice(0,3)">
-          <h4 class="cd-dashboard-children__name">
-            {{ child.name }}
-          </h4>
-          <span class="cd-dashboard-children__badges" v-if="child.badges.length > 0" >
-            <div class="cd-dashboard-children__badge" v-for="badge in child.badges.slice(0,3)">
-              <img class="cd-dashboard-children__badge-image" :src="badge.imageUrl" />
-            </div>
-            <a :href="`/dashboard/children/${child.userId}`" class="cd-dashboard-children__badges-link" v-if="child.badges.length > 2">{{ $t('See all {badgesAmount} badges', {badgesAmount: child.badges.length}) }}</a>
-          </span>
-          <p class="cd-dashboard-children__badges-none" v-else>{{ $t('{name} doesn\'t have any badges yet. Talk to the organisers of your Dojo to learn how {name} can be rewarded through badges.', { name: child.firstName }) }}</p>
-        </div>
-        <div class="cd-dashboard-children__cta">
-          <a class="cd-dashboard-children__view-all" href="/dashboard/children/">{{ $t('View my children') }}</a>
-        </div>
+    <div v-if="isDisplayable" class="cd-dashboard-children">
+      <h2 class="cd-dashboard-children__header">{{ $t('My Children') }}</h2>
+      <hr class ="cd-dashboard-children__divider visible-xs">
+      <div class="cd-dashboard-children__child" v-for="child in children.slice(0,3)">
+        <h4 class="cd-dashboard-children__name">
+          {{ child.name }}
+        </h4>
+        <span class="cd-dashboard-children__badges" v-if="child.badges.length > 0" >
+          <div class="cd-dashboard-children__badge" v-for="badge in child.badges.slice(0,3)">
+            <img class="cd-dashboard-children__badge-image" :src="badge.imageUrl" />
+          </div>
+          <a :href="`/dashboard/children/${child.userId}`" class="cd-dashboard-children__badges-link" v-if="child.badges.length > 2">{{ $t('See all {badgesAmount} badges', {badgesAmount: child.badges.length}) }}</a>
+        </span>
+        <p class="cd-dashboard-children__badges-none" v-else>{{ $t('{name} doesn\'t have any badges yet. Talk to the organisers of your Dojo to learn how {name} can be rewarded through badges.', { name: child.firstName }) }}</p>
       </div>
-      <div v-else class="cd-dashboard-children">
-        <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
-        <div class="cd-dashboard-children__child cd-filler cd-filler--grey-bg">
-          <h3 class="cd-dashboard-children__name cd-dashboard-children__name--filler"></h3>
-          <span class="cd-dashboard-children__badges cd-dashboard-children__badges--filler"></span>
-        </div>
+      <div class="cd-dashboard-children__cta">
+        <a class="cd-dashboard-children__view-all" href="/dashboard/children/">{{ $t('View my children') }}</a>
       </div>
     </div>
-    <div v-else></div>
+    <div v-else class="cd-dashboard-children">
+      <h1 class="cd-dashboard-children__header">{{ $t('My Children') }}</h1>
+      <div class="cd-dashboard-children__child cd-filler cd-filler--grey-bg">
+        <h3 class="cd-dashboard-children__name cd-dashboard-children__name--filler"></h3>
+        <span class="cd-dashboard-children__badges cd-dashboard-children__badges--filler"></span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -39,11 +36,10 @@
 
   export default {
     name: 'cd-dashboard-children',
+    props: ['userProfile'],
     data() {
       return {
-        withoutChildren: false,
         loadedChildren: false,
-        userProfile: {},
         userChildren: [],
       };
     },
@@ -67,27 +63,19 @@
         const badges = userBadges || [];
         return badges.sort((a, b) => moment(a.dateAccepted).isBefore(moment(b.dateAccepted)));
       },
-      async loadProfile() {
-        this.userProfile = (await UserService.userProfileData(this.loggedInUser.id)).body;
-      },
       async loadChildren() {
-        if (this.userProfile.children) {
-          this.userChildren = (await Promise.all(
-            this.userProfile.children.map(
-              child => UserService.userProfileData(child))))
-            .map(res => ({
-              ...res.body,
-              badges: this.orderedBadges(res.body.badges),
-            }));
-          this.loadedChildren = true;
-        } else {
-          this.withoutChildren = true;
-        }
+        this.userChildren = (await Promise.all(
+          this.userProfile.children.map(
+            child => UserService.userProfileData(child))))
+          .map(res => ({
+            ...res.body,
+            badges: this.orderedBadges(res.body.badges),
+          }));
+        this.loadedChildren = true;
       },
     },
     async created() {
-      await this.loadProfile();
-      this.loadChildren();
+      await this.loadChildren();
     },
   };
 </script>

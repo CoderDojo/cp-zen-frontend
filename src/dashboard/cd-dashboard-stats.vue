@@ -47,10 +47,9 @@
   
   export default {
     name: 'cd-dashboard-stats',
+    props: ['userDojos'],
     data() {
       return {
-        dojos: null,
-        dojoId: null,
         dojoUsers: null,
         genders: null,
         bookedChildren: null,
@@ -97,14 +96,11 @@
           return acc;
         }, []);
       },
+      dojoId() {
+        return this.userDojos.length ? this.userDojos[0].dojoId : null;
+      },
     },
     methods: {
-      async getDojos() {
-        const dojos = (await DojoService.getUsersDojos(this.loggedInUser.id)).body;
-        this.dojos = dojos.filter(dojo => dojo.userTypes.includes('champion'));
-        // TODO : drop-down dojo selection
-        this.dojoId = this.dojos.length ? this.dojos[0].dojoId : null;
-      },
       async getBookedChildren() {
         this.bookedChildren = (await EventsService.searchApplicationsByDojo(
           this.dojoId,
@@ -129,7 +125,6 @@
       },
     },
     async created() {
-      await this.getDojos();
       // Stat booked number
       await this.getBookedChildren();
       // Stat gender pie-chart

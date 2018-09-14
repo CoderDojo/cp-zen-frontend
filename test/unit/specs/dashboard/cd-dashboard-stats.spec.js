@@ -71,41 +71,19 @@ describe('Dashboard stats component', () => {
         expect(vm.genderStats).to.deep.equal(expectedData);
       });
     });
+    describe('dojoId', () => {
+      it('should return the first dojoId from the usersDojos', () => {
+        vm.userDojos = [{ dojoId: 'd1' }, { dojoId: 'd2' }];
+        expect(vm.dojoId).to.equal('d1');
+      });
+      it('should return null when usersDojos doesn\'t exists', () => {
+        vm.userDojos = [];
+        expect(vm.dojoId).to.be.null;
+      });
+    });
   });
 
   describe('methods', () => {
-    describe('getDojos', () => {
-      it('should load the users Dojos into dojos and define the current DojoId as the first Dojo', async () => {
-        // ARRANGE
-        const mockUserDojos = [{ dojoId: 'd1', userId: 'u1', userTypes: ['champion'] }];
-        MockDojoService.getUsersDojos.resolves({ body: mockUserDojos });
-        vm.loggedInUser = { id: 'u1' };
-        // ACT
-        await vm.getDojos();
-
-        // ASSERT
-        expect(MockDojoService.getUsersDojos).to.have.been.calledOnce;
-        expect(MockDojoService.getUsersDojos).to.have.been.calledWith('u1');
-
-        expect(vm.dojos).to.deep.equal(mockUserDojos);
-        expect(vm.dojoId).to.equal('d1');
-      });
-      it('should load the users Dojos into dojos and define the current DojoId as null', async () => {
-        // ARRANGE
-        const mockUserDojos = [{ dojoId: 'd1', userId: 'u1', userTypes: ['banana'] }];
-        MockDojoService.getUsersDojos.resolves({ body: mockUserDojos });
-        vm.loggedInUser = { id: 'u1' };
-        // ACT
-        await vm.getDojos();
-
-        // ASSERT
-        expect(MockDojoService.getUsersDojos).to.have.been.calledOnce;
-        expect(MockDojoService.getUsersDojos).to.have.been.calledWith('u1');
-
-        expect(vm.dojos).to.deep.equal([]);
-        expect(vm.dojoId).to.equal(null);
-      });
-    });
     describe('getBookedChildren', () => {
       it('should load the dojos applications', async () => {
         // ARRANGE
@@ -169,7 +147,6 @@ describe('Dashboard stats component', () => {
   describe('created', () => {
     it('should call getDojos && getBookedChildren && getDojoUsers', async () => {
       // ARRANGE
-      sandbox.stub(vm, 'getDojos');
       sandbox.stub(vm, 'getBookedChildren');
       sandbox.stub(vm, 'getDojoUsers');
 
@@ -177,7 +154,6 @@ describe('Dashboard stats component', () => {
       await vm.$lifecycleMethods.created();
 
       // ASSERT
-      expect(vm.getDojos).to.have.been.calledOnce;
       expect(vm.getBookedChildren).to.have.been.calledOnce;
       expect(vm.getDojoUsers).to.have.been.calledOnce;
     });
