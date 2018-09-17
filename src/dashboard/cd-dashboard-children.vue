@@ -13,7 +13,8 @@
           </div>
           <a :href="`/dashboard/children/${child.userId}`" class="cd-dashboard-children__badges-link" v-if="child.badges.length > 2" v-ga-track-click="'view_badges'">{{ $t('See all {badgesAmount} badges', {badgesAmount: child.badges.length}) }}</a>
         </span>
-        <p class="cd-dashboard-children__badges-none" v-else>{{ $t('{name} doesn\'t have any badges yet. Talk to the organisers of your Dojo to learn how {name} can be rewarded through badges.', { name: child.firstName }) }}</p>
+        <p class="cd-dashboard-children__badges-none" v-else>{{ $t('{name} doesn\'t have any badges yet.', { name: child.firstName }) }}
+        {{ $t('Talk to the organisers of your Dojo to learn how {name} can be rewarded through badges.', { name: child.firstName }) }}</p>
       </div>
       <div class="cd-dashboard-children__cta">
         <a class="cd-dashboard-children__view-all" href="/dashboard/children/" v-ga-track-click="'view_children'">{{ $t('View my children') }}</a>
@@ -122,6 +123,7 @@
       }
 
       &-none {
+        white-space: pre-line;
       }
 
       &--filler {
