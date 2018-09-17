@@ -4,9 +4,9 @@ describe('Homepage projects', () => {
   beforeEach(() => {
     cy.server();
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-    cy.route('/api/v1/en/projects?order=asc', 'fx:projects').as('projects');
-    cy.route('/api/v1/de-de/projects?order=asc', 'fx:projectsDE').as('projectsDE');
-    cy.route('/api/v1/pt-pt/projects?order=asc', '').as('projectsPT');
+    cy.route('/api/v1/en/projects?order=desc', 'fx:projects').as('projects');
+    cy.route('/api/v1/de-de/projects?order=desc', 'fx:projectsDE').as('projectsDE');
+    cy.route('/api/v1/pt-pt/projects?order=desc', '').as('projectsPT');
   });
 
   it('should display the section', () => {
@@ -15,7 +15,7 @@ describe('Homepage projects', () => {
     cy.wait('@projects');
     cy.get(homePage.projectTitle)
   });
-  
+
   it('should display the latest 3 projects', () => {
     cy.visit('/home');
     cy.wait('@loggedIn');
