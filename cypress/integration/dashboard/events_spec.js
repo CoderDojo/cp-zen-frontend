@@ -2,7 +2,7 @@ import eventPage from '../../pages/events';
 
 describe('Homepage events', () => {
   beforeEach(() => {
-    cy.server({ urlMatchingOptions: { matchBase: false, } });
+    cy.server();
   });
 
   it('should show events from multiple Dojos', () => {
@@ -38,8 +38,8 @@ describe('Homepage events', () => {
     it('should show a message about EB if the dojo is old', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
       cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: ['ticketing-admin'] }]).as('userDojos');
-      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=60&related=sessions\.tickets$/, { results: [] }).as('noEvents');
-      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=60$/, { results: [] }).as('oldEvents');
+      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
+      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [] }).as('oldEvents');
       cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo');
       cy.visit('/home');
       cy.wait('@oldEvents');
@@ -52,8 +52,8 @@ describe('Homepage events', () => {
     it('should show a message about zen events if the dojo is new', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
       cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: ['ticketing-admin'] }]).as('userDojos');
-      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=60&related=sessions\.tickets$/, { results: [] }).as('noEvents');
-      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=60$/, { results: [] }).as('oldEvents');
+      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
+      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [] }).as('oldEvents');
       cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2018-08-26T11:46:14.308Z' }).as('dojo');
       cy.visit('/home');
       cy.wait('@oldEvents');
@@ -65,8 +65,8 @@ describe('Homepage events', () => {
     it('should show a message about creating an event if the dojo used Zen events', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
       cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: ['ticketing-admin'] }]).as('userDojos');
-      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=60&related=sessions\.tickets$/, { results: [] }).as('noEvents');
-      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=60$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents');
+      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
+      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents');
       cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo');
       cy.visit('/home');
       cy.wait('@oldEvents');
