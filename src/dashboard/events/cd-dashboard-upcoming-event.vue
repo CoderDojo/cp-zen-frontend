@@ -73,14 +73,6 @@
       totalMentorTickets() {
         return this.ticketReduction('mentor', 'quantity');
       },
-      dojoImageUrl() {
-        return `https://s3-eu-west-1.amazonaws.com/zen-dojo-images/${this.dojo.id}`;
-      },
-      dojoImageFallbackImage() {
-        /* eslint-disable global-require */
-        return require('../../assets/avatars/dojo-default-logo.png');
-        /* eslint-enable global-require */
-      },
       hasOrder() {
         return this.orders && this.orders.length > 0;
       },

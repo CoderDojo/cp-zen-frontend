@@ -3,11 +3,22 @@
     <div class="cd-dashboard-events">
       <div class="cd-dashboard-events__content">
         <h1 class="cd-dashboard-events__header">{{ $t('Hey {name}, here\'s what\'s most important...', { name: loggedInUser.firstName }) }}</h1>
-        <div class="cd-dashboard-events__list">
+        <div class="cd-dashboard-events__list" v-if="events && events[0].id">
           <upcoming-event v-for="event in events" :key="event.id" :event="event" :dojo="dojos[event.dojoId]"></upcoming-event>
         </div>
-        <div class="cd-dashboard-events__cta">
+        <div v-else-if="ticketingAdmins.length > 0">
+          {{ usesTicketing }} 
+          {{ oldEvents }}
+          <div v-if="!usesTicketing && maxDojoAge < 1" class="cd-dashboard-events__hint">{{ $t('Create your first event so attendees can book and you can easily see who\'s attending. It\'s simple and only takes 2 minutes!') }}</div>
+          <div v-else-if="!usesTicketing && maxDojoAge >= 1" class="cd-dashboard-events__hint">{{ $t('We see you don\'t use Zen events. If you\'re using Eventbrite for your Dojo you can make it easier for attendees and volunteers to find you by using our one-click Eventbrite[link to EB plugin blogpost] plugin (it\'s really easy!)') }}</div>
+          <div v-else-if="usesTicketing" class="cd-dashboard-events__hint">{{ $t('Create your next event so attendees can book in!') }}</div>
+        </div>
+        <div class="cd-dashboard-events__cta" v-if="events">
           <router-link class="cd-dashboard-events__cta-link" :to="{ name: 'MyTickets' }" v-ga-track-click="'your_events'">{{ $t('Your Events') }}</router-link>
+        </div>
+        <div v-else>
+          <button></button>
+          <button></button>
         </div>
       </div>
     </div>
@@ -30,6 +41,7 @@
     data() {
       return {
         events: [{}, {}],
+        oldEvents: null,
         usersDojos: [],
         dojos: {},
         loaded: false,
@@ -45,6 +57,16 @@
           map[dojoId].push(usersDojo);
           return map;
         }, {});
+      },
+      ticketingAdmins() {
+        return this.usersDojos.filter(ud =>
+          ud.userPermissions.includes('ticketing-admin'));
+      },
+      usesTicketing() {
+        return this.oldEvents && this.oldEvents.length > 0;
+      },
+      maxDojoAge() {
+        return Math.max(Object.values(this.dojos).map(d => moment().diff(d.createdAt, 'years')));
       },
     },
     methods: {
@@ -70,12 +92,25 @@
             usersDojos: this.usersDojosMap[event.dojoId],
           }));
       },
+      async loadOldEvents() {
+        const query = { status: 'published' };
+        query.afterDate = moment().subtract(1, 'year').unix();
+        query.utcOffset = moment().utcOffset();
+
+        this.oldEvents = (await Promise.all(this.ticketingAdmins.map(ud =>
+          EventService.v3.get(ud.dojoId, {
+            params: {
+              query,
+            },
+          }),
+        ))).reduce((acc, res) => acc.concat(res.body.results), []);
+      },
       async loadUserDojos() {
         const res = await DojosService.getUsersDojos(this.loggedInUser.id);
         this.usersDojos = res.body;
       },
       async loadDojos() {
-        const dojoIds = this.events.reduce((acc, event) => {
+        const dojoIds = this.usersDojos.reduce((acc, event) => {
           if (acc.indexOf(event.dojoId) === -1) acc.push(event.dojoId);
           return acc;
         }, []);
@@ -89,7 +124,12 @@
     async created() {
       await this.loadUserDojos();
       await this.loadEvents();
-      await this.loadDojos();
+      if (!this.events.length) {
+        // Reset to default for the animation to continue running
+        this.events = [{}, {}];
+        this.loadOldEvents();
+      }
+      this.loadDojos();
       this.loaded = true;
     },
   };
