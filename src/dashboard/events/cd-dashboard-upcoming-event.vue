@@ -3,8 +3,8 @@
     <div v-if="isLoaded" class="cd-dashboard-upcoming-event__content" :class="{ 'cd-dashboard-upcoming-event__content--booked': hasOrder}">
       <div class="cd-dashboard-upcoming-event__main">
         <h4 v-if="hasOrder">{{ $t('"{name}" is booked', { name: event.name }) }}</h4>
-        <h4 v-else-if="remainingTickets > 0">{{ $t('"{name}" is fully booked', { name: event.name }) }}</h4>
-        <h4 v-else>{{ $t('"{name}" is the available to book', { name: event.name }) }}</h4>
+        <h4 v-else-if="remainingTickets <= 0">{{ $t('"{name}" is fully booked', { name: event.name }) }}</h4>
+        <h4 v-else>{{ $t('"{name}" is available to book', { name: event.name }) }}</h4>
         <router-link v-if="canBook" class="cd-dashboard-upcoming-event__book" :to="{ name: 'EventSessions', params: { eventId: event.id } }" v-ga-track-click="'book_now'">{{ $t('Book now') }}</router-link>
         <router-link v-if="hasOrder"  class="cd-dashboard-upcoming-event__link" :to="{ name: 'EventSessions', params: { eventId: event.id } }" v-ga-track-click="'booked_tickets'">
           <span v-if="ninjaTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedNinjaTickets, type: $t('Youth') }) }}</span>
