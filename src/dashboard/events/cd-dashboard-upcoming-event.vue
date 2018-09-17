@@ -6,8 +6,12 @@
         <h4 v-else>{{ $t('"{name}" is the next session available', { name: event.name }) }}</h4>
         <router-link v-if="canBook" class="cd-dashboard-upcoming-event__book" :to="{ name: 'EventSessions', params: { eventId: event.id } }" v-ga-track-click="'book_now'">{{ $t('Book now') }}</router-link>
         <router-link v-if="hasOrder"  class="cd-dashboard-upcoming-event__link" :to="{ name: 'EventSessions', params: { eventId: event.id } }" v-ga-track-click="'booked_tickets'">
-          <span v-if="ninjaTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedNinjaTickets, type: $t('Youth') }) }}</span>
-          <span v-if="mentorTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedMentorTickets, type: $t('Mentor') }) }}</span>
+          <span class="cd-dashboard-upcoming-event__tick fa-stack">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+          </span>
+          <span v-if="bookedNinjaTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedNinjaTickets, type: $t('Youth') }) }}</span>
+          <span v-if="bookedMentorTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedMentorTickets, type: $t('Mentor') }) }}</span>
         </router-link>
         <a v-if="isChampion || isTicketingAdmin" class="cd-dashboard-upcoming-event__link" href="#" v-ga-track-click="'manage_tickets'">
           <span>{{ $t('{booked}/{total} {type} booked', { booked: approvedNinjaTickets, total: totalNinjaTickets, type: 'Youth' }) }}</span>
@@ -15,7 +19,7 @@
         </a>
       </div>
       <div class="cd-dashboard-upcoming-event__dojo">
-          <h4>{{ dojo.name }}</h4>
+          <h4 class="cd-dashboard-upcoming-event__dojo-name">{{ dojo.name }}</h4>
           <p>{{ eventDate | cdDateFormatter }}, {{ formattedStartTime }} - {{ formattedEndTime }}</p>
       </div>
     </div>
@@ -156,6 +160,10 @@
       padding: 10px;
       flex: 1 1 33.3%;
 
+      &-name {
+        word-break: break-word;
+      }
+
       p {
         margin: 0;
       }
@@ -172,6 +180,17 @@
     &__link {
       span {
         margin-right: 8px;
+      }
+
+      .cd-dashboard-upcoming-event {
+        &__tick {
+          font-size: 10px;
+          margin-right: 0;
+
+          .fa-circle {
+            color: @cd-green;
+          }
+        }
       }
     }
 
