@@ -23,7 +23,7 @@ describe('Homepage component visibility', () => {
     cy.wait('@parentProfile');
     cy.get(homePage.statsTitle).should('be.visible');
   });
-  it('should hide the stats if the user is not a champion', () => {
+  it('should hide the stats and show the kids if the user is not a champion', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
     // NOTE: this profile only exists because cypress cannot overwrite an API fixture once defined
     cy.route('POST', '/api/2.0/profiles/user-profile-data', 'fx:profiles/parent1WithBadges').as('parentProfile');
@@ -32,5 +32,16 @@ describe('Homepage component visibility', () => {
     cy.wait('@loggedIn');
     cy.wait('@parentProfile');
     cy.get(homePage.statsTitle).should('not.be.visible');
+    cy.get(homePage.childrenTitle).should('be.visible');
+  });
+  it('should hide the sidebar if the user has no children and isnt a champion', () => {
+    cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
+    // NOTE: this profile only exists because cypress cannot overwrite an API fixture once defined
+    cy.route('POST', '/api/2.0/profiles/user-profile-data', 'fx:profiles/adultWithoutChildren').as('parentProfile');
+    cy.route('POST', '/api/2.0/dojos/users', [{ userTypes: ['banana'] }]).as('userDojos');
+    cy.visit('/home');
+    cy.wait('@loggedIn');
+    cy.wait('@parentProfile');
+    cy.get(homePage.sidebar).should('not.be.visible');
   });
 });

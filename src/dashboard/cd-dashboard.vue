@@ -6,7 +6,7 @@
         <dashboard-projects/>
         <dashboard-news />
       </div>
-      <div class="cd-dashboard__right-column">
+      <div class="cd-dashboard__right-column" v-show="sidebarIsVisible">
         <dashboard-children v-if="userProfile && childrenAreVisible" :user-profile="userProfile"/>
         <dashboard-stats v-if="userDojos && statsAreVisible" :user-dojos="filterUserDojos('champion')"/>
       </div>
@@ -41,6 +41,12 @@
     },
     computed: {
       ...mapGetters(['loggedInUser']),
+      sidebarIsVisible() {
+        return !((this.userProfile &&
+            this.userProfile.children &&
+            this.userProfile.children.length === 0) &&
+          (this.userDojos && this.filterUserDojos('champion').length === 0));
+      },
       statsAreVisible() {
         return this.filterUserDojos('champion').length > 0;
       },
