@@ -138,7 +138,6 @@
   @import "../../common/variables";
   @import "../../common/styles/cd-filler-loading";
 
-  @wrap: 300px;
   .cd-dashboard-upcoming-event {
     margin: 32px 0;
 
@@ -146,7 +145,6 @@
       background: @cd-white;
       display: flex;
       padding: 0 20px;
-      flex-wrap: wrap;
     }
 
     &__main {
