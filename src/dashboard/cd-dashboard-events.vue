@@ -3,22 +3,24 @@
     <div class="cd-dashboard-events">
       <div class="cd-dashboard-events__content">
         <h1 class="cd-dashboard-events__header">{{ $t('Hey {name}, here\'s what\'s most important...', { name: loggedInUser.firstName }) }}</h1>
-        <div class="cd-dashboard-events__list" v-if="events && events[0].id">
+        <div class="cd-dashboard-events__list" v-if="events">
           <upcoming-event v-for="event in events" :key="event.id" :event="event" :dojo="dojos[event.dojoId]"></upcoming-event>
+          <div class="cd-dashboard-events__cta" v-if="events && events[0].id">
+            <router-link class="cd-dashboard-events__cta-link" :to="{ name: 'MyTickets' }" v-ga-track-click="'your_events'">{{ $t('Your Events') }}</router-link>
+          </div>
         </div>
         <div v-else-if="ticketingAdmins.length > 0">
-          {{ usesTicketing }} 
-          {{ oldEvents }}
-          <div v-if="!usesTicketing && maxDojoAge < 1" class="cd-dashboard-events__hint">{{ $t('Create your first event so attendees can book and you can easily see who\'s attending. It\'s simple and only takes 2 minutes!') }}</div>
-          <div v-else-if="!usesTicketing && maxDojoAge >= 1" class="cd-dashboard-events__hint">{{ $t('We see you don\'t use Zen events. If you\'re using Eventbrite for your Dojo you can make it easier for attendees and volunteers to find you by using our one-click Eventbrite[link to EB plugin blogpost] plugin (it\'s really easy!)') }}</div>
-          <div v-else-if="usesTicketing" class="cd-dashboard-events__hint">{{ $t('Create your next event so attendees can book in!') }}</div>
+          <p v-if="!usesTicketing && maxDojoAge < 1" class="cd-dashboard-events__hint">
+            {{ $t('Create your first event so attendees can book and you can easily see who\'s attending.') }}
+            {{ $t('It\'s simple and only takes 2 minutes!') }}</p>
+          <p v-else-if="!usesTicketing && maxDojoAge >= 1" class="cd-dashboard-events__hint">
+            {{ $t('We see you don\'t use Zen events.') }}
+            <span v-html="$t('If you\'re using Eventbrite for your Dojo you can make it easier for attendees and volunteers to find you by using <a href=\'https://coderdojo.com/2017/07/19/launching-eventbrite-integration-on-the-coderdojo-community-platform/\'>our one-click Eventbrite plugin</a> (it\'s really easy!)')"></span></p>
+          <p v-else-if="usesTicketing" class="cd-dashboard-events__hint">{{ $t('Create your next event so attendees can book in!') }}</p>
         </div>
-        <div class="cd-dashboard-events__cta" v-if="events">
-          <router-link class="cd-dashboard-events__cta-link" :to="{ name: 'MyTickets' }" v-ga-track-click="'your_events'">{{ $t('Your Events') }}</router-link>
-        </div>
-        <div v-else>
-          <button></button>
-          <button></button>
+        <div v-else class="cd-dashboard-events__cta">
+          <router-link class="cd-dashboard-events__cta-link" :to="{ name: 'FindDojo' }" v-ga-track-click="'find_dojo'">{{ $t('Find a Dojo to attend') }}</router-link>
+          <router-link class="cd-dashboard-events__cta-link" :to="start-dojo" v-ga-track-click="'start_dojo'">{{ $t('Start a Dojo') }}</router-link>
         </div>
       </div>
     </div>
@@ -104,16 +106,14 @@
             },
           }),
         ))).reduce((acc, res) => acc.concat(res.body.results), []);
+        this.events = null;
       },
       async loadUserDojos() {
         const res = await DojosService.getUsersDojos(this.loggedInUser.id);
         this.usersDojos = res.body;
       },
       async loadDojos() {
-        const dojoIds = this.usersDojos.reduce((acc, event) => {
-          if (acc.indexOf(event.dojoId) === -1) acc.push(event.dojoId);
-          return acc;
-        }, []);
+        const dojoIds = Object.keys(this.usersDojosMap);
         const res = await Promise.all(dojoIds.map(dojoId => DojosService.getDojoById(dojoId)));
         this.dojos = {};
         dojoIds.forEach((dojoId, index) => {
@@ -149,6 +149,13 @@
     &__content {
       max-width: 824px;
       margin: 0 auto;
+    }
+    
+    &__hint {
+      .subtitle;
+      color: @cd-white;
+      text-align: center;
+      line-break: pre-wrap;
     }
 
     &__header {

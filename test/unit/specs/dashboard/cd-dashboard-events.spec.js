@@ -31,6 +31,8 @@ describe('Dashboard events component', () => {
   describe('computed', () => {
     describe('usersDojosMap', () => {
       it('should return a mapping of dojoIds to usersDojos', () => {
+        vm.usersDojos = [{ dojoId: 'd1', userPermissions: ['banana'] }, { dojoId: 'd2', userPermissions: ['ticketing-admin'] }];
+        expect(vm.usersDojosMap).to.deep.equal({ d1: [{ dojoId: 'd1', userPermissions: ['banana'] }], d2: [{ dojoId: 'd2', userPermissions: ['ticketing-admin'] }] });
       });
     });
 
@@ -38,7 +40,7 @@ describe('Dashboard events component', () => {
       it('should return the usersdojos where the user has a ticketingAdmin perm', () => {
         vm.usersDojos = [{ dojoId: 'd1', userPermissions: ['banana'] }, { dojoId: 'd2', userPermissions: ['ticketing-admin'] }];
         expect(vm.ticketingAdmins).to.deep.equal([{ dojoId: 'd2', userPermissions: ['ticketing-admin'] }]);
-      }); 
+      });
     });
     describe('usesTicketing', () => {
       it('should return true if the dojo uses ticketing', () => {
