@@ -11,3 +11,40 @@
 /* Font sizes */
 @font-size-medium: ceil((@font-size-base * 1.1));
 @font-size-mobile-page-title: ceil((@font-size-base * 1.5));
+
+.default-margin() {
+  margin: 16px 0;
+}
+.title() {
+  font-size: 30px;
+  font-weight: 500;
+  margin: 45px 0 16px;
+}
+
+.subtitle() {
+  font-size: 18px;
+  font-weight: 500;
+  .default-margin;
+}
+
+.cta() {
+  text-align: center;
+}
+
+.button-link() {
+  border: 1px solid;
+  font-size: @font-size-medium;
+  font-weight: bold;
+  padding: 14px;
+  display: inline-block;
+  border-radius: 4px;
+  margin: 32px 0;
+}
+
+.small-link() {
+  font-size: @font-size-medium;
+  font-weight: bold;
+  text-decoration: underline;
+  padding: 14px;
+  display: inline-block;
+}
