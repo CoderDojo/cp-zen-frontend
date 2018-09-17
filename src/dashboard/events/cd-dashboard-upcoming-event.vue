@@ -138,6 +138,7 @@
   @import "../../common/variables";
   @import "../../common/styles/cd-filler-loading";
 
+  @wrap: 300px;
   .cd-dashboard-upcoming-event {
     margin: 32px 0;
 
@@ -145,11 +146,13 @@
       background: @cd-white;
       display: flex;
       padding: 0 20px;
+      flex-wrap: wrap;
     }
 
     &__main {
       flex: 2 2 66.6%;
       padding: 10px 10px 20px 10px;
+      min-height: 100px;
     }
 
     &__dojo {
@@ -217,6 +220,17 @@
     &__filler {
       height: 90px;
       background: @cd-very-light-grey;
+    }
+  }
+  @media (max-width: @screen-xs-max) {
+    .cd-dashboard-upcoming-event {
+      &__content {
+        flex-direction: column;
+      }
+      &__book {
+        display: block;
+        text-align: center;
+      } 
     }
   }
 </style>
