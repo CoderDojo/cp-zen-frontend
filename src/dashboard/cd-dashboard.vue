@@ -6,7 +6,7 @@
         <dashboard-projects/>
         <dashboard-news />
       </div>
-      <div class="cd-dashboard__right-column">
+      <div class="cd-dashboard__right-column" v-if="userProfile && (childrenAreVisible || statsAreVisible)">
         <dashboard-children v-if="userProfile && childrenAreVisible" :user-profile="userProfile"/>
         <dashboard-stats v-if="userDojos && statsAreVisible" :user-dojos="filterUserDojos('champion')"/>
       </div>
