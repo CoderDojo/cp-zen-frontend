@@ -48,7 +48,7 @@
     },
     methods: {
       async loadProjects(locale = 'en') {
-        const projects = (await ProjectsService.list(locale, { order: 'asc' })).body;
+        const projects = (await ProjectsService.list(locale, { order: 'desc' })).body;
         if (projects) {
           this.projects = projects.data.slice(0, 3);
         }
