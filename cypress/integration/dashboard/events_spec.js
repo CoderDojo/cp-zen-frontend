@@ -59,7 +59,7 @@ describe('Homepage events', () => {
       cy.wait('@oldEvents');
       cy.wait('@dojo');
       cy.get(eventPage.noEventMessage).should('be.visible');
-      cy.get(eventPage.noEventMessage).should('have.text', '\n          Create your first event so attendees can book and you can easily see who\'s attending.\n          It\'s simple and only takes 2 minutes!');
+      cy.get(eventPage.noEventMessage).should('have.text', '\n            Create your first event so attendees can book and you can easily see who\'s attending.\n            It\'s simple and only takes 2 minutes!\n          ');
       cy.get(eventPage.fallbackCTAs).should('not.be.visible');
     });
     it('should show a message about creating an event if the dojo used Zen events (redirects to dojo create event form)', () => {
@@ -80,10 +80,13 @@ describe('Homepage events', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
       cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: ['ticketing-admin'] }, { dojoId: 'd2', userPermissions: ['ticketing-admin'] }]).as('userDojos');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
+      cy.route(/\/api\/3\.0\/dojos\/d2\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents2');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents');
+      cy.route(/\/api\/3\.0\/dojos\/d2\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents2');
       cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo');
       cy.visit('/home');
       cy.wait('@oldEvents');
+      cy.wait('@oldEvents2');
       cy.wait('@dojo');
       cy.get(eventPage.noEventMessage).should('be.visible');
       cy.get(eventPage.noEventMessage).should('have.text', 'Create your next event so attendees can book in!');
