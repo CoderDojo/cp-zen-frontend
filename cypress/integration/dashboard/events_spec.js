@@ -1,6 +1,6 @@
 import eventPage from '../../pages/events';
 
-describe.only('Homepage events', () => {
+describe('Homepage events', () => {
   beforeEach(() => {
     cy.server();
   });
