@@ -6,7 +6,7 @@
       <h4 class="cd-dashboard-stats__category">{{ $t('Youth') }}</h4>
       <div class="cd-dashboard-stats__charts" v-if="chartsAreVisible">
         <div class="cd-dashboard-stats__chart-number" v-if="numberChartIsReady">
-          <span class="cd-dashboard-stats__description" v-html="$t('{numKids} kids attended your events', { numKids: numberStatText })"></span>
+          <span class="cd-dashboard-stats__description" v-html="$t('{numKids} ninjas attended your events', { numKids: numberStatText })"></span>
         </div>
         <div v-else class="cd-dashboard-stats__chart-number--filler cd-filler cd-filler--grey-bg"/>
         <div class="cd-dashboard-stats__chart-pie" v-if="pieChartIsReady">
