@@ -4,7 +4,7 @@
       <div class="cd-dashboard-events__content">
         <h1 class="cd-dashboard-events__header">{{ $t('Hey {name}, here\'s what\'s most important...', { name: loggedInUser.firstName }) }}</h1>
         <div class="cd-dashboard-events__list" v-if="events">
-          <upcoming-event v-for="event in events" :key="event.id" :event="event" :dojo="dojos[event.dojoId]" v-if="dojos[event.dojoId]"></upcoming-event>
+          <upcoming-event v-for="event in events" :key="event.id" :event="event" :dojo="dojos[event.dojoId]"></upcoming-event>
           <div class="cd-dashboard-events__cta" v-if="events && events[0].id">
             <router-link class="cd-dashboard-events__cta-link" :to="{ name: 'MyTickets' }" v-ga-track-click="'your_events'">{{ $t('Your events') }}</router-link>
           </div>
