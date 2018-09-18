@@ -25,6 +25,16 @@ exports.register = function (server, options, next) {
 
   server.route({
     method: 'GET',
+    path: '/find',
+    handler: {
+      file: {
+        path: 'index.html'
+      }
+    }
+  });
+
+  server.route({
+    method: 'GET',
     path: '/dojos/{id}',
     handler: {
       file: {
