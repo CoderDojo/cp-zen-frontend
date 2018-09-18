@@ -82,6 +82,7 @@
       },
       hasOrder() {
         return this.orders && this.orders.length > 0 &&
+          // eslint-disable-next-line no-return-assign, no-param-reassign
           (this.orders.reduce((acc, ord) => acc += ord.applications.length, 0)) > 0;
       },
       formattedStartTime() {
