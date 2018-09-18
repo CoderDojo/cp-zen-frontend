@@ -1,7 +1,7 @@
 <template>
   <div class="column">
     <div v-if="isDisplayable" class="cd-dashboard-news">
-      <h2 class="cd-dashboard-news__header">{{ $t('News Updates') }}</h2>
+      <h2 class="cd-dashboard-news__header">{{ $t('News') }}</h2>
       <hr class ="cd-dashboard-news__divider visible-xs">
       <div class="cd-dashboard-news__posts" v-for="post in allPosts">
         <span class="cd-dashboard-news__posts-left">
@@ -14,7 +14,7 @@
       </div>
     </div>
     <div v-else class="cd-dashboard-news">
-      <h2 class="cd-dashboard-news__header">{{ $t('News Updates') }}</h2>
+      <h2 class="cd-dashboard-news__header">{{ $t('News') }}</h2>
       <div class="cd-dashboard-news__posts cd-filler">
         <div class="cd-dashboard-news__posts--filler"></div>
       </div>

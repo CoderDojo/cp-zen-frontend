@@ -6,7 +6,7 @@
         <div class="cd-dashboard-events__list" v-if="events">
           <upcoming-event v-for="event in events" :key="event.id" :event="event" :dojo="dojos[event.dojoId]" v-if="dojos[event.dojoId]"></upcoming-event>
           <div class="cd-dashboard-events__cta" v-if="events && events[0].id">
-            <router-link class="cd-dashboard-events__cta-link" :to="{ name: 'MyTickets' }" v-ga-track-click="'your_events'">{{ $t('Your Events') }}</router-link>
+            <router-link class="cd-dashboard-events__cta-link" :to="{ name: 'MyTickets' }" v-ga-track-click="'your_events'">{{ $t('Your events') }}</router-link>
           </div>
         </div>
         <div v-else-if="ticketingAdmins.length > 0">
