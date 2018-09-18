@@ -130,6 +130,27 @@ describe('Homepage events', () => {
     });
 
     it('should show number of booked tickets as a ticketing-admin', () => {});
+
+    it('should show the eventbrite tickets as always bookable', () => {
+      cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
+      cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [], userTypes: ['mentor'] }]).as('userDojos');
+      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/,
+        { results: [{ id: 'e1', name: 'event1', dojoId: 'd1', dates: ['2018-08-26T11:00:00.000'], 
+          eventbriteId: 'eb1', eventbriteUrl: 'www.eventbrite.com', sessions: [] }] 
+        }).as('dojoEvent1');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo1');
+      cy.route('/api/3.0/users/u1/orders?query[eventId]=e1', 
+        { results: [] } ).as('orders1');
+      cy.visit('/home');
+      cy.wait('@userDojos');
+      cy.wait('@dojo1');
+      cy.wait('@dojoEvent1');
+      cy.wait('@orders1');
+      cy.get(eventPage.bookButton).should('be.visible');
+      cy.get(eventPage.bookButton).should('have.attr', 'href', 'www.eventbrite.com');
+      cy.get(eventPage.bookedTickets).should('not.be.visible');
+      cy.get(eventPage.manageEventLink).last().should('have.attr', 'href', 'https://www.eventbrite.com/myevent?eid=eb1');
+    });
   });
 
   describe('as a dojo-admin', () => {
