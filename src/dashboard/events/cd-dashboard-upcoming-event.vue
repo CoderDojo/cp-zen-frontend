@@ -14,10 +14,12 @@
           <span v-if="bookedNinjaTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedNinjaTickets, type: $t('Youth') }) }}</span>
           <span v-if="bookedMentorTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedMentorTickets, type: $t('Mentor') }) }}</span>
         </router-link>
-        <a v-if="isChampion || isTicketingAdmin" class="cd-dashboard-upcoming-event__link" :href="`/dashboard/my-dojos/${event.dojoId}/events/${event.id}/applications`" v-ga-track-click="'manage_tickets'">
-          <span>{{ $t('{booked}/{total} {type} booked', { booked: approvedNinjaTickets, total: totalNinjaTickets, type: 'Youth' }) }}</span>
-          <span>{{ $t('{booked}/{total} {type} booked', { booked: approvedMentorTickets, total: totalMentorTickets, type: 'Mentor' }) }}</span>
-        </a>
+        <div>
+          <a v-if="isChampion || isTicketingAdmin" class="cd-dashboard-upcoming-event__link" :href="`/dashboard/my-dojos/${event.dojoId}/events/${event.id}/applications`" v-ga-track-click="'manage_tickets'">
+            <span v-if="totalNinjaTickets > 0">{{ $t('{booked}/{total} {type} booked', { booked: approvedNinjaTickets, total: totalNinjaTickets, type: 'Youth' }) }}</span>
+            <span v-if="totalMentorTickets > 0">{{ $t('{booked}/{total} {type} booked', { booked: approvedMentorTickets, total: totalMentorTickets, type: 'Mentor' }) }}</span>
+          </a>
+        </div>
       </div>
       <div class="cd-dashboard-upcoming-event__dojo">
           <h4 class="cd-dashboard-upcoming-event__dojo-name">{{ dojo.name }}</h4>
@@ -79,7 +81,8 @@
         return this.ticketReduction('mentor', 'quantity');
       },
       hasOrder() {
-        return this.orders && this.orders.length > 0;
+        return this.orders && this.orders.length > 0 &&
+          (this.orders.reduce((acc, ord) => acc += ord.applications.length, 0)) > 0;
       },
       formattedStartTime() {
         return this.$options.filters.cdTimeFormatter(this.event.dates[0].startTime);
