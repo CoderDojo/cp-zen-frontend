@@ -17,8 +17,8 @@
         </router-link>
         <div v-if="isChampion || isTicketingAdmin">
           <a v-if="!event.eventbriteId" class="cd-dashboard-upcoming-event__link" :href="`/dashboard/my-dojos/${event.dojoId}/events/${event.id}/applications`" v-ga-track-click="'manage_tickets'">
-            <span>{{ $t('{booked}/{total} {type} booked', { booked: approvedNinjaTickets, total: totalNinjaTickets, type: 'Youth' }) }}</span>
-            <span>{{ $t('{booked}/{total} {type} booked', { booked: approvedMentorTickets, total: totalMentorTickets, type: 'Mentor' }) }}</span>
+            <span v-if="totalNinjaTickets > 0">{{ $t('{booked}/{total} {type} booked', { booked: approvedNinjaTickets, total: totalNinjaTickets, type: 'Youth' }) }}</span>
+            <span v-if="totalMentorTickets > 0">{{ $t('{booked}/{total} {type} booked', { booked: approvedMentorTickets, total: totalMentorTickets, type: 'Mentor' }) }}</span>
           </a>
           <a v-else-if="event.eventbriteId" :href="`https://www.eventbrite.com/myevent?eid=${event.eventbriteId}`" class="cd-dashboard-upcoming-event__link" v-ga-track-exit-nav>
             {{ $t('Manage') }}
