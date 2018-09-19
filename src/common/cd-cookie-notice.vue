@@ -27,7 +27,7 @@
     },
     watch: {
       $route(newVal, oldVal) {
-        if (newVal.fullPath !== oldVal.fullPath) {
+        if (newVal.fullPath !== oldVal.fullPath && oldVal.fullPath !== '/') {
           this.dismissNotice();
         }
       },
