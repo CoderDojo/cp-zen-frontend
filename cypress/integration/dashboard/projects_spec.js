@@ -31,7 +31,7 @@ describe('Homepage projects', () => {
       .first()
       .find(homePage.projectCard)
       .first()
-      .find('h4')
+      .find('h3')
       .invoke('text')
       .should('eq', 'Advanced HTML & CSS for Social Innovation');
   });
@@ -45,7 +45,7 @@ describe('Homepage projects', () => {
           .first()
           .find(homePage.projectCard)
           .first()
-          .find('h4')
+          .find('h3')
           .invoke('text')
           .should('eq', 'Verschollen im Weltraum');
       });
@@ -61,7 +61,7 @@ describe('Homepage projects', () => {
           .first()
           .find(homePage.projectCard)
           .first()
-          .find('h4')
+          .find('h3')
           .invoke('text')
           .should('eq', 'Advanced HTML & CSS for Social Innovation');
         // Ensure the urls fallbacks to EN as well
