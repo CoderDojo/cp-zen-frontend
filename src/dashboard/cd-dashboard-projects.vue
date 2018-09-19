@@ -17,7 +17,7 @@
       <div class="cd-dashboard-projects__card cd-dashboard-projects__card--filler"></div>
     </div>
     <div class="cd-dashboard-projects__cta">
-      <a class="cd-dashboard-projects__view-all" href="https://projects.raspberrypi.org" v-ga-track-exit-nav>{{ $t('View more projects') }}</a>
+      <a class="cd-dashboard-projects__view-all" :href="`https://projects.raspberrypi.org/${locale}`" v-ga-track-exit-nav>{{ $t('View more projects') }}</a>
     </div>
   </div>
 </template>
