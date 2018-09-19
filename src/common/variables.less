@@ -12,8 +12,10 @@
 @font-size-medium: ceil((@font-size-base * 1.1));
 @font-size-mobile-page-title: ceil((@font-size-base * 1.5));
 
+@margin: 16px;
+
 .default-margin() {
-  margin: 16px 0;
+  margin: @margin 0;
 }
 .title() {
   font-size: 30px;
@@ -35,10 +37,18 @@
   border: 1px solid;
   font-size: @font-size-medium;
   font-weight: bold;
-  padding: 14px;
   display: inline-block;
+  padding: 14px;
   border-radius: 4px;
-  margin: 32px 0;
+}
+
+.button-link-sm() {
+  border: 1px solid;
+  font-size: @font-size-medium;
+  font-weight: bold;
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 2px;
 }
 
 .small-link() {
@@ -47,4 +57,7 @@
   text-decoration: underline;
   padding: 14px;
   display: inline-block;
+}
+.h3 {
+  font-size: 18px;
 }

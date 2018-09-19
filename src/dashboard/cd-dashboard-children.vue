@@ -4,9 +4,9 @@
       <h2 class="cd-dashboard-children__header">{{ $t('My children') }}</h2>
       <hr class ="cd-dashboard-children__divider visible-xs">
       <div class="cd-dashboard-children__child" v-for="child in children.slice(0,3)">
-        <h4 class="cd-dashboard-children__name">
+        <h3 class="cd-dashboard-children__name">
           {{ child.name }}
-        </h4>
+        </h3>
         <span class="cd-dashboard-children__badges" v-if="child.badges.length > 0" >
           <div class="cd-dashboard-children__badge" v-for="badge in child.badges.slice(0,3)">
             <img class="cd-dashboard-children__badge-image" :src="badge.imageUrl" />
@@ -94,17 +94,18 @@
     max-width: 340px;
 
     &__header {
-      margin: 45px 0 16px 0;
+      margin: 45px 0 @margin 0;
     }
 
     &__child {
-      margin: 16px 0 16px 0;
+      .default-margin;
       display: flex;
       flex-direction: column;
     }
 
     &__name {
-      margin: 16px 0 16px 0;
+      .default-margin;
+      .h3;
       display: flex;
 
       &--filler {
@@ -119,7 +120,7 @@
       justify-content: space-evenly;
 
       &-link {
-        margin: 16px 0 0;
+        margin: @margin 0 0;
       }
 
       &-none {
@@ -146,15 +147,11 @@
     }
 
     &__cta {
-      text-align: center;
+      .cta;
     }
 
     &__view-all {
-      font-size: @font-size-medium;
-      font-weight: bold;
-      text-decoration: underline;
-      padding: 14px;
-      display: inline-block;
+      .small-link;
     }
   }
 

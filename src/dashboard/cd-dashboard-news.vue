@@ -98,18 +98,18 @@
 
   .cd-dashboard-news {
     background-color: #fff;
-    padding: 0 32px;
+    padding: 0 @margin*2;
     min-height: 432px;
     max-width: 940px;
     display: flex;
     flex-direction: column;
 
     &__header {
-      margin: 45px 0 16px 0;
+      margin: 45px 0 @margin 0;
     }
 
     &__posts {
-      margin: 16px 0;
+      .default-margin;
       display: flex;
       flex-direction: row;
 
@@ -119,7 +119,7 @@
       }
 
       &-right{
-        margin: 0 16px 0 16px;
+        .default-margin;
         max-width: 425px;
       }
 
@@ -154,14 +154,10 @@
     }
 
     &__view-all {
+      .button-link;
       color: @cd-purple;
-      border: 1px solid @cd-purple;
-      font-size: @font-size-medium;
-      font-weight: bold;
-      padding: 14px;
-      display: inline-block;
-      border-radius: 4px;
-      margin: 16px 0 32px 0;
+      border-color: @cd-purple;
+      margin: @margin 0 @margin*2 0;
     }
   }
 

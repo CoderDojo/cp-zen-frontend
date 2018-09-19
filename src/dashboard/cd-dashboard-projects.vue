@@ -8,7 +8,7 @@
         :href="`https://projects.raspberrypi.org/${locale}/projects/${project.attributes.repositoryName}`"
         v-ga-track-exit-nav>
         <img :src="project.attributes.content.heroImage" />
-        <h4>{{ project.attributes.content.title }}</h4>
+        <h3 class="cd-dashboard-projects__card-name">{{ project.attributes.content.title }}</h3>
       </a>
     </div>
     <div v-show="!isDisplayable" class="cd-dashboard-projects__cards cd-filler">
@@ -100,8 +100,8 @@
         width: 100%;
       }
 
-      h4 {
-        font-size: 18px;
+      h3 {
+        .h3;
         font-weight: bold;
         text-align: center;
         margin: 18px;
@@ -123,13 +123,9 @@
     }
 
     &__view-all {
+      .button-link;
       color: @cd-purple;
-      border: 1px solid @cd-purple;
-      font-size: @font-size-medium;
-      font-weight: bold;
-      padding: 14px;
-      display: inline-block;
-      border-radius: 4px;
+      border-color: @cd-purple;
       margin: 32px 0;
     }
   }
