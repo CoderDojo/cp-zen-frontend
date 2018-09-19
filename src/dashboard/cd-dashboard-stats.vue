@@ -1,9 +1,9 @@
 <template>
   <div class="column">
     <div class="cd-dashboard-stats">
-      <h3 class="cd-dashboard-stats__header">{{ $t('Dojo stats') }}</h3>
+      <h2 class="cd-dashboard-stats__header">{{ $t('Dojo stats') }}</h2>
       <hr class="cd-dashboard-stats__divider visible-xs"/>
-      <h4 class="cd-dashboard-stats__category">{{ $t('Youth') }}</h4>
+      <h3 class="cd-dashboard-stats__category">{{ $t('Youth') }}</h3>
       <div class="cd-dashboard-stats__charts" v-if="chartsAreVisible">
         <div class="cd-dashboard-stats__chart-number" v-if="numberChartIsReady">
           <span class="cd-dashboard-stats__description" v-html="$t('{numKids} ninjas attended your events', { numKids: numberStatText })"></span>
@@ -140,20 +140,20 @@
 
   .cd-dashboard-stats {
     background-color: @side-column-grey;
-    padding: 0 32px;
+    padding: 0 @margin*2;
     margin-left: auto;
     min-height: 100%;
     max-width: 340px;
     display: block; 
 
     &__header {
-      margin: 45px 0 16px 0;
+      margin: 45px 0 @margin 0;
     }
     &__chart {
       &-pie {
-        margin-top: 16px;
+        margin-top: @margin;
         &--filler {
-          margin-top: 16px;
+          margin-top: @margin;
           background-color: @cd-very-light-grey;
           height: 100px;
           width: 100px;
@@ -173,7 +173,8 @@
       align-items: center;
       justify-content: space-evenly;
       svg {
-        width: 100px; height: 100px;
+        width: 100px; 
+        height: 100px;
         transform: rotate(-90deg);
         border-radius: 50%;
       }
@@ -216,7 +217,7 @@
       }
       &__chart {
         &-pie {
-          margin: 16px 0;
+          .default-margin;
         }
       }
     }

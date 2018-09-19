@@ -123,13 +123,9 @@
     }
 
     &__view-all {
+      .button-link;
       color: @cd-purple;
-      border: 1px solid @cd-purple;
-      font-size: @font-size-medium;
-      font-weight: bold;
-      padding: 14px;
-      display: inline-block;
-      border-radius: 4px;
+      border-color: @cd-purple;
       margin: 32px 0;
     }
   }

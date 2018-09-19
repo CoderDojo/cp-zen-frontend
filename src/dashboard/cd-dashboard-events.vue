@@ -175,19 +175,15 @@
     &__list-filler {
       background: @cd-very-light-grey;
       height: 90px;
-      margin: 32px 0;
+      margin: @margin*2 0;
     }
 
     &__cta {
-      text-align: center;
+      .cta;
 
       &-link {
-        display: inline-block;
+        .button-link-sm;
         color: @cd-white;
-        font-weight: bold;
-        padding: 7px 14px;
-        border: 1px solid @cd-white;
-        border-radius: 2px;
       }
     }
   }
