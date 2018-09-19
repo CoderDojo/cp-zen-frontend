@@ -43,6 +43,16 @@ const router = new Router({
       children: [
         {
           path: '',
+          name: 'root',
+          beforeEnter(to, from, next) {
+            if (store.getters.isLoggedIn) {
+              return next({ name: 'Home' });
+            }
+            return next({ name: 'FindDojo', query: to.query });
+          },
+        },
+        {
+          path: '/find',
           name: 'FindDojo',
           component: FindDojo,
         },
