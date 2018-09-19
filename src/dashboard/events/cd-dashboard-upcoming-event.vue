@@ -3,9 +3,10 @@
     <div v-if="isLoaded" class="cd-dashboard-upcoming-event__content" :class="{ 'cd-dashboard-upcoming-event__content--booked': hasOrder}">
       <div class="cd-dashboard-upcoming-event__main">
         <h4 v-if="hasOrder">{{ $t('"{name}" is booked', { name: event.name }) }}</h4>
-        <h4 v-else-if="remainingTickets <= 0">{{ $t('"{name}" is fully booked', { name: event.name }) }}</h4>
+        <h4 v-else-if="remainingTickets <= 0 && !event.eventbriteId">{{ $t('"{name}" is fully booked', { name: event.name }) }}</h4>
         <h4 v-else>{{ $t('"{name}" is available to book', { name: event.name }) }}</h4>
         <router-link v-if="canBook" class="cd-dashboard-upcoming-event__book" :to="{ name: 'EventSessions', params: { eventId: event.id } }" v-ga-track-click="'book_now'">{{ $t('Book now') }}</router-link>
+        <a v-if="event.eventbriteId"  class="cd-dashboard-upcoming-event__book" :href="event.eventbriteUrl" v-ga-track-exit-nav>{{ $t('Book now') }}</a>
         <router-link v-if="hasOrder"  class="cd-dashboard-upcoming-event__link" :to="{ name: 'EventSessions', params: { eventId: event.id } }" v-ga-track-click="'booked_tickets'">
           <span class="cd-dashboard-upcoming-event__tick fa-stack">
             <i class="fa fa-circle fa-stack-2x"></i>
@@ -14,10 +15,13 @@
           <span class="cd-dashboard-upcoming-event__booked" v-if="bookedNinjaTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedNinjaTickets, type: $t('Youth') }) }}</span>
           <span class="cd-dashboard-upcoming-event__booked" v-if="bookedMentorTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedMentorTickets, type: $t('Mentor') }) }}</span>
         </router-link>
-        <div>
-          <a v-if="isChampion || isTicketingAdmin" class="cd-dashboard-upcoming-event__link" :href="`/dashboard/my-dojos/${event.dojoId}/events/${event.id}/applications`" v-ga-track-click="'manage_tickets'">
+        <div v-if="isChampion || isTicketingAdmin">
+          <a v-if="!event.eventbriteId" class="cd-dashboard-upcoming-event__link" :href="`/dashboard/my-dojos/${event.dojoId}/events/${event.id}/applications`" v-ga-track-click="'manage_tickets'">
             <span v-if="totalNinjaTickets > 0">{{ $t('{booked}/{total} {type} booked', { booked: approvedNinjaTickets, total: totalNinjaTickets, type: 'Youth' }) }}</span>
             <span v-if="totalMentorTickets > 0">{{ $t('{booked}/{total} {type} booked', { booked: approvedMentorTickets, total: totalMentorTickets, type: 'Mentor' }) }}</span>
+          </a>
+          <a v-else-if="event.eventbriteId" :href="`https://www.eventbrite.com/myevent?eid=${event.eventbriteId}`" class="cd-dashboard-upcoming-event__link" v-ga-track-exit-nav>
+            {{ $t('Manage') }}
           </a>
         </div>
       </div>

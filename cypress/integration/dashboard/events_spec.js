@@ -7,7 +7,7 @@ describe('Homepage events', () => {
 
   it('should show events from multiple Dojos', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-    cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: ['ticketing-admin'], userTypes: ['mentor'] }, { dojoId: 'd2', userPermissions: [], userTypes: ['mentor'] }]).as('userDojos');
+    cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }], userTypes: ['mentor'] }, { dojoId: 'd2', userPermissions: [], userTypes: ['mentor'] }]).as('userDojos');
     cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/,
       { results: [{ id: 'e1', name: 'event1', dojoId: 'd1', dates: ['2018-08-26T11:00:00.000'], sessions: [{ tickets: [{ type: 'ninja' }] }] }] }).as('dojoEvent1');
     cy.route(/\/api\/3\.0\/dojos\/d2\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/,
@@ -32,7 +32,7 @@ describe('Homepage events', () => {
   });
   it('should show fully booked event', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-    cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: ['ticketing-admin'], userTypes: ['mentor'] }]).as('userDojos');
+    cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }], userTypes: ['mentor'] }]).as('userDojos');
     cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/,
       { results: [{ id: 'e1', name: 'event1', dojoId: 'd1', dates: ['2018-08-26T11:00:00.000'], 
         sessions: [{ tickets: [{ type: 'ninja', quantity: 42, approvedApplications: 42 }] }] }] 
@@ -51,7 +51,7 @@ describe('Homepage events', () => {
   describe('as a parent', () => {
     it('should display "Book now" if no order exists and tickets available', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-      cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: ['ticketing-admin'], userTypes: ['mentor'] }]).as('userDojos');
+      cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [], userTypes: ['parent-guardian'] }]).as('userDojos');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/,
         { results: [{ id: 'e1', name: 'event1', dojoId: 'd1', dates: ['2018-08-26T11:00:00.000'], 
           sessions: [{ tickets: [{ type: 'ninja', quantity: 42, approvedApplications: 0 }] }] }] 
@@ -69,7 +69,7 @@ describe('Homepage events', () => {
 
     it('should show number of tickets booked if order exists', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-      cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: ['ticketing-admin'], userTypes: ['mentor'] }]).as('userDojos');
+      cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }], userTypes: ['mentor'] }]).as('userDojos');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/,
         { results: [{ id: 'e1', name: 'event1', dojoId: 'd1', dates: ['2018-08-26T11:00:00.000'], 
           sessions: [{ tickets: [{ type: 'ninja', quantity: 42, approvedApplications: 0 }] }] }] 
@@ -130,12 +130,33 @@ describe('Homepage events', () => {
     });
 
     it('should show number of booked tickets as a ticketing-admin', () => {});
+
+    it('should show the eventbrite tickets as always bookable', () => {
+      cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
+      cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin'}], userTypes: ['mentor'] }]).as('userDojos');
+      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/,
+        { results: [{ id: 'e1', name: 'event1', dojoId: 'd1', dates: ['2018-08-26T11:00:00.000'], 
+          eventbriteId: 'eb1', eventbriteUrl: 'www.eventbrite.com', sessions: [] }] 
+        }).as('dojoEvent1');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo1');
+      cy.route('/api/3.0/users/u1/orders?query[eventId]=e1', 
+        { results: [] } ).as('orders1');
+      cy.visit('/home');
+      cy.wait('@userDojos');
+      cy.wait('@dojo1');
+      cy.wait('@dojoEvent1');
+      cy.wait('@orders1');
+      cy.get(eventPage.bookButton).should('be.visible');
+      cy.get(eventPage.bookButton).should('have.attr', 'href', 'www.eventbrite.com');
+      cy.get(eventPage.bookedTickets).should('not.be.visible');
+      cy.get(eventPage.manageEventLink).last().should('have.attr', 'href', 'https://www.eventbrite.com/myevent?eid=eb1');
+    });
   });
 
   describe('as a dojo-admin', () => {
     it('should display info about booked youth and mentor tickets', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-      cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: ['ticketing-admin'], userTypes: ['champion'] }]).as('userDojos');
+      cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }], userTypes: ['champion'] }]).as('userDojos');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/,
         { results: [{ id: 'e1', name: 'event1', dojoId: 'd1', dates: ['2018-08-26T11:00:00.000'], 
           sessions: [{ tickets: [
@@ -157,7 +178,7 @@ describe('Homepage events', () => {
   describe('as a dojo-admin without events', () => {
     it('should show a message about EB if the dojo is old', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-      cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: ['ticketing-admin'] }]).as('userDojos');
+      cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }] }]).as('userDojos');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [] }).as('oldEvents');
       cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo');
@@ -171,7 +192,7 @@ describe('Homepage events', () => {
     });
     it('should show a message about zen events if the dojo is new', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-      cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: ['ticketing-admin'] }]).as('userDojos');
+      cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }] }]).as('userDojos');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [] }).as('oldEvents');
       cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2018-08-26T11:46:14.308Z' }).as('dojo');
@@ -185,7 +206,7 @@ describe('Homepage events', () => {
     });
     it('should show a message about creating an event if the dojo used Zen events (redirects to dojo create event form)', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-      cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: ['ticketing-admin'] }]).as('userDojos');
+      cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }] }]).as('userDojos');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents');
       cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo');
@@ -199,7 +220,7 @@ describe('Homepage events', () => {
     });
     it('should show a message about creating an event if a dojo used Zen events (redirects to my-dojos)', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-      cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: ['ticketing-admin'] }, { dojoId: 'd2', userPermissions: ['ticketing-admin'] }]).as('userDojos');
+      cy.route('POST', '/api/2.0/dojos/users', [ { dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }] }, { dojoId: 'd2', userPermissions: [{ name: 'ticketing-admin' }] }]).as('userDojos');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
       cy.route(/\/api\/3\.0\/dojos\/d2\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents2');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents');

@@ -70,8 +70,8 @@
         }, {});
       },
       ticketingAdmins() {
-        return this.usersDojos.filter(ud =>
-          ud.userPermissions.includes('ticketing-admin'));
+        return this.usersDojos.filter(usersDojo =>
+          usersDojo.userPermissions.find(perm => perm.name === 'ticketing-admin'));
       },
       usesTicketing() {
         return this.oldEvents && this.oldEvents.length > 0;
