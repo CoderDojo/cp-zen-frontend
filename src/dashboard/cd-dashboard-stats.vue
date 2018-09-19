@@ -33,7 +33,7 @@
       </div>
       <div v-else>
         <p>{{ $t('No statistics are available at the moment.') }}
-        {{ $t('The more Zen is used, the more you\'ll find about your Dojo!') }}</p>
+        {{ $t('The more Zen is used, the more you\'ll find out about your Dojo!') }}</p>
       </div>
     </div>
   </div>
@@ -58,7 +58,7 @@
     computed: {
       ...mapGetters(['loggedInUser']),
       chartsAreVisible() {
-        return (this.bookedChildren === null || this.bookedChildren.length !== 0) &&
+        return (this.bookedChildren === null || this.bookedChildren !== 0) &&
           ((this.dojoUsers === null || this.dojoUsers.length !== 0) &&
             (this.genders === null || this.genders.length !== 0));
       },
@@ -102,10 +102,14 @@
     },
     methods: {
       async getBookedChildren() {
-        this.bookedChildren = (await EventsService.searchApplicationsByDojo(
+        const res = (await EventsService.searchApplicationsByDojo(
           this.dojoId,
           { deleted: 0, ticketType: 'ninja', status: { ne$: 'cancelled' } },
-        )).body.length;
+        )).body;
+        this.bookedChildren = (res.reduce((acc, application) => {
+          acc.add(application.userId);
+          return acc;
+        }, new Set())).size;
       },
       async getDojoUsers() {
         let dojoUsers = (await DojoService.getDojoUsers(this.dojoId, { userType: 'attendee-u13', fields: ['gender'] })).body.response;
