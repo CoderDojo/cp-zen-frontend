@@ -33,7 +33,7 @@ describe('Homepage stats', () => {
       cy.wait('@userDojos');
       cy.wait('@dojoUsers');
       cy.wait('@dojoUsers');
-      cy.get(homePage.statsNbYouthChart).invoke('text').should('eq', '1 kids attended your events');
+      cy.get(homePage.statsNbYouthChart).invoke('text').should('eq', '1 ninjas attended your events');
     });
     it('should show the stats chart of youth gender', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');

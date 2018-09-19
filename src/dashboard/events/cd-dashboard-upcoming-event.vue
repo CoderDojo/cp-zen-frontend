@@ -11,8 +11,8 @@
             <i class="fa fa-circle fa-stack-2x"></i>
             <i class="fa fa-check fa-stack-1x fa-inverse"></i>
           </span>
-          <span v-if="bookedNinjaTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedNinjaTickets, type: $t('Youth') }) }}</span>
-          <span v-if="bookedMentorTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedMentorTickets, type: $t('Mentor') }) }}</span>
+          <span class="cd-dashboard-upcoming-event__booked" v-if="bookedNinjaTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedNinjaTickets, type: $t('Youth') }) }}</span>
+          <span class="cd-dashboard-upcoming-event__booked" v-if="bookedMentorTickets > 0">{{ $t('{num} "{type}" tickets booked', { num: bookedMentorTickets, type: $t('Mentor') }) }}</span>
         </router-link>
         <div>
           <a v-if="isChampion || isTicketingAdmin" class="cd-dashboard-upcoming-event__link" :href="`/dashboard/my-dojos/${event.dojoId}/events/${event.id}/applications`" v-ga-track-click="'manage_tickets'">
@@ -32,7 +32,6 @@
 
 <script>
   import { mapGetters } from 'vuex';
-  import ImgFallback from '@/common/directives/cd-img-fallback';
   import cdDateFormatter from '@/common/filters/cd-date-formatter';
   import cdTimeFormatter from '@/common/filters/cd-time-formatter';
   import EventsService from '@/events/service';
@@ -41,9 +40,6 @@
   export default {
     name: 'cd-dashboard-upcoming-event',
     props: ['event', 'dojo'],
-    directives: {
-      ImgFallback,
-    },
     filters: {
       cdDateFormatter,
       cdTimeFormatter,

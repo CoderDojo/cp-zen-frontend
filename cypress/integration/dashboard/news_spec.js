@@ -11,7 +11,7 @@ describe('Dashboard news', () => {
     cy.visit('/home');
     cy.wait('@loggedIn');
     cy.wait('@blogArticles');
-    cy.get(homePage.newsTitle).invoke('text').should('eq', 'News Updates');
+    cy.get(homePage.newsTitle).invoke('text').should('eq', 'News');
   });
   
   it('should display the latest 6 news', () => {
