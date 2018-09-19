@@ -114,7 +114,8 @@
         return this.event.usersDojos.filter(usersDojo => usersDojo.userTypes.indexOf('champion') !== -1).length > 0;
       },
       isTicketingAdmin() {
-        return this.event.usersDojos.filter(usersDojo => usersDojo.userPermissions.find(perm => perm.name === 'ticketing-admin')).length > 0;
+        return this.event.usersDojos.filter(usersDojo =>
+          usersDojo.userPermissions && usersDojo.userPermissions.find(perm => perm.name === 'ticketing-admin')).length > 0;
       },
     },
     methods: {

@@ -71,7 +71,7 @@
       },
       ticketingAdmins() {
         return this.usersDojos.filter(usersDojo =>
-          usersDojo.userPermissions.find(perm => perm.name === 'ticketing-admin'));
+          usersDojo.userPermissions && usersDojo.userPermissions.find(perm => perm.name === 'ticketing-admin'));
       },
       usesTicketing() {
         return this.oldEvents && this.oldEvents.length > 0;
@@ -159,7 +159,7 @@
       max-width: 824px;
       margin: 0 auto;
     }
-    
+
     &__hint {
       .subtitle;
       color: @cd-white;
