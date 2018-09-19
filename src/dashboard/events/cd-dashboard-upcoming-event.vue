@@ -2,8 +2,9 @@
   <div class="cd-dashboard-upcoming-event">
     <div v-if="isLoaded" class="cd-dashboard-upcoming-event__content" :class="{ 'cd-dashboard-upcoming-event__content--booked': hasOrder}">
       <div class="cd-dashboard-upcoming-event__main">
-        <h4 v-if="hasOrder">{{ $t('"{name}" is booked', { name: event.name }) }}</h4>
-        <h4 v-else-if="remainingTickets <= 0 && !event.eventbriteId">{{ $t('"{name}" is fully booked', { name: event.name }) }}</h4>
+        <h4 v-if="hasOrder && !approvalRequired">{{ $t('"{name}" is booked', { name: event.name }) }}</h4>
+        <h4 v-else-if="hasOrder">{{ $t('Your "{name}" tickets are waiting for approval', { name: event.name }) }}</h4>
+        <h4 v-else-if="fullyBooked && !event.eventbriteId">{{ $t('"{name}" is fully booked', { name: event.name }) }}</h4>
         <h4 v-else>{{ $t('"{name}" is available to book', { name: event.name }) }}</h4>
         <router-link v-if="canBook" class="cd-dashboard-upcoming-event__book" :to="{ name: 'EventSessions', params: { eventId: event.id } }" v-ga-track-click="'book_now'">{{ $t('Book now') }}</router-link>
         <a v-if="event.eventbriteId"  class="cd-dashboard-upcoming-event__book" :href="event.eventbriteUrl" v-ga-track-exit-nav>{{ $t('Book now') }}</a>
@@ -60,12 +61,15 @@
       },
       canBook() {
         return !this.isChampion && !this.isTicketingAdmin &&
-          !this.hasOrder && this.remainingTickets > 0;
+          !this.hasOrder && (this.remainingNinjaTickets > 0 || this.remainingMentorTickets > 0);
       },
       eventDate() {
         return EventUtils.getNextStartTime(this.event);
       },
-      remainingTickets() {
+      fullyBooked() {
+        return this.remainingNinjaTickets <= 0 && this.remainingMentorTickets <= 0;
+      },
+      remainingNinjaTickets() {
         return this.totalNinjaTickets - this.approvedNinjaTickets;
       },
       approvedNinjaTickets() {
@@ -73,6 +77,9 @@
       },
       totalNinjaTickets() {
         return this.ticketReduction('ninja', 'quantity');
+      },
+      remainingMentorTickets() {
+        return this.totalMentorTickets - this.approvedMentorTickets;
       },
       approvedMentorTickets() {
         return this.ticketReduction('mentor', 'approvedApplications');
@@ -98,6 +105,10 @@
       bookedMentorTickets() {
         return this.orders.reduce((acc, order) =>
           acc + order.applications.filter(application => application.ticketType === 'mentor').length, 0);
+      },
+      approvalRequired() {
+        return (this.orders.reduce((acc, order) =>
+          acc + order.applications.filter(application => application.status === 'pending').length, 0)) > 0;
       },
       isChampion() {
         return this.event.usersDojos.filter(usersDojo => usersDojo.userTypes.indexOf('champion') !== -1).length > 0;
@@ -244,7 +255,7 @@
       &__book {
         display: block;
         text-align: center;
-      } 
+      }
     }
   }
 </style>
