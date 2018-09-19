@@ -119,7 +119,7 @@
       }
 
       &-right{
-        .default-margin;
+        margin: 0 @margin;
         max-width: 425px;
       }
 
