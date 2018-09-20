@@ -2,7 +2,7 @@ import homePage from '../../pages/home';
 
 // NOTE : Well, crap.
 // Tests are failing despite a day in debugging, without reason
-describe.skip('Homepage children', () => {
+describe('Homepage children', () => {
   beforeEach(() => {
     cy.server();
     cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1' }]).as('dojoMembership');
@@ -16,6 +16,9 @@ describe.skip('Homepage children', () => {
     cy.wait('@parentProfile');
     cy.wait('@dojoMembership');
     cy.wait('@dojoMembership');
+    cy.wait('@parentProfile');
+    cy.wait('@parentProfile');
+    cy.wait('@parentProfile');
     cy.get(homePage.childrenTitle).scrollIntoView().should('be.visible');
     // Check how many children
     cy.get(homePage.childrenNames).should('have.length', 3);
@@ -33,11 +36,11 @@ describe.skip('Homepage children', () => {
     // Parent profile: list children ids
     cy.wait('@parentProfile');
     // Children profile: list children badges
-    cy.wait('@parentProfile');
-    cy.wait('@parentProfile');
-    cy.wait('@parentProfile');
     cy.wait('@dojoMembership');
     cy.wait('@dojoMembership');
+    cy.wait('@parentProfile');
+    cy.wait('@parentProfile');
+    cy.wait('@parentProfile');
     let child1 = cy.get(homePage.children).first();
     child1.within((child) => {
       let badges = cy.get(homePage.childrenBadges);
@@ -61,6 +64,9 @@ describe.skip('Homepage children', () => {
     cy.wait('@parentProfile');
     cy.wait('@dojoMembership');
     cy.wait('@dojoMembership');
+    cy.wait('@parentProfile');
+    cy.wait('@parentProfile');
+    cy.wait('@parentProfile');
     // Parent profile: list children ids
     let children = cy.get(homePage.children);
     children.should('have.length', 3);
@@ -72,10 +78,9 @@ describe.skip('Homepage children', () => {
     cy.route('POST', '/api/2.0/profiles/user-profile-data', 'fx:profiles/adultWithoutChildren').as('adultProfile');
     cy.visit('/home');
     cy.wait('@loggedIn');
-    cy.wait('@dojoMembership');
-    cy.wait('@dojoMembership');
-    // Parent profile: list children ids
     cy.wait('@adultProfile');
+    cy.wait('@dojoMembership');
+    cy.wait('@dojoMembership');
     cy.get(homePage.children).should('not.be.visible');
   });
 });
