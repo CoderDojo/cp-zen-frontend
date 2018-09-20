@@ -25,7 +25,7 @@ services:
       - .:/usr/src/app:Z
       - ../cp-translations:/usr/src/app/node_modules/cp-translations:ro
   cypress:
-    image: cypress/base:8
+    image: cypress/browsers:chrome67
     command: yarn cypress
     working_dir: /usr/src/app
     volumes:
