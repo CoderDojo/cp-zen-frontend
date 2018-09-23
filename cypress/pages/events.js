@@ -1,5 +1,6 @@
 export default {
   noEventMessage: '.cd-dashboard-events__hint',
+  newDojoMessage: '.cd-dashboard-events__poll',
   fallbackCTAs: '.cd-dashboard-events__cta-link',
   events: '.cd-dashboard-upcoming-event__main',
   bookButton: '.cd-dashboard-upcoming-event__book',

@@ -3,13 +3,10 @@
     <div class="cd-dashboard-events">
       <div class="cd-dashboard-events__content">
         <h1 class="cd-dashboard-events__header">{{ $t('Hey {name}, here\'s what\'s most important...', { name: loggedInUser.firstName }) }}</h1>
-        <div class="cd-dashboard-events__list" v-if="events">
+        <div class="cd-dashboard-events__list" v-if="events.length > 0">
           <upcoming-event v-for="event in events" :key="event.id" :event="event" :dojo="dojos[event.dojoId]"></upcoming-event>
-          <div class="cd-dashboard-events__cta" v-if="events && events[0].id">
-            <router-link class="cd-dashboard-events__cta-link" :to="{ name: 'MyTickets' }" v-ga-track-click="'your_events'">{{ $t('Your events') }}</router-link>
-          </div>
         </div>
-        <div v-else-if="ticketingAdmins.length > 0">
+        <div v-if="hasDojos && ticketingAdmins.length > 0 && events.length <= 0">
           <p v-if="!usesTicketing && maxDojoAge < 1" class="cd-dashboard-events__hint">
             <router-link :to="getTicketingAdminUrl" v-ga-track-click="'create_first_event'">
               {{ $t('Create your first event so attendees can book and you can easily see who\'s attending.') }}
@@ -23,7 +20,19 @@
             <router-link :to="getTicketingAdminUrl" v-ga-track-click="'create_event'">{{ $t('Create your next event so attendees can book in!') }}</router-link>
           </p>
         </div>
-        <div v-else class="cd-dashboard-events__cta">
+        <div v-if="usersDojos && dojoAdmins.length === 1">
+          <div v-if="hasDojos && dojoAge(firstDojo, 'weeks') < 2" class="cd-dashboard-events__poll" >
+            <a :href="`https://docs.google.com/forms/d/e/1FAIpQLSfkYe44Upu9ezRd7FUytxnvgmZuDxbQTPAj1BcdiqxFoBUslA/viewform?usp=pp_url&entry.1799182697=${firstDojo.name}`" v-ga-track-exit-nav>
+              <i class="fa fa-info-circle"></i>{{ $t('We always ask new Dojos to do a 2 minutes survey.') }} {{ $t('You don\'t have to but it helps the whole community!') }}
+            </a>
+          </div>
+        </div>
+        <div v-if="events.length > 0 && events[0].id">
+          <div class="cd-dashboard-events__cta">
+            <router-link class="cd-dashboard-events__cta-link" :to="{ name: 'MyTickets' }" v-ga-track-click="'your_events'">{{ $t('Your events') }}</router-link>
+          </div>
+        </div>
+        <div v-if="events.length <= 0 && ticketingAdmins.length <= 0" class="cd-dashboard-events__cta">
           <router-link class="cd-dashboard-events__cta-link" :to="{ name: 'FindDojo' }" v-ga-track-click="'find_dojo'">{{ $t('Find a Dojo to attend') }}</router-link>
           <router-link class="cd-dashboard-events__cta-link" to="start-dojo" v-ga-track-click="'start_dojo'">{{ $t('Start a Dojo') }}</router-link>
         </div>
@@ -76,11 +85,25 @@
       usesTicketing() {
         return this.oldEvents && this.oldEvents.length > 0;
       },
+      dojoAdmins() {
+        return this.usersDojos.filter(usersDojo =>
+          usersDojo.userPermissions && usersDojo.userPermissions.find(perm => perm.name === 'dojo-admin'));
+      },
+      hasDojos() {
+        return Object.keys(this.dojos).length > 0;
+      },
       maxDojoAge() {
-        return Math.max(Object.values(this.dojos).map(d => moment().diff(d.createdAt, 'years')));
+        return this.hasDojos ? Math.max(this.ticketingAdmins.map(ud => ud.dojoId)
+          .map(dojoId => this.dojoAge(this.dojos[dojoId], 'years'))) : 0;
+      },
+      firstDojo() {
+        return this.dojos ? this.dojos[this.dojoAdmins[0].dojoId] : {};
       },
     },
     methods: {
+      dojoAge(dojo, format) {
+        return moment().diff(dojo.createdAt, format);
+      },
       async loadEvents() {
         const query = { status: 'published' };
         query.afterDate = moment().unix();
@@ -115,7 +138,7 @@
             },
           }),
         ))).reduce((acc, res) => acc.concat(res.body.results), []);
-        this.events = null;
+        this.events = [];
       },
       async loadUserDojos() {
         const res = await DojosService.getUsersDojos(this.loggedInUser.id);
@@ -159,12 +182,27 @@
       max-width: 824px;
       margin: 0 auto;
     }
-
-    &__hint {
+    &__poll  {
+      text-align: center;
+      margin-bottom: @margin;
+      a {
+        color: @cd-white;
+        i {
+          margin-right: 8px;
+        }
+      }
+    }
+    &__hint{
+      text-align: center;
+      margin-bottom: @margin;
       .subtitle;
       color: @cd-white;
       text-align: center;
       line-break: pre-wrap;
+      a {
+        .subtitle;
+        color: @cd-white;
+      }
     }
 
     &__header {
