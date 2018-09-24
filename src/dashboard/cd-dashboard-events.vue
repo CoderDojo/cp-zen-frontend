@@ -60,7 +60,6 @@
         oldEvents: null,
         usersDojos: [],
         dojos: {},
-        loaded: false,
       };
     },
     computed: {
@@ -97,7 +96,7 @@
           .map(dojoId => this.dojoAge(this.dojos[dojoId], 'years'))) : 0;
       },
       firstDojo() {
-        return this.dojos ? this.dojos[this.dojoAdmins[0].dojoId] : {};
+        return this.hasDojos ? this.dojos[this.dojoAdmins[0].dojoId] : {};
       },
     },
     methods: {
@@ -162,7 +161,6 @@
         this.loadOldEvents();
       }
       this.loadDojos();
-      this.loaded = true;
     },
   };
 </script>
