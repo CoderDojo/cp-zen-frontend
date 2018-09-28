@@ -1,3 +1,4 @@
+import moment from 'moment';
 import eventPage from '../../pages/events';
 
 describe('Homepage events', () => {
@@ -168,35 +169,11 @@ describe('Homepage events', () => {
       cy.get(eventPage.bookedTickets).should('be.visible');
       cy.get(eventPage.bookedTickets).should('have.text', '1 "Mentor" tickets booked');
     });
-
-    it('should show number of booked tickets as a ticketing-admin', () => { });
-
-    it('should show the eventbrite tickets as always bookable', () => {
-      cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-      cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }], userTypes: ['mentor'] }]).as('userDojos');
-      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/,
-        {
-          results: [{
-            id: 'e1', name: 'event1', dojoId: 'd1', dates: ['2018-08-26T11:00:00.000'],
-            eventbriteId: 'eb1', eventbriteUrl: 'www.eventbrite.com', sessions: []
-          }]
-        }).as('dojoEvent1');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo1');
-      cy.route('/api/3.0/users/u1/orders?query[eventId]=e1',
-        { results: [] }).as('orders1');
-      cy.visit('/home');
-      cy.wait('@userDojos');
-      cy.wait('@dojo1');
-      cy.wait('@dojoEvent1');
-      cy.wait('@orders1');
-      cy.get(eventPage.bookButton).should('be.visible');
-      cy.get(eventPage.bookButton).should('have.attr', 'href', 'www.eventbrite.com');
-      cy.get(eventPage.bookedTickets).should('not.be.visible');
-      cy.get(eventPage.manageEventLink).last().should('have.attr', 'href', 'https://www.eventbrite.com/myevent?eid=eb1');
-    });
   });
 
-  describe('as a dojo-admin', () => {
+  describe('as a ticketing-admin', () => {
+    const after2Weeks = (moment().subtract(2, 'weeks')).format();
+    const after1Year = (moment().subtract(1, 'years')).format();
     it('should display info about booked youth and mentor tickets', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
       cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }], userTypes: ['champion'] }]).as('userDojos');
@@ -222,14 +199,36 @@ describe('Homepage events', () => {
       cy.get(eventPage.manageEventLink).last().find('span').first().should('have.text', '2/42 Youth booked');
       cy.get(eventPage.manageEventLink).last().find('span').last().should('have.text', '1/42 Mentor booked');
     });
-  });
-  describe('as a dojo-admin without events', () => {
+    it('should show the eventbrite tickets as always bookable', () => {
+      cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
+      cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }], userTypes: ['mentor'] }]).as('userDojos');
+      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/,
+        {
+          results: [{
+            id: 'e1', name: 'event1', dojoId: 'd1', dates: ['2018-08-26T11:00:00.000'],
+            eventbriteId: 'eb1', eventbriteUrl: 'www.eventbrite.com', sessions: []
+          }]
+        }).as('dojoEvent1');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo1');
+      cy.route('/api/3.0/users/u1/orders?query[eventId]=e1',
+        { results: [] }).as('orders1');
+      cy.visit('/home');
+      cy.wait('@userDojos');
+      cy.wait('@dojo1');
+      cy.wait('@dojoEvent1');
+      cy.wait('@orders1');
+      cy.get(eventPage.bookButton).should('be.visible');
+      cy.get(eventPage.bookButton).should('have.attr', 'href', 'www.eventbrite.com');
+      cy.get(eventPage.bookedTickets).should('not.be.visible');
+      cy.get(eventPage.manageEventLink).last().should('have.attr', 'href', 'https://www.eventbrite.com/myevent?eid=eb1');
+    });
+
     it('should show a message about EB if the dojo is old', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
       cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }] }]).as('userDojos');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [] }).as('oldEvents');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: after1Year }).as('dojo');
       cy.visit('/home');
       cy.wait('@oldEvents');
       cy.wait('@dojo');
@@ -238,18 +237,19 @@ describe('Homepage events', () => {
         '\n          We see you don\'t use Zen events.\n          If you\'re using Eventbrite for your Dojo you can make it easier for attendees and volunteers to find you by using our one-click Eventbrite plugin (it\'s really easy!)');
       cy.get(eventPage.fallbackCTAs).should('not.be.visible');
     });
-    it('should show a message about zen events if the dojo is new', () => {
+    it('should show a message about zen events if a dojo is new (> 2 weeks)', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
       cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }] }]).as('userDojos');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [] }).as('oldEvents');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2018-08-26T11:46:14.308Z' }).as('dojo');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: after2Weeks, name: 'dojo1' }).as('dojo');
       cy.visit('/home');
       cy.wait('@oldEvents');
       cy.wait('@dojo');
       cy.get(eventPage.noEventMessage).should('be.visible');
       cy.get(eventPage.noEventMessage).should('have.text', '\n            Create your first event so attendees can book and you can easily see who\'s attending.\n            It\'s simple and only takes 2 minutes!\n          ');
       cy.get(eventPage.noEventMessage).find('a').should('have.attr', 'href', '/dashboard/dojo/d1/event-form');
+      cy.get(eventPage.newDojoMessage).should('not.be.visible');
       cy.get(eventPage.fallbackCTAs).should('not.be.visible');
     });
     it('should show a message about creating an event if the dojo used Zen events (redirects to dojo create event form)', () => {
@@ -274,15 +274,43 @@ describe('Homepage events', () => {
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents');
       cy.route(/\/api\/3\.0\/dojos\/d2\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents2');
       cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo');
+      cy.route('/api/2.0/dojos/d2', { id: 'd2', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo2');
       cy.visit('/home');
       cy.wait('@oldEvents');
       cy.wait('@oldEvents2');
       cy.wait('@dojo');
+      cy.wait('@dojo2');
       cy.get(eventPage.noEventMessage).should('be.visible');
       cy.get(eventPage.noEventMessage).should('have.text', 'Create your next event so attendees can book in!');
       cy.get(eventPage.noEventMessage).find('a').should('have.attr', 'href', '/dashboard/my-dojos');
       cy.get(eventPage.fallbackCTAs).should('not.be.visible');
     });
+  });
+  describe('as a dojo-admin+ticketing-admin', () => {
+    const last2Weeks = moment().format();
+    it('should show two messages if the Dojo he recently created (< 2 weeks) has no events and is his first', () => {
+      cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
+      cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [{ name: 'dojo-admin' }, { name: 'ticketing-admin' }] }, { dojoId: 'd2', userPermissions: [{ name: 'ticketing-admin' }] }]).as('userDojos');
+      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
+      cy.route(/\/api\/3\.0\/dojos\/d2\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents2');
+      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents');
+      cy.route(/\/api\/3\.0\/dojos\/d2\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents2');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: last2Weeks, name: 'dojo1', }).as('dojo');
+      cy.route('/api/2.0/dojos/d2', { id: 'd2', createdAt: '2015-09-15T11:46:14.308Z', name: 'dojo2', }).as('dojo2');
+      cy.visit('/home');
+      cy.wait('@noEvents');
+      cy.wait('@noEvents2');
+      cy.wait('@oldEvents');
+      cy.wait('@oldEvents2');
+      cy.wait('@dojo');
+      cy.wait('@dojo2');
+      cy.get(eventPage.noEventMessage).should('be.visible');
+      cy.get(eventPage.noEventMessage).should('have.text', 'Create your next event so attendees can book in!');
+      cy.get(eventPage.noEventMessage).find('a').should('have.attr', 'href', '/dashboard/my-dojos');
+      cy.get(eventPage.newDojoMessage).find('a').should('have.attr', 'href', 'https://docs.google.com/forms/d/e/1FAIpQLSfkYe44Upu9ezRd7FUytxnvgmZuDxbQTPAj1BcdiqxFoBUslA/viewform?usp=pp_url&entry.1799182697=dojo1');
+      cy.get(eventPage.newDojoMessage).find('a').should('have.text', 'We always ask new Dojos to do a 2 minutes survey. You don\'t have to but it helps the whole community!\n          ');
+      cy.get(eventPage.fallbackCTAs).should('not.be.visible');
+     });
   });
   describe('as a normal user without event that is not ticketing-admin', () => {
     it('should display two buttons as cta', () => {
