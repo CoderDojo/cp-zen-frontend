@@ -185,6 +185,7 @@
       margin-bottom: @margin;
       a {
         color: @cd-white;
+        text-decoration: underline;
         i {
           margin-right: 8px;
         }
@@ -200,6 +201,7 @@
       a {
         .subtitle;
         color: @cd-white;
+        text-decoration: underline;
       }
     }
 
