@@ -135,7 +135,9 @@
     },
     watch: {
       event() {
-        this.loadOrders();
+        if (this.event && this.event.id) {
+          this.loadOrders();
+        }
       },
     },
     created() {
