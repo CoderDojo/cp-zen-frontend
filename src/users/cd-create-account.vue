@@ -12,7 +12,7 @@
       <div>
         <label class="cd-create-account__label" for="email">{{ $t('Your email address') }}</label>
         <div class="cd-create-account__email">
-         <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-name="email" v-validate="'required|email'" data-vv-validate-on="blur" v-model="profile.email">
+         <input type="email" :placeholder="$t('Email address')" class="form-control" name="email" id="email" data-vv-name="email" v-validate="'required|email'" data-vv-validate-on="blur" v-model="userData.email">
        </div>
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:required')">{{ $t('Email address is required') }}</p>
         <p class="cd-create-account-form__email-error text-danger" v-show="errors.has('email:email')">{{ $t('Email address is invalid') }}</p>
@@ -21,11 +21,11 @@
       <label class="cd-create-account__label cd-create-account__names-label" for="firstName">{{ $t('Name') }}</label>
       <div class="cd-create-account__names" >
         <div class="cd-create-account__names-first" :class="{'cd-create-account__names--error': errors.has('lastName:required') && !errors.has('firstName:required')}">
-          <input type="text" class="form-control" name="firstName" :placeholder="$t('First name')" id="name" data-vv-as="first name" v-validate="'required'" v-model="profile.firstName">
+          <input type="text" class="form-control" name="firstName" :placeholder="$t('First name')" id="name" data-vv-as="first name" v-validate="'required'" v-model="userData.firstName">
           <p class="cd-create-account-form__first-name-error text-danger" v-show="errors.has('firstName:required')" for="firstName">{{ $t('First name is required') }}</p>
         </div>
           <div class="cd-create-account__names-last" :class="{'cd-create-account__names--error': !errors.has('lastName:required') && errors.has('firstName:required')}">
-          <input type="text" class="form-control" name="lastName" :placeholder="$t('Last name')" id="lastName" data-vv-as="last name" v-validate="'required'" v-model="profile.lastName">
+          <input type="text" class="form-control" name="lastName" :placeholder="$t('Last name')" id="lastName" data-vv-as="last name" v-validate="'required'" v-model="userData.lastName">
           <p class="cd-create-account-form__last-name-error text-danger" v-show="errors.has('lastName:required')" for="lastName">{{ $t('Last name is required') }}</p>
         </div>
       </div>
@@ -124,7 +124,7 @@
     },
     data() {
       return {
-        profile: {
+        userData: {
           email: null,
           firstName: null,
           lastName: null,
@@ -141,7 +141,7 @@
     },
     computed: {
       user() {
-        return extend({}, this.profile, {
+        return extend({}, this.userData, {
           password: this.password,
           'g-recaptcha-response': this.recaptchaResponse,
           initUserType: {
@@ -150,6 +150,7 @@
           },
           termsConditionsAccepted: this.termsConditionsAccepted,
           mailingList: this.isSubscribedToMailingList,
+          emailSubject: 'Welcome to Zen, the CoderDojo community platform.',
         });
       },
       isUnderage() {
@@ -181,12 +182,8 @@
           try {
             await UserService.register(
               this.user,
-              UserUtils.profileToJSON(
-                extend(
-                  {},
-                  this.profile,
-                  { dob: this.dob, ...context },
-            )));
+              { dob: this.dob, ...context },
+            );
             this.$ga.event(this.$route.name, 'click', `register_${isAdult ? 'adult' : 'kid'}`);
             OrderStore.commit('setIsNewUser', true);
             this.$emit('registered');

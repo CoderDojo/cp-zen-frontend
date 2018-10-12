@@ -36,7 +36,7 @@ describe('Booking Create Account Form', () => {
   describe('computed', () => {
     it('should return an user based on profile', () => {
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.profile = {
+      vm.userData = {
         firstName: 'ba',
       };
       vm.password = 'duh';
@@ -49,6 +49,7 @@ describe('Booking Create Account Form', () => {
         'g-recaptcha-response': 'stuff',
         termsConditionsAccepted: true,
         mailingList: true,
+        emailSubject: 'Welcome to Zen, the CoderDojo community platform.',
         initUserType: {
           title: 'Parent/Guardian',
           name: 'parent-guardian',
@@ -114,7 +115,7 @@ describe('Booking Create Account Form', () => {
       };
       vm.dob = '2017/03/01';
       vm.user = { lastName: 'blu' };
-      vm.profile = { firstName: 'bla' };
+      vm.userData = { firstName: 'bla' };
       vm.$ga = {
         event: sandbox.stub(),
       };
@@ -128,7 +129,7 @@ describe('Booking Create Account Form', () => {
 
       expect(MockUserUtils.getAge).to.have.been.calledWith(sinon.match.date);
       expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_adult');
-      expect(MockUsersService.register).to.have.been.calledWith(vm.user, { firstName: 'bla', dob: '2017/03/01', country: { alpha2: 'FR' } });
+      expect(MockUsersService.register).to.have.been.calledWith(vm.user, { dob: '2017/03/01', country: { alpha2: 'FR' } });
       expect(vm.$emit).to.have.been.calledWith('registered');
       expect(OrderStore.commit).to.have.been.calledWith('setIsNewUser', true);
     });
@@ -144,7 +145,7 @@ describe('Booking Create Account Form', () => {
       };
       vm.dob = '2017/03/01';
       vm.user = { lastName: 'blu' };
-      vm.profile = { firstName: 'bla' };
+      vm.userData = { firstName: 'bla' };
       vm.$ga = {
         event: sandbox.stub(),
       };
@@ -158,7 +159,7 @@ describe('Booking Create Account Form', () => {
 
       expect(MockUserUtils.getAge).to.have.been.calledWith(sinon.match.date);
       expect(vm.$ga.event).to.have.been.calledWith(vm.$route.name, 'click', 'register_kid');
-      expect(MockUsersService.register).to.have.been.calledWith(vm.user, { firstName: 'bla', dob: '2017/03/01', country: { alpha2: 'FR' } });
+      expect(MockUsersService.register).to.have.been.calledWith(vm.user, { dob: '2017/03/01', country: { alpha2: 'FR' } });
       expect(vm.$emit).to.have.been.calledWith('registered');
     });
 
@@ -176,7 +177,7 @@ describe('Booking Create Account Form', () => {
       };
       vm.dob = '2017/03/01';
       vm.user = { lastName: 'blu' };
-      vm.profile = { firstName: 'bla' };
+      vm.userData = { firstName: 'bla' };
       vm.$ga = {
         event: sandbox.stub(),
       };
@@ -189,7 +190,7 @@ describe('Booking Create Account Form', () => {
       await vm.register();
 
       expect(MockUserUtils.getAge).to.have.been.calledWith(sinon.match.date);
-      expect(MockUsersService.register).to.have.been.calledWith(vm.user, { firstName: 'bla', dob: '2017/03/01', country: { alpha2: 'FR' } });
+      expect(MockUsersService.register).to.have.been.calledWith(vm.user, { dob: '2017/03/01', country: { alpha2: 'FR' } });
       expect(vm.$ga.event).to.not.have.been.called;
       expect(vm.$emit).to.not.have.been.called;
       expect(alerting).to.have.been.calledOnce;
@@ -208,7 +209,7 @@ describe('Booking Create Account Form', () => {
       };
       vm.dob = '2017/03/01';
       vm.user = { lastName: 'blu' };
-      vm.profile = { firstName: 'bla' };
+      vm.userData = { firstName: 'bla' };
       vm.$ga = {
         event: sandbox.stub(),
       };
@@ -224,7 +225,7 @@ describe('Booking Create Account Form', () => {
       await vm.register();
 
       expect(MockUserUtils.getAge).to.have.been.calledWith(sinon.match.date);
-      expect(MockUsersService.register).to.have.been.calledWith(vm.user, { firstName: 'bla', dob: '2017/03/01', country: { alpha2: 'FR' } });
+      expect(MockUsersService.register).to.have.been.calledWith(vm.user, { dob: '2017/03/01', country: { alpha2: 'FR' } });
       expect(vm.$ga.event).to.not.have.been.called;
       expect(vm.$emit).to.not.have.been.called;
       expect(vm.errors.add).to.have.been.calledWith('registration', 'Nick exists', 'nick-exists');
