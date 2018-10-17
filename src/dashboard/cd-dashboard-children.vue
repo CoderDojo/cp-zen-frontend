@@ -62,7 +62,7 @@
     methods: {
       orderedBadges(userBadges) {
         const badges = userBadges || [];
-        return badges.sort((a, b) => moment(a.dateAccepted).isBefore(moment(b.dateAccepted)));
+        return badges.sort((a, b) => moment(b.dateAccepted).diff(moment(a.dateAccepted)));
       },
       async loadChildren() {
         this.userChildren = (await Promise.all(
