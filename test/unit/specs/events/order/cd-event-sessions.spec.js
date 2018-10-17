@@ -449,7 +449,7 @@ describe('Event sessions component', () => {
       });
     });
 
-    describe.only('methods.addNewChildren()', () => {
+    describe('methods.addNewChildren()', () => {
       it('should call the create child funtion for each child component', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
