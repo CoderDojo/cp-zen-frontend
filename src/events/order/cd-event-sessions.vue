@@ -151,8 +151,11 @@
       },
       async addNewChildren() {
         if (this.$refs.allChildComponents) {
-          return Promise.all((this.$refs.allChildComponents)
-            .map(child => child.createChild()));
+          let promiseChain = Promise.resolve();
+          this.$refs.allChildComponents.forEach((childComponents) => {
+            promiseChain = promiseChain.then(childComponents.createChild);
+          });
+          return promiseChain;
         }
         return true;
       },
