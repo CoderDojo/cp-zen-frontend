@@ -97,7 +97,7 @@ describe('Dashboard stats component', () => {
         expect(MockEventService.searchApplicationsByDojo).to.have.been.calledOnce;
         expect(MockEventService.searchApplicationsByDojo).to.have.been.calledWith(
           'd1',
-          { deleted: 0, ticketType: 'ninja', status: { ne$: 'cancelled' } },
+          { deleted: false, ticketType: 'ninja', status: { ne$: 'cancelled' } },
         );
         expect(vm.bookedChildren).to.equal(1);
       });

@@ -104,7 +104,7 @@
       async getBookedChildren() {
         const res = (await EventsService.searchApplicationsByDojo(
           this.dojoId,
-          { deleted: 0, ticketType: 'ninja', status: { ne$: 'cancelled' } },
+          { deleted: false, ticketType: 'ninja', status: { ne$: 'cancelled' } },
         )).body;
         this.bookedChildren = (res.reduce((acc, application) => {
           acc.add(application.userId);
