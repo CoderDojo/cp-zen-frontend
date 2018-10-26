@@ -51,7 +51,7 @@
   </div>
 </template>
 <script>
-  import { omit } from 'lodash';
+  import { pick } from 'lodash';
   import { mapGetters } from 'vuex';
   import uuid from 'uuid/v4';
   import store from '@/store';
@@ -142,7 +142,7 @@
       },
       async addPhoneNumber() {
         this.profile.phone = this.phone;
-        return UserService.updateUserProfileData(omit(this.profile, ['userTypes', 'dojos', 'children']));
+        return UserService.updateUserProfileData(pick(this.profile, ['id', 'userId', 'email', 'dob', 'firstName', 'lastName', 'phone']));
       },
       async joinDojo() {
         OrderStore.commit('setIsNewDojoMember', true);
