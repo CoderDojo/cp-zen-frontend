@@ -53,7 +53,7 @@
         return this.$validator.validateAll();
       },
       redirectTo(url) {
-        location.href = this.redirectUrl;
+        location.href = url;
       },
       async login() {
         const valid = await this.validateForm();
@@ -64,7 +64,8 @@
           } else {
             const forumUrl = `^${Vue.config.forumsUrlBase}/auth/CoderDojo$`;
             if (this.redirectUrl.match(forumUrl)) {
-              return this.redirectTo(this.redirectUrl);
+              this.redirectTo(this.redirectUrl);
+              return;
             }
             this.$router.push(this.redirectUrl);
           }
