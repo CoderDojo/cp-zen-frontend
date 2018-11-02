@@ -28,6 +28,7 @@
 </template>
 
 <script>
+  import Vue from 'vue';
   import store from '@/store';
   import { mapGetters } from 'vuex';
   import UserService from './service';
@@ -51,6 +52,9 @@
       async validateForm() {
         return this.$validator.validateAll();
       },
+      redirectTo(url) {
+        location.href = url;
+      },
       async login() {
         const valid = await this.validateForm();
         if (valid) {
@@ -58,6 +62,11 @@
           if (response.body.ok === false) {
             this.errors.add('loginFailed', response.body.why);
           } else {
+            const forumUrl = `^${Vue.config.forumsUrlBase}/auth/CoderDojo$`;
+            if (this.redirectUrl.match(forumUrl)) {
+              this.redirectTo(this.redirectUrl);
+              return;
+            }
             this.$router.push(this.redirectUrl);
           }
         }

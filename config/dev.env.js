@@ -8,6 +8,6 @@ module.exports = merge(prodEnv, {
   GOOGLE_ANALYTICS_PROPERTY_ID: '"UA-25136319-8"',
   GOOGLE_MAPS_API_KEY: '"AIzaSyC3xF9XV91bS2R14Gjmx3UQaKbGgAfHbE4"',
   NEWS_URL_BASE: '""',
-  FORUMS_URL_BASE: '""',
+  FORUMS_URL_BASE: '"http://localhost:4567"',
   PROJECTS_URL_BASE: '""',
 })

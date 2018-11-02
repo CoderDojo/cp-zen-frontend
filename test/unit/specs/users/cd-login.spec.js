@@ -148,6 +148,36 @@ describe('Login', () => {
       expect(vm.$router.push).to.have.been.calledOnce;
       expect(vm.$router.push).to.have.been.calledWith('/library');
     });
+    it('should redirect to an allowed external referer when login succeeds and referer is set', async () => {
+      // ARRANGE
+      sandbox.stub(vm, 'validateForm').resolves(true);
+      MockUserService.login.resolves({ body: {} });
+      vm.$route.query.referer = 'http://localhost:4567/auth/CoderDojo';
+      vm.redirectTo = sinon.stub();
+
+      // ACT
+      await vm.login();
+
+      // ASSERT
+      expect(vm.errors.add).to.not.have.been.called;
+      expect(vm.$router.push).to.not.have.been.called;
+      expect(vm.redirectTo).to.have.been.calledOnce;
+      expect(vm.redirectTo).to.have.been.calledWith('http://localhost:4567/auth/CoderDojo');
+    });
+    it('should not redirect to a disallowed external referer when login succeeds and referer is set', async () => {
+      // ARRANGE
+      sandbox.stub(vm, 'validateForm').resolves(true);
+      MockUserService.login.resolves({ body: {} });
+      vm.$route.query.referer = 'https://mylittlepony.hasbro.com/worldwide';
+
+      // ACT
+      await vm.login();
+
+      // ASSERT
+      expect(vm.errors.add).to.not.have.been.called;
+      expect(vm.$router.push).to.have.been.calledOnce;
+      expect(vm.$router.push).to.have.been.calledWith('https://mylittlepony.hasbro.com/worldwide');
+    });
   });
   describe('created', () => {
     it('should redirect if the user is logged-in', async () => {
