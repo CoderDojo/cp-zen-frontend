@@ -71,7 +71,7 @@ describe('Dashboard events component', () => {
     });
     describe('maxDojoAge', () => {
       it('should return the maxAge of the user\'s Dojos in years', () => {
-        vm.dojos = { d1: { createdAt: (moment().subtract(1, 'years')).format() } };
+        vm.dojos = { d1: { created: (moment().subtract(1, 'years')).format() } };
         vm.hasDojos = true;
         vm.ticketingAdmins = [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }] }];
         expect(vm.maxDojoAge).to.equal(1);

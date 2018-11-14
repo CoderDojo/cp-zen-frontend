@@ -101,7 +101,7 @@
     },
     methods: {
       dojoAge(dojo, format) {
-        return moment().diff(dojo.createdAt, format);
+        return moment().diff(dojo.created, format);
       },
       async loadEvents() {
         const query = { status: 'published' };

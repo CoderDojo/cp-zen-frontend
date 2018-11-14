@@ -13,8 +13,8 @@ describe('Homepage events', () => {
       { results: [{ id: 'e1', name: 'event1', dojoId: 'd1', dates: ['2018-08-26T11:00:00.000'], sessions: [{ tickets: [{ type: 'ninja' }] }] }] }).as('dojoEvent1');
     cy.route(/\/api\/3\.0\/dojos\/d2\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/,
       { results: [{ id: 'e2', name: 'event2', dojoId: 'd2', dates: ['2018-08-26T11:00:00.000'], sessions: [{ tickets: [{ type: 'ninja' }] }] }] }).as('dojoEvent2');
-    cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z', name: 'dojo1' }).as('dojo1');
-    cy.route('/api/2.0/dojos/d2', { id: 'd2', createdAt: '2015-08-26T11:46:14.308Z', name: 'dojo2' }).as('dojo2');
+    cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z', name: 'dojo1' }).as('dojo1');
+    cy.route('/api/2.0/dojos/d2', { id: 'd2', created: '2015-08-26T11:46:14.308Z', name: 'dojo2' }).as('dojo2');
     cy.route('/api/3.0/users/u1/orders?query[eventId]=e1', { results: [] }).as('orders1');
     cy.route('/api/3.0/users/u1/orders?query[eventId]=e2', { results: [] }).as('orders2');
     cy.visit('/home');
@@ -41,7 +41,7 @@ describe('Homepage events', () => {
           sessions: [{ tickets: [{ type: 'ninja', quantity: 42, approvedApplications: 42 }] }]
         }]
       }).as('dojoEvent1');
-    cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z', name: 'dojo1' }).as('dojo1');
+    cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z', name: 'dojo1' }).as('dojo1');
     cy.route('/api/3.0/users/u1/orders?query[eventId]=e1', { results: [] }).as('orders1');
     cy.visit('/home');
     cy.wait('@userDojos');
@@ -63,7 +63,7 @@ describe('Homepage events', () => {
             sessions: [{ tickets: [{ type: 'ninja', quantity: 42, approvedApplications: 0 }] }]
           }]
         }).as('dojoEvent1');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z', name: 'dojo1' }).as('dojo1');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z', name: 'dojo1' }).as('dojo1');
       cy.route('/api/3.0/users/u1/orders?query[eventId]=e1', { results: [] }).as('orders1');
       cy.visit('/home');
       cy.wait('@userDojos');
@@ -84,7 +84,7 @@ describe('Homepage events', () => {
             sessions: [{ tickets: [{ type: 'ninja', quantity: 42, approvedApplications: 0 }] }]
           }]
         }).as('dojoEvent1');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo1');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z' }).as('dojo1');
       cy.route('/api/3.0/users/u1/orders?query[eventId]=e1',
         { results: [{ id: 'o1', applications: [{ ticketType: 'ninja' }, { ticketType: 'ninja' }] }] }).as('orders1');
       cy.visit('/home');
@@ -109,7 +109,7 @@ describe('Homepage events', () => {
             sessions: [{ tickets: [{ type: 'ninja', quantity: 42, approvedApplications: 0 }] }]
           }]
         }).as('dojoEvent1');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo1');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z' }).as('dojo1');
       cy.route('/api/3.0/users/u1/orders?query[eventId]=e1',
         { results: [{ id: 'o1', applications: [{ ticketType: 'ninja', status: 'pending' }, { ticketType: 'ninja', status: 'pending' }] }] }).as('orders1');
       cy.visit('/home');
@@ -136,7 +136,7 @@ describe('Homepage events', () => {
             sessions: [{ tickets: [{ type: 'ninja', quantity: 42, approvedApplications: 0 }] }]
           }]
         }).as('dojoEvent1');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo1');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z' }).as('dojo1');
       cy.route('/api/3.0/users/u1/orders?query[eventId]=e1', { results: [] }).as('orders1');
       cy.visit('/home');
       cy.wait('@userDojos');
@@ -157,7 +157,7 @@ describe('Homepage events', () => {
             sessions: [{ tickets: [{ type: 'mentor', quantity: 1, approvedApplications: 0 }] }]
           }]
         }).as('dojoEvent1');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo1');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z' }).as('dojo1');
       cy.route('/api/3.0/users/u1/orders?query[eventId]=e1',
         { results: [{ id: 'o1', applications: [{ ticketType: 'mentor' }] }] }).as('orders1');
       cy.visit('/home');
@@ -188,7 +188,7 @@ describe('Homepage events', () => {
             }]
           }]
         }).as('dojoEvent1');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo1');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z' }).as('dojo1');
       cy.route('/api/3.0/users/u1/orders?query[eventId]=e1', { results: [] }).as('orders1');
       cy.visit('/home');
       cy.wait('@userDojos');
@@ -209,7 +209,7 @@ describe('Homepage events', () => {
             eventbriteId: 'eb1', eventbriteUrl: 'www.eventbrite.com', sessions: []
           }]
         }).as('dojoEvent1');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo1');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z' }).as('dojo1');
       cy.route('/api/3.0/users/u1/orders?query[eventId]=e1',
         { results: [] }).as('orders1');
       cy.visit('/home');
@@ -228,7 +228,7 @@ describe('Homepage events', () => {
       cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }] }]).as('userDojos');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [] }).as('oldEvents');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: after1Year }).as('dojo');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: after1Year }).as('dojo');
       cy.visit('/home');
       cy.wait('@oldEvents');
       cy.wait('@dojo');
@@ -242,7 +242,7 @@ describe('Homepage events', () => {
       cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }] }]).as('userDojos');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [] }).as('oldEvents');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: after2Weeks, name: 'dojo1' }).as('dojo');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: after2Weeks, name: 'dojo1' }).as('dojo');
       cy.visit('/home');
       cy.wait('@oldEvents');
       cy.wait('@dojo');
@@ -257,7 +257,7 @@ describe('Homepage events', () => {
       cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }] }]).as('userDojos');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z' }).as('dojo');
       cy.visit('/home');
       cy.wait('@oldEvents');
       cy.wait('@dojo');
@@ -273,8 +273,8 @@ describe('Homepage events', () => {
       cy.route(/\/api\/3\.0\/dojos\/d2\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents2');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents');
       cy.route(/\/api\/3\.0\/dojos\/d2\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents2');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo');
-      cy.route('/api/2.0/dojos/d2', { id: 'd2', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo2');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z' }).as('dojo');
+      cy.route('/api/2.0/dojos/d2', { id: 'd2', created: '2015-08-26T11:46:14.308Z' }).as('dojo2');
       cy.visit('/home');
       cy.wait('@oldEvents');
       cy.wait('@oldEvents2');
@@ -295,8 +295,8 @@ describe('Homepage events', () => {
       cy.route(/\/api\/3\.0\/dojos\/d2\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/, { results: [] }).as('noEvents2');
       cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents');
       cy.route(/\/api\/3\.0\/dojos\/d2\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+$/, { results: [{ id: 'e1', name: 'oldEvent' }] }).as('oldEvents2');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: last2Weeks, name: 'dojo1', }).as('dojo');
-      cy.route('/api/2.0/dojos/d2', { id: 'd2', createdAt: '2015-09-15T11:46:14.308Z', name: 'dojo2', }).as('dojo2');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: last2Weeks, name: 'dojo1', }).as('dojo');
+      cy.route('/api/2.0/dojos/d2', { id: 'd2', created: '2015-09-15T11:46:14.308Z', name: 'dojo2', }).as('dojo2');
       cy.visit('/home');
       cy.wait('@noEvents');
       cy.wait('@noEvents2');
@@ -316,7 +316,7 @@ describe('Homepage events', () => {
     it('should display two buttons as cta', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
       cy.route('POST', '/api/2.0/dojos/users', []).as('userDojos');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', createdAt: '2015-08-26T11:46:14.308Z' }).as('dojo');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z' }).as('dojo');
       cy.visit('/home');
       cy.get(eventPage.fallbackCTAs).should('be.visible');
       cy.get(eventPage.fallbackCTAs).should('have.length', 2);
