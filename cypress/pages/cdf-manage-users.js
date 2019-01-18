@@ -1,0 +1,15 @@
+export default {
+  header: '.cdf-users__header',
+  emailInput: '.cdf-users__button.btn.btn-primary',
+  emailError: '.cdf-users__email-format-err.text-danger',
+  noUserInfo: '.cdf-users__no-info',
+  noChildren: '.cdf-users__no-children',
+  anonymize: '.cdf-users__button.btn.btn-warning',
+  delete: '.cdf-users__button.btn.btn-danger',
+  userName: '.cdf-users__user-name',
+  userType: '.cdf-users__user-type',
+  ownership: '.cdf-users__role-owner',
+  userRole: '.cdf-users__role-champion',
+  childName: '.cdf-users__child span',
+  childLink: '.cdf-users__child-link',
+};
