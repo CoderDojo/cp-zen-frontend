@@ -83,7 +83,7 @@ describe('Delete user', () => {
     cy.get(page.delete).should('have.attr', 'disabled');
   });
   // Multi domain is not supported by cypress
-  it.skip('should display if the user is not having a forum account', () => {
+  it.skip('should display if the user does not have a forum account', () => {
     cy.visit('/cdf/dashboard/users?userId=u1');
     cy.wait('@loggedIn');
     cy.wait('@CDFloggedIn');
