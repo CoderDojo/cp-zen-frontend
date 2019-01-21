@@ -34,17 +34,26 @@
           <div v-if="children.length">
             <div v-for="child in children" class="cdf-users__child">
               <i class="fa fa-check text-success" v-if="child.userType === 'attendee-u13'"></i>
-              <i class="fa fa-exclamation text-warning" v-else="child.userType === 'attendee-u13'"></i>
+              <i class="fa fa-exclamation text-warning" v-if="child.userType === 'attendee-o13'"></i>
               <span>{{ child.name }} - {{ child.userType }}</span>
-              <router-link :to="{name: 'CDFUsersManagement', query: { userId: child.userId }}" class="cdf-users__child-link">Load this user</router-link>
+              <router-link :to="{name: 'CDFUsersManagement', query: { userId: child.userId }}" class="cdf-users__child-link">Load this user<span v-if="child.userType === 'attendee-o13'"> and review their forum account</span></router-link>
             </div>
           </div>
           <div v-else class="cdf-users__no-children">No children found</div>
           <h4>Important roles</h4>
           <div v-for="membership in memberships" v-if="memberships.length && dojos.length">
-            <div v-if="isDojoOwnerOf(membership)" class="cdf-users__role-owner">User is dojo owner of <router-link :to="{ name: 'DojoDetailsId', params: { id: membership.dojoId } }">{{ getDojo(membership.dojoId).name }}</router-link></div>
-            <div v-if="isChampionOf(membership)" class="cdf-users__role-champion">User is champion of <router-link :to="{ name: 'DojoDetailsId', params: { id: membership.dojoId } }">{{ getDojo(membership.dojoId).name }}</router-link></div>
+            <div v-if="isDojoOwnerOf(membership)" class="cdf-users__role-owner">
+              <i class="fa fa-exclamation text-danger"></i>User is dojo owner of <router-link :to="{ name: 'DojoDetailsId', params: { id: membership.dojoId } }">{{ getDojo(membership.dojoId).name }}</router-link></div>
+            <div v-if="isChampionOf(membership)" class="cdf-users__role-champion">
+              <i class="fa fa-warning text-warning"></i>User is champion of <router-link :to="{ name: 'DojoDetailsId', params: { id: membership.dojoId } }">{{ getDojo(membership.dojoId).name }}</router-link></div>
           </div>
+          <p class="cdf-users__forum-not-found" v-if="user.id && !forumUser.uid">
+            <i class="fa fa-check text-success"></i>
+            User not found on the forum
+          </p>
+          <a :href="userProfileForumUrl" v-if="user.id && forumUser.uid" class="cdf-users__forum-link">
+            <i class="fa fa-exclamation text-danger"></i>User found on the forum, please delete there first
+          </a>
         </div>
         <div v-else>
           <h3 class="cdf-users__no-info">No info available</h3>
@@ -61,8 +70,10 @@
 </template>
 
 <script>
+  import Vue from 'vue';
   import store from '@/store';
   import DojoService from '@/dojos/service';
+  import ForumService from '@/forum/service';
   import { mapGetters } from 'vuex';
   import UserService from './service';
 
@@ -75,6 +86,7 @@
         userId: '',
         children: [],
         memberships: [],
+        forumUser: {},
         dojos: [],
       };
     },
@@ -83,6 +95,9 @@
       ...mapGetters(['isLoggedIn']),
       isDojoOwner() {
         return (this.memberships.filter(this.isDojoOwnerOf)).length > 0;
+      },
+      userProfileForumUrl() {
+        return `${Vue.config.forumsUrlBase}/user/${this.forumUser.userslug}/settings`;
       },
     },
     methods: {
@@ -117,7 +132,18 @@
           ]).then((res) => {
             this.children = res[0].body;
             this.dojos = res[1].map(resp => resp.body);
-          });
+          })
+          // Split this function from the promise.all : CORS errors are hard to catch
+          .then((async () => {
+            // TODO : once the forum integration is done back-end wise
+            // we can fully automate from there
+            try {
+              this.forumUser = (await ForumService.user.search(this.user.email)).body;
+            } catch (e) {
+              // You might not have the forums running in development; and that's fine
+              this.errors.add('forumUserNotFound', 'User not found');
+            }
+          })());
         } catch (e) {
           if (e.status === 404 && e.body.message === '404 - "Invalid userId"') {
             this.errors.add('userNotFound', e.body.message);
@@ -162,6 +188,10 @@
   @import "../common/styles/cd-primary-button.less";
 
   .cdf-users {
+    & .fa {
+      width: 20px;
+      text-align: center;
+    }
     &__header {
       padding: 24px;
     }

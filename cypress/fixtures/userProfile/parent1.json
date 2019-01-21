@@ -1,6 +1,7 @@
 {
   "name": "parent 1one",
   "firstName": "parent",
+  "email": "parent1@example.com",
   "lastName": "1one",
   "id": "u1",
   "dob": "1976-05-22T00:00:00.000Z",

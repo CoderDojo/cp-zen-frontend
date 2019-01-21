@@ -5,6 +5,9 @@ const displayUserInfo = () => {
   cy.get(page.userType).invoke('text').should('eq', 'User type: parent-guardian');
   cy.get(page.ownership).invoke('text').should('eq', 'User is dojo owner of CD ROM');
   cy.get(page.userRole).invoke('text').should('eq', 'User is champion of CD ROM');
+  // Multi-domain not supported by cypress
+  // cy.get(page.forumInfo).invoke('text').should('eq', 'User found on the forum, please delete there first');
+  cy.get(page.noForumInfo).invoke('text').should('contain', 'User not found on the forum');
 };
 
 const displayChildInfo = () => {
@@ -12,7 +15,7 @@ const displayChildInfo = () => {
   cy.get(page.childLink).first().invoke('text').should('eq', 'Load this user');
   cy.get(page.childLink).first().should('have.attr', 'href').and('eq', '/cdf/dashboard/users?userId=pc1');
   cy.get(page.childName).last().invoke('text').should('eq', 'Child 2two - attendee-o13');
-  cy.get(page.childLink).last().invoke('text').should('eq', 'Load this user');
+  cy.get(page.childLink).last().invoke('text').should('eq', 'Load this user and review their forum account');
   cy.get(page.childLink).last().should('have.attr', 'href').and('eq', '/cdf/dashboard/users?userId=pc2');
 };
 describe('Delete user', () => {
@@ -78,6 +81,16 @@ describe('Delete user', () => {
     cy.wait('@dojo');
     cy.get(page.anonymize).should('have.attr', 'disabled');
     cy.get(page.delete).should('have.attr', 'disabled');
+  });
+  // Multi domain is not supported by cypress
+  it.skip('should display if the user is not having a forum account', () => {
+    cy.visit('/cdf/dashboard/users?userId=u1');
+    cy.wait('@loggedIn');
+    cy.wait('@CDFloggedIn');
+    cy.wait('@userProfileById');
+    cy.wait('@children');
+    cy.wait('@userDojosChampion');
+    cy.get('noForumUser').invoke('text').should('eq', 'User not found on forum');
   });
   it('should allow deletion if the user is not an owner', () => {
     cy.route('POST', '/api/2.0/dojos/users', 'fx:userDojosMentor').as('userDojosChampion');

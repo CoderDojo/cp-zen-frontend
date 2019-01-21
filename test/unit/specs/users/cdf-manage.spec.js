@@ -5,6 +5,7 @@ describe('CDFManageUsers', () => {
   let sandbox;
   let MockUserService;
   let MockDojoService;
+  let MockForumService;
   let ManageUsersComponentWithMocks;
 
   beforeEach(() => {
@@ -20,9 +21,16 @@ describe('CDFManageUsers', () => {
       getUsersDojos: sandbox.stub(),
       getDojoById: sandbox.stub(),
     };
+    MockForumService = {
+      user: {
+        search: sandbox.stub(),
+      },
+    };
+
     ManageUsersComponentWithMocks = ManageUsersComponent({
       './service': MockUserService,
       '@/dojos/service': MockDojoService,
+      '@/forum/service': MockForumService,
     });
   });
 
@@ -133,11 +141,12 @@ describe('CDFManageUsers', () => {
       vm.errors = {
         clear: sandbox.stub(),
       };
-      MockUserService.load.resolves({ body: { id: 1 } });
+      MockUserService.load.resolves({ body: { id: 1, email: 'user@example.com' } });
       MockUserService.getChildren.resolves({ body: [{ id: 'c1' }] });
       MockDojoService.getUsersDojos.resolves({ body: [{ dojoId: 'd1' }, { dojoId: 'd2' }] });
       MockDojoService.getDojoById.onFirstCall().resolves({ body: { id: 'd1' } });
       MockDojoService.getDojoById.onSecondCall().resolves({ body: { id: 'd2' } });
+      MockForumService.user.search.resolves({ body: { uid: 1 } });
       vm.userId = 1;
       // ACT
       await vm.getUserInfos();
@@ -147,9 +156,11 @@ describe('CDFManageUsers', () => {
       expect(MockDojoService.getDojoById).to.have.been.calledTwice;
       expect(MockDojoService.getDojoById.getCall(0)).to.have.been.calledWith('d1');
       expect(MockDojoService.getDojoById.getCall(1)).to.have.been.calledWith('d2');
+      expect(MockForumService.user.search).to.have.been.calledWith('user@example.com');
       expect(vm.children).to.eql([{ id: 'c1' }]);
       expect(vm.memberships).to.eql([{ dojoId: 'd1' }, { dojoId: 'd2' }]);
       expect(vm.dojos).to.eql([{ id: 'd1' }, { id: 'd2' }]);
+      expect(vm.forumUser).to.eql({ uid: 1 });
     });
 
     it('should register an error on retrieval of data', async () => {
