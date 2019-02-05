@@ -25,7 +25,7 @@ const UserService = {
 
   search: query => Vue.http.get(`${Vue.config.apiServer}/api/3.0/users`, { params: query }),
 
-  load: userId => Vue.http.get(`${Vue.config.apiServer}/api/3.0/users/${userId}`),
+  load: (userId, query) => Vue.http.get(`${Vue.config.apiServer}/api/3.0/users/${userId}`, { params: query }),
 
   delete: (userId, soft) => Vue.http.delete(`${Vue.config.apiServer}/api/3.0/users/${userId}`, { body: { soft } }),
 

@@ -121,7 +121,7 @@ describe('CDFManageUsers', () => {
       // ACT
       await vm.getUserInfos();
       // ASSERT
-      expect(MockUserService.search).to.have.been.calledWith({ email: 'test@test.com' });
+      expect(MockUserService.search).to.have.been.calledWith({ email: 'test@test.com', related: 'profile' });
     });
     it('should get the user data by its userId', async () => {
       // ARRANGE
@@ -129,11 +129,12 @@ describe('CDFManageUsers', () => {
       vm.errors = {
         clear: sandbox.stub(),
       };
-      vm.userId = 1;
+      vm.userId = '123';
+      vm.email = '';
       // ACT
       await vm.getUserInfos();
       // ASSERT
-      expect(MockUserService.load).to.have.been.calledWith(1);
+      expect(MockUserService.load).to.have.been.calledWith('123', { related: 'profile' });
     });
     it('should get the user membership data', async () => {
       // ARRANGE
@@ -147,11 +148,12 @@ describe('CDFManageUsers', () => {
       MockDojoService.getDojoById.onFirstCall().resolves({ body: { id: 'd1' } });
       MockDojoService.getDojoById.onSecondCall().resolves({ body: { id: 'd2' } });
       MockForumService.user.search.resolves({ body: { uid: 1 } });
-      vm.userId = 1;
+      vm.userId = '123';
+      vm.email = '';
       // ACT
       await vm.getUserInfos();
       // ASSERT
-      expect(MockUserService.load).to.have.been.calledWith(1);
+      expect(MockUserService.load).to.have.been.calledWith('123', { related: 'profile' });
       expect(MockDojoService.getUsersDojos).to.have.been.calledWith(1);
       expect(MockDojoService.getDojoById).to.have.been.calledTwice;
       expect(MockDojoService.getDojoById.getCall(0)).to.have.been.calledWith('d1');
@@ -170,7 +172,7 @@ describe('CDFManageUsers', () => {
         clear: sandbox.stub(),
         add: sandbox.stub(),
       };
-      vm.userId = 1;
+      vm.userId = '123';
       const err = new Error('404 - "Invalid userId"');
       err.status = 404;
       err.body = {
@@ -198,6 +200,7 @@ describe('CDFManageUsers', () => {
       await vm.deleteUser();
       // ASSERT
       expect(MockUserService.delete).to.have.been.calledWith('u1', false);
+      expect(vm.deleted).to.be.true;
     });
     it('should softDelete', async () => {
       // ARRANGE
@@ -213,6 +216,7 @@ describe('CDFManageUsers', () => {
       await vm.deleteUser(true);
       // ASSERT
       expect(MockUserService.delete).to.have.been.calledWith('u1', true);
+      expect(vm.deleted).to.be.true;
     });
     it('should register an error on retrieval of data', async () => {
        // ARRANGE
@@ -227,14 +231,12 @@ describe('CDFManageUsers', () => {
       window.confirm = sandbox.stub().returns(true);
       const err = new Error();
       err.status = 500;
-      err.body = {
-        message: 'Something awful happened',
-      };
       MockUserService.delete.throws(err);
       // ACT
       await vm.deleteUser(true);
       // ASSERT
-      expect(vm.errors.add).to.have.been.calledWith('deletionFailed', err.body.message);
+      expect(vm.errors.add).to.have.been.calledWith('deletionFailed', 'Something went absolutly wrong');
+      expect(vm.deleted).to.be.false;
     });
   });
   describe('created', () => {

@@ -26,6 +26,9 @@
       </div>
       <div class="cdf-users__box">
         <h3>User infos</h3>
+        <div v-if="deleted" class="cdf-users__box-confirmation">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/8_LcH-Lwlxs?rel=0&amp;showinfo=0&amp;autoplay=1&amp;start=12" frameborder="0"></iframe>
+        </div>
         <p>Any information displayed here will be affected by the action you'll trigger</p>
         <div v-if="user.id">
           <h4 class="cdf-users__user-name">{{ user.name }}</h4>
@@ -88,6 +91,7 @@
         memberships: [],
         forumUser: {},
         dojos: [],
+        deleted: false,
       };
     },
     store,
@@ -117,10 +121,10 @@
         this.errors.clear();
         this.reset();
         try {
-          if (this.email) {
-            this.user = (await UserService.search({ email: this.email })).body;
-          } else if (this.userId) {
-            this.user = (await UserService.load(this.userId)).body;
+          if (this.email && this.email.length > 0) {
+            this.user = (await UserService.search({ email: this.email, related: 'profile' })).body;
+          } else if (this.userId && this.userId.length > 0) {
+            this.user = (await UserService.load(this.userId, { related: 'profile' })).body;
           }
           await Promise.all([
             UserService.getChildren(this.user.id),
@@ -135,13 +139,15 @@
           })
           // Split this function from the promise.all : CORS errors are hard to catch
           .then((async () => {
-            // TODO : once the forum integration is done back-end wise
-            // we can fully automate from there
-            try {
-              this.forumUser = (await ForumService.user.search(this.user.email)).body;
-            } catch (e) {
-              // You might not have the forums running in development; and that's fine
-              this.errors.add('forumUserNotFound', 'User not found');
+            if (this.user.email) {
+              // TODO : once the forum integration is done back-end wise
+              // we can fully automate from there
+              try {
+                this.forumUser = (await ForumService.user.search(this.user.email)).body;
+              } catch (e) {
+                // You might not have the forums running in development; and that's fine
+                this.errors.add('forumUserNotFound', 'User not found');
+              }
             }
           })());
         } catch (e) {
@@ -156,8 +162,9 @@
         if (window.confirm(`Are you 100% sure you know what you are about to do to this poor ${this.user.name} ?`)) {
           try {
             await UserService.delete(this.user.id, !!soft);
+            this.deleted = true;
           } catch (e) {
-            this.errors.add('deletionFailed', e.body.message);
+            this.errors.add('deletionFailed', 'Something went absolutly wrong');
           }
         }
       },
@@ -166,6 +173,7 @@
         this.children = [];
         this.dojos = [];
         this.memberships = [];
+        this.deleted = false;
       },
     },
     async created() {
@@ -204,6 +212,9 @@
       border-width: 1px 1px 3px 1px;
       padding: 24px;
       margin-bottom: 16px;
+      &-confirmation {
+        text-align: center;
+      }
     }
     &__no-info {
       text-align: center;
