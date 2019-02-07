@@ -111,17 +111,36 @@ describe('CDFManageUsers', () => {
     });
   });
   describe('getUserInfos()', () => {
-    it('should get the user data by its email', async () => {
+    it('should search the user by its email', async () => {
       // ARRANGE
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
       vm.errors = {
         clear: sandbox.stub(),
       };
       vm.email = 'test@test.com';
+      MockUserService.search.resolves({ body: { results: [{ id: '123', profile: { userId: '123' } }], total: 1 } });
+
       // ACT
       await vm.getUserInfos();
       // ASSERT
       expect(MockUserService.search).to.have.been.calledWith({ email: 'test@test.com', related: 'profile' });
+      expect(vm.user).to.eql({ id: '123', profile: { userId: '123' } });
+    });
+    it('should search the user by its email and throw if not found', async () => {
+      // ARRANGE
+      const vm = vueUnitHelper(ManageUsersComponentWithMocks);
+      vm.errors = {
+        clear: sandbox.stub(),
+        add: sandbox.stub(),
+      };
+      vm.email = 'test@test.com';
+      MockUserService.search.resolves({ body: { results: [], total: 0 } });
+
+      // ACT
+      await vm.getUserInfos();
+      // ASSERT
+      expect(MockUserService.search).to.have.been.calledWith({ email: 'test@test.com', related: 'profile' });
+      expect(vm.errors.add).to.have.been.calledOnce.and.calledWith('userNotFound', 'Invalid email');
     });
     it('should get the user data by its userId', async () => {
       // ARRANGE
@@ -131,10 +150,12 @@ describe('CDFManageUsers', () => {
       };
       vm.userId = '123';
       vm.email = '';
+      MockUserService.load.resolves({ body: { id: '123', profile: { userId: '123' } } });
       // ACT
       await vm.getUserInfos();
       // ASSERT
       expect(MockUserService.load).to.have.been.calledWith('123', { related: 'profile' });
+      expect(vm.user).to.eql({ id: '123', profile: { userId: '123' } });
     });
     it('should get the user membership data', async () => {
       // ARRANGE
@@ -273,7 +294,5 @@ describe('CDFManageUsers', () => {
       expect(vm.userId).to.equal('123');
       expect(vm.getUserInfos).to.have.been.calledOnce;
     });
-
   });
 });
-

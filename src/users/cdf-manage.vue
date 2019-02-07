@@ -122,7 +122,12 @@
         this.reset();
         try {
           if (this.email && this.email.length > 0) {
-            this.user = (await UserService.search({ email: this.email, related: 'profile' })).body;
+            const res = (await UserService.search({ email: this.email, related: 'profile' })).body;
+            if (res.results.length > 0) {
+              this.user = res.results[0];
+            } else {
+              throw new Error('Invalid email');
+            }
           } else if (this.userId && this.userId.length > 0) {
             this.user = (await UserService.load(this.userId, { related: 'profile' })).body;
           }
@@ -151,8 +156,10 @@
             }
           })());
         } catch (e) {
-          if (e.status === 404 && e.body.message === '404 - "Invalid userId"') {
-            this.errors.add('userNotFound', e.body.message);
+          if ((e.status === 404 && e.body.message === '404 - "Invalid userId"') ||
+            e.message === 'Invalid email') {
+            const message = e.body ? e.body.message : e.message;
+            this.errors.add('userNotFound', message);
           }
         }
       },

@@ -23,8 +23,8 @@ describe('Delete user', () => {
     cy.server();
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
     cy.route('/api/2.0/users/cdf/instance', 'fx:parentLoggedIn').as('CDFloggedIn');
-    cy.route('/api/3.0/users?email=me@example.com', 'fx:userProfile/parent1').as('userProfile');
-    cy.route('/api/3.0/users/u1', 'fx:userProfile/parent1').as('userProfileById');
+    cy.route('/api/3.0/users?email=me@example.com&related=profile', 'fx:userProfile/collectionParent1').as('userProfile');
+    cy.route('/api/3.0/users/u1?related=profile', 'fx:userProfile/parent1').as('userProfileById');
     cy.route('/api/2.0/profiles/children-for-user/u1', 'fx:children').as('children');
     cy.route('/api/2.0/dojos/b850b40e-1e10-4e3a-8a46-d076c94946c6', 'fx:dojo').as('dojo');
     cy.route('POST', '/api/2.0/dojos/users', 'fx:userDojosChampion').as('userDojosChampion');
