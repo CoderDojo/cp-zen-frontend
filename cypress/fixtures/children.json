@@ -1,0 +1,15 @@
+[{
+  "id": "cp1",
+  "userId": "pc1",
+  "name": "Child 1one",
+  "firstName": "Child",
+  "lastName": "1one",
+  "userType":"attendee-u13"
+}, {
+  "id": "cp2",
+  "userId": "pc2",
+  "name": "Child 2two",
+  "firstName": "Child",
+  "lastName": "2two",
+  "userType":"attendee-o13"
+}]

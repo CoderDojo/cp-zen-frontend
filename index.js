@@ -102,6 +102,16 @@ exports.register = function (server, options, next) {
 
   server.route({
     method: 'GET',
+    path: '/cdf/dashboard/users',
+    handler: {
+      file: {
+        path: 'index.html'
+      }
+    }
+  });  
+
+  server.route({
+    method: 'GET',
     path: '/events/{eventId}',
     handler: function (request, reply) {
       reply(openGraphTemplate({
