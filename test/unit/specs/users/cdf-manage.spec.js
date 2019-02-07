@@ -240,16 +240,6 @@ describe('CDFManageUsers', () => {
     });
   });
   describe('created', () => {
-    it('should ensure the user is CDF logged-in', async () => {
-      const vm = vueUnitHelper(ManageUsersComponentWithMocks);
-      vm.$router = { replace: sandbox.stub() };
-      vm.reset = sandbox.stub();
-      vm.isLoggedIn = false;
-
-      await vm.$lifecycleMethods.created();
-      expect(vm.$router.replace).to.have.been.calledOnce;
-      expect(vm.$router.replace).to.have.been.calledWith('/cdf');
-    });
     it('should set the email if the param exists', async () => {
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
       vm.$router = { replace: sandbox.stub() };
@@ -266,6 +256,24 @@ describe('CDFManageUsers', () => {
       expect(vm.email).to.equal('test@test.com');
       expect(vm.getUserInfos).to.have.been.calledOnce;
     });
+    it('should set the userId if the param exists and email doesnt', async () => {
+      const vm = vueUnitHelper(ManageUsersComponentWithMocks);
+      vm.$router = { replace: sandbox.stub() };
+      vm.reset = sandbox.stub();
+      vm.getUserInfos = sandbox.stub();
+      vm.$route = {
+        query: {
+          userId: '123',
+        },
+      };
+      vm.isLoggedIn = true;
+
+      await vm.$lifecycleMethods.created();
+      expect(vm.email).to.equal('');
+      expect(vm.userId).to.equal('123');
+      expect(vm.getUserInfos).to.have.been.calledOnce;
+    });
+
   });
 });
 

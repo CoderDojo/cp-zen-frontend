@@ -178,7 +178,6 @@
     },
     async created() {
       this.reset();
-      if (!this.isLoggedIn) return this.$router.replace('/cdf');
       if (this.$route.query.email) {
         this.email = this.$route.query.email;
         return this.getUserInfos();
