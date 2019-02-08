@@ -157,9 +157,9 @@ workflows:
       - test-unit:
           requires:
             - build
-      - test-e2e:
-          requires:
-            - build
+    # - test-e2e:
+    #      requires:
+    #        - build
       - test-lint:
           requires:
             - build
