@@ -1,9 +1,9 @@
 const LoginPage = require('../page-objects/login');
-const FindDojoPage = require('../page-objects/find-dojo-page');
+const DashboardPage = require('../page-objects/dashboard');
 const MyTickets = require('../page-objects/my-tickets');
 
 describe('Login Page', () => {
-   afterEach(() => {
+   beforeEach(() => {
      browser.deleteCookie('loggedIn');
    });
 
@@ -114,7 +114,7 @@ describe('Login Page', () => {
     LoginPage.email.setValue('parent1@example.com');
     LoginPage.password.setValue('testparent1');
     LoginPage.login.click();
-    FindDojoPage.addressSearchInput.waitForVisible();
-    expect(browser.getUrl()).to.equal(browser.options.baseUrl);
+    DashboardPage.header.waitForVisible();
+    expect(browser.getUrl()).to.equal(`${browser.options.baseUrl}home`);
   });
 });
