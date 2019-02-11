@@ -168,7 +168,7 @@
         // eslint-disable-next-line no-alert
         if (window.confirm(`Are you 100% sure you know what you are about to do to this poor ${this.user.name} ?`)) {
           try {
-            await UserService.delete(this.user.id, !!soft);
+            await UserService.delete(this.user.id, { soft: !!soft, cascade: true });
             this.deleted = true;
           } catch (e) {
             this.errors.add('deletionFailed', 'Something went absolutly wrong');
