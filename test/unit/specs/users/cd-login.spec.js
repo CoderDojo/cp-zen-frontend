@@ -50,6 +50,35 @@ describe('Login', () => {
         expect(vm.redirectUrl).to.equal('/');
       });
     });
+    describe('registerUrl', () => {
+      it('should use the referer query param if set', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(LoginComponentWithMocks);
+        vm.$route = { query: { referer: '/test1' } };
+
+        // ASSERT
+        expect(vm.registerUrl).to.equal('/register?referer=/test1');
+      });
+
+      it('should use the referrer query param if referer is not set', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(LoginComponentWithMocks);
+        vm.$route = { query: { referrer: '/test2' } };
+
+        // ASSERT
+        expect(vm.registerUrl).to.equal('/register?referer=/test2');
+      });
+
+      it('should use /register if neither referer or referrer are set', () => {
+        // ARRANGE
+        const vm = vueUnitHelper(LoginComponentWithMocks);
+        vm.$route = { query: {} };
+
+        // ASSERT
+        expect(vm.registerUrl).to.equal('/register');
+      });
+    });
+
   });
 
   describe('validateForm()', () => {
