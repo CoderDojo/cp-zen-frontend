@@ -50,8 +50,8 @@
         return this.$route.query.referer || this.$route.query.referrer;
       },
       registerUrl() {
-        let url = '/register'
-        url += this.referer ? `?referer=${this.referer}`: '';
+        let url = '/register';
+        url += this.referer ? `?referer=${this.referer}` : '';
         return url;
       },
       ...mapGetters(['isLoggedIn']),

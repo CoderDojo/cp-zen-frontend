@@ -78,7 +78,6 @@ describe('Login', () => {
         expect(vm.registerUrl).to.equal('/register');
       });
     });
-
   });
 
   describe('validateForm()', () => {
