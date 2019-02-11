@@ -220,7 +220,7 @@ describe('CDFManageUsers', () => {
       // ACT
       await vm.deleteUser();
       // ASSERT
-      expect(MockUserService.delete).to.have.been.calledWith('u1', false);
+      expect(MockUserService.delete).to.have.been.calledWith('u1', { soft: false, cascade: true });
       expect(vm.deleted).to.be.true;
     });
     it('should softDelete', async () => {
@@ -236,7 +236,7 @@ describe('CDFManageUsers', () => {
       // ACT
       await vm.deleteUser(true);
       // ASSERT
-      expect(MockUserService.delete).to.have.been.calledWith('u1', true);
+      expect(MockUserService.delete).to.have.been.calledWith('u1', { soft: true, cascade: true });
       expect(vm.deleted).to.be.true;
     });
     it('should register an error on retrieval of data', async () => {

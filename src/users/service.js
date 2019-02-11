@@ -27,7 +27,7 @@ const UserService = {
 
   load: (userId, query) => Vue.http.get(`${Vue.config.apiServer}/api/3.0/users/${userId}`, { params: query }),
 
-  delete: (userId, soft) => Vue.http.delete(`${Vue.config.apiServer}/api/3.0/users/${userId}`, { body: { soft } }),
+  delete: (userId, body) => Vue.http.delete(`${Vue.config.apiServer}/api/3.0/users/${userId}`, { body }),
 
   userProfileData: userId => Vue.http.post(`${Vue.config.apiServer}/api/2.0/profiles/user-profile-data`, { query: { userId } }),
 
