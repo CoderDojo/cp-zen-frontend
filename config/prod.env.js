@@ -3,7 +3,7 @@ module.exports = {
   API_SERVER: '""',
   RECAPTCHA_SITE_KEY: '"6LfVKQgTAAAAAF3wUs0q-vfrtsKdHO1HCAkp6pnY"',
   GOOGLE_ANALYTICS_PROPERTY_ID: process.env.GIT_BRANCH === 'master' ? '"UA-25136319-2"' : '"UA-25136319-8"',
-  GOOGLE_MAPS_API_KEY: '"AIzaSyA4Ih0ykeVb_W79W6Z1Ey-2DsM9b5KcQBM"',
+  GOOGLE_MAPS_API_KEY: '"AIzaSyCLtwLgQX5wXFJ9bK3hYid5YaW6Qo4bGpc"',
   GIT_BRANCH: `"${process.env.GIT_BRANCH}"`,
   NEWS_URL_BASE: '"https://coderdojo.com"',
   FORUMS_URL_BASE: '"https://forums.coderdojo.com"',
