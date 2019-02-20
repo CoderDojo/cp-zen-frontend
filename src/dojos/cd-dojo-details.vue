@@ -235,7 +235,7 @@
           name: 'DojoDetails',
           params: {
             country: this._country,
-            path: this._path.split('/'),
+            path: this._path,
           },
         });
       },

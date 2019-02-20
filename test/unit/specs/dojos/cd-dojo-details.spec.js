@@ -88,7 +88,7 @@ describe('Dojo details component', () => {
         name: 'DojoDetails',
         params: {
           country: 'ie',
-          path: ['dublin', 'docklands'],
+          path: 'dublin/docklands',
         },
       });
     });
