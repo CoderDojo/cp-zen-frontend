@@ -250,7 +250,11 @@
     async created() {
       this._country = this.country;
       if (this.path) {
-        this._path = this.path.join('/');
+        if (Array.isArray(this.path)) {
+          this._path = this.path.join('/');
+        } else {
+          this._path = this.path;
+        }
       }
       await Promise.all([
         this.loadDojoDetails(),
