@@ -235,7 +235,7 @@
           name: 'DojoDetails',
           params: {
             country: this._country,
-            path: this._path,
+            path: this._path.split('/'),
           },
         });
       },
@@ -249,7 +249,9 @@
     },
     async created() {
       this._country = this.country;
-      this._path = this.path;
+      if (this.path) {
+        this._path = this.path.join('/');
+      }
       await Promise.all([
         this.loadDojoDetails(),
         this.loadCurrentUser(),
