@@ -157,9 +157,9 @@ workflows:
       - test-unit:
           requires:
             - build
-      - test-e2e:
-          requires:
-            - build
+    # - test-e2e:
+    #      requires:
+    #        - build
       - test-lint:
           requires:
             - build
@@ -169,7 +169,6 @@ workflows:
       - publish:
           requires:
             - test-unit
-            - test-e2e
             - test-lint
             - test-cypress
           filters:

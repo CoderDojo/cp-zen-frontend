@@ -21,6 +21,7 @@ Vue.use(Vuex);
 
 Vue.config.productionTip = false;
 Vue.config.apiServer = process.env.API_SERVER;
+Vue.config.forumsUrlBase = process.env.FORUMS_URL_BASE;
 
 // require all test files (files that ends with .spec.js)
 const testsContext = require.context('./specs', true, /\.spec$/);

@@ -18,6 +18,10 @@ const EventsService = {
     });
     return Vue.http.post(`${Vue.config.apiServer}/api/2.0/events/bulk-apply-applications`, { applications });
   },
+  // Dojo Stats, blame me but that's the fastest of the existing endpoint
+  searchApplicationsByDojo(dojoId, params) {
+    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/events/applications/search`, { query: { dojoId, ...params } });
+  },
   v3: {
     get(dojoId, options) {
       return Vue.http.get(`${Vue.config.apiServer}/api/3.0/dojos/${dojoId}/events`, options);

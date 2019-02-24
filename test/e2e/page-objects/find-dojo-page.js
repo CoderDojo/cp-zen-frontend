@@ -132,12 +132,12 @@ const DojoPage = Object.create(BasePage, {
   },
   open: {
     value(clearCookie) {
-      return BasePage.open.call(this, '/', clearCookie);
+      return BasePage.open.call(this, '/find', clearCookie);
     },
   },
   openWithQuery: {
     value(query, clearCookie) {
-      return BasePage.open.call(this, `?q=${query}`, clearCookie);
+      return BasePage.open.call(this, `/find?q=${query}`, clearCookie);
     },
   },
   openDojoWithQuery: {

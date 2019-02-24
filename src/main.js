@@ -8,6 +8,7 @@ import VueAnalytics from 'vue-analytics';
 import PasswordValidator from '@/common/directives/cd-password-validator';
 import titleDirective from '@/common/directives/title';
 import gaTrackClickDirective from '@/common/directives/cd-ga-track-click';
+import gaTrackExitNavDirective from '@/common/directives/cd-ga-track-exit-nav';
 import 'font-awesome/css/font-awesome.min.css';
 import 'vue-dob-picker/dist/static/vue-dob-picker.css';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
@@ -20,6 +21,9 @@ Vue.config.apiServer = process.env.API_SERVER;
 Vue.config.s3Server = process.env.S3_SERVER;
 Vue.config.buildBranch = process.env.GIT_BRANCH;
 Vue.config.googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
+Vue.config.newsUrlBase = process.env.NEWS_URL_BASE;
+Vue.config.forumsUrlBase = process.env.FORUMS_URL_BASE;
+Vue.config.projectsUrlBase = process.env.PROJECTS_URL_BASE;
 
 Vue.use(VueResource);
 Vue.use(VeeValidate);
@@ -34,6 +38,7 @@ Vue.use(VueAnalytics, {
 });
 Vue.directive('title', titleDirective);
 Vue.directive('ga-track-click', gaTrackClickDirective);
+Vue.directive('ga-track-exit-nav', gaTrackExitNavDirective);
 
 /* eslint-disable no-new */
 new Vue({

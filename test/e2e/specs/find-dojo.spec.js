@@ -3,7 +3,7 @@ const db = require('../../../json-server/db.js');
 
 describe('Find Dojo page', () => {
   it('should have a Get current location button', () => {
-    DojoPage.open();
+    DojoPage.open(true);
     browser.pause(2000);
     expect(DojoPage.detectLocationButton.isVisible()).to.equal(true);
   });

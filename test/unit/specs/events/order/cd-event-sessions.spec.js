@@ -453,13 +453,32 @@ describe('Event sessions component', () => {
       it('should call the create child funtion for each child component', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
+        const order = [];
         vm.$refs = {
           allChildComponents: [
             {
-              createChild: ChildTicket.createChild,
+              createChild: () => new Promise((resolve) => {
+                setTimeout(() => {
+                  order.push(1);
+                  resolve();
+                }, 500);
+              }),
             },
             {
-              createChild: ChildTicket.createChild,
+              createChild: () => new Promise((resolve) => {
+                setTimeout(() => {
+                  order.push(2);
+                  resolve();
+                }, 100);
+              }),
+            },
+            {
+              createChild: () => new Promise((resolve) => {
+                setTimeout(() => {
+                  order.push(3);
+                  resolve();
+                }, 200);
+              }),
             },
           ],
         };
@@ -468,7 +487,7 @@ describe('Event sessions component', () => {
         await vm.addNewChildren();
 
         // ASSERT
-        expect(ChildTicket.createChild).to.have.been.calledTwice;
+        expect(order).to.deep.equal([1, 2, 3]);
       });
     });
 

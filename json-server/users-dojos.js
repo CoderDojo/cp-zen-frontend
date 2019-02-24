@@ -30,10 +30,10 @@ module.exports = {
       "mysqlUserId": null,
       "mysqlDojoId": null,
       "owner": 0,
-      "userId": "parent1",
+      "userId": "parent2",
       "dojoId": "3ed47c6d-a689-46a0-883b-1f3fd46e9c77",
       "userTypes": [
-        "parent-guardian"
+        "mentor"
       ],
       "userPermissions": [],
       "backgroundChecked": true,
@@ -47,7 +47,7 @@ module.exports = {
       "mysqlUserId": null,
       "mysqlDojoId": null,
       "owner": 0,
-      "userId": "parent1",
+      "userId": "parent2",
       "dojoId": "bkr5hk4a9-78gf-9b44-63h2-6gtgfbqy0lkx",
       "userTypes": [
         "parent-guardian"

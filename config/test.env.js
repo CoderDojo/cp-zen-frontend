@@ -6,5 +6,6 @@ module.exports = merge(devEnv, {
   API_SERVER: '""',
   S3_SERVER: '"https://s3.amazonaws.com"',
   GOOGLE_ANALYTICS_PROPERTY_ID: '"UA-25136319-8"',
-  GOOGLE_MAPS_API_KEY: '"AIzaSyC3xF9XV91bS2R14Gjmx3UQaKbGgAfHbE4"'
+  GOOGLE_MAPS_API_KEY: '"AIzaSyD6WWeWYAVLLO1rmVSLiK-gSQUK8-U6w7w"',
+  FORUMS_URL_BASE: '"http://localhost:4567"',
 })

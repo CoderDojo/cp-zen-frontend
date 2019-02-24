@@ -13,8 +13,12 @@ import Login from '@/users/cd-login';
 import orderWrapper from '@/events/order/wrapper';
 import UserService from '@/users/service';
 import store from '@/store';
+import Home from '@/dashboard/cd-dashboard';
+import CDFManageUsers from '@/users/cdf-manage';
 import loggedInNavGuard from './loggedInNavGuard';
+import loggedInCDFNavGuard from './loggedInCDFNavGuard';
 import orderExistsNavGuard from './orderExistsNavGuard';
+
 
 Vue.use(Router);
 
@@ -34,7 +38,7 @@ const router = new Router({
     {
       path: '/',
       component: {
-        template: '<router-view></router-view>',
+        template: '<router-view :key="$route.fullPath"></router-view>',
       },
       async beforeEnter(to, from, next) {
         await store.dispatch('getLoggedInUser');
@@ -43,6 +47,16 @@ const router = new Router({
       children: [
         {
           path: '',
+          name: 'root',
+          beforeEnter(to, from, next) {
+            if (store.getters.isLoggedIn) {
+              return next({ name: 'Home' });
+            }
+            return next({ name: 'FindDojo', query: to.query });
+          },
+        },
+        {
+          path: '/find',
           name: 'FindDojo',
           component: FindDojo,
         },
@@ -82,6 +96,12 @@ const router = new Router({
           component: Login,
         },
         {
+          path: '/home',
+          name: 'Home',
+          component: Home,
+          beforeEnter: loggedInNavGuard,
+        },
+        {
           path: 'events/:eventId',
           component: orderWrapper,
           props: true,
@@ -118,6 +138,12 @@ const router = new Router({
           component: BookingConfirmation,
           beforeEnter: MultiGuard([loggedInNavGuard, orderExistsNavGuard]),
           props: true,
+        },
+        {
+          path: 'cdf/dashboard/users',
+          name: 'CDFUsersManagement',
+          component: CDFManageUsers,
+          beforeEnter: loggedInCDFNavGuard,
         },
         // Kept for future development/transitions
         {

@@ -21,13 +21,14 @@
         </form>
         <p v-show="errors.has('loginFailed')" class="cd-login__login-failed text-danger">{{ $t('There was a problem logging in: {msg}', {msg: $t('Invalid email or password') }) }}</p>
         <p class="cd-login__forgot-password"><a href="/reset">{{ $t('Forgot password?') }}</a></p>
-        <p class="cd-login__register">{{ $t("Don't have an account?") }} <a href="/register">{{ $t('Register here') }}</a></p>
+        <p class="cd-login__register">{{ $t("Don't have an account?") }} <a :href="registerUrl">{{ $t('Register here') }}</a></p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import Vue from 'vue';
   import store from '@/store';
   import { mapGetters } from 'vuex';
   import UserService from './service';
@@ -43,13 +44,24 @@
     store,
     computed: {
       redirectUrl() {
-        return this.$route.query.referer || this.$route.query.referrer || '/';
+        return this.referer || '/';
+      },
+      referer() {
+        return this.$route.query.referer || this.$route.query.referrer;
+      },
+      registerUrl() {
+        let url = '/register';
+        url += this.referer ? `?referer=${this.referer}` : '';
+        return url;
       },
       ...mapGetters(['isLoggedIn']),
     },
     methods: {
       async validateForm() {
         return this.$validator.validateAll();
+      },
+      redirectTo(url) {
+        location.href = url;
       },
       async login() {
         const valid = await this.validateForm();
@@ -58,6 +70,11 @@
           if (response.body.ok === false) {
             this.errors.add('loginFailed', response.body.why);
           } else {
+            const forumUrl = `^${Vue.config.forumsUrlBase}/auth/CoderDojo$`;
+            if (this.redirectUrl.match(forumUrl)) {
+              this.redirectTo(this.redirectUrl);
+              return;
+            }
             this.$router.push(this.redirectUrl);
           }
         }

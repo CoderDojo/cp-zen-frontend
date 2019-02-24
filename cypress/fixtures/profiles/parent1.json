@@ -1,0 +1,10 @@
+{
+  "name": "parent 1one",
+  "userId": "u1",
+  "dob": "1976-05-22T00:00:00.000Z",
+  "children": [
+    "uchild1",
+    "uchild2",
+    "uchild3"
+  ]
+}

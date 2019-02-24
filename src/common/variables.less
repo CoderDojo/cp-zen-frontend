@@ -4,7 +4,60 @@
 @grid-gutter-width: 32px;
 @brand-primary: @cd-blue;
 @light-grey: #7b8082;
+@side-column-grey: #f4f5f6;
+@divider-grey: #CAC4CE;
+@link-color: #0093D5;
 
 /* Font sizes */
 @font-size-medium: ceil((@font-size-base * 1.1));
 @font-size-mobile-page-title: ceil((@font-size-base * 1.5));
+
+@margin: 16px;
+
+.default-margin() {
+  margin: @margin 0;
+}
+.title() {
+  font-size: 30px;
+  font-weight: 500;
+  margin: 45px 0 16px;
+}
+
+.subtitle() {
+  font-size: 18px;
+  font-weight: 500;
+  .default-margin;
+}
+
+.cta() {
+  text-align: center;
+}
+
+.button-link() {
+  border: 1px solid;
+  font-size: @font-size-medium;
+  font-weight: bold;
+  display: inline-block;
+  padding: 14px;
+  border-radius: 4px;
+}
+
+.button-link-sm() {
+  border: 1px solid;
+  font-size: @font-size-medium;
+  font-weight: bold;
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 2px;
+}
+
+.small-link() {
+  font-size: @font-size-medium;
+  font-weight: bold;
+  text-decoration: underline;
+  padding: 14px;
+  display: inline-block;
+}
+.h3 {
+  font-size: 18px;
+}

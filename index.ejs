@@ -7,9 +7,9 @@
     <% if (htmlWebpackPlugin.options.openGraph) { %>
       {{#each openGraphProperties}}
         {{#each this}}
-          <meta name="og:{{@../key}}" content="{{this}}">
+          <meta property="og:{{@../key}}" content="{{this}}">
         {{else}}
-          <meta name="og:{{@key}}" content="{{this}}">
+          <meta property="og:{{@key}}" content="{{this}}">
         {{/each}}
       {{/each}}
     <% } %>
