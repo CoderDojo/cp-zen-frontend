@@ -44,8 +44,7 @@
     "vue-router-multiguard": "^1.0.3",
     "vue-static-map": "^2.0.0",
     "vue2-google-maps": "^0.7.9",
-    "vuex": "^2.3.1",
-    "webdriverio": "^4.8.0"
+    "vuex": "^2.3.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
