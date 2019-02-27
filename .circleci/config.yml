@@ -139,7 +139,7 @@ jobs:
             git config --global user.email "webteam@coderdojo.com"
             git config --global user.name "CoderDojo Foundation"
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-            yarn config set version-git-message "[skip-ci] Update to %s" # Skip CI or infinite loop
+            yarn config set version-git-message "[skip ci] Update to %s" # Skip CI or infinite loop
             yarn config set version-git-tag false # No significations in tags
             yarn config set version-commit-hooks false # We're after the tests 
       - run:
