@@ -2,7 +2,7 @@
   <div class="cd-event-list" >
     <div class="cd-event-list__heading" >
       <h4>{{ $t('Upcoming Events') }}</h4>
-      <ics-link :dojo-id="dojo.id"/>
+      <ics-link :dojo-id="dojo.id" v-if="hasFutureEvents"/>
     </div>
     <div v-if="!hasFutureEvents" class="cd-event-list__event">
       <div class="cd-event-list__no-events">
