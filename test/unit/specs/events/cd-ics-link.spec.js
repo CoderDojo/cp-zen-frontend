@@ -12,7 +12,7 @@ describe('ICS link component', () => {
         TimeShift.setTime(1501079400000); // 2017-07-26 16:30:00 GMT+02:00
         vm.dojoId = 1;
 
-        expect(vm.url).to.match(/\/api\/3\.0\/dojos\/1\/events\.ics\?query\[status\]=published&query\[afterDate\]=1501079400&query\[utcOffset\]=120&query\[zone\]=[a-zA-Z/]+/);
+        expect(vm.url).to.match(/\/api\/3\.0\/dojos\/1\/events\.ics\?query\[status\]=published&query\[afterDate\]=1501079400&query\[utcOffset\]=120/);
       });
     });
   });

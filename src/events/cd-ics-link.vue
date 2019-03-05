@@ -13,8 +13,7 @@
       url() {
         const afterDate = moment().unix();
         const utcOffset = moment().utcOffset();
-        const zoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        return `/api/3.0/dojos/${this.dojoId}/events.ics?query[status]=published&query[afterDate]=${afterDate}&query[utcOffset]=${utcOffset}&query[zone]=${zoneName}`;
+        return `/api/3.0/dojos/${this.dojoId}/events.ics?query[status]=published&query[afterDate]=${afterDate}&query[utcOffset]=${utcOffset}`;
       },
     },
   };
