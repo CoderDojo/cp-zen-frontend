@@ -1,6 +1,9 @@
 <template>
   <div class="cd-event-list" >
-    <div class="cd-event-list__heading" >{{ $t('Upcoming Events') }}</div>
+    <div class="cd-event-list__heading" >
+      <h4>{{ $t('Upcoming Events') }}</h4>
+      <ics-link :dojo-id="dojo.id"/>
+    </div>
     <div v-if="!hasFutureEvents" class="cd-event-list__event">
       <div class="cd-event-list__no-events">
         <div class="cd-event-list__no-events-header" v-if="!hasPastEvents">
@@ -36,6 +39,7 @@
   import UsersUtil from '@/users/util';
   import DojosService from '@/dojos/service';
   import EventListItem from '@/events/cd-event-list-item';
+  import IcsLink from '@/events/cd-ics-link';
   import service from './service';
 
 
@@ -57,6 +61,7 @@
     },
     components: {
       EventListItem,
+      IcsLink,
     },
     computed: {
       noEventsContent() {
@@ -164,12 +169,20 @@
 
   .cd-event-list {
      &__heading {
-      color: #000;
-      font-size: @font-size-large;
-      margin: 0 0 16px 0;
-      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
       border-bottom: 1px solid #bebebe;
-      padding-bottom: 8px;
+      margin-bottom: 16px;
+      h4 {
+        color: #000;
+        font-size: @font-size-large;
+        margin: 0 0 8px 0;
+        font-weight: bold;
+        line-height: 1;
+      }
+      a {
+        font-size: @font-size-small;
+      }
     }
     &__event {
       border-style: solid;
