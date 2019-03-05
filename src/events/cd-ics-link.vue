@@ -1,6 +1,6 @@
 <template>
   <span class="cd-ics-link">
-    <a :href="url" type="text/calendar">[Beta] Add to your calendar</a>
+    <a :href="url" type="text/calendar">Add to your calendar</a>
   </span>
 </template>
 <script>
