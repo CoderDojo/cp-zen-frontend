@@ -187,16 +187,15 @@ describe('Dojos Service', () => {
       const userType = 'mentor';
       const expectedPayload = {
         data: {
-          dojoId,
           userType,
         },
       };
 
       const postMock = sandbox.stub(Vue.http, 'post');
-      postMock.withArgs(`${Vue.config.apiServer}/api/2.0/dojos/request-user-invite`, expectedPayload).returns(Promise.resolve());
+      postMock.withArgs(`${Vue.config.apiServer}/api/3.0/dojos/d1/membership-request`, expectedPayload).returns(Promise.resolve());
 
       // ACT
-      await DojosServiceWithMocks.requestUserInvite(user, dojoId, userType);
+      await DojosServiceWithMocks.membership.request(dojoId, userType);
     });
   });
 });

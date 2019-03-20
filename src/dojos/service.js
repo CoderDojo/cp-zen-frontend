@@ -78,15 +78,15 @@ const DojosService = {
     },
   },
   lead: {
-    list: (userId) => {
+    list(userId) {
       return Vue.http.get(`${Vue.config.apiServer}/api/3.0/leads`, {
         params: {
           userId,
           deleted: 0,
         },
       });
-    }
-  }
+    },
+  },
 };
 
 export default DojosService;

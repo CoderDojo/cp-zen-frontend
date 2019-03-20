@@ -116,7 +116,7 @@ describe('Dojo details component', () => {
 
       // ASSERT
       expect(DojoServiceMock.membership.request).to
-        .have.been.calledWith(vm.user, vm.dojoDetails.id, userType);
+        .have.been.calledWith(vm.dojoDetails.id, userType);
       // Window.alert cannot be stubbed/spy, so we can't test the redirection
       // expect(vm.$router.push).to.have.been.calledOnce.and.calledWith({ name: 'Home' });
     });
