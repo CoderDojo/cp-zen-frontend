@@ -2,8 +2,8 @@
   <div class="row">
     <div class="cd-dashboard-events">
       <div class="cd-dashboard-events__content">
-        <h1 class="cd-dashboard-events__header">{{ $t('Hey {name}, here\'s what\'s most important...', { name: loggedInUser.firstName }) }}</h1>
-        <div class="cd-dashboard-events__list" v-if="events.length > 0">
+         <dashboard-header :has-dojos="hasDojos" :first-name="loggedInUser.firstName" :user-id="loggedInUser.id"></dashboard-header>
+         <div class="cd-dashboard-events__list" v-if="events.length > 0">
           <upcoming-event v-for="event in events" :key="event.id" :event="event" :dojo="dojos[event.dojoId]"></upcoming-event>
         </div>
         <div v-if="hasDojos && ticketingAdmins.length > 0 && events.length <= 0">
@@ -47,12 +47,14 @@
   import DojosService from '@/dojos/service';
   import EventService from '@/events/service';
   import EventUtils from '@/events/util';
+  import DashboardHeader from '@/dashboard/cd-dashboard-header';
   import UpcomingEvent from './events/cd-dashboard-upcoming-event';
 
   export default {
     name: 'cd-dashboard-events',
     components: {
       UpcomingEvent,
+      DashboardHeader,
     },
     data() {
       return {
@@ -60,6 +62,7 @@
         oldEvents: null,
         usersDojos: [],
         dojos: {},
+        leads: [],
       };
     },
     computed: {
@@ -203,11 +206,6 @@
         color: @cd-white;
         text-decoration: underline;
       }
-    }
-
-    &__header {
-      color: @cd-white;
-      margin: 0 0 48px 0;
     }
 
     &__list-filler {
