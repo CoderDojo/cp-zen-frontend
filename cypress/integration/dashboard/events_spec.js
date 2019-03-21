@@ -30,6 +30,7 @@ describe('Homepage events', () => {
     cy.get(eventPage.events).last().find('h4').should('have.text', '"event2" is available to book');
     cy.get(eventPage.dojoName).first().should('have.text', 'dojo1');
     cy.get(eventPage.dojoName).last().should('have.text', 'dojo2');
+    cy.get(eventPage.genericHeader).invoke('text').should('match', /(here's what's most important...)/);
   });
   it('should show fully booked event', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
@@ -72,6 +73,7 @@ describe('Homepage events', () => {
       cy.wait('@orders1');
       cy.get(eventPage.events).first().find('h4').should('have.text', '"event1" is available to book');
       cy.get(eventPage.bookButton).should('be.visible');
+    cy.get(eventPage.genericHeader).invoke('text').should('match', /(here's what's most important...)/);
     });
 
     it('should show number of tickets booked if order exists', () => {
@@ -145,6 +147,7 @@ describe('Homepage events', () => {
       cy.wait('@orders1');
       cy.get(eventPage.events).first().find('h4').should('have.text', '"event1" is available to book');
       cy.get(eventPage.bookButton).should('be.visible');
+      cy.get(eventPage.genericHeader).invoke('text').should('match', /(here's what's most important...)/);
     });
 
     it('should show number of mentor tickets booked if order exists', () => {
@@ -170,7 +173,6 @@ describe('Homepage events', () => {
       cy.get(eventPage.bookedTickets).should('have.text', '1 "Mentor" tickets booked');
     });
   });
-
   describe('as a ticketing-admin', () => {
     const after2Weeks = (moment().subtract(2, 'weeks')).format();
     const after1Year = (moment().subtract(1, 'years')).format();
@@ -198,6 +200,7 @@ describe('Homepage events', () => {
       cy.get(eventPage.bookButton).should('not.be.visible');
       cy.get(eventPage.manageEventLink).last().find('span').first().should('have.text', '2/42 Youth booked');
       cy.get(eventPage.manageEventLink).last().find('span').last().should('have.text', '1/42 Mentor booked');
+      cy.get(eventPage.genericHeader).invoke('text').should('match', /(here's what's most important...)/);
     });
     it('should show the eventbrite tickets as always bookable', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
@@ -233,8 +236,7 @@ describe('Homepage events', () => {
       cy.wait('@oldEvents');
       cy.wait('@dojo');
       cy.get(eventPage.noEventMessage).should('be.visible');
-      cy.get(eventPage.noEventMessage).should('have.text',
-        '\n          We see you don\'t use Zen events.\n          If you\'re using Eventbrite for your Dojo you can make it easier for attendees and volunteers to find you by using our one-click Eventbrite plugin (it\'s really easy!)');
+      cy.get(eventPage.noEventMessage).should('have.text', '\n    We see you don\'t use Zen events.\n    If you\'re using Eventbrite for your Dojo you can make it easier for attendees and volunteers to find you by using our one-click Eventbrite plugin (it\'s really easy!)');
       cy.get(eventPage.fallbackCTAs).should('not.be.visible');
     });
     it('should show a message about zen events if a dojo is new (> 2 weeks)', () => {
@@ -247,7 +249,7 @@ describe('Homepage events', () => {
       cy.wait('@oldEvents');
       cy.wait('@dojo');
       cy.get(eventPage.noEventMessage).should('be.visible');
-      cy.get(eventPage.noEventMessage).should('have.text', '\n            Create your first event so attendees can book and you can easily see who\'s attending.\n            It\'s simple and only takes 2 minutes!\n          ');
+      cy.get(eventPage.noEventMessage).should('have.text', '\n        Create your first event so attendees can book and you can easily see who\'s attending.\n        It\'s simple and only takes 2 minutes!\n      ');
       cy.get(eventPage.noEventMessage).find('a').should('have.attr', 'href', '/dashboard/dojo/d1/event-form');
       cy.get(eventPage.newDojoMessage).should('not.be.visible');
       cy.get(eventPage.fallbackCTAs).should('not.be.visible');
@@ -308,16 +310,21 @@ describe('Homepage events', () => {
       cy.get(eventPage.noEventMessage).should('have.text', 'Create your next event so attendees can book in!');
       cy.get(eventPage.noEventMessage).find('a').should('have.attr', 'href', '/dashboard/my-dojos');
       cy.get(eventPage.newDojoMessage).find('a').should('have.attr', 'href', 'https://docs.google.com/forms/d/e/1FAIpQLSfkYe44Upu9ezRd7FUytxnvgmZuDxbQTPAj1BcdiqxFoBUslA/viewform?usp=pp_url&entry.1799182697=dojo1');
-      cy.get(eventPage.newDojoMessage).find('a').should('have.text', 'We always ask new Dojos to do a 2 minutes survey. You don\'t have to but it helps the whole community!\n          ');
+      cy.get(eventPage.newDojoMessage).find('a').should('have.text', 'We always ask new Dojos to do a 2 minutes survey. You don\'t have to but it helps the whole community!\n    ');
       cy.get(eventPage.fallbackCTAs).should('not.be.visible');
+      cy.get(eventPage.genericHeader).invoke('text').should('match', /(here's what's most important...)/);
      });
   });
   describe('as a normal user without event that is not ticketing-admin', () => {
     it('should display two buttons as cta', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
       cy.route('POST', '/api/2.0/dojos/users', []).as('userDojos');
-      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z' }).as('dojo');
+      cy.route('/api/3.0/leads?userId=u1&deleted=0', []).as('leads');
       cy.visit('/home');
+      cy.wait('@userDojos');
+      cy.wait('@leads');
+      cy.get(eventPage.defaultHeader).should('be.visible');
+      cy.get(eventPage.defaultHeader).invoke('text').should('match', /(once you join or start a Dojo this page will have useful information about your Dojos)/);
       cy.get(eventPage.fallbackCTAs).should('be.visible');
       cy.get(eventPage.fallbackCTAs).should('have.length', 2);
     });

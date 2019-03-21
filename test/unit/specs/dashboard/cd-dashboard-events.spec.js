@@ -1,5 +1,5 @@
 import vueUnitHelper from 'vue-unit-helper';
-import moment from 'moment';
+import moment from 'moment'; // eslint-disable-line no-unused-vars
 import DashboardEventsComponent from '!!vue-loader?inject!@/dashboard/cd-dashboard-events';
 
 describe('Dashboard events component', () => {
@@ -49,16 +49,6 @@ describe('Dashboard events component', () => {
         expect(vm.dojoAdmins).to.deep.equal([{ dojoId: 'd2', userPermissions: [{ name: 'dojo-admin' }] }]);
       });
     });
-    describe('usesTicketing', () => {
-      it('should return true if the dojo uses ticketing', () => {
-        vm.oldEvents = [{ id: 'e1' }];
-        expect(vm.usesTicketing).to.be.true;
-      });
-      it('should return false if the dojo doesn\'t use ticketing', () => {
-        vm.oldEvents = [];
-        expect(vm.usesTicketing).to.be.false;
-      });
-    });
     describe('hasDojos', () => {
       it('should return true if the object contains keys', () => {
         vm.dojos = { d1: { dojoId: 'd1' } };
@@ -67,18 +57,6 @@ describe('Dashboard events component', () => {
       it('should return false if the object is empty', () => {
         vm.dojos = {};
         expect(vm.hasDojos).to.be.false;
-      });
-    });
-    describe('maxDojoAge', () => {
-      it('should return the maxAge of the user\'s Dojos in years', () => {
-        vm.dojos = { d1: { created: (moment().subtract(1, 'years')).format() } };
-        vm.hasDojos = true;
-        vm.ticketingAdmins = [{ dojoId: 'd1', userPermissions: [{ name: 'ticketing-admin' }] }];
-        expect(vm.maxDojoAge).to.equal(1);
-      });
-      it('should return 0 when the dojos are not loaded yet', () => {
-        vm.hasDojos = false;
-        expect(vm.maxDojoAge).to.equal(0);
       });
     });
     describe('firstDojo', () => {

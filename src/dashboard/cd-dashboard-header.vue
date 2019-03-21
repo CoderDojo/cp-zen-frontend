@@ -1,7 +1,7 @@
 <template>
-  <div class="cd-dashboard-header" v-if="ready">
-    <h1 class="cd-dashboard-header--volunteer" v-if="!hasDojos && !hasLeads">{{ $t('Hey {name}, once you join or start a Dojo this page will have useful information about your Dojos', { name: firstName }) }}</h1>
-       <h1 class="cd-dashboard-header--generic" v-else>{{ $t('Hey {name}, here\'s what\'s most important...', { name: firstName }) }}</h1>
+  <div class="cd-dashboard-header">
+    <h1 class="cd-dashboard-header--generic" v-if="hasDojos || hasLeads || hasRequests">{{ $t('Hey {name}, here\'s what\'s most important...', { name: firstName }) }}</h1>
+    <h1 class="cd-dashboard-header--volunteer" v-if="!hasDojos && !hasLeads && !hasRequests && ready">{{ $t('Hey {name}, once you join or start a Dojo this page will have useful information about your Dojos', { name: firstName }) }}</h1>
   </div>
 </template>
 
@@ -10,7 +10,7 @@
 
   export default {
     name: 'cd-dashboard-header',
-    props: ['hasDojos', 'firstName', 'userId'],
+    props: ['hasDojos', 'hasRequests', 'firstName', 'userId'],
     data() {
       return {
         leads: [],
@@ -28,9 +28,12 @@
         this.leads = res.body;
       },
     },
-    async created() {
-      await this.loadLeads();
-      this.ready = true;
+    created() {
+      // Don't await, so we don't block rendering.
+      // It's unecessary here as 90% of users will not fall under this scenario
+      this.loadLeads().then(() => {
+        this.ready = true;
+      });
     },
   };
 </script>
@@ -39,7 +42,7 @@
   @import "~@coderdojo/cd-common/common/_colors";
 
   .cd-dashboard-header {
-      color: @cd-white;
-      margin: 0 0 48px 0;
+    color: @cd-white;
+    text-align: center;
   }
 </style>
