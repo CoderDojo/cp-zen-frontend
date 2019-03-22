@@ -13,7 +13,9 @@ describe('Dojo details component', () => {
     DojoServiceMock = {
       getDojoById: sandbox.stub(),
       getByUrlSlug: sandbox.stub(),
-      requestUserInvite: sandbox.stub(),
+      membership: {
+        request: sandbox.stub(),
+      },
     };
     UsersDojosServiceMock = {
       getUsersDojos: sandbox.stub(),
@@ -105,13 +107,18 @@ describe('Dojo details component', () => {
       vm.dojoDetails = {
         id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
       };
+      vm.$router = {
+        push: sandbox.stub(),
+      };
 
       // ACT
       vm.volunteer(userType);
 
       // ASSERT
-      expect(DojoServiceMock.requestUserInvite).to
-        .have.been.calledWith(vm.user, vm.dojoDetails.id, userType);
+      expect(DojoServiceMock.membership.request).to
+        .have.been.calledWith(vm.dojoDetails.id, userType);
+      // Window.alert cannot be stubbed/spy, so we can't test the redirection
+      // expect(vm.$router.push).to.have.been.calledOnce.and.calledWith({ name: 'Home' });
     });
   });
 
