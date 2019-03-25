@@ -12,6 +12,9 @@
         <div v-if="usersDojos && dojoAdmins.length === 1 && hasDojos && dojoAge(firstDojo, 'weeks') < 2">
           <dashboard-admin-survey :dojo-name="firstDojo.name"></dashboard-admin-survey>
         </div>
+        <div v-if="hasRequests">
+          <dashboard-pending-volunteering :requests-to-join="loggedInUser.joinRequests"></dashboard-pending-volunteering>
+        </div>
         <dashboard-cta :has-events="events.length > 0 && events[0].id" :is-ticketing-admin="ticketingAdmins.length > 0"></dashboard-cta>
       </div>
     </div>
@@ -28,6 +31,7 @@
   import DashboardCreateEvent from '@/dashboard/events/cd-dashboard-create-event';
   import DashboardAdminSurvey from '@/dashboard/cd-dashboard-admin-survey';
   import DashboardCta from '@/dashboard/cd-dashboard-cta';
+  import DashboardPendingVolunteering from '@/dashboard/cd-dashboard-pending-volunteering';
   import UpcomingEvent from './events/cd-dashboard-upcoming-event';
 
   export default {
@@ -38,6 +42,7 @@
       DashboardCreateEvent,
       DashboardAdminSurvey,
       DashboardCta,
+      DashboardPendingVolunteering,
     },
     data() {
       return {
