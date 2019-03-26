@@ -13,7 +13,7 @@
           <dashboard-admin-survey :dojo-name="firstDojo.name"></dashboard-admin-survey>
         </div>
         <div v-if="hasRequests">
-          <dashboard-pending-volunteering :requests-to-join="loggedInUser.joinRequests"></dashboard-pending-volunteering>
+          <dashboard-pending-volunteering :user-is-new="userIsNew" :requests-to-join="loggedInUser.joinRequests"></dashboard-pending-volunteering>
         </div>
         <dashboard-cta :has-events="events.length > 0 && events[0].id" :is-ticketing-admin="ticketingAdmins.length > 0"></dashboard-cta>
       </div>
@@ -71,6 +71,10 @@
       dojoAdmins() {
         return this.usersDojos.filter(usersDojo =>
           usersDojo.userPermissions && usersDojo.userPermissions.find(perm => perm.name === 'dojo-admin'));
+      },
+      userIsNew() {
+        // Don't use moment month difference  https://github.com/moment/moment/issues/3029
+        return moment().diff(this.loggedInUser.when, 'days') < 90; // 3 months
       },
       hasDojos() {
         return Object.keys(this.dojos).length > 0;

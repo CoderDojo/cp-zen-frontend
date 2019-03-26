@@ -213,6 +213,49 @@ describe('Homepage events', () => {
       cy.get(homePage.pendingRequestsInfo).should('be.visible');
       cy.get(eventPage.genericHeader).invoke('text').should('match', /(here's what's most important...)/);
     });
+
+    it('should show the pending request, but not the newcomer hints when hes a returning user', () => {
+      const createdAt = moment().add(-3, 'months');
+      cy.route('/api/3.0/leads?userId=u1&deleted=0', []).as('leads');
+      cy.route('/api/2.0/users/instance', {
+        ok: true,
+        login: {
+          id: 'l1',
+        },
+        user: {
+          id: 'u1',
+          joinRequests: [{
+            dojoId: 'd1',
+            timestamp: new Date(),
+            userType: 'mentor',
+          }],
+          when: createdAt,
+        },
+      }).as('loggedIn');
+      cy.route('POST', '/api/2.0/dojos/users', [{ dojoId: 'd1', userPermissions: [], userTypes: ['mentor'] }]).as('userDojos');
+      cy.route(/\/api\/3\.0\/dojos\/d1\/events\?query\[status\]=published&query\[afterDate\]=\d+&query\[utcOffset\]=\d+&related=sessions\.tickets$/,
+        {
+          results: [{
+            id: 'e1', name: 'event1', dojoId: 'd1', dates: ['2018-08-26T11:00:00.000'],
+            sessions: [{ tickets: [{ type: 'mentor', quantity: 1, approvedApplications: 0 }] }]
+          }]
+        }).as('dojoEvent1');
+      cy.route('/api/2.0/dojos/d1', { id: 'd1', created: '2015-08-26T11:46:14.308Z' }).as('dojo1');
+      cy.route('POST', '/api/2.0/dojos', [{ id: 'd1', created: '2015-08-26T11:46:14.308Z' }]).as('dojos');
+      cy.route('/api/3.0/users/u1/orders?query[eventId]=e1',
+        { results: [{ id: 'o1', applications: [{ ticketType: 'mentor' }] }] }).as('orders1');
+      cy.visit('/home');
+      cy.wait('@loggedIn');
+      cy.wait('@leads');
+      cy.wait('@userDojos');
+      cy.wait('@dojoEvent1');
+      cy.wait('@orders1');
+      cy.wait('@dojo1');
+      cy.wait('@dojos');
+      cy.get(homePage.pendingRequests).should('have.length', 1);
+      cy.get(homePage.pendingRequestsInfo).should('not.be.visible');
+      cy.get(eventPage.genericHeader).invoke('text').should('match', /(here's what's most important...)/);
+    });
   });
   describe('as a ticketing-admin', () => {
     const after2Weeks = (moment().subtract(2, 'weeks')).format();

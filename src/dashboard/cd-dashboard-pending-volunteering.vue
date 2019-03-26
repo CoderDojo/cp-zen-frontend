@@ -1,11 +1,11 @@
 <template>
   <div class="cd-dashboard-pending-requests">
-    <div :class="[index === (dojos.length -1) ? 'cd-dashboard-pending-requests__request--last': '', 'cd-dashboard-pending-requests__request']" v-for="(dojo, index) in dojos">
+    <div :class="[index === (dojos.length -1) && infoIsDisplayed ? 'cd-dashboard-pending-requests__request--last': '', 'cd-dashboard-pending-requests__request']" v-for="(dojo, index) in dojos">
       <i class="fa fa-hourglass-half"></i>
       <h4 class="cd-dashboard-pending-requests__request-title" v-html="$t('You have a pending join request for <a href=\'/dojos/{slug}\'>{name}</a>.', { name: dojo.name, slug: dojo.urlSlug })"/>
         <p>{{ $t('If the Dojo does not reply/accept within a few days, we suggest you try another club or contacting support.') }}</p>
     </div>
-    <div class="cd-dashboard-pending-requests__info" v-if="isRecent">
+    <div class="cd-dashboard-pending-requests__info" v-if="infoIsDisplayed">
       {{ $t('In the meantime, volunteers often like to complete some of the following.') }}
       <ul>
         <li><a href="https://www.raspberrypi.org/safeguarding/e-learning-module/">{{ $t('Do our safeguarding module') }}</a></li>
@@ -22,7 +22,7 @@
 
   export default {
     name: 'cd-dashboard-pending-requests',
-    props: ['requestsToJoin'],
+    props: ['requestsToJoin', 'userIsNew'],
     data() {
       return {
         dojos: [],
@@ -32,8 +32,8 @@
       recentRequestsToJoin() {
         return this.requestsToJoin.filter(r => moment().diff(r.timestamp, 'days') < 30);
       },
-      isRecent() {
-        return this.recentRequestsToJoin.length > 0;
+      infoIsDisplayed() {
+        return this.userIsNew && this.recentRequestsToJoin.length > 0;
       },
     },
     async created() {

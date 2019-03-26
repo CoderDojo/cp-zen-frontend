@@ -37,6 +37,18 @@ describe('Dashboard events component', () => {
       });
     });
 
+    describe('userIsNew', () => {
+      it('should return true if the user is less than 3 months old', () => {
+        vm.loggedInUser = { when: new Date() };
+        expect(vm.userIsNew).to.be.true;
+      });
+      it('should return false if the user is 3months + old', () => {
+        const createdAt = moment().add(-3, 'months');
+        vm.loggedInUser = { when: createdAt };
+        expect(vm.userIsNew).to.be.false;
+      });
+    });
+
     describe('ticketingAdmins', () => {
       it('should return the usersdojos where the user has a ticketingAdmin perm', () => {
         vm.usersDojos = [{ dojoId: 'd1', userPermissions: [{ name: 'banana' }] }, { dojoId: 'd2', userPermissions: [{ name: 'ticketing-admin' }] }];
