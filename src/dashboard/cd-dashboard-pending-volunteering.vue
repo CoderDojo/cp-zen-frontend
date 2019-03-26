@@ -6,11 +6,11 @@
         <p>{{ $t('If the Dojo does not reply/accept within a few days, we suggest you try another club or contacting support.') }}</p>
     </div>
     <div class="cd-dashboard-pending-requests__info" v-if="infoIsDisplayed">
-      {{ $t('In the meantime, volunteers often like to complete some of the following.') }}
-      <ul>
+      {{ $t('In the meantime, we recommend that you complete some of the following.') }}
+      <ul class="cd-dashboard-pending-requests__info-recommendations">
         <li><a href="https://www.raspberrypi.org/safeguarding/e-learning-module/">{{ $t('Do our safeguarding module') }}</a></li>
         <li><a href="https://help.coderdojo.com/hc/en-us/articles/360000674903-Setting-up-and-running-a-Dojo-a-CoderDojo-guide">{{ $t('Look at our guide to mentoring') }}</a></li>
-        <li><a href="https://projects.raspberrypi.org/org/coderdojo">{{ $t('Check out some projects you like') }}</a></li>
+        <li><a href="https://projects.raspberrypi.org/org/coderdojo">{{ $t('Check out some projects you might like') }}</a></li>
       </ul>
     </div>
   </div>
@@ -57,6 +57,11 @@
     &__request, &__info {
       background: @cd-white;
       padding: 20px; 
+    }
+    &__info {
+      &-recommendations {
+        padding-top: 1em;  
+      }
     }
     &__request {
       margin: @margin 0; 
