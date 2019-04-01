@@ -14,6 +14,7 @@ import UserService from '@/users/service';
 import store from '@/store';
 import Home from '@/dashboard/cd-dashboard';
 import CDFManageUsers from '@/users/cdf-manage';
+import ManageRequestToJoin from '@/dojos/manage-request-to-join';
 import loggedInNavGuard from './loggedInNavGuard';
 import loggedInCDFNavGuard from './loggedInCDFNavGuard';
 import orderExistsNavGuard from './orderExistsNavGuard';
@@ -81,6 +82,12 @@ const router = new Router({
           path: '/dashboard/tickets',
           name: 'MyTickets',
           component: UserTickets,
+          beforeEnter: loggedInNavGuard,
+        },
+        {
+          path: '/dashboard/dojos/:dojoId/join-requests/:requestId/status/:status',
+          name: 'ManageRequestToJoin',
+          component: ManageRequestToJoin,
           beforeEnter: loggedInNavGuard,
         },
         {

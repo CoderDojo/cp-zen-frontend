@@ -183,19 +183,57 @@ describe('Dojos Service', () => {
   describe('membership:request', () => {
     it('should request a user be joined to a dojo, given user, dojoId and userType', async () => {
       // ARRANGE
-      const dojoId = '4e591bbe-667b-4782-bc9c-180c6d321883';
+      const dojoId = 'd1';
       const userType = 'mentor';
-      const expectedPayload = {
-        data: {
-          userType,
-        },
-      };
 
       const postMock = sandbox.stub(Vue.http, 'post');
-      postMock.withArgs(`${Vue.config.apiServer}/api/3.0/dojos/d1/membership-request`, expectedPayload).returns(Promise.resolve());
 
       // ACT
       await DojosServiceWithMocks.membership.request(dojoId, userType);
+      expect(postMock).to.have.been.calledOnce
+        .and.calledWith(`${Vue.config.apiServer}/api/3.0/dojos/d1/membership-requests`, { userType: 'mentor' });
+    });
+  });
+  describe('membership:loadPending', () => {
+    it('should transform a request to join into a membership', async () => {
+       // ARRANGE
+      const dojoId = 'd1';
+      const requestId = 'rq1';
+
+      const postMock = sandbox.stub(Vue.http, 'get');
+
+      // ACT
+      await DojosServiceWithMocks.membership.loadPending(requestId, dojoId);
+      expect(postMock).to.have.been.calledOnce
+        .and.calledWith(`${Vue.config.apiServer}/api/3.0/dojos/d1/membership-requests/rq1`);
+    });
+  });
+  describe('membership:accept', () => {
+    it('should transform a request to join into a membership', async () => {
+      // ARRANGE
+      const dojoId = 'd1';
+      const requestId = 'rq1';
+
+      const postMock = sandbox.stub(Vue.http, 'put');
+
+      // ACT
+      await DojosServiceWithMocks.membership.accept(requestId, dojoId);
+      expect(postMock).to.have.been.calledOnce
+        .and.calledWith(`${Vue.config.apiServer}/api/3.0/dojos/d1/membership-requests/rq1`);
+    });
+  });
+  describe('membership:refuse', () => {
+    it('should decline a membership request', async () => {
+      // ARRANGE
+      const dojoId = 'd1';
+      const requestId = 'rq1';
+
+      const postMock = sandbox.stub(Vue.http, 'delete');
+
+      // ACT
+      await DojosServiceWithMocks.membership.refuse(requestId, dojoId);
+      expect(postMock).to.have.been.calledOnce
+        .and.calledWith(`${Vue.config.apiServer}/api/3.0/dojos/d1/membership-requests/rq1`);
     });
   });
 });
