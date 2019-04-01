@@ -28,11 +28,11 @@
       },
       text() {
         /* eslint-disable no-nested-ternary */
-        return this.status === 'accept' ?
+        return this.status === 'accept' && this.loaderIsVisible ?
           (this.ready ? this.userTypeString : 'Accepting the user...') :
-            this.status === 'refuse' ?
+            (this.status === 'refuse' && this.loaderIsVisible ?
               (this.ready ? 'The request to join your Dojo has been refused.' : 'Refusing this user from joining your Dojo...') :
-                'Invalid action, try again or contact support.';
+                'Invalid action, try again or contact support.');
         /* eslint-enable no-nested-ternary */
       },
     },
