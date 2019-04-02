@@ -2,7 +2,6 @@
   <div class="cd-event-list" >
     <div class="cd-event-list__heading" >
       <h4>{{ $t('Upcoming Events') }}</h4>
-      <ics-link :dojo-id="dojo.id" v-if="hasFutureEvents"/>
     </div>
     <div v-if="!hasFutureEvents" class="cd-event-list__event">
       <div class="cd-event-list__no-events">
@@ -39,7 +38,6 @@
   import UsersUtil from '@/users/util';
   import DojosService from '@/dojos/service';
   import EventListItem from '@/events/cd-event-list-item';
-  import IcsLink from '@/events/cd-ics-link';
   import service from './service';
 
 
@@ -61,7 +59,6 @@
     },
     components: {
       EventListItem,
-      IcsLink,
     },
     computed: {
       noEventsContent() {
@@ -179,9 +176,6 @@
         margin: 0 0 8px 0;
         font-weight: bold;
         line-height: 1;
-      }
-      a {
-        font-size: @font-size-small;
       }
     }
     &__event {
