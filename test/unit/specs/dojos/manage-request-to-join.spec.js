@@ -96,6 +96,53 @@ describe('Manage request to join component', () => {
         expect(vm.membershipRequest).to.be.null;
       });
     });
+    describe('actOnMembershipRequest', () => {
+      it('should accept the membership', async () => {
+        vm.status = 'accept';
+        vm.requestId = 'rq1';
+        vm.dojoId = 'd1';
+        await vm.actOnMembershipRequest();
+        expect(DojosService.membership.accept).to.have.been.calledOnce
+          .and.calledWith('rq1', 'd1');
+      });
+      it('should refuse the membership', async () => {
+        vm.status = 'refuse';
+        vm.requestId = 'rq1';
+        vm.dojoId = 'd1';
+        await vm.actOnMembershipRequest();
+        expect(DojosService.membership.refuse).to.have.been.calledOnce
+          .and.calledWith('rq1', 'd1');
+      });
+      it('should call onError if the status is invalid', async () => {
+        vm.onError = sandbox.stub();
+        vm.status = 'banana';
+        await vm.actOnMembershipRequest();
+        expect(DojosService.membership.accept).to.not.have.been.called;
+        expect(DojosService.membership.refuse).to.not.have.been.called;
+        expect(vm.onError).to.have.been.calledOnce;
+        expect(vm.errorText).to.be.empty;
+      });
+      it('should call onError if rejected', async () => {
+        DojosService.membership.accept.rejects();
+        vm.onError = sandbox.stub();
+        vm.status = 'accept';
+        await vm.actOnMembershipRequest();
+        expect(DojosService.membership.accept).to.have.been.calledOnce;
+        expect(vm.onError).to.have.been.calledOnce;
+        expect(vm.errorText).to.be.empty;
+      });
+      it('should set an error message if the user exists', async () => {
+        const err = new Error();
+        err.status = 400;
+        DojosService.membership.accept.rejects(err);
+        vm.onError = sandbox.stub();
+        vm.status = 'accept';
+        await vm.actOnMembershipRequest();
+        expect(DojosService.membership.accept).to.have.been.calledOnce;
+        expect(vm.onError).to.have.been.calledOnce;
+        expect(vm.errorText).to.equal('This user is already part of your Dojo, please go to your {openLink}Dojo\'s user management page{closeLink} to change the user\'s role.');
+      });
+    });
   });
   describe('lifecycle', () => {
     it('should load the membership and act on it', async () => {

@@ -4,6 +4,7 @@
       <div class="checkmark draw" :class="{ 'checkmark--visible': ready }"></div>
     </div>
     <h1>{{ $t(text) }}</h1>
+    <h2 v-if="errorText" v-html="$t(errorText, { openLink: `<a href='/dashboard/my-dojos/${dojoId}/users'>`, closeLink: '</a>'})"></h2>
   </div>
 </template>
 <script>
@@ -18,6 +19,7 @@
         dojoId: null,
         requestId: null,
         loaderIsVisible: true,
+        errorText: '',
         membershipRequest: null,
         ready: false,
       };
@@ -63,6 +65,10 @@
             this.onError();
           }
         } catch (e) {
+          // Conflict on the creation of the user: we recommend using another path
+          if (e.status === 400) {
+            this.errorText = 'This user is already part of your Dojo, please go to your {openLink}Dojo\'s user management page{closeLink} to change the user\'s role.';
+          }
           this.onError();
         }
       },

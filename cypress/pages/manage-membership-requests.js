@@ -3,4 +3,5 @@ export default {
   checkmark: '.cd-manage-request-to-join .circle-loader--done',
   circle: '.cd-manage-request-to-join .circle-loader',
   text: '.cd-manage-request-to-join h1',
+  description: '.cd-manage-request-to-join h2',
 };
