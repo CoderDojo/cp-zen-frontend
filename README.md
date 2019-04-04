@@ -12,7 +12,7 @@ To run Cypress tests with the Cypress UI (good for debugging issues), you will f
 yarn cypress:open
 ```
 
-This will open a window where you can select what spec to run.
+This will open a window where you can select what spec to run. Notice that if you have a new version of the translations which is not published yet, tests on strings containing interpolation will fail as they are not depending on the linked version of your own repo. Running it headless will solve that.
 
 ### Headless
 You can also run the Cypress tests headless through Docker. You'll first need to install Cypress within the Docker container by running
@@ -28,7 +28,8 @@ docker-compose run --rm cypress
 ```
 
 ## wdio tests
-The selenium-based wdio tests will run along with the unit tests when you run
+The selenium-based wdio tests are legacy tests, waiting to be migrated to cypress. They are not actively maintained and are there only for reference until migrated.
+To run the tests
 ```
-docker-compose run --rm test
+docker-compose run --rm test e2e-with-mocks
 ```
