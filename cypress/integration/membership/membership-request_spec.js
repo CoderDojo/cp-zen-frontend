@@ -6,7 +6,7 @@ describe('Membership requests', () => {
   });
   it('should show the accept flow for a mentor', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-    cy.route('/api/3.0/dojos/d1/membership-requests/rq1', { id: 'rq1', userType: 'mentor' }).as('load');
+    cy.route('/api/3.0/dojos/d1/membership-requests/rq1', { id: 'rq1', dojoId: 'd1', userType: 'mentor' }).as('load');
     cy.route('PUT', '/api/3.0/dojos/d1/membership-requests/rq1', {}).as('actOnRQ');
     cy.visit('/dashboard/dojos/d1/join-requests/rq1/status/accept');
     cy.wait('@loggedIn');
@@ -18,7 +18,7 @@ describe('Membership requests', () => {
   });
   it('should show the accept flow for a champion', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-    cy.route('/api/3.0/dojos/d1/membership-requests/rq1', { id: 'rq1', userType: 'champion' }).as('load');
+    cy.route('/api/3.0/dojos/d1/membership-requests/rq1', { id: 'rq1', dojoId: 'd1', userType: 'champion' }).as('load');
     cy.route('PUT', '/api/3.0/dojos/d1/membership-requests/rq1', {}).as('actOnRQ');
     cy.visit('/dashboard/dojos/d1/join-requests/rq1/status/accept');
     cy.wait('@loggedIn');
@@ -30,7 +30,7 @@ describe('Membership requests', () => {
   });
   it('should show the declined flow', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-    cy.route('/api/3.0/dojos/d1/membership-requests/rq1', { id: 'rq1', userType: 'champion' }).as('load');
+    cy.route('/api/3.0/dojos/d1/membership-requests/rq1', { id: 'rq1', dojoId: 'd1', userType: 'champion' }).as('load');
     cy.route('DELETE', '/api/3.0/dojos/d1/membership-requests/rq1', {}).as('actOnRQ');
     cy.visit('/dashboard/dojos/d1/join-requests/rq1/status/refuse');
     cy.wait('@loggedIn');
@@ -42,7 +42,7 @@ describe('Membership requests', () => {
   });
   it('should show an error message when the status is not supported', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-    cy.route('/api/3.0/dojos/d1/membership-requests/rq1', { id: 'rq1', userType: 'champion' }).as('load');
+    cy.route('/api/3.0/dojos/d1/membership-requests/rq1', { id: 'rq1', dojoId: 'd1', userType: 'champion' }).as('load');
     cy.visit('/dashboard/dojos/d1/join-requests/rq1/status/banana');
     cy.wait('@loggedIn');
     cy.wait('@load');
@@ -62,7 +62,7 @@ describe('Membership requests', () => {
   });
   it('should show an error message when the user is already a member of the Dojo', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-    cy.route('/api/3.0/dojos/d1/membership-requests/rq1', { id: 'rq1', userType: 'champion' }).as('load');
+    cy.route('/api/3.0/dojos/d1/membership-requests/rq1', { id: 'rq1', dojoId: 'd1', userType: 'champion' }).as('load');
     cy.route({ method: 'PUT', url: '/api/3.0/dojos/d1/membership-requests/rq1', status: 400, response: {} }).as('actOnRQ');
     cy.visit('/dashboard/dojos/d1/join-requests/rq1/status/accept');
     cy.wait('@loggedIn');
