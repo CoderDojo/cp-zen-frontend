@@ -4,7 +4,7 @@
       <div class="checkmark draw" :class="{ 'checkmark--visible': ready }"></div>
     </div>
     <h1>{{ $t(text) }}</h1>
-    <h2 v-if="errorText" v-html="$t(errorText, { openLink: `<a href='/dashboard/my-dojos/${dojoId}/users'>`, closeLink: '</a>'})"></h2>
+    <h2 v-if="errorText" v-html="$t(errorText, { openLink: `<a href='/dashboard/my-dojos/${membershipRequest.dojoId}/users'>`, closeLink: '</a>'})"></h2>
   </div>
 </template>
 <script>
@@ -55,10 +55,10 @@
       async actOnMembershipRequest() {
         try {
           if (this.status === 'accept') {
-            await DojosService.membership.accept(this.requestId, this.dojoId);
+            await DojosService.membership.accept(this.requestId, this.membershipRequest.dojoId);
             this.ready = true;
           } else if (this.status === 'refuse') {
-            await DojosService.membership.refuse(this.requestId, this.dojoId);
+            await DojosService.membership.refuse(this.requestId, this.membershipRequest.dojoId);
             this.ready = true;
           } else {
             // Unexpected scenario

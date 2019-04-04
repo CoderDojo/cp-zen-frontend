@@ -100,7 +100,9 @@ describe('Manage request to join component', () => {
       it('should accept the membership', async () => {
         vm.status = 'accept';
         vm.requestId = 'rq1';
-        vm.dojoId = 'd1';
+        vm.membershipRequest = {
+          dojoId: 'd1',
+        };
         await vm.actOnMembershipRequest();
         expect(DojosService.membership.accept).to.have.been.calledOnce
           .and.calledWith('rq1', 'd1');
@@ -108,7 +110,9 @@ describe('Manage request to join component', () => {
       it('should refuse the membership', async () => {
         vm.status = 'refuse';
         vm.requestId = 'rq1';
-        vm.dojoId = 'd1';
+        vm.membershipRequest = {
+          dojoId: 'd1',
+        };
         await vm.actOnMembershipRequest();
         expect(DojosService.membership.refuse).to.have.been.calledOnce
           .and.calledWith('rq1', 'd1');
@@ -125,6 +129,7 @@ describe('Manage request to join component', () => {
       it('should call onError if rejected', async () => {
         DojosService.membership.accept.rejects();
         vm.onError = sandbox.stub();
+        vm.membershipRequest = {};
         vm.status = 'accept';
         await vm.actOnMembershipRequest();
         expect(DojosService.membership.accept).to.have.been.calledOnce;
@@ -135,6 +140,7 @@ describe('Manage request to join component', () => {
         const err = new Error();
         err.status = 400;
         DojosService.membership.accept.rejects(err);
+        vm.membershipRequest = {};
         vm.onError = sandbox.stub();
         vm.status = 'accept';
         await vm.actOnMembershipRequest();
