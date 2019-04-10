@@ -1,7 +1,9 @@
 export default {
+  defaultHeader: '.cd-dashboard-header--volunteer',
+  genericHeader: '.cd-dashboard-header--generic',
   noEventMessage: '.cd-dashboard-events__hint',
-  newDojoMessage: '.cd-dashboard-events__poll',
-  fallbackCTAs: '.cd-dashboard-events__cta-link',
+  newDojoMessage: '.cd-dashboard__poll',
+  fallbackCTAs: '.cd-dashboard__cta-link',
   events: '.cd-dashboard-upcoming-event__main',
   bookButton: '.cd-dashboard-upcoming-event__book',
   bookedTickets: '.cd-dashboard-upcoming-event__booked',

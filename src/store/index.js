@@ -40,6 +40,10 @@ export default new Vuex.Store({
       state.loggedInUser.login !== null &&
       state.loggedInUser.login.id !== undefined,
     dojo: state => state.dojo,
+    // User properties
+    hasRequests: (state, getters) => getters.isLoggedIn &&
+      getters.loggedInUser.joinRequests &&
+      getters.loggedInUser.joinRequests.length > 0,
   },
   modules: {
     order,

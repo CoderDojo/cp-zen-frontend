@@ -70,15 +70,22 @@ const DojosService = {
       },
     });
   },
-  requestUserInvite(user, dojoId, userType) {
-    return Vue.http.post(`${Vue.config.apiServer}/api/2.0/dojos/request-user-invite`, {
-      data: {
-        user,
-        dojoId,
+  membership: {
+    request(dojoId, userType) {
+      return Vue.http.post(`${Vue.config.apiServer}/api/3.0/dojos/${dojoId}/membership-request`, {
         userType,
-        emailSubject: 'New Request to join your Dojo',
-      },
-    });
+      });
+    },
+  },
+  lead: {
+    list(userId) {
+      return Vue.http.get(`${Vue.config.apiServer}/api/3.0/leads`, {
+        params: {
+          userId,
+          deleted: 0,
+        },
+      });
+    },
   },
 };
 
