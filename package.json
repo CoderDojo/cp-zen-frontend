@@ -1,6 +1,6 @@
 {
   "name": "cp-zen-frontend",
-  "version": "1.0.94",
+  "version": "1.0.95",
   "description": "Frontend for CoderDojo Community Platform (Zen)",
   "author": "CoderDojo Foundation <webteam@coderdojo.com>",
   "scripts": {
