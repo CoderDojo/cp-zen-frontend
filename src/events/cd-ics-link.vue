@@ -4,8 +4,8 @@
       <summary ref="summary">{{ $t('Add to your calendar') }}</summary>
       <input type="text" name="httpUrl" :value="httpUrl" ref="httpUrl" class="form-control"/>
       <div class="input-group-append btn-group">
-        <button name="copy" class="btn btn-default" @click="toClipboard"><i class="fa fa-copy"></i></button>
-        <a :href="webcalUrl" class="btn btn-default" name="open" role="button"><i class="fa fa-external-link"></i></a>
+        <button name="copy" class="btn btn-default" v-ga-track-click="'ics-clipboard'" @click="toClipboard"><i class="fa fa-copy"></i></button>
+        <a :href="webcalUrl" class="btn btn-default" name="open" role="button" v-ga-track-click="'ics-webcal'"><i class="fa fa-external-link"></i></a>
       </div>
       <p :class="[copied ? 'cd-ics-link__copy-label--hidden' : 'cd-ics-link__copy-label']">{{ $t('iCalendar feed copied!') }}</p>
     </details>
