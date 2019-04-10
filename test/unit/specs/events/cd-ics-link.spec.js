@@ -44,12 +44,26 @@ describe('ICS link component', () => {
             select: sandbox.stub(),
           },
         };
+        vm.toggleCopy = sandbox.stub();
         const spy = sandbox.spy(document, 'execCommand');
         vm.toClipboard();
         expect(vm.$refs.httpUrl.focus).to.have.been.calledOnce;
         expect(vm.$refs.httpUrl.select).to.have.been.calledOnce;
         expect(spy).to.have.been.calledWith('copy');
+        expect(vm.toggleCopy).to.have.been.calledOnce;
       });
+    });
+    describe('toggleCopy', () => {
+      it('should switch copy over a 2 second period', (done) => {
+        const vm = vueUnitHelper(IcsLink);
+        vm.copied = false;
+        vm.toggleCopy();
+        expect(vm.copied).to.be.true;
+        setTimeout(() => {
+          expect(vm.copied).to.be.false;
+          done();
+        }, 2000);
+      }).timeout(3000);
     });
   });
 });

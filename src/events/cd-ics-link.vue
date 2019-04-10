@@ -7,6 +7,7 @@
         <button name="copy" class="btn btn-default" @click="toClipboard"><i class="fa fa-copy"></i></button>
         <a :href="webcalUrl" class="btn btn-default" name="open" role="button"><i class="fa fa-external-link"></i></a>
       </div>
+      <p :class="[copied ? 'cd-ics-link__copy-label--hidden' : 'cd-ics-link__copy-label']">{{ $t('iCalendar feed copied!') }}</p>
     </details>
   </div>
 </template>
@@ -16,12 +17,24 @@
   export default {
     name: 'IcsLink',
     props: ['dojoId'],
+    data() {
+      return {
+        copied: false,
+      };
+    },
     methods: {
+      toggleCopy() {
+        this.copied = true;
+        setTimeout(() => {
+          this.copied = false;
+        }, 2000);
+      },
       toClipboard() {
         this.$refs.httpUrl.focus();
         this.$refs.httpUrl.select();
         // Clipboard API requires permission, this doesn't :O
-        return document.execCommand('copy');
+        document.execCommand('copy');
+        this.toggleCopy();
       },
     },
     computed: {
@@ -55,6 +68,15 @@
       .btn:first-child {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
+      }
+    }
+    &__copy-label {
+      transition: opacity 1s ease-out;
+      opacity: 0;
+      overflow: hidden;
+      position: relative;
+      &--hidden {
+        opacity: 1;
       }
     }
   }
