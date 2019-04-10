@@ -13,6 +13,7 @@
       <info-column class="cd-dojo-details__left-column">
         <info-column-section class="cd-dojo-details__left-column-section" icon="clock-o" :header="$t('Time')">
           {{ buildDojoFrequency(dojoDetails) }}
+          <ics-link :dojo-id="dojoDetails.id"/>
         </info-column-section>
         <info-column-section class="cd-dojo-details__left-column-section" icon="map-marker" :header="$t('Location')">
           {{ address }}
@@ -96,6 +97,7 @@
   import InfoColumn from '@/common/cd-info-column';
   import Dropdown from '@/common/cd-dropdown';
   import InfoColumnSection from '@/common/cd-info-column-section';
+  import IcsLink from '@/events/cd-ics-link';
   import cdUrlFormatter from '@/common/filters/cd-url-formatter';
   import UserService from '@/users/service';
   import UsersDojosService from '@/usersDojos/service';
@@ -117,6 +119,7 @@
       eventsList,
       InfoColumn,
       InfoColumnSection,
+      IcsLink,
       Dropdown,
       StaticMap,
     },
