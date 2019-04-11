@@ -71,10 +71,19 @@ const DojosService = {
     });
   },
   membership: {
+    loadPending(requestId, dojoId) {
+      return Vue.http.get(`${Vue.config.apiServer}/api/3.0/dojos/${dojoId}/membership-requests/${requestId}`);
+    },
     request(dojoId, userType) {
-      return Vue.http.post(`${Vue.config.apiServer}/api/3.0/dojos/${dojoId}/membership-request`, {
+      return Vue.http.post(`${Vue.config.apiServer}/api/3.0/dojos/${dojoId}/membership-requests`, {
         userType,
       });
+    },
+    accept(requestId, dojoId) {
+      return Vue.http.put(`${Vue.config.apiServer}/api/3.0/dojos/${dojoId}/membership-requests/${requestId}`);
+    },
+    refuse(requestId, dojoId) {
+      return Vue.http.delete(`${Vue.config.apiServer}/api/3.0/dojos/${dojoId}/membership-requests/${requestId}`);
     },
   },
   lead: {
