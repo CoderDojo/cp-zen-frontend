@@ -122,6 +122,43 @@ describe('Dojo details component', () => {
     });
   });
 
+  describe('computed.isActive', () => {
+    it('should return true', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm.dojoDetails = {
+        stage: 1,
+        deleted: 0,
+      };
+
+      // ASSERT
+      expect(vm.isActive).to.be.true;
+    });
+    it('should return false if the dojo is deleted', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm.dojoDetails = {
+        stage: 1,
+        deleted: 1,
+      };
+
+      // ASSERT
+      expect(vm.isActive).to.be.false;
+    });
+    it('should return false if the stage is inactive', () => {
+      // ARRANGE
+      const vm = vueUnitHelper(DojoDetailsWithMocks);
+      vm.dojoDetails = {
+        stage: 4,
+        deleted: 0,
+      };
+
+      // ASSERT
+      expect(vm.isActive).to.be.false;
+    });
+
+  });
+
   describe('computed.urlSlug', () => {
     it('should build the urlSlug from path parameters', () => {
       // ARRANGE
