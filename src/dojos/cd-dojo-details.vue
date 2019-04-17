@@ -31,7 +31,7 @@
           <a v-if="dojoDetails.googleGroup" class="cd-dojo-details__social-media-icon fa fa-2x fa-google cd-dojo-details__google-group sm-icon" aria-hidden="true" :href="dojoDetails.googleGroup"></a>
         </info-column-section>
       </info-column>
-      <div class="cd-dojo-details__main_content">
+      <div class="cd-dojo-details__main_content" v-if="isActive">
         <dropdown v-if="isDojoAdmin || isTicketingAdmin" class="cd-dojo-details__settings-dropdown" icon="gear" align="right">
           <li v-if="isDojoAdmin"><a :href="`/dashboard/edit-dojo/${dojoDetails.id}`"><i class="fa fa-pencil"></i>{{ $t('Edit Dojo') }}</a></li>
           <li v-if="isDojoAdmin"><a :href="`/dashboard/my-dojos/${dojoDetails.id}/users`"><i class="fa fa-users"></i>{{ $t('Manage Users') }}</a></li>
@@ -86,6 +86,10 @@
             <img v-if="dojoDetails.supporterImage" :src="dojoDetails.supporterImage"/>
           </div>
         </section>
+      </div>
+      <div class="cd-dojo-details__main_content" v-else>
+        <h2>{{ $t('This Dojo is now inactive.') }}</h2>
+        <h3 v-html="$t('Click {openLink}here{closeLink} to look for an active Dojo.',{ openLink: `<a href='/find'>`, closeLink: '</a>' })"></h3>
       </div>
     </div>
   </div>
@@ -209,6 +213,9 @@
       },
       isTicketingAdmin() {
         return this.isCDFAdmin || UsersDojosUtil.hasPermission(this.usersDojos, 'ticketing-admin');
+      },
+      isActive() {
+        return !this.dojoDetails.deleted && this.dojoDetails.stage !== 4;
       },
     },
     methods: {
