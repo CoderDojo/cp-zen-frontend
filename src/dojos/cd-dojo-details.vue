@@ -215,7 +215,7 @@
         return this.isCDFAdmin || UsersDojosUtil.hasPermission(this.usersDojos, 'ticketing-admin');
       },
       isActive() {
-        return !this.dojoDetails.deleted && this.dojoDetails.stage != 4;
+        return !this.dojoDetails.deleted && this.dojoDetails.stage !== 4;
       },
     },
     methods: {

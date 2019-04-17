@@ -156,7 +156,6 @@ describe('Dojo details component', () => {
       // ASSERT
       expect(vm.isActive).to.be.false;
     });
-
   });
 
   describe('computed.urlSlug', () => {
