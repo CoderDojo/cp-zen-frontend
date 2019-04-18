@@ -1,5 +1,5 @@
 <template>
-  <div class="cd-event-form"> 
+  <div class="cd-event-form">
     <div class="cd-event-form__left-column">
       <h1 class="cd-event-form__header">{{ $t('Create an event') }}</h1>
       <form @submit="save">
@@ -26,20 +26,26 @@
           </div>
         </div>
         <div class="cd-event-form__date form-group">
-          <input list="days" type="number" name="day" v-model="day" class="form-control"> 
+          <input list="days" type="number" name="day" v-model="day" class="form-control">
           <datalist id="days" v-model="day">
             <option v-for="day in 31" :key="index" :value="day">{{ day }} </option>
           </datalist>
           <select name="month" v-model="month">
             <option v-for="(month, index) in months" :value="index">{{ month }}</option>
           </select>
-          <input list="years" type="number" name="year" v-model="year" class="form-control"> 
+          <input list="years" type="number" name="year" v-model="year" class="form-control">
           <datalist id="years" v-model="year">
             <option v-for="year in 3" :key="index">{{ year + today.year() -1 }} </option>
           </datalist>
         </div>
         <div class="cd-event-form__date form-group">
           <input type="datetime-local" name="day" :value="today" :min="today">
+        </div>
+        <div class="cd-event-form__tickets">
+          <form-tickets label="Youth tickets" ref="youthTickets" :default-quantity="20" class="cd-event-form__youth-tickets">
+            </form-tickets>
+          <form-tickets label="Mentor tickets" ref="mentorTickets" :default-quantity="5" class="cd-event-form__mentor-tickets">
+            </form-tickets>
         </div>
         <dropdown type="primary" display="splitted" class="cd-event-form__button">
           <button slot="submit" type="submit" class="btn btn-primary cd-event-form__button-default-submit">
@@ -66,6 +72,7 @@
   import CKEditor from '@ckeditor/ckeditor5-vue';
   import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
   import EventTile from './cd-event-tile';
+  import FormTickets from './form/form-tickets';
 
   export default {
     name: 'event-form',
@@ -73,6 +80,7 @@
     components: {
       ckeditor: CKEditor.component,
       dropdown: Dropdown,
+      formTickets: FormTickets,
     },
     data() {
       return {
@@ -94,8 +102,9 @@
       };
     },
     methods: {
-      save(e) {
+      async save(e) {
         e.preventDefault();
+        await Promise.all(this.tickets.map(t => t.createTicket()));
       },
       toggle(field) { // eslint-disable-line no-unused-vars
         // eslint-disable-next-line no-param-reassign
@@ -114,6 +123,9 @@
       },
       months() {
         return moment.localeData().monthsShort();
+      },
+      tickets() {
+        return [this.$refs.youthTickets, this.$refs.mentorTickets];
       },
     },
     async created() {

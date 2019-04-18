@@ -47,4 +47,37 @@ describe('Event Form component', () => {
       });
     });
   });
+
+  describe('computed', () => {
+    describe('tickets', () => {
+      it('should reference dom elements', () => {
+        const vm = vueUnitHelper(EventFormWithMocks);
+        vm.$refs = {
+          youthTickets: 'one',
+          mentorTickets: 'two',
+        };
+        expect(vm.tickets).to.eql(['one', 'two']);
+      });
+    });
+  });
+
+  describe('methods', () => {
+    describe('save', () => {
+      it('should reference dom elements', async () => {
+        const vm = vueUnitHelper(EventFormWithMocks);
+        const createTicket = sandbox.stub();
+        const event = {
+          preventDefault: sandbox.stub(),
+        };
+
+        vm.tickets = [
+          { createTicket },
+          { createTicket },
+        ];
+        await vm.save(event);
+        expect(event.preventDefault).to.have.been.calledOnce;
+        expect(createTicket).to.have.been.calledTwice;
+      });
+    });
+  });
 });

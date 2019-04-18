@@ -1,25 +1,40 @@
-var utils = require('./utils')
-var webpack = require('webpack')
-var config = require('../config')
-var merge = require('webpack-merge')
-var baseWebpackConfig = require('./webpack.base.conf')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const path = require('path');
+const utils = require('./utils');
+const webpack = require('webpack');
+const config = require('../config');
+const merge = require('webpack-merge');
+const baseWebpackConfig = require('./webpack.base.conf');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
+
+function resolve(dir) {
+  return path.join(__dirname, '..', dir);
+}
 
 // add hot-reload related code to entry chunks
-Object.keys(baseWebpackConfig.entry).forEach(function (name) {
-  baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name])
-})
+Object.keys(baseWebpackConfig.entry).forEach((name) => {
+  baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name]);
+});
 
 module.exports = merge(baseWebpackConfig, {
   module: {
-    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
+    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap }).concat(
+      {
+        test: /\.(js|vue)$/,
+        loader: 'eslint-loader',
+        enforce: 'pre',
+        include: [resolve('src'), resolve('test')],
+        options: {
+          formatter: require('eslint-friendly-formatter'),
+        },
+      },
+    ),
   },
   // cheap-module-eval-source-map is faster for development
   devtool: '#eval-source-map',
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': config.dev.env
+      'process.env': config.dev.env,
     }),
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
     new webpack.HotModuleReplacementPlugin(),
@@ -28,8 +43,8 @@ module.exports = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.ejs',
-      inject: true
+      inject: true,
     }),
-    new FriendlyErrorsPlugin()
-  ]
-})
+    new FriendlyErrorsPlugin(),
+  ],
+});
