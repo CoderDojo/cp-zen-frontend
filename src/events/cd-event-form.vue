@@ -22,7 +22,7 @@
           <i class="fa fa-pencil" @click="descriptionIsVisible = true" v-show="!descriptionIsVisible"></i>
           <i class="fa fa-times" @click="descriptionIsVisible = false" v-show="descriptionIsVisible"></i>
           <div v-if="descriptionIsVisible">
-            <ckeditor :editor="editor" v-model="description"></ckeditor>
+            <VueTrix v-model="description" />
           </div>
         </div>
         <div class="cd-event-form__date form-group">
@@ -67,10 +67,9 @@
 </template>
 <script>
   import moment from 'moment';
+  import VueTrix from 'vue-trix';
   import DojoService from '@/dojos/service';
   import Dropdown from '@/common/cd-dropdown';
-  import CKEditor from '@ckeditor/ckeditor5-vue';
-  import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
   import EventTile from './cd-event-tile';
   import FormTickets from './form/form-tickets';
 
@@ -78,9 +77,9 @@
     name: 'event-form',
     mixins: [EventTile],
     components: {
-      ckeditor: CKEditor.component,
       dropdown: Dropdown,
       formTickets: FormTickets,
+      VueTrix,
     },
     data() {
       return {
@@ -94,8 +93,6 @@
         year: new Date().getFullYear(),
         dojo: {},
         today: moment.utc(),
-        //
-        editor: ClassicEditor,
         // state
         addressIsVisible: false,
         descriptionIsVisible: false,
