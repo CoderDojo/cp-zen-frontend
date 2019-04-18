@@ -42,7 +42,7 @@
           <input type="datetime-local" name="day" :value="today" :min="today">
         </div>
         <dropdown type="primary" display="splitted" class="cd-event-form__button">
-          <button slot="submit" type="submit" class="btn btn-primary">
+          <button slot="submit" type="submit" class="btn btn-primary cd-event-form__button-default-submit">
             {{ $t('Publish and email members') }}
           </button>
           <li><a href="#">Publish only</a></li>
