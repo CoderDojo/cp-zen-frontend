@@ -2,16 +2,6 @@
 # yarn lockfile v1
 
 
-"@ckeditor/ckeditor5-build-classic@^12.1.0":
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-build-classic/-/ckeditor5-build-classic-12.1.0.tgz#bd8127b8f11ce0a33a3dd8893546bbed5ab5fd30"
-  integrity sha512-SYT+stYBS8JqxWZNye5x9AlwNmwY7+bp2IKNdZDsolKFF1CjOC18gmIB4isGfINzFgn/ke1H21XDenZYp3IxqA==
-
-"@ckeditor/ckeditor5-vue@^1.0.0-beta.1":
-  version "1.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-vue/-/ckeditor5-vue-1.0.0-beta.1.tgz#976bf7b00bd5f9d99637bfa8279e35f2e899c334"
-  integrity sha512-CTNyEdofAfmhVomkft6kYEmbh6yRvZMzkvCC4bHZ8LOBHBY7QWkWXP3gbs19SvimUV7PfnsrsDE093aI0SyXqQ==
-
 "@coderdojo/cd-common@1.1.11":
   version "1.1.11"
   resolved "https://registry.yarnpkg.com/@coderdojo/cd-common/-/cd-common-1.1.11.tgz#fb42fa68eff8b47d9843007db013d3f3fb4b1f95"
@@ -8031,6 +8021,11 @@ trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
 
+trix@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/trix/-/trix-1.1.1.tgz#ca8a3fab4d23d960a17e88441d601cb22a86f5d5"
+  integrity sha512-dNHTcryRK0EmwCyJDOBrG6OznL8HNEVVlecq/xzxLj3M9Eht5DV4yl+eCYX8RKyfrtBcNki+mpKIxESgXaGGZA==
+
 tryit@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tryit/-/tryit-1.0.3.tgz#393be730a9446fd1ead6da59a014308f36c289cb"
@@ -8464,6 +8459,13 @@ vue-template-compiler@^2.2.6:
 vue-template-es2015-compiler@^1.2.2:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.5.3.tgz#22787de4e37ebd9339b74223bc467d1adee30545"
+
+vue-trix@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/vue-trix/-/vue-trix-0.8.1.tgz#196ecc69df380233fc48854985d8490b21cab61b"
+  integrity sha512-fkDW6qwCDz8/56X5glzZ1iaxTLrZSiKbxEKANMUAC+Y2xAzIWlIzZ8FE6nTm0atNt+X6EzCBc48JYFE8aqOb3Q==
+  dependencies:
+    trix "^1.1.0"
 
 vue-unit-helper@^1.0.9:
   version "1.0.9"
