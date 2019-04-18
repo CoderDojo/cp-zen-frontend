@@ -13,5 +13,7 @@ describe('Event form', () => {
     cy.get(page.header).should('be.visible');
     cy.get(page.submitButton).should('be.visible');
     cy.get(page.submitButton).invoke('text').should('contain', 'Publish and email members');
+    cy.get(page.youthTickets).should('be.visible');
+    cy.get(page.mentorTickets).should('be.visible');
   });
 });
