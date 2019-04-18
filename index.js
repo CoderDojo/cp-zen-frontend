@@ -82,6 +82,16 @@ exports.register = function (server, options, next) {
 
   server.route({
     method: 'GET',
+    path: '/dashboard/dojos/{dojoId}/events/new',
+    handler :{
+      file: {
+        path: 'index.html'
+      }
+    }
+  });
+
+  server.route({
+    method: 'GET',
     path: '/dashboard/dojos/{dojoId}/join-requests/{id}/status/{status}',
     handler :{
       file: {

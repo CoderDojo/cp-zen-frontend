@@ -7,6 +7,7 @@ import UserTickets from '@/users/cd-tickets';
 import EventDetails from '@/events/order/cd-event-details';
 import LoginOrRegister from '@/users/cd-login-or-register';
 import EventSessions from '@/events/order/cd-event-sessions';
+import EventForm from '@/events/cd-event-form';
 import BookingConfirmation from '@/events/order/cd-booking-confirmation';
 import Login from '@/users/cd-login';
 import orderWrapper from '@/events/order/wrapper';
@@ -82,6 +83,13 @@ const router = new Router({
           path: '/dashboard/tickets',
           name: 'MyTickets',
           component: UserTickets,
+          beforeEnter: loggedInNavGuard,
+        },
+        {
+          path: '/dashboard/dojos/:dojoId/events/new',
+          name: 'EventForm',
+          component: EventForm,
+          // TODO: restrict access to ticketing-admin ?
           beforeEnter: loggedInNavGuard,
         },
         {
