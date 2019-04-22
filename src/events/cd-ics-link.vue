@@ -62,13 +62,6 @@
   @import "../common/variables";
 
   .cd-ics-link {
-    summary {
-      cursor: pointer;
-      color: @link-color;
-      &:hover {
-        color: #005e89;
-      }
-    }
     input {
       max-width: 170px;
       border-right-width: 0px;
@@ -86,6 +79,13 @@
       position: relative;
       &--hidden {
         opacity: 1;
+      }
+    }
+    summary {
+      cursor: pointer;
+      color: @link-color;
+      &:hover {
+        color: #005e89;
       }
     }
   }
