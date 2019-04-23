@@ -85,7 +85,7 @@
       cursor: pointer;
       color: @link-color;
       &:hover {
-        color: #005e89;
+        color: @link-hover-color;
       }
     }
   }
