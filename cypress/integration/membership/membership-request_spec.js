@@ -62,12 +62,14 @@ describe('Membership requests', () => {
   });
   it('should show an error message when the user is already a member of the Dojo', () => {
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
+    cy.route('POST', '/api/2.0/profiles/user-profile-data', 'fx:parentLoggedIn').as('userProfileData');
     cy.route('/api/3.0/dojos/d1/membership-requests/rq1', { id: 'rq1', dojoId: 'd1', userType: 'champion' }).as('load');
     cy.route({ method: 'PUT', url: '/api/3.0/dojos/d1/membership-requests/rq1', status: 400, response: {} }).as('actOnRQ');
     cy.visit('/dashboard/dojos/d1/join-requests/rq1/status/accept');
     cy.wait('@loggedIn');
     cy.wait('@load');
     cy.wait('@actOnRQ');
+    cy.wait('@userProfileData');
     cy.get(page.checkmark).should('not.be.visible');
     cy.get(page.circle).should('not.be.visible');
     cy.get(page.text).invoke('text').should('eq', 'Invalid action, try again or contact support.');

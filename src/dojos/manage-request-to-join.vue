@@ -4,11 +4,12 @@
       <div class="checkmark draw" :class="{ 'checkmark--visible': ready }"></div>
     </div>
     <h1>{{ $t(text) }}</h1>
-    <h2 v-if="errorText" v-html="$t(errorText, { openLink: `<a href='/dashboard/my-dojos/${membershipRequest.dojoId}/users'>`, closeLink: '</a>'})"></h2>
+    <h2 v-if="errorText" v-html="$t(errorText, { openLink: conflictUrl, closeLink: '</a>'})"></h2>
   </div>
 </template>
 <script>
   import DojosService from '@/dojos/service';
+  import UsersService from '@/users/service';
 
   export default {
     name: 'manage-request-to-join',
@@ -37,6 +38,9 @@
                 'Invalid action, try again or contact support.');
         /* eslint-enable no-nested-ternary */
       },
+      conflictUrl() {
+        return `<a href="/dashboard/my-dojos/${this.membershipRequest.dojoId}/users?name=${this.member.name}">`;
+      },
     },
     methods: {
       onError() {
@@ -51,6 +55,9 @@
         } catch (e) {
           this.onError();
         }
+      },
+      async loadConflictingUser() {
+        this.member = (await UsersService.userProfileData(this.membershipRequest.userId)).body;
       },
       async actOnMembershipRequest() {
         try {
@@ -67,6 +74,7 @@
         } catch (e) {
           // Conflict on the creation of the user: we recommend using another path
           if (e.status === 400) {
+            await this.loadConflictingUser();
             this.errorText = 'This user is already part of your Dojo, please go to your {openLink}Dojo\'s user management page{closeLink} to change the user\'s role.';
           }
           this.onError();
