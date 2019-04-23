@@ -75,7 +75,7 @@
           // Conflict on the creation of the user: we recommend using another path
           if (e.status === 400) {
             await this.loadConflictingUser();
-            this.errorText = 'This user is already part of your Dojo, change tab to change the user\'s role.';
+            this.errorText = 'This user is already part of your Dojo, please go to your {openLink}Dojo\'s user management page{closeLink} to change the user\'s role.';
           }
           this.onError();
         }
