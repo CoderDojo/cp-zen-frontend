@@ -21,4 +21,7 @@ export default {
   statsYouthGenderChart: '.cd-dashboard-stats__circle',
   statsUseZenMessage: '.cd-dashboard-stats p',
   statsYouthGirlsHint: '.cd-dashboard-stats__chart-pie-hint',
+  comms: {
+    anniversaryLink: '.cd-dashboard__anniversary',
+  },
 };
