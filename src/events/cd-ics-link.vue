@@ -59,6 +59,8 @@
   };
 </script>
 <style scoped lang="less">
+  @import "../common/variables";
+
   .cd-ics-link {
     input {
       max-width: 170px;
@@ -77,6 +79,13 @@
       position: relative;
       &--hidden {
         opacity: 1;
+      }
+    }
+    summary {
+      cursor: pointer;
+      color: @link-color;
+      &:hover {
+        color: @link-hover-color;
       }
     }
   }
