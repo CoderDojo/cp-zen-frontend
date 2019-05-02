@@ -93,6 +93,13 @@ const router = new Router({
           beforeEnter: loggedInNavGuard,
         },
         {
+          path: '/dashboard/dojos/:dojoId/events/:eventId/edit',
+          name: 'EventForm',
+          component: EventForm,
+          // TODO: restrict access to ticketing-admin ?
+          beforeEnter: loggedInNavGuard,
+        },
+        {
           path: '/dashboard/dojos/:dojoId/join-requests/:requestId/status/:status',
           name: 'ManageRequestToJoin',
           component: ManageRequestToJoin,
