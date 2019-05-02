@@ -43,7 +43,7 @@ describe('Dashboard events component', () => {
         expect(vm.userIsNew).to.be.true;
       });
       it('should return false if the user is 3months + old', () => {
-        const createdAt = moment().add(-3, 'months');
+        const createdAt = moment().add(-90, 'days');
         vm.loggedInUser = { when: createdAt };
         expect(vm.userIsNew).to.be.false;
       });
