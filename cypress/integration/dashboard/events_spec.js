@@ -215,7 +215,7 @@ describe('Homepage events', () => {
     });
 
     it('should show the pending request, but not the newcomer hints when hes a returning user', () => {
-      const createdAt = moment().add(-3, 'months');
+      const createdAt = moment().add(-90, 'days');
       cy.route('/api/3.0/leads?userId=u1&deleted=0', []).as('leads');
       cy.route('/api/2.0/users/instance', {
         ok: true,
