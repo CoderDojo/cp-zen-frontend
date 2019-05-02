@@ -2,7 +2,7 @@ import vueUnitHelper from 'vue-unit-helper';
 import moment from 'moment';
 import DashboardDojoAnniversary from '!!vue-loader?inject!@/dashboard/cd-dashboard-dojo-anniversary';
 
-describe.only('Dashboard dojo anniversary component', () => {
+describe('Dashboard dojo anniversary component', () => {
   let sandbox;
   let vm;
   let clock;

@@ -1,6 +1,7 @@
 <template>
   <div class="cd-dashboard__anniversaries">
     <div v-for="dojo in filteredDojos" class="cd-dashboard__anniversary">
+      <span class="cd-dashboard__anniversary-popper">🎉</span>
       <a :href="`https://docs.google.com/forms/d/e/1FAIpQLScNDxfs7MP4aOA9f8iZPTuNl6NVO2RHpIch5VGwUDiupaGOxA/viewform`" v-ga-track-exit-nav>{{ $t('{dojoName}\'s Dojo anniversary is approaching - apply now for your FREE birthday pack to celebrate', { dojoName: dojo.name }) }}</a>
     </div>
   </div>
@@ -62,6 +63,9 @@
         i {
           margin-right: 8px;
         }
+      }
+      &-popper {
+        font-size: 2em;
       }
     }
   }
