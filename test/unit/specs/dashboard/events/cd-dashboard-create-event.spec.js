@@ -42,7 +42,7 @@ describe('Dashboard create event component', () => {
         vm.ticketingAdmins = [{ dojoId: 'd1' }];
 
         // ASSERT
-        expect(vm.getTicketingAdminUrl).to.equal('dashboard/dojo/d1/event-form');
+        expect(vm.getTicketingAdminUrl).to.equal('dashboard/dojos/d1/events/new');
       });
       it('should return the url to my-dojos if the user is not a ticketing-admin', () => {
         // ARRANGE
