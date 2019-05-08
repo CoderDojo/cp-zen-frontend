@@ -24,13 +24,19 @@ describe('Dashboard dojo anniversary component', () => {
       it('should return true if the creation date is less than 2 months from now', () => {
         clock = sinon.useFakeTimers(new Date(2018, 3, 24, 0, 0, 0, 0));
         const created = moment();
-        created.subtract(1, 'month');
+        created.add(1, 'months');
         expect(vm.hasAnniversary({ created })).to.be.true;
       });
       it('should return false if the creation date is more than 2 months from now', () => {
         clock = sinon.useFakeTimers(new Date(2018, 3, 24, 0, 0, 0, 0));
         const created = moment();
-        created.subtract(3, 'month');
+        created.add(3, 'months');
+        expect(vm.hasAnniversary({ created })).to.be.false;
+      });
+      it('should return false if the creation date is past', () => {
+        clock = sinon.useFakeTimers(new Date(2018, 3, 24, 0, 0, 0, 0));
+        const created = moment();
+        created.subtract(1, 'days');
         expect(vm.hasAnniversary({ created })).to.be.false;
       });
     });
@@ -67,6 +73,12 @@ describe('Dashboard dojo anniversary component', () => {
         vm.isOld.onCall(1).returns(false);
         const dojos = [{ id: 'd1' }, { id: 'd2' }, { id: 'd3' }];
         expect(vm.dojosWithUpcomingAnniversary(dojos)).to.eql([{ id: 'd1' }]);
+      });
+    });
+    describe('formUrl', () => {
+      it('should return the url of the form with its variables pre-filled', () => {
+        const url = vm.formUrl({ name: 'd1', urlSlug: 'ie/dublin/dublin/dublin-docklands-chq' });
+        expect(url).to.equal('https://docs.google.com/forms/d/e/1FAIpQLScNDxfs7MP4aOA9f8iZPTuNl6NVO2RHpIch5VGwUDiupaGOxA/viewform?entry.803640143=d1&entry.2104926148=http://test.coderdojo.com/dojos/ie/dublin/dublin/dublin-docklands-chq');
       });
     });
   });

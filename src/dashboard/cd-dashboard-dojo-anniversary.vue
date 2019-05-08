@@ -2,13 +2,14 @@
   <div class="cd-dashboard__anniversaries">
     <div v-for="dojo in filteredDojos" class="cd-dashboard__anniversary">
       <span class="cd-dashboard__anniversary-popper">🎉</span>
-      <a :href="`https://docs.google.com/forms/d/e/1FAIpQLScNDxfs7MP4aOA9f8iZPTuNl6NVO2RHpIch5VGwUDiupaGOxA/viewform`" v-ga-track-exit-nav>{{ $t('{dojoName}\'s Dojo anniversary is approaching - apply now for your FREE birthday pack to celebrate', { dojoName: dojo.name }) }}</a>
+      <a :href="formUrl(dojo)">{{ $t('{dojoName}\'s Dojo anniversary is approaching - apply now for your FREE birthday pack to celebrate', { dojoName: dojo.name }) }}</a>
     </div>
   </div>
 </template>
 
 <script>
   import moment from 'moment';
+  import Vue from 'vue';
 
   export default {
     name: 'cd-dashboard-dojo-anniversary',
@@ -19,13 +20,17 @@
       };
     },
     methods: {
+      formUrl(dojo) {
+        const url = `${Vue.config.apiServer}/dojos/${dojo.urlSlug}`;
+        return `https://docs.google.com/forms/d/e/1FAIpQLScNDxfs7MP4aOA9f8iZPTuNl6NVO2RHpIch5VGwUDiupaGOxA/viewform?entry.803640143=${dojo.name}&entry.2104926148=${url}`;
+      },
       hasAnniversary(dojo) {
         const now = moment();
-        const creationDate = moment(dojo.created);
-        const referenceDate = moment(creationDate);
+        const referenceDate = moment(dojo.created);
         referenceDate.year(now.year());
-        const timeToAnniversary = referenceDate.diff(now, 'months');
-        return timeToAnniversary >= -2 && timeToAnniversary <= 0;
+        const timeToAnniversary = now.diff(referenceDate, 'months');
+        // Note: this won't be exact due to the user's tz and the creation date being in IST
+        return timeToAnniversary >= -2 && timeToAnniversary <= 0 && now <= referenceDate;
       },
       championOfDojos(dojos, dojoAdmins) {
         return dojoAdmins.reduce((acc, membership) => {
@@ -60,12 +65,14 @@
       a {
         color: @cd-white;
         text-decoration: underline;
+        font-size: @font-size-medium;
         i {
           margin-right: 8px;
         }
       }
       &-popper {
-        font-size: 2em;
+        color: @cd-orange;
+        font-size: 1.5em;
       }
     }
   }
