@@ -25,7 +25,7 @@ describe('Homepage comms', () => {
       cy.wait('@dojo2');
       cy.get(homePage.comms.anniversaryLink).should('be.visible');
       cy.get(homePage.comms.anniversaryLink).should('have.length', 1);
-      cy.get(homePage.comms.anniversaryLink).invoke('text').should('be.eq', '🎉 dojo2\'s Dojo anniversary is approaching - apply now for your FREE birthday pack to celebrate');
+      cy.get(homePage.comms.anniversaryLink).invoke('text').should('be.eq', '🎉 dojo2, your Dojo anniversary is approaching! Apply now for your FREE birthday pack to celebrate');
     });
     it('should show two panels for Dojo anniversary to the champion if both creation dates are within the good range', () => {
       cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
@@ -40,8 +40,8 @@ describe('Homepage comms', () => {
       cy.wait('@dojo2');
       cy.get(homePage.comms.anniversaryLink).should('be.visible');
       cy.get(homePage.comms.anniversaryLink).should('have.length', 2);
-      cy.get(homePage.comms.anniversaryLink).first().invoke('text').should('be.eq', '🎉 dojo1\'s Dojo anniversary is approaching - apply now for your FREE birthday pack to celebrate');
-      cy.get(homePage.comms.anniversaryLink).last().invoke('text').should('be.eq', '🎉 dojo2\'s Dojo anniversary is approaching - apply now for your FREE birthday pack to celebrate');
+      cy.get(homePage.comms.anniversaryLink).first().invoke('text').should('be.eq', '🎉 dojo1, your Dojo anniversary is approaching! Apply now for your FREE birthday pack to celebrate');
+      cy.get(homePage.comms.anniversaryLink).last().invoke('text').should('be.eq', '🎉 dojo2, your Dojo anniversary is approaching! Apply now for your FREE birthday pack to celebrate');
     });
 
     it('should not show a panel for Dojo anniversary if the user is not a dojo-admin', () => {

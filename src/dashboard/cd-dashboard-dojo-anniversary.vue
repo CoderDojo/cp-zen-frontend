@@ -2,7 +2,7 @@
   <div class="cd-dashboard__anniversaries">
     <div v-for="dojo in filteredDojos" class="cd-dashboard__anniversary">
       <span class="cd-dashboard__anniversary-popper">🎉</span>
-      <a :href="formUrl(dojo)">{{ $t('{dojoName}\'s Dojo anniversary is approaching - apply now for your FREE birthday pack to celebrate', { dojoName: dojo.name }) }}</a>
+      <a :href="formUrl(dojo)">{{ $t('{dojoName}, your Dojo anniversary is approaching! Apply now for your FREE birthday pack to celebrate', { dojoName: dojo.name }) }}</a>
     </div>
   </div>
 </template>
