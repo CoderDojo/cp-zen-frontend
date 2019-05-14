@@ -1,12 +1,23 @@
 <template>
   <div>
+
     <label for="quantity">{{ $t(label) }}</label>
-    <input type="number" v-model="quantity" name="quantity" />
+    <input type="number"
+           v-model="quantity"
+           name="quantity" />
   </div>
 
 </template>
 <script>
 export default {
+  $_veeValidate: {
+    name() {
+      return this.label;
+    },
+    value() {
+      return this.quantity;
+    },
+  },
   name: 'form-ticket',
   props: [
     'label',
