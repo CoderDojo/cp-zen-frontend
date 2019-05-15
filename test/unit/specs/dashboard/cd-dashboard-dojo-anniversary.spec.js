@@ -77,8 +77,9 @@ describe('Dashboard dojo anniversary component', () => {
     });
     describe('formUrl', () => {
       it('should return the url of the form with its variables pre-filled', () => {
+        vm.baseUrl = 'https://zen.coderdojo.com';
         const url = vm.formUrl({ name: 'd1', urlSlug: 'ie/dublin/dublin/dublin-docklands-chq' });
-        expect(url).to.equal('https://docs.google.com/forms/d/e/1FAIpQLScNDxfs7MP4aOA9f8iZPTuNl6NVO2RHpIch5VGwUDiupaGOxA/viewform?entry.803640143=d1&entry.2104926148=http://test.coderdojo.com/dojos/ie/dublin/dublin/dublin-docklands-chq');
+        expect(url).to.equal('https://docs.google.com/forms/d/e/1FAIpQLScNDxfs7MP4aOA9f8iZPTuNl6NVO2RHpIch5VGwUDiupaGOxA/viewform?entry.803640143=d1&entry.2104926148=https://zen.coderdojo.com/dojos/ie/dublin/dublin/dublin-docklands-chq');
       });
     });
   });

@@ -9,7 +9,6 @@
 
 <script>
   import moment from 'moment';
-  import Vue from 'vue';
 
   export default {
     name: 'cd-dashboard-dojo-anniversary',
@@ -19,9 +18,14 @@
         filteredDojos: [],
       };
     },
+    computed: {
+      baseUrl() {
+        return `${window.location.protocol}//${window.location.hostname}`;
+      },
+    },
     methods: {
       formUrl(dojo) {
-        const url = `${Vue.config.apiServer}/dojos/${dojo.urlSlug}`;
+        const url = `${this.baseUrl}/dojos/${dojo.urlSlug}`;
         return `https://docs.google.com/forms/d/e/1FAIpQLScNDxfs7MP4aOA9f8iZPTuNl6NVO2RHpIch5VGwUDiupaGOxA/viewform?entry.803640143=${dojo.name}&entry.2104926148=${url}`;
       },
       hasAnniversary(dojo) {
