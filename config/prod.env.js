@@ -1,6 +1,6 @@
 module.exports = {
   NODE_ENV: '"production"',
-  API_SERVER: '""',
+  API_SERVER: '""', // False good idea, remove me
   RECAPTCHA_SITE_KEY: '"6LfVKQgTAAAAAF3wUs0q-vfrtsKdHO1HCAkp6pnY"',
   GOOGLE_ANALYTICS_PROPERTY_ID: process.env.GIT_BRANCH === 'master' ? '"UA-25136319-2"' : '"UA-25136319-8"',
   GOOGLE_MAPS_API_KEY: '"AIzaSyCLtwLgQX5wXFJ9bK3hYid5YaW6Qo4bGpc"',
