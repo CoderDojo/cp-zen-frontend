@@ -31,7 +31,7 @@
       },
       getTicketingAdminUrl() {
         return this.ticketingAdmins.length === 1 ?
-          `dashboard/dojo/${this.ticketingAdmins[0].dojoId}/event-form` : 'dashboard/my-dojos';
+          `dashboard/dojos/${this.ticketingAdmins[0].dojoId}/events/new` : 'dashboard/my-dojos';
       },
     },
     methods: {

@@ -334,7 +334,7 @@ describe('Homepage events', () => {
       cy.wait('@dojo');
       cy.get(eventPage.noEventMessage).should('be.visible');
       cy.get(eventPage.noEventMessage).should('have.text', '\n        Create your first event so attendees can book and you can easily see who\'s attending.\n        It\'s simple and only takes 2 minutes!\n      ');
-      cy.get(eventPage.noEventMessage).find('a').should('have.attr', 'href', '/dashboard/dojo/d1/event-form');
+      cy.get(eventPage.noEventMessage).find('a').should('have.attr', 'href', '/dashboard/dojos/d1/events/new');
       cy.get(eventPage.newDojoMessage).should('not.be.visible');
       cy.get(eventPage.fallbackCTAs).should('not.be.visible');
     });
@@ -349,7 +349,7 @@ describe('Homepage events', () => {
       cy.wait('@dojo');
       cy.get(eventPage.noEventMessage).should('be.visible');
       cy.get(eventPage.noEventMessage).should('have.text', 'Create your next event so attendees can book in!');
-      cy.get(eventPage.noEventMessage).find('a').should('have.attr', 'href', '/dashboard/dojo/d1/event-form');
+      cy.get(eventPage.noEventMessage).find('a').should('have.attr', 'href', '/dashboard/dojos/d1/events/new');
       cy.get(eventPage.fallbackCTAs).should('not.be.visible');
     });
     it('should show a message about creating an event if a dojo used Zen events (redirects to my-dojos)', () => {
