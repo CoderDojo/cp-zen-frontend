@@ -1,102 +1,133 @@
 <template>
-  <div class="cd-event-form">
-    <h1 class="cd-event-form__header">{{ $t('Create an event') }}</h1>
-    <form @submit="save">
+  <div class="cd-event-container">
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2">
 
-      <p class="text-danger" v-show="errors.has('name:required')">{{ $t('Name is required') }}</p>
-      <input type="text" name="name" v-model="name" class="form-control" data-vv-name="name" v-validate="'required'" data-vv-validate-on="blur" :placeholder="$t('e.g. October Dojo')">
+        <div class="cd-event-form">
+          <h3 class="cd-event-form__header">{{ `${$t('Create an event for')} ${dojo.name}` }}</h3>
+          <form @submit="save">
+            <h4 class="cd-event__section-title">{{ $t('Event Title') }}</h4>
+            <p class="text-danger" v-show="errors.has('name:required')">{{ $t('Title is required') }}</p>
+            <input type="text" name="name" v-model="name" class="form-control" data-vv-name="name" v-validate="'required'" data-vv-validate-on="blur" :placeholder="$t('e.g. October Dojo')">
 
-      <div class="cd-event-form__location">
-        <!-- is the text relevant when it's been modified? -->
-        <!-- what about previous event information, default back to Dojo's or previous event ? -->
-        {{ $t('This event uses the Dojo address.') }}
-        <span v-show="!addressIsVisible">{{ formattedAddress }}</span>
-        <i class="fa fa-pencil" @click="addressIsVisible = true" v-show="!addressIsVisible"></i>
-        <i class="fa fa-times" @click="addressIsVisible = false" v-show="addressIsVisible"></i>
-        <div v-if="addressIsVisible">
-          <input type="text" name="city" v-model="city" class="form-control">
-          <textarea name="address" v-model="address" rows="3" class="form-control"></textarea>
+            <div class="cd-event-form__location">
+              <!-- is the text relevant when it's been modified? -->
+              <!-- what about previous event information, default back to Dojo's or previous event ? -->
+              {{ $t('This event uses the Dojo address.') }}
+              <span v-show="!addressIsVisible">{{ formattedAddress }}</span>
+              <i class="fa fa-pencil" @click="addressIsVisible = true" v-show="!addressIsVisible"></i>
+              <i class="fa fa-times" @click="addressIsVisible = false" v-show="addressIsVisible"></i>
+              <div v-if="addressIsVisible">
+                <input type="text" name="city" v-model="city.name" class="form-control">
+                <textarea name="address" v-model="address" rows="3" class="form-control"></textarea>
+              </div>
+            </div>
+
+            <div class="cd-event-form__description">
+              {{ $t('This event uses the previous event description') }}
+              <span v-show="!descriptionIsVisible">{{ truncatedDescription }}</span>
+              <i class="fa fa-pencil" @click="descriptionIsVisible = true" v-show="!descriptionIsVisible"></i>
+              <i class="fa fa-times" @click="descriptionIsVisible = false" v-show="descriptionIsVisible"></i>
+              <div v-if="descriptionIsVisible">
+                <VueTrix v-model="description" />
+              </div>
+            </div>
+
+            <h4 class="cd-event__section-title">{{ $t('Date and Time') }}</h4>
+            <div>
+              <p class="text-danger" v-show="errors.has('startingTime:required')">{{ $t('Start time is required') }}</p>
+              <p class="text-danger" v-show="errors.has('finishTime:required')">{{ $t('Finish time is required') }}</p>
+              <p class="text-danger" v-show="errors.has('finishTime:after')">{{ $t('Finish time must be after start time') }}</p>
+            </div>
+
+            <div class="cd-event-form__date form-group row">
+              <div class="col-sm-5 flow">
+                <VueCtkDateTimePicker v-model="eventDate"
+                                      name="eventDate"
+                                      v-validate="'required'"
+                                      :only-date="true"
+                                      :input-size="'sm'"
+                                      :format="'YYYY-MM-DD'"
+                                      :formatted="'ll'"
+                                      :no-label=true
+                                      :color="'#73449B'"
+                                      />
+              </div>
+
+              <div class="col-sm-3 flow">
+                <VueCtkDateTimePicker v-model="startingTime"
+                                      name="startingTime"
+                                      v-validate="'required'"
+                                      :only-time="true"
+                                      :input-size="'sm'"
+                                      :format="'HH:mm'"
+                                      :formatted="'HH:mm'"
+                                      :minute-interval=10
+                                      :no-label=true
+                                      ref="startTimePicker"
+                                      :color="'#73449B'"
+                                      />
+              </div>
+              <div class="col-sm-1 flow">
+                <span class="cd-event-form__date-separator">
+                  to:
+                </span>
+              </div>
+
+              <div class="col-sm-3 flow">
+                <VueCtkDateTimePicker v-model="finishTime"
+                                      v-validate="'date_format:HH:mm|after:startTimePicker'"
+                                      name="finishTime"
+                                      :only-time="true"
+                                      :input-size="'sm'"
+                                      :format="'HH:mm'"
+                                      :formatted="'HH:mm'"
+                                      :minute-interval=10
+                                      :no-label=true
+                                      :color="'#73449B'"
+                                      />
+              </div>
+            </div>
+
+            <h4 class="cd-event__section-title">{{ $t('Tickets') }}</h4>
+            <div class="cd-event-form__tickets">
+              <p class="text-danger" v-show="errors.has('Youth tickets:required')">{{ $t('Number of Youth tickets is required') }}</p>
+              <p class="text-danger" v-show="errors.has('Youth tickets:min_value')">{{ $t('Must be greater than 0') }}</p>
+              <form-tickets label="Youth"
+                            v-validate="'required|min_value:1'"
+                            ref="youthTickets"
+                            :default-quantity="20"
+                            type="ninja"
+                            class="cd-event-form__youth-tickets">
+              </form-tickets>
+              <p class="text-danger" v-show="errors.has('Mentor tickets:required')">{{ $t('Number of Mentor tickets is required') }}</p>
+              <p class="text-danger" v-show="errors.has('Mentor tickets:min_value')">{{ $t('Must be greater than 0') }}</p>
+              <form-tickets label="Mentor"
+                            v-validate="'required|min_value:1'"
+                            ref="mentorTickets"
+                            :default-quantity="5"
+                            type="mentor"
+                            class="cd-event-form__mentor-tickets">
+              </form-tickets>
+            </div>
+            <div class="form-group">
+              <input type="checkbox" v-model="sendEmails" />
+              <span>{{ $t('Send an email to Dojo members about this event') }}</span>
+            </div>
+            <div class="form-group">
+              <button slot="submit" type="submit" class="btn btn-primary cd-event-form__button-default-submit">
+                {{ $t('Publish') }}
+              </button>
+            </div>
+          </form>
+          <div class="flow">
+            <p>We simplified our events experience, read <a href="TODO">about it here</a>.
+            <br/>
+            If you need to customise your event further you can still use the <a href="TODO">advanced events form</a></p>
+          </div>
         </div>
       </div>
-
-      <div class="cd-event-form__description">
-        {{ $t('This event uses the previous event description') }}
-        <span v-show="!descriptionIsVisible">{{ truncatedDescription }}</span>
-        <i class="fa fa-pencil" @click="descriptionIsVisible = true" v-show="!descriptionIsVisible"></i>
-        <i class="fa fa-times" @click="descriptionIsVisible = false" v-show="descriptionIsVisible"></i>
-        <div v-if="descriptionIsVisible">
-          <VueTrix v-model="description" />
-        </div>
-      </div>
-
-      <div class="cd-event-form__date form-group">
-        <input list="days" type="number" name="day" v-model="day" class="form-control">
-        <datalist id="days" v-model="day">
-          <option v-for="day in 31" :key="index" :value="day">{{ day }} </option>
-        </datalist>
-        <select name="month" v-model="month">
-          <option v-for="(month, index) in months" :value="index">{{ month }}</option>
-        </select>
-        <input list="years" type="number" name="year" v-model="year" class="form-control">
-        <datalist id="years" v-model="year">
-          <option v-for="year in 3" :key="index">{{ year + today.year() -1 }} </option>
-        </datalist>
-      </div>
-
-      <p class="text-danger" v-show="errors.has('startingTime:required')">{{ $t('Start time is required') }}</p>
-      <p class="text-danger" v-show="errors.has('finishTime:required')">{{ $t('Finish time is required') }}</p>
-      <p class="text-danger" v-show="errors.has('finishTime:after')">{{ $t('Finish time must be after start time') }}</p>
-      <div class="cd-event-form__date form-group">
-        <VueCtkDateTimePicker v-model="startingTime"
-                              name="startingTime"
-                              v-validate="'required'"
-                              :only-time="true"
-                              :input-size="'sm'"
-                              :format="'HH:mm'"
-                              :formatted="'llll'"
-                              :minute-interval=10
-                              :no-label=true
-                              />
-        <span>
-          to:
-        </span>
-        <VueCtkDateTimePicker v-model="finishTime"
-                              name="finishTime"
-                              v-on:input="finishTimeChanged"
-                              :only-time="true"
-                              :input-size="'sm'"
-                              :format="'HH:mm'"
-                              :formatted="'llll'"
-                              :minute-interval=10
-                              :no-label=true
-                              />
-      </div>
-
-      <div class="cd-event-form__tickets">
-        <p class="text-danger" v-show="errors.has('Youth tickets:required')">{{ $t('Number of Youth tickets is required') }}</p>
-        <p class="text-danger" v-show="errors.has('Youth tickets:min_value')">{{ $t('Must be greater than 0') }}</p>
-        <form-tickets label="Youth tickets"
-                      v-validate="'required|min_value:1'"
-                      ref="youthTickets"
-                      :default-quantity="20"
-                      class="cd-event-form__youth-tickets">
-        </form-tickets>
-        <p class="text-danger" v-show="errors.has('Mentor tickets:required')">{{ $t('Number of Mentor tickets is required') }}</p>
-        <p class="text-danger" v-show="errors.has('Mentor tickets:min_value')">{{ $t('Must be greater than 0') }}</p>
-        <form-tickets label="Mentor tickets"
-                      v-validate="'required|min_value:1'"
-                      ref="mentorTickets"
-                      :default-quantity="5"
-                      class="cd-event-form__mentor-tickets">
-        </form-tickets>
-      </div>
-      <button slot="submit" type="submit" class="btn btn-primary cd-event-form__button-default-submit">
-        {{ $t('Publish') }}
-      </button>
-    </form>
-    <p>We simplified our events experience, read <a href="TODO">about it here</a>.
-    <br/>
-    If you need to customise your event further you can still use the <a href="TODO">advanced events form</a></p>
+    </div>
   </div>
 </template>
 <script>
@@ -104,9 +135,9 @@
   import VueTrix from 'vue-trix';
   import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
   import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
-  import DojoService from '@/dojos/service';
+  import DojosService from '@/dojos/service';
   import Dropdown from '@/common/cd-dropdown';
-  import EventService from '@/events/service';
+  import EventsService from '@/events/service';
   import EventTile from './cd-event-tile';
   import FormTickets from './form/form-tickets';
 
@@ -125,26 +156,36 @@
         description: '',
         city: {},
         address: '',
-        day: moment().date(),
-        // TODO: momentjs get month of current locale
-        month: moment().month(),
-        year: new Date().getFullYear(),
         dojo: {},
-        today: moment.utc(),
+        latestEvent: {},
         // state
         addressIsVisible: false,
         descriptionIsVisible: false,
         public: true,
         // TODO: generate start/end based on previous event
-        startingTime: '9:00',
-        finishTime: '10:00',
+        startingTime: '09:00',
+        finishTime: '11:00',
+        // TODO: momentjs get month of current locale
+        eventDate: `${moment().year()}-${moment().month() + 1}-${moment().date()}`,
+        sendEmails: true,
       };
     },
     methods: {
+      async populateForm() {
+        if (this.latestEvent !== undefined) {
+          this.description = this.latestEvent.description;
+          this.city = this.latestEvent.city;
+          this.address = this.latestEvent.address;
+        } else {
+          // TODO: use dojo description?
+          // this.description = 'standard desc';
+          this.address = this.dojo.address1;
+          this.city = this.dojo.city;
+        }
+      },
       async validateForm() {
         try {
           const res = await this.$validator.validateAll();
-          console.log(res);
           return res;
         } catch (err) {
           return false;
@@ -152,12 +193,9 @@
       },
       async save(e) {
         e.preventDefault();
-        console.log('something');
-        const ready = await this.validateForm();
-        console.log(ready);
-        if (ready) {
-          await Promise.all(this.tickets.map(t => t.createTicket()));
-          await EventService.v3.create({
+        const valid = await this.validateForm();
+        if (valid) {
+          await EventsService.v3.create({
             name: this.name,
             description: this.description,
             city: this.city,
@@ -169,15 +207,9 @@
             useDojoAddress: false,
             ticketApproval: false,
             notifyOnApplicant: false,
-            country: {
-              countryName: 'Ireland',
-              countryNumber: 372,
-              continent: 'Europe',
-              alpha2: 'IE',
-              alpha3: 'IRL',
-            },
+            country: this.dojo.country,
             sessions: this.sessions,
-            dojoId: 'a6796f63-db6b-429b-b2bd-612e0f107c84',
+            dojoId: this.dojo.id,
           });
         }
       },
@@ -186,86 +218,85 @@
         // eslint-disable-next-line no-param-reassign
         field = !field;
       },
-      finishTimeChanged() {
-        console.log(this.startTime);
-        console.log(this.endTime);
-        const isAfter = this.endTime.isAfter(this.startTime);
-        console.log('Is it after:', isAfter);
-        if (!isAfter) {
-          console.log('It is before lets add error');
-          this.errors.add(
-            {
-              field: 'finishTime',
-              msg: 'Finish time is after start time',
-              rule: 'after',
-            });
-          console.log(this.errors);
-        }
-      },
     },
     computed: {
-      eventDay() {
-        return moment.utc([this.year, this.month, this.day]);
-      },
       truncatedDescription() {
         return this.description.substring(0, 20);
       },
       formattedAddress() {
-        return `${this.address.substring(0, 15)}... ${this.city}`;
-      },
-      months() {
-        return moment.localeData().monthsShort();
+        return `${this.address.substring(0, 15)}... ${this.city.name}`;
       },
       tickets() {
         return [this.$refs.youthTickets, this.$refs.mentorTickets];
       },
       startTime() {
-        console.log('Getting start time');
-        const startDay = moment.utc([this.year, this.month, this.day]);
-        // const startDay = this.eventDay;
+        const startDay = moment.utc(this.eventDate);
         const startingTimeElements = this.startingTime.split(':');
-        console.log('st el:', startingTimeElements);
         startDay.hours(startingTimeElements[0]);
         startDay.minutes(startingTimeElements[1]);
         return startDay;
       },
       endTime() {
-        console.log('Getting end time');
-        const endDay = moment.utc([this.year, this.month, this.day]);
-        // const day = this.eventDay;
+        const endDay = moment.utc(this.eventDate);
         const finishTimeElements = this.finishTime.split(':');
-        console.log('ft el:', finishTimeElements);
         endDay.hours(finishTimeElements[0]);
         endDay.minutes(finishTimeElements[1]);
         return endDay;
       },
       sessions() {
+        const tickets = this.tickets.map(t => t.createTicket());
         return [{
-          name: 'A session',
-          description: 'Some session or other',
-          tickets: [{
-            name: 'tickets',
-            type: 'ninja',
-            quantity: 3,
-          }],
+          name: 'General',
+          description: 'General Session',
+          tickets,
         }];
       },
     },
     async created() {
+      // TODO: if eventId in params load event, otherwise populate defaults
+
+      // TODO: get previous event, use that info to populate defaults
+
+          // const query = { status: 'published' };
+          // query.afterDate = moment().unix();
+          // query.utcOffset = moment().utcOffset();
+          // query.pageSize = 1;
       const { dojoId } = this.$route.params;
-      this.dojo = (await DojoService.getDojoById(dojoId)).body;
-      this.address = this.dojo.address1;
-      this.city = this.dojo.city;
+
+      // const query = { pageSize: 1 };
+      const latestEvent = await EventsService.v3.get(
+        dojoId,
+        {
+          params:
+          {
+            pageSize: 1,
+            page: 1,
+            orderBy: 'startTime',
+            direction: 'desc',
+          },
+        });
+
+      // TODO: will this error when no events
+      this.latestEvent = latestEvent.body.results[0];
+      this.dojo = (await DojosService.getDojoById(dojoId)).body;
+      this.populateForm();
     },
   };
 </script>
 <style scoped lang="less">
-  @import "../common/variables";
+  @import "../common/styles/cd-events";
 
   .cd-event-form {
-    padding-bottom: 5em;
+    background: @cd-white;
+    border-radius: 3px;
+    padding: 0 50px 20px;
     &__header {
-      .title;
+      font-size: 20px;
+      font-weight: 700;
+      background: #ececec;
+      margin: 0 -50px 30px;
+      border-radius: 3px 3px 0 0;
+      padding: 20px 50px;
     }
     &__location, &__description {
       margin-top: @margin;
@@ -273,15 +304,15 @@
     &__description {
       margin-bottom: @margin;
     }
-    &__date {
-      flex: 1;
-      display: flex;
-      flex-direction: row;
-      // TODO: Proper styling per field, not lazy
-      max-width: 50%;
+    &__date-separator {
+      position: relative;
+      top: 4px;
     }
     &__button {
       float: right;
+    }
+    &__button-default-submit {
+      width: 100%;
     }
   }
 </style>
