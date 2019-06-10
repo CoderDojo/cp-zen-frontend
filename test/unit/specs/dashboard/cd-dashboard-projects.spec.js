@@ -69,6 +69,17 @@ describe('Dashboard children component', () => {
         expect(MockLocaleService.getUserLocale).to.have.been.calledOnce;
         expect(res).to.equal('fr-FR');
       });
+      it('should return en when cookie locale is en_US', () => {
+        // ARRANGE
+        MockLocaleService.getUserLocale.returns('"en_US"');
+
+        // EXECUTE
+        const res = vm.userLocale;
+
+        // ASSERT
+        expect(MockLocaleService.getUserLocale).to.have.been.calledOnce;
+        expect(res).to.equal('en');
+      });
     });
   });
 

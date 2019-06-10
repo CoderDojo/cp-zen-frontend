@@ -4,7 +4,7 @@
     <h2 class="cd-dashboard-projects__header visible-xs">{{ $t('Here are some projects you can try') }}</h2>
     <hr class ="cd-dashboard-projects__divider visible-xs">
     <div v-show="isDisplayable" class="cd-dashboard-projects__cards">
-      <a class="cd-dashboard-projects__card" v-for="project in projects" :key="project.id" 
+      <a class="cd-dashboard-projects__card" v-for="project in projects" :key="project.id"
         :href="`https://projects.raspberrypi.org/${locale}/projects/${project.attributes.repositoryName}`"
         v-ga-track-exit-nav>
         <img :src="project.attributes.content.heroImage" />
@@ -41,16 +41,25 @@
       userLocale() {
         const langCookie = LocaleService.getUserLocale();
         if (langCookie) {
-          return langCookie.replace(/"/g, '').replace('_', '-');
+          let formattedLocale = langCookie.replace(/"/g, '').replace('_', '-');
+          if (/en-.*/.test(formattedLocale)) {
+            formattedLocale = 'en';
+          }
+          return formattedLocale;
         }
         return 'en';
       },
     },
     methods: {
       async loadProjects(locale = 'en') {
-        const projects = (await ProjectsService.list(locale, { order: 'desc' })).body;
-        if (projects) {
-          this.projects = projects.data.slice(0, 3);
+        try {
+          const projects = (await ProjectsService.list(locale, { order: 'desc' })).body;
+          if (projects) {
+            this.projects = projects.data.slice(0, 3);
+          }
+        } catch (err) {
+          // If the request fails it is most likely to be the
+          // locale and we will then fall back to the 'en' locale
         }
       },
     },
