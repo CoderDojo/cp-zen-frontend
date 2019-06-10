@@ -52,10 +52,17 @@
     },
     methods: {
       async loadProjects(locale = 'en') {
-        const projects = (await ProjectsService.list(locale, { order: 'desc' })).body;
-        if (projects) {
-          this.projects = projects.data.slice(0, 3);
-        }
+        await ProjectsService.list(locale, { order: 'desc' })
+          .then((data) => {
+            const projects = data.body;
+            if (projects) {
+              this.projects = projects.data.slice(0, 3);
+            }
+          })
+          .catch(() => {
+            // If the request fails it is most likely to be the
+            // locale and we will then fall back to the 'en' locale
+          });
       },
     },
     async created() {
