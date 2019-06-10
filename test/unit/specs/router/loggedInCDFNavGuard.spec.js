@@ -1,17 +1,15 @@
 import loggedInNavGuard from 'inject-loader!@/router/loggedInCDFNavGuard';
 
 describe('loggedInCDFNavGuard', () => {
-  let sandbox;
   let MockUserService;
   let loggedInNavGuardWithMock;
   let nextMock;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockUserService = {
-      getCurrentCDFUser: sandbox.stub(),
+      getCurrentCDFUser: sinon.stub(),
     };
-    nextMock = sandbox.stub();
+    nextMock = sinon.stub();
     loggedInNavGuardWithMock = loggedInNavGuard({
       '@/users/service': MockUserService,
     }).default;
@@ -34,7 +32,7 @@ describe('loggedInCDFNavGuard', () => {
     const loggedInNavGuardInstance = loggedInNavGuard({
       '@/users/service': MockUserService,
     });
-    const redirectStub = sandbox.stub(loggedInNavGuardInstance.fn, 'redirect');
+    const redirectStub = sinon.stub(loggedInNavGuardInstance.fn, 'redirect');
     MockUserService.getCurrentCDFUser.resolves({ body: { login: null } });
     const toMock = {
       fullPath: '/some/path',

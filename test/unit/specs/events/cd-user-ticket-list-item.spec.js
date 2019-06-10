@@ -2,23 +2,21 @@ import vueUnitHelper from 'vue-unit-helper';
 import TicketListItemComponent from '!!vue-loader?inject!@/events/cd-user-ticket-list-item';
 
 describe('Ticket list item component', () => {
-  let sandbox;
   let MockEventsService;
   let TicketListItemComponentWithMocks;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockEventsService = {
-      manageTickets: sandbox.stub(),
+      manageTickets: sinon.stub(),
     };
-    // window.alert = sandbox.stub();
+    // window.alert = sinon.stub();
     TicketListItemComponentWithMocks = TicketListItemComponent({
       './service': MockEventsService,
     });
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('computed', () => {

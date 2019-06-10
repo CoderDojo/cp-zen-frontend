@@ -2,7 +2,6 @@ import vueUnitHelper from 'vue-unit-helper';
 import eventList from '!!vue-loader?inject!@/events/cd-event-list';
 
 describe('Event list component', () => {
-  let sandbox;
   let EventListWithMocks;
   let MockEventsService;
   let MockDojosService;
@@ -10,22 +9,21 @@ describe('Event list component', () => {
   let MockUsersUtil;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockEventsService = {
       v3: {
-        get: sandbox.stub(),
+        get: sinon.stub(),
       },
     };
     MockDojosService = {
-      getUsersDojos: sandbox.stub(),
-      joinDojo: sandbox.stub(),
+      getUsersDojos: sinon.stub(),
+      joinDojo: sinon.stub(),
     };
     MockUsersService = {
-      getCurrentUser: sandbox.stub(),
-      userProfileData: sandbox.stub(),
+      getCurrentUser: sinon.stub(),
+      userProfileData: sinon.stub(),
     };
     MockUsersUtil = {
-      isYouthOverThirteen: sandbox.stub(),
+      isYouthOverThirteen: sinon.stub(),
     };
     EventListWithMocks = eventList({
       '@/users/service': MockUsersService,
@@ -36,7 +34,7 @@ describe('Event list component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   it('should show the list of dojo events', async () => {
@@ -345,8 +343,8 @@ describe('Event list component', () => {
       });
       it('should update userProfile and DojoRole if there is a currentUser', (done) => {
         // ARRANGE
-        sandbox.stub(vm, 'loadUserDojoRole').returns(Promise.resolve());
-        sandbox.stub(vm, 'loadUsersProfile').returns(Promise.resolve());
+        sinon.stub(vm, 'loadUserDojoRole').returns(Promise.resolve());
+        sinon.stub(vm, 'loadUsersProfile').returns(Promise.resolve());
         // ACT
         vm.$watchers.currentUser('foo');
 
@@ -365,8 +363,8 @@ describe('Event list component', () => {
       it('should load user and event data', () => {
         // ARRANGE
         const vm = vueUnitHelper(eventList());
-        sandbox.stub(vm, 'loadEvents').resolves({ body: [] });
-        sandbox.stub(vm, 'loadCurrentUser');
+        sinon.stub(vm, 'loadEvents').resolves({ body: [] });
+        sinon.stub(vm, 'loadCurrentUser');
         MockUsersService.getCurrentUser.returns({ body: { user: { id: '34174952-8ca4-4189-b8cb-d383e3fde992' } } });
         vm.dojo = { verified: 1 };
         // ACT
@@ -379,8 +377,8 @@ describe('Event list component', () => {
       it('shouldnt load event data', () => {
         // ARRANGE
         const vm = vueUnitHelper(eventList());
-        sandbox.stub(vm, 'loadEvents');
-        sandbox.stub(vm, 'loadCurrentUser');
+        sinon.stub(vm, 'loadEvents');
+        sinon.stub(vm, 'loadCurrentUser');
         vm.dojo = { verified: 0 };
         MockUsersService.getCurrentUser.returns({ body: { user: { id: '34174952-8ca4-4189-b8cb-d383e3fde992' } } });
         // ACT

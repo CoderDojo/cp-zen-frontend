@@ -3,15 +3,13 @@ import EventDetails from '!!vue-loader?inject!@/events/order/cd-event-details';
 
 describe('Event Details', () => {
   let vm;
-  let sandbox;
   let MockDojoUtils;
   let EventDetailsWithMocks;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockDojoUtils = {
-      imageUrl: sandbox.stub(),
-      fallbackImage: sandbox.stub(),
+      imageUrl: sinon.stub(),
+      fallbackImage: sinon.stub(),
     };
     EventDetailsWithMocks = EventDetails({
       '@/dojos/util': MockDojoUtils,
@@ -23,7 +21,7 @@ describe('Event Details', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('computed', () => {

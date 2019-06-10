@@ -3,14 +3,12 @@ import moment from 'moment';
 import DashboardHeaderComponent from '!!vue-loader?inject!@/dashboard/cd-dashboard-pending-volunteering';
 
 describe('Dashboard pending volunteering component', () => {
-  let sandbox;
   let vm;
   let MockDojosService;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockDojosService = {
-      getDojos: sandbox.stub(),
+      getDojos: sinon.stub(),
     };
     vm = vueUnitHelper(DashboardHeaderComponent({
       '@/dojos/service': MockDojosService,
@@ -18,7 +16,7 @@ describe('Dashboard pending volunteering component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
 

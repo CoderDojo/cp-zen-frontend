@@ -2,7 +2,6 @@ import vueUnitHelper from 'vue-unit-helper';
 import ticketList from '!!vue-loader?inject!@/users/cd-tickets';
 
 describe('Events/Tickets list component', () => {
-  let sandbox;
   let TicketListWithMocks;
   let MockEventsService;
   let MockEventsUtil;
@@ -10,21 +9,20 @@ describe('Events/Tickets list component', () => {
   let MockUsersService;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockEventsService = {
       v3: {
-        get: sandbox.stub(),
+        get: sinon.stub(),
       },
     };
     MockEventsUtil = {
-      orderByStartTime: sandbox.stub(),
+      orderByStartTime: sinon.stub(),
     };
     MockDojosService = {
-      getUsersDojos: sandbox.stub(),
+      getUsersDojos: sinon.stub(),
     };
     MockUsersService = {
-      getCurrentUser: sandbox.stub(),
-      getChildren: sandbox.stub(),
+      getCurrentUser: sinon.stub(),
+      getChildren: sinon.stub(),
     };
     TicketListWithMocks = ticketList({
       '@/events/service': MockEventsService,
@@ -35,7 +33,7 @@ describe('Events/Tickets list component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('methods', () => {

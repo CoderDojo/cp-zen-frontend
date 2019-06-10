@@ -2,15 +2,13 @@ import vueUnitHelper from 'vue-unit-helper';
 import DashboardHeaderComponent from '!!vue-loader?inject!@/dashboard/cd-dashboard-header';
 
 describe('Dashboard header component', () => {
-  let sandbox;
   let vm;
   let MockDojosService;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockDojosService = {
       lead: {
-        list: sandbox.stub(),
+        list: sinon.stub(),
       },
     };
     vm = vueUnitHelper(DashboardHeaderComponent({
@@ -19,7 +17,7 @@ describe('Dashboard header component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
 

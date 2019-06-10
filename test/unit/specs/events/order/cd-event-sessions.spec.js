@@ -2,7 +2,6 @@ import vueUnitHelper from 'vue-unit-helper';
 import SessionList from '!!vue-loader?inject!@/events/order/cd-event-sessions';
 
 describe('Event sessions component', () => {
-  let sandbox;
   let mockService;
   let MockUserService;
   let MockDojoService;
@@ -13,33 +12,32 @@ describe('Event sessions component', () => {
   let SessionListWithMocks;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     mockService = {
       v3: {
-        createOrder: sandbox.stub(),
-        getOrder: sandbox.stub(),
+        createOrder: sinon.stub(),
+        getOrder: sinon.stub(),
       },
     };
     MockUserService = {
-      getCurrentUser: sandbox.stub(),
-      userProfileData: sandbox.stub(),
-      updateUserProfileData: sandbox.stub(),
+      getCurrentUser: sinon.stub(),
+      userProfileData: sinon.stub(),
+      updateUserProfileData: sinon.stub(),
     };
     MockDojoService = {
-      joinDojo: sandbox.stub(),
+      joinDojo: sinon.stub(),
     };
     ChildTicket = {
-      createChild: sandbox.stub(),
+      createChild: sinon.stub(),
     };
     MockUserUtils = {
-      isYouthOverThirteen: sandbox.stub(),
+      isYouthOverThirteen: sinon.stub(),
     };
     OrderStore = {
       getters: {},
       state: {},
-      commit: sandbox.stub(),
+      commit: sinon.stub(),
     };
-    uuidMock = sandbox.stub();
+    uuidMock = sinon.stub();
     SessionListWithMocks = SessionList({
       'uuid/v4': uuidMock,
       '../service': mockService,
@@ -52,7 +50,7 @@ describe('Event sessions component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('computed', () => {
@@ -530,7 +528,7 @@ describe('Event sessions component', () => {
         vm.isSingle = false;
         vm.isO13 = false;
         vm.hasChildren = true;
-        vm.createParentTicket = sandbox.stub();
+        vm.createParentTicket = sinon.stub();
         vm.applications = [{
           eventId: 'eventId',
           name: 'Jane Doe',
@@ -553,7 +551,7 @@ describe('Event sessions component', () => {
       });
     });
     describe('methods.joinDojo()', () => {
-      beforeEach(() => sandbox.restore());
+      beforeEach(() => sinon.restore());
       it('should call joinDojo with the right userType (parent)', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
@@ -587,15 +585,15 @@ describe('Event sessions component', () => {
     });
 
     describe('methods.setupPrerequisites()', () => {
-      beforeEach(() => sandbox.restore());
+      beforeEach(() => sinon.restore());
       it('should call addPhoneNumber and addNewChildren if showPhone is true', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
         vm.showPhone = true;
         vm.dojoRole = {};
-        sandbox.stub(vm, 'addPhoneNumber');
-        sandbox.stub(vm, 'addNewChildren');
-        sandbox.stub(vm, 'joinDojo');
+        sinon.stub(vm, 'addPhoneNumber');
+        sinon.stub(vm, 'addNewChildren');
+        sinon.stub(vm, 'joinDojo');
         // ACT
         await vm.setupPrerequisites();
 
@@ -607,9 +605,9 @@ describe('Event sessions component', () => {
       it('should call only addNewChildren if showPhone is false and dojoRole is defined', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        sandbox.stub(vm, 'addPhoneNumber');
-        sandbox.stub(vm, 'addNewChildren');
-        sandbox.stub(vm, 'joinDojo');
+        sinon.stub(vm, 'addPhoneNumber');
+        sinon.stub(vm, 'addNewChildren');
+        sinon.stub(vm, 'joinDojo');
         vm.profile = { phone: '01' };
         vm.isO13 = false;
         vm.dojoRole = {};
@@ -624,9 +622,9 @@ describe('Event sessions component', () => {
       it('should call joinDojo if dojoRole is falsy', async () => {
         // ARRANGE
         const vm = vueUnitHelper(SessionListWithMocks);
-        sandbox.stub(vm, 'addPhoneNumber');
-        sandbox.stub(vm, 'addNewChildren');
-        sandbox.stub(vm, 'joinDojo');
+        sinon.stub(vm, 'addPhoneNumber');
+        sinon.stub(vm, 'addNewChildren');
+        sinon.stub(vm, 'joinDojo');
         vm.profile = { phone: '01' };
         vm.isO13 = false;
         vm.dojoRole = undefined;
@@ -646,11 +644,11 @@ describe('Event sessions component', () => {
       beforeEach(() => {
         vm = vueUnitHelper(SessionListWithMocks);
         vm.errors = {
-          clear: sandbox.stub(),
-          add: sandbox.stub(),
+          clear: sinon.stub(),
+          add: sinon.stub(),
         };
         vm.$router = {
-          push: sandbox.spy(),
+          push: sinon.spy(),
         };
         vm.$ga = { event: sinon.stub() };
         vm.$route = { name: 'a' };
@@ -661,8 +659,8 @@ describe('Event sessions component', () => {
         vm.$validator = {
           validateAll: () => true,
         };
-        sandbox.stub(vm, 'setupPrerequisites').resolves(true);
-        sandbox.stub(vm, 'bookTickets');
+        sinon.stub(vm, 'setupPrerequisites').resolves(true);
+        sinon.stub(vm, 'bookTickets');
 
         // ACT
         await vm.submitBooking();
@@ -678,8 +676,8 @@ describe('Event sessions component', () => {
         vm.$validator = {
           validateAll: () => true,
         };
-        sandbox.stub(vm, 'setupPrerequisites').resolves(false);
-        sandbox.stub(vm, 'bookTickets');
+        sinon.stub(vm, 'setupPrerequisites').resolves(false);
+        sinon.stub(vm, 'bookTickets');
 
         // ACT
         await vm.submitBooking();

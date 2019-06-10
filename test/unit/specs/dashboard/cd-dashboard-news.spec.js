@@ -3,15 +3,13 @@ import DashboardNewsComponent from '!!vue-loader?inject!@/dashboard/cd-dashboard
 import moment from 'moment';
 
 describe('Dashboard children component', () => {
-  let sandbox;
   let DashboardNewsComponentWithMocks;
   let MockUpdatesService;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockUpdatesService = {
-      loadForums: sandbox.stub(),
-      loadNews: sandbox.stub(),
+      loadForums: sinon.stub(),
+      loadNews: sinon.stub(),
     };
     DashboardNewsComponentWithMocks = DashboardNewsComponent({
       './service': MockUpdatesService,
@@ -19,7 +17,7 @@ describe('Dashboard children component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
 
@@ -37,7 +35,7 @@ describe('Dashboard children component', () => {
         { date: '2018-08-14T10:00:00.000Z', link: 'blah6', title: { rendered: 'blah6' } },
         { date: '2018-08-15T10:00:00.000Z', link: 'blah7', title: { rendered: 'blah7' } }];
 
-        vm.sortPostsByDate = sandbox.stub().returns([
+        vm.sortPostsByDate = sinon.stub().returns([
           { type: 'News', date: moment('2018-08-15T10:00:00.000Z'), formattedDate: '15/08/2018', link: 'blah7', title: 'blah7' },
           { type: 'News', date: moment('2018-08-14T10:00:00.000Z'), formattedDate: '14/08/2018', link: 'blah6', title: 'blah6' },
           { type: 'News', date: moment('2018-08-13T10:00:00.000Z'), formattedDate: '13/08/2018', link: 'blah5', title: 'blah5' },

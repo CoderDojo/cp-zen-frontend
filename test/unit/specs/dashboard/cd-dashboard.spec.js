@@ -2,18 +2,16 @@ import vueUnitHelper from 'vue-unit-helper';
 import DashboardComponent from '!!vue-loader?inject!@/dashboard/cd-dashboard';
 
 describe('Dashboard component', () => {
-  let sandbox;
   let DashboardComponentWithMocks;
   let MockDojosService;
   let MockUserService;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockDojosService = {
-      getUsersDojos: sandbox.stub(),
+      getUsersDojos: sinon.stub(),
     };
     MockUserService = {
-      userProfileData: sandbox.stub(),
+      userProfileData: sinon.stub(),
     };
     DashboardComponentWithMocks = DashboardComponent({
       '@/dojos/service': MockDojosService,
@@ -22,7 +20,7 @@ describe('Dashboard component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
 

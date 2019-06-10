@@ -2,14 +2,8 @@ import vueUnitHelper from 'vue-unit-helper';
 import DojoMap from '@/dojos/cd-dojo-map';
 
 describe('Dojo map', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
-
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('getMarkerPosition(dojo)', () => {

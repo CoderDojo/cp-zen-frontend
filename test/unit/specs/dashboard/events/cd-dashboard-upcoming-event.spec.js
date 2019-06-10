@@ -2,15 +2,13 @@ import vueUnitHelper from 'vue-unit-helper';
 import DashboardUpcomingEventComponent from '!!vue-loader?inject!@/dashboard/events/cd-dashboard-upcoming-event';
 
 describe('Dashboard upcoming event component', () => {
-  let sandbox;
   let vm;
   let MockEventsService;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockEventsService = {
       v3: {
-        getOrder: sandbox.stub(),
+        getOrder: sinon.stub(),
       },
     };
     vm = vueUnitHelper(DashboardUpcomingEventComponent({
@@ -19,7 +17,7 @@ describe('Dashboard upcoming event component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
 

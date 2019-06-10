@@ -1,17 +1,15 @@
 import orderExistsNavGuard from 'inject-loader!@/router/orderExistsNavGuard';
 
 describe('orderExistsNavGuard', () => {
-  let sandbox;
   let MockEventService;
   let store;
   let orderExistsNavGuardWithMock;
   let nextMock;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockEventService = {
       v3: {
-        getOrder: sandbox.stub(),
+        getOrder: sinon.stub(),
       },
     };
     store = {
@@ -19,7 +17,7 @@ describe('orderExistsNavGuard', () => {
         loggedInUser: {},
       },
     };
-    nextMock = sandbox.stub();
+    nextMock = sinon.stub();
     orderExistsNavGuardWithMock = orderExistsNavGuard({
       '@/events/service': MockEventService,
       '@/store': store,
