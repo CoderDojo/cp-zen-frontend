@@ -2,17 +2,15 @@ import vueUnitHelper from 'vue-unit-helper';
 import EventTicket from '!!vue-loader?inject!@/events/order/cd-event-ticket';
 
 describe('Event ticket creation', () => {
-  let sandbox;
   let EventTicketWithMocks;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     EventTicketWithMocks = EventTicket({
     });
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('computed: isNinja', () => {
@@ -57,7 +55,7 @@ describe('Event ticket creation', () => {
     });
     it('should filter the tickets', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
-      vm.filterByTicketType = sandbox.stub().returns(false);
+      vm.filterByTicketType = sinon.stub().returns(false);
       vm.event = {
         sessions: [{
           description: 'desc',
@@ -82,9 +80,9 @@ describe('Event ticket creation', () => {
     });
     it('should set if the ticket is disabled', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
-      vm.$t = sandbox.stub().returnsArg(0);
-      vm.filterByTicketType = sandbox.stub().returns(true);
-      vm.ticketIsFull = sandbox.stub().returns(true);
+      vm.$t = sinon.stub().returnsArg(0);
+      vm.filterByTicketType = sinon.stub().returns(true);
+      vm.ticketIsFull = sinon.stub().returns(true);
       vm.event = {
         sessions: [{
           description: 'desc',
@@ -219,7 +217,7 @@ describe('Event ticket creation', () => {
   describe('lifecycle: created', () => {
     it('should transform the existingApplications into selected tickets', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
-      vm.findTicketOption = sandbox.stub().returnsArg(0);
+      vm.findTicketOption = sinon.stub().returnsArg(0);
       vm.existingApplications = [{ ticketId: 'ticket1' }, { ticketId: 'ticket2' }];
 
       vm.$lifecycleMethods.created();
@@ -228,7 +226,7 @@ describe('Event ticket creation', () => {
     });
     it('should not transform the applications if there aren\'t any', () => {
       const vm = vueUnitHelper(EventTicketWithMocks);
-      vm.findTicketOption = sandbox.stub().returnsArg(0);
+      vm.findTicketOption = sinon.stub().returnsArg(0);
       vm.existingApplications = undefined;
 
       vm.$lifecycleMethods.created();

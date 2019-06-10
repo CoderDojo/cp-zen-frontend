@@ -2,26 +2,24 @@ import vueUnitHelper from 'vue-unit-helper';
 import dojoDetails from '!!vue-loader?inject!@/dojos/cd-dojo-details';
 
 describe('Dojo details component', () => {
-  let sandbox;
   let DojoDetailsWithMocks;
   let DojoServiceMock;
   let UsersDojosServiceMock;
   let UsersDojosUtilMock;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     DojoServiceMock = {
-      getDojoById: sandbox.stub(),
-      getByUrlSlug: sandbox.stub(),
+      getDojoById: sinon.stub(),
+      getByUrlSlug: sinon.stub(),
       membership: {
-        request: sandbox.stub(),
+        request: sinon.stub(),
       },
     };
     UsersDojosServiceMock = {
-      getUsersDojos: sandbox.stub(),
+      getUsersDojos: sinon.stub(),
     };
     UsersDojosUtilMock = {
-      hasPermission: sandbox.stub(),
+      hasPermission: sinon.stub(),
     };
     DojoDetailsWithMocks = dojoDetails({
       './service': DojoServiceMock,
@@ -46,7 +44,7 @@ describe('Dojo details component', () => {
       const vm = vueUnitHelper(DojoDetailsWithMocks);
       vm.id = undefined;
       vm.urlSlug = 'za/gauteng/johannesburg-rock-stars';
-      sandbox.stub(vm, 'redirectToSlug');
+      sinon.stub(vm, 'redirectToSlug');
 
       await vm.loadDojoDetails();
 
@@ -60,7 +58,7 @@ describe('Dojo details component', () => {
       DojoServiceMock.getDojoById.withArgs('foo').returns(Promise.resolve({ body: dojoDetailsWithAddress }));
       const vm = vueUnitHelper(DojoDetailsWithMocks);
       vm.id = 'foo';
-      sandbox.stub(vm, 'redirectToSlug');
+      sinon.stub(vm, 'redirectToSlug');
 
       await vm.loadDojoDetails();
 
@@ -76,7 +74,7 @@ describe('Dojo details component', () => {
       // ARRANGE
       const vm = vueUnitHelper(DojoDetailsWithMocks);
       vm.$router = {
-        replace: sandbox.stub(),
+        replace: sinon.stub(),
       };
       vm._country = 'ie';
       vm._path = 'dublin/docklands';
@@ -108,7 +106,7 @@ describe('Dojo details component', () => {
         id: '3ed47c6d-a689-46a0-883b-1f3fd46e9c77',
       };
       vm.$router = {
-        push: sandbox.stub(),
+        push: sinon.stub(),
       };
 
       // ACT

@@ -1,18 +1,16 @@
 import translationComponentGenerator from 'inject-loader!@/common/cd-translation-component-generator';
 
 describe('Translation Component Generator', () => {
-  let sandbox;
   let vueMock;
   let i18nMock;
   let translationComponentGeneratorWithMocks;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     vueMock = {
-      compile: sandbox.stub(),
+      compile: sinon.stub(),
     };
     i18nMock = {
-      t: sandbox.stub(),
+      t: sinon.stub(),
     };
     translationComponentGeneratorWithMocks = translationComponentGenerator({
       vue: vueMock,
@@ -21,7 +19,7 @@ describe('Translation Component Generator', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   it('should return an component definition using the given str and interpolationOptions as a template', () => {

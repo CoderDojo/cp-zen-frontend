@@ -4,13 +4,9 @@
       <label class="cd-form-ticket__label" for="quantity">{{ $t(label) }}</label>
     </div>
     <div class="col-sm-2">
-      <input type="number"
-            class="form-control"
-            v-model="quantity"
-            name="quantity" />
+      <input type="number" class="form-control" v-model="quantity" name="quantity" />
     </div>
   </div>
-
 </template>
 <script>
 export default {
@@ -33,6 +29,7 @@ export default {
       quantity: null,
     };
   },
+
   methods: {
     createTicket() {
       return {
@@ -40,6 +37,9 @@ export default {
         type: this.type,
         quantity: this.quantity,
       };
+    },
+    setQuantity(q) {
+      this.quantity = q;
     },
   },
   created() {

@@ -2,14 +2,12 @@ import Vue from 'vue';
 import UserService from 'inject-loader!@/users/service';
 
 describe('UserService', () => {
-  let sandbox;
   let storeMock;
   let UserServiceWithMocks;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     storeMock = {
-      dispatch: sandbox.stub(),
+      dispatch: sinon.stub(),
     };
     UserServiceWithMocks = UserService({
       '@/store': storeMock,
@@ -17,7 +15,7 @@ describe('UserService', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('login()', () => {
@@ -25,12 +23,12 @@ describe('UserService', () => {
       // ARRANGE
       window.cdMenu = {
         fns: {
-          loadProfileMenu: sandbox.stub(),
+          loadProfileMenu: sinon.stub(),
         },
       };
       const email = 'email';
       const password = 'password';
-      sandbox.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/users/login`, {
+      sinon.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/users/login`, {
         email,
         password,
       }).returns(Promise.resolve('foo'));
@@ -55,11 +53,11 @@ describe('UserService', () => {
         id: 'foo',
       };
 
-      sandbox.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/users/register`, {
+      sinon.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/users/register`, {
         profile,
         user,
       }).returns(Promise.resolve({ body: { user, profile, ok: true } }));
-      sandbox.stub(UserServiceWithMocks, 'login').returns(Promise.resolve());
+      sinon.stub(UserServiceWithMocks, 'login').returns(Promise.resolve());
 
       // ACT
       await UserServiceWithMocks.register(user, profile);
@@ -74,7 +72,7 @@ describe('UserService', () => {
       const responseMock = {
         dob: '2000-10-26T00:00:00.000Z',
       };
-      sandbox.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/profiles/user-profile-data`, { query: { userId: 'parent1' } }).returns(Promise.resolve(responseMock));
+      sinon.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/profiles/user-profile-data`, { query: { userId: 'parent1' } }).returns(Promise.resolve(responseMock));
 
       // ACT
       UserServiceWithMocks.userProfileData('parent1').then((resp) => {
@@ -92,7 +90,7 @@ describe('UserService', () => {
         id: 'foo',
       };
 
-      sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
+      sinon.stub(Vue.http, 'post').returns(Promise.resolve());
 
       // ACT
       await UserServiceWithMocks.updateUserProfileData(profile);
@@ -108,7 +106,7 @@ describe('UserService', () => {
       const userMock = {
         key: 'val',
       };
-      sandbox.stub(Vue.http, 'get').withArgs(`${Vue.config.apiServer}/api/2.0/users/instance`)
+      sinon.stub(Vue.http, 'get').withArgs(`${Vue.config.apiServer}/api/2.0/users/instance`)
         .returns(Promise.resolve({ body: userMock }));
 
       // ACT
@@ -127,7 +125,7 @@ describe('UserService', () => {
         id: 'foo',
       };
 
-      sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
+      sinon.stub(Vue.http, 'post').returns(Promise.resolve());
 
       // ACT
       await UserServiceWithMocks.addChild(profile);

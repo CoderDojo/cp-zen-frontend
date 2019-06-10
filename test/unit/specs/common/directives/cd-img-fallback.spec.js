@@ -1,14 +1,8 @@
 import ImageFallback from '@/common/directives/cd-img-fallback';
 
 describe('Image fallback', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
-
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   it('should set the src to fallback on error', () => {
@@ -20,7 +14,7 @@ describe('Image fallback', () => {
       },
     };
     const elMock = {
-      addEventListener: sandbox.stub(),
+      addEventListener: sinon.stub(),
       style: {},
     };
     let errorCb = () => {};
@@ -55,7 +49,7 @@ describe('Image fallback', () => {
     let srcSetCallCount = 0;
     let srcValue;
     const elMock = {
-      addEventListener: sandbox.stub(),
+      addEventListener: sinon.stub(),
       style: {},
       get src() {
         return srcValue;

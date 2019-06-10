@@ -3,7 +3,6 @@ import { clone } from 'lodash';
 import ChildTicket from '!!vue-loader?inject!@/events/order/cd-event-add-child-ticket';
 
 describe('Add Child Ticket', () => {
-  let sandbox;
   let MockVueDobPicker;
   let MockVueMultiselect;
   let MockUserUtils;
@@ -14,23 +13,22 @@ describe('Add Child Ticket', () => {
 
   beforeEach(() => {
     clock = sinon.useFakeTimers(new Date(2018, 3, 24, 0, 0, 0, 0));
-    sandbox = sinon.sandbox.create();
     MockVueDobPicker = {
-      dob: sandbox.stub(),
+      dob: sinon.stub(),
     };
     MockVueMultiselect = {
-      ticketSelect: sandbox.stub(),
+      ticketSelect: sinon.stub(),
     };
     MockUserUtils = {
-      isUnderAge: sandbox.stub(),
-      profileToJSON: sandbox.stub(),
+      isUnderAge: sinon.stub(),
+      profileToJSON: sinon.stub(),
     };
     MockUsersService = {
-      addChild: sandbox.stub(),
+      addChild: sinon.stub(),
     };
     OrderStore = {
       getters: {},
-      commit: sandbox.stub(),
+      commit: sinon.stub(),
     };
     ChildTicketWithMocks = ChildTicket({
       'vue-dob-picker': MockVueDobPicker,
@@ -42,7 +40,7 @@ describe('Add Child Ticket', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
     clock.restore();
   });
 
@@ -65,11 +63,11 @@ describe('Add Child Ticket', () => {
       it('should emit a blur event after 50ms and assign the timeout to blurTimeout', () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
-        sandbox.stub(window, 'setTimeout').callsFake((cb) => {
+        sinon.stub(window, 'setTimeout').callsFake((cb) => {
           cb();
           return 'foo';
         });
-        const emitStub = sandbox.stub();
+        const emitStub = sinon.stub();
         vm.$emit = emitStub;
 
         // ACT
@@ -88,7 +86,7 @@ describe('Add Child Ticket', () => {
       it('should clear any existing blur timeout', () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
-        sandbox.stub(window, 'clearTimeout');
+        sinon.stub(window, 'clearTimeout');
         vm.blurTimeout = 'foo';
 
         // ACT
@@ -165,7 +163,7 @@ describe('Add Child Ticket', () => {
       it('should filter out only child tickets from each sessions tickets', async () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.ticketIsFull = sandbox.stub().returns(false);
+        vm.ticketIsFull = sinon.stub().returns(false);
         OrderStore.getters.applications = [];
         vm.sessions = [{ description: 'description1',
           eventId: 'some-eventId',
@@ -215,8 +213,8 @@ describe('Add Child Ticket', () => {
       it('should set the ticket as disabled', async () => {
         // ARRANGE
         const vm = vueUnitHelper(ChildTicketWithMocks);
-        vm.ticketIsFull = sandbox.stub().returns(true);
-        vm.$t = sandbox.stub().returnsArg(0);
+        vm.ticketIsFull = sinon.stub().returns(true);
+        vm.$t = sinon.stub().returnsArg(0);
         OrderStore.getters.applications = [];
         vm.sessions = [{ description: 'description1',
           eventId: 'some-eventId',

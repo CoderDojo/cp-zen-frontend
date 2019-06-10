@@ -1,15 +1,13 @@
 import gaTrackClick from 'inject-loader!@/common/directives/cd-ga-track-click';
 
 describe('GA Track Click directive', () => {
-  let sandbox;
   let gaTrackClickWithMocks;
   let VueMock;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     VueMock = {
       $ga: {
-        event: sandbox.stub(),
+        event: sinon.stub(),
       },
     };
     gaTrackClickWithMocks = gaTrackClick({

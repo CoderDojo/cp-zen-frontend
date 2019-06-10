@@ -2,21 +2,19 @@ import vueUnitHelper from 'vue-unit-helper';
 import BookingConfirmationComponent from '!!vue-loader?inject!@/events/order/cd-booking-confirmation';
 
 describe('Booking Confirmation Component', () => {
-  let sandbox;
   let MockEventService;
   let OrderStore;
   let BookingConfirmationComponentWithMocks;
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockEventService = {
       v3: {
-        getOrder: sandbox.stub(),
+        getOrder: sinon.stub(),
       },
     };
     OrderStore = {
-      commit: sandbox.stub(),
+      commit: sinon.stub(),
     };
     BookingConfirmationComponentWithMocks = BookingConfirmationComponent({
       '@/events/service': MockEventService,
@@ -26,7 +24,7 @@ describe('Booking Confirmation Component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('methods.loadData()', () => {
@@ -104,7 +102,7 @@ describe('Booking Confirmation Component', () => {
   describe('created()', () => {
     it('should load booking data', () => {
       // ARRANGE
-      sandbox.stub(vm, 'loadData');
+      sinon.stub(vm, 'loadData');
 
       // ACT
       vm.$lifecycleMethods.created();

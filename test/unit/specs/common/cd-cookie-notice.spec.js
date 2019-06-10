@@ -2,16 +2,14 @@ import vueUnitHelper from 'vue-unit-helper';
 import CookieNotice from '!!vue-loader?inject!@/common/cd-cookie-notice';
 
 describe('Cookie Notice component', () => {
-  let sandbox;
   let CookieMock;
   let CookieNoticeWithMock;
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     CookieMock = {
-      set: sandbox.stub(),
-      get: sandbox.stub(),
+      set: sinon.stub(),
+      get: sinon.stub(),
     };
     CookieNoticeWithMock = CookieNotice({
       'js-cookie': CookieMock,
@@ -20,14 +18,14 @@ describe('Cookie Notice component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('methods', () => {
     describe('dismissNotice', () => {
       it('should set cookieDisclaimer cookie to confirmed if value is true', (done) => {
         // ARRANGE
-        sandbox.stub(vm, '$destroy');
+        sinon.stub(vm, '$destroy');
 
         // ACT
         vm.dismissNotice();
@@ -46,7 +44,7 @@ describe('Cookie Notice component', () => {
 
   describe('created()', () => {
     beforeEach(() => {
-      sandbox.stub(vm, 'dismissNotice');
+      sinon.stub(vm, 'dismissNotice');
     });
 
     it('should call dismissNotice if cookieDisclaimer cookie is confirmed', () => {

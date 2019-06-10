@@ -1,14 +1,8 @@
 import OrderStore from '@/events/order/order-store';
 
 describe('Order Store', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
-
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('mutations', () => {

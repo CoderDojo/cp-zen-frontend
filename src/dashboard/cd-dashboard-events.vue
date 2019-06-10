@@ -79,7 +79,7 @@
       hasDojos() {
         return Object.keys(this.dojos).length > 0;
       },
-  
+
       firstDojo() {
         return this.hasDojos ? this.dojos[this.dojoAdmins[0].dojoId] : {};
       },
@@ -165,7 +165,7 @@
       max-width: 824px;
       margin: 0 auto;
     }
-    
+
     &__list-filler {
       background: @cd-very-light-grey;
       height: 90px;

@@ -2,22 +2,20 @@ import vueUnitHelper from 'vue-unit-helper';
 import LoginOrRegisterComponent from '@/users/cd-login-or-register';
 
 describe('Login or register', () => {
-  let sandbox;
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     vm = vueUnitHelper(LoginOrRegisterComponent);
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('checkIsLoggedIn', () => {
     it('should call next if user is logged in', () => {
       // ARRANGE
-      sandbox.stub(vm, 'next');
+      sinon.stub(vm, 'next');
       vm.isLoggedIn = true;
 
       // ACT
@@ -29,7 +27,7 @@ describe('Login or register', () => {
 
     it('should not call next if user is not logged in', () => {
       // ARRANGE
-      sandbox.stub(vm, 'next');
+      sinon.stub(vm, 'next');
       vm.isLoggedIn = false;
 
       // ACT
@@ -43,7 +41,7 @@ describe('Login or register', () => {
   describe('next', () => {
     it('should go to the next step', () => {
       vm.$router = {
-        push: sandbox.stub(),
+        push: sinon.stub(),
       };
       vm.eventDetails = {
         bananas: 1,
@@ -74,7 +72,7 @@ describe('Login or register', () => {
   describe('created', () => {
     it('should call checkIsLoggedIn', () => {
       // ARRANGE
-      sandbox.stub(vm, 'checkIsLoggedIn');
+      sinon.stub(vm, 'checkIsLoggedIn');
 
       // ACT
       vm.$lifecycleMethods.created();

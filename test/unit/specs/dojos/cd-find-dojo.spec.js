@@ -135,18 +135,12 @@ function setUpFindDojoComponent() {
 }
 
 describe('The Find dojo vue ', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
-
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   it('should get the user current location', (done) => {
-    sandbox.stub(navigator.geolocation, 'getCurrentPosition').callsFake((cb) => {
+    sinon.stub(navigator.geolocation, 'getCurrentPosition').callsFake((cb) => {
       cb({
         coords: {
           latitude: 10,
@@ -157,7 +151,7 @@ describe('The Find dojo vue ', () => {
 
     const vm = vueUnitHelper(cdFindDojo());
     vm.$router = {
-      push: sandbox.spy(),
+      push: sinon.spy(),
     };
     vm.getCurrentLocation();
     requestAnimationFrame(() => {
@@ -169,7 +163,7 @@ describe('The Find dojo vue ', () => {
   });
 
   it('should stop the loading animation when user location not granted', (done) => {
-    sandbox.stub(navigator.geolocation, 'getCurrentPosition').callsFake((success, error) => {
+    sinon.stub(navigator.geolocation, 'getCurrentPosition').callsFake((success, error) => {
       error();
     });
     const vm = new Vue(cdFindDojo());
@@ -186,8 +180,8 @@ describe('The Find dojo vue ', () => {
     const vm = vueUnitHelper(cdFindDojo());
     vm.lat = 11;
     vm.long = 88;
-    sandbox.stub(vm, 'getDojosByLatLong');
-    sandbox.stub(vm, 'getAllDojos');
+    sinon.stub(vm, 'getDojosByLatLong');
+    sinon.stub(vm, 'getAllDojos');
     vm.$route = {
       query: {
         q: null,
@@ -208,8 +202,8 @@ describe('The Find dojo vue ', () => {
     const vm = vueUnitHelper(cdFindDojo());
     vm.lat = undefined;
     vm.long = undefined;
-    sandbox.stub(vm, 'getDojosByLatLong');
-    sandbox.stub(vm, 'getAllDojos');
+    sinon.stub(vm, 'getDojosByLatLong');
+    sinon.stub(vm, 'getAllDojos');
     vm.$route = {
       query: {
         q: null,
@@ -225,8 +219,8 @@ describe('The Find dojo vue ', () => {
 
   it('should get dojos based on query in url when query is present', () => {
     const vm = vueUnitHelper(cdFindDojo());
-    sandbox.stub(vm, 'searchDojosByAddress');
-    sandbox.stub(vm, 'getCurrentLocation');
+    sinon.stub(vm, 'searchDojosByAddress');
+    sinon.stub(vm, 'getCurrentLocation');
 
     vm.$route = {
       query: {
@@ -243,8 +237,8 @@ describe('The Find dojo vue ', () => {
 
   it('should get dojos based on currentLocation in url when currentLocation is present', () => {
     const vm = vueUnitHelper(cdFindDojo());
-    sandbox.stub(vm, 'searchDojosByAddress');
-    sandbox.stub(vm, 'getCurrentLocation');
+    sinon.stub(vm, 'searchDojosByAddress');
+    sinon.stub(vm, 'getCurrentLocation');
 
     vm.$route = {
       query: {
@@ -261,8 +255,8 @@ describe('The Find dojo vue ', () => {
 
   it('should get dojos based on query in url when query and currentLocation are present', () => {
     const vm = vueUnitHelper(cdFindDojo());
-    sandbox.stub(vm, 'searchDojosByAddress');
-    sandbox.stub(vm, 'getCurrentLocation');
+    sinon.stub(vm, 'searchDojosByAddress');
+    sinon.stub(vm, 'getCurrentLocation');
 
     vm.$route = {
       query: {
@@ -290,10 +284,10 @@ describe('The Find dojo vue ', () => {
         longiutide: 84,
       }));
     const vm = vueUnitHelper(FindDojoWithMock);
-    sandbox.stub(vm, 'getDojosByLatLong');
+    sinon.stub(vm, 'getDojosByLatLong');
     vm.searchCriteria = 'CHQ';
     vm.$router = {
-      push: sandbox.spy(),
+      push: sinon.spy(),
     };
 
     // ACT
@@ -345,7 +339,7 @@ describe('The Find dojo vue ', () => {
     it('should load all Dojos', (done) => {
       // ARRANGE
       const DojoServiceMock = {
-        getDojos: sandbox.stub(),
+        getDojos: sinon.stub(),
       };
       DojoServiceMock.getDojos.withArgs({
         verified: 1,
@@ -374,7 +368,7 @@ describe('The Find dojo vue ', () => {
       const vm = vueUnitHelper(cdFindDojo());
       vm.showMap = false;
       Vue.$gmapDefaultResizeBus = {
-        $emit: sandbox.stub(),
+        $emit: sinon.stub(),
       };
 
       // ACT
@@ -391,7 +385,7 @@ describe('The Find dojo vue ', () => {
       const vm = vueUnitHelper(cdFindDojo());
       vm.showMap = true;
       Vue.$gmapDefaultResizeBus = {
-        $emit: sandbox.stub(),
+        $emit: sinon.stub(),
       };
 
       // ACT
@@ -474,8 +468,8 @@ describe('The Find dojo vue ', () => {
           q: null,
           currentLocation: null,
         };
-        sandbox.stub(vm, 'searchDojosByAddress');
-        sandbox.stub(vm, 'getCurrentLocation');
+        sinon.stub(vm, 'searchDojosByAddress');
+        sinon.stub(vm, 'getCurrentLocation');
       });
       it('should call searchDojosByAddress() if there is a new query', () => {
         // ARRANGE

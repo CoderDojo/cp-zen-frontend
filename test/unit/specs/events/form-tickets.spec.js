@@ -1,24 +1,16 @@
 import vueUnitHelper from 'vue-unit-helper';
-import formTicket from '!!vue-loader?inject!@/events/form/form-tickets';
+import formTicket from '@/events/form/form-tickets';
 
 describe('Form Ticket component', () => {
-  let sandbox;
-  let FormTicketWithMocks;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-    FormTicketWithMocks = formTicket();
-  });
-
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
-  describe.only('lifecycle functions', () => {
+  describe('lifecycle functions', () => {
     describe('created', () => {
       it('sets default quantity', () => {
         // ARRANGE
-        const vm = vueUnitHelper(FormTicketWithMocks);
+        const vm = vueUnitHelper(formTicket);
         expect(vm.quantity).to.be.null;
         vm.defaultQuantity = 42;
 
@@ -44,7 +36,7 @@ describe('Form Ticket component', () => {
   //   });
   // });
   //
-  // describe.only('methods', () => {
+  // describe.only('tethods', () => {
   //   describe('save', () => {
   //     it('should reference dom elements', async () => {
   //       const vm = vueUnitHelper(FormTicketWithMocks);

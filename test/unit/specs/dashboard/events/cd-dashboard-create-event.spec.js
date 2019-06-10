@@ -3,16 +3,14 @@ import moment from 'moment';
 import DashboardCreateEventComponent from '!!vue-loader?inject!@/dashboard/events/cd-dashboard-create-event';
 
 describe('Dashboard create event component', () => {
-  let sandbox;
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     vm = vueUnitHelper(DashboardCreateEventComponent());
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
 

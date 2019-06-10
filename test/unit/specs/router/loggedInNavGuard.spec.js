@@ -1,17 +1,15 @@
 import loggedInNavGuard from 'inject-loader!@/router/loggedInNavGuard';
 
 describe('loggedInNavGuard', () => {
-  let sandbox;
   let MockUserService;
   let loggedInNavGuardWithMock;
   let nextMock;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockUserService = {
-      getCurrentUser: sandbox.stub(),
+      getCurrentUser: sinon.stub(),
     };
-    nextMock = sandbox.stub();
+    nextMock = sinon.stub();
     loggedInNavGuardWithMock = loggedInNavGuard({
       '@/users/service': MockUserService,
     }).default;

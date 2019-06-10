@@ -3,21 +3,19 @@ import moment from 'moment'; // eslint-disable-line no-unused-vars
 import DashboardEventsComponent from '!!vue-loader?inject!@/dashboard/cd-dashboard-events';
 
 describe('Dashboard events component', () => {
-  let sandbox;
   let vm;
   let MockDojosService;
   let MockEventsService;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockEventsService = {
       v3: {
-        get: sandbox.stub(),
+        get: sinon.stub(),
       },
     };
     MockDojosService = {
-      getUsersDojos: sandbox.stub(),
-      getDojoById: sandbox.stub(),
+      getUsersDojos: sinon.stub(),
+      getDojoById: sinon.stub(),
     };
     vm = vueUnitHelper(DashboardEventsComponent({
       '@/events/service': MockEventsService,
@@ -26,7 +24,7 @@ describe('Dashboard events component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('computed', () => {
