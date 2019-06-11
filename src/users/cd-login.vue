@@ -3,6 +3,13 @@
     <div class="row">
       <h3 class="cd-login__header text-center">{{ $t('Login') }}</h3>
     </div>
+    <div v-show="passwordReset" class="row">
+      <p class="text-center text-success">
+        <strong>
+          {{ $t('Successfully updated password') }}
+        </strong>
+      </p>
+    </div>
     <div class="row">
       <div class="cd-login__box">
         <form @submit.prevent="login">
@@ -53,6 +60,12 @@
         let url = '/register';
         url += this.referer ? `?referer=${this.referer}` : '';
         return url;
+      },
+      passwordReset() {
+        if (this.$route.query.pwr) {
+          return true;
+        }
+        return false;
       },
       ...mapGetters(['isLoggedIn']),
     },
