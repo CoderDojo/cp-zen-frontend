@@ -166,11 +166,15 @@ describe('Manage request to join component', () => {
         DojosService.membership.accept.rejects(err);
         vm.membershipRequest = {};
 <<<<<<< HEAD
+<<<<<<< HEAD
         vm.onError = sandbox.stub();
         vm.loadConflictingUser = sandbox.stub().resolves();
 =======
         vm.onError = sinon.stub();
 >>>>>>> Add unit tests for event form
+=======
+        vm.onError = sinon.stub();
+>>>>>>> fff3af7f33812ddbc1922f3173da485aa86cc325
         vm.status = 'accept';
         await vm.actOnMembershipRequest();
         expect(DojosService.membership.accept).to.have.been.calledOnce;
