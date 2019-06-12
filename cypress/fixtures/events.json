@@ -1,0 +1,73 @@
+{
+  "results": [
+    {
+      "id": "b2a60543-6356-4ab5-b766-d66b96187b14",
+      "name": "asdasdfas",
+      "country": {
+        "countryName": "United Kingdom",
+        "continent": "EU",
+        "alpha2": "GB",
+        "alpha3": "GBR",
+        "countryNumber": 826
+      },
+      "city": {
+        "nameWithHierarchy": "Sheffield"
+      },
+      "address": "108 The Moor, Sheffield, S1 4PD",
+      "createdAt": "2019-06-10T10:46:58.549Z",
+      "createdBy": null,
+      "type": "one-off",
+      "description": "<div><!--block-->Please bring:<br><br></div><ul><li><!--block-->A laptop. Borrow one from somebody if needs be.</li><li><!--block--><strong>A parent! (Very important). If you are 12 or under, your parent must stay with you during the session.</strong></li></ul>",
+      "dojoId": "4f2ebdec-ce05-4a85-840c-f59fb0a19ca7",
+      "position": null,
+      "public": true,
+      "status": "published",
+      "recurringType": null,
+      "dates": [
+        {
+          "startTime": "2019-07-12T10:00:00.000Z",
+          "endTime": "2019-07-12T12:00:00.000Z"
+        }
+      ],
+      "ticketApproval": false,
+      "notifyOnApplicant": false,
+      "eventbriteId": null,
+      "eventbriteUrl": null,
+      "useDojoAddress": false,
+      "startTime": "2019-07-12T10:00:00.000Z",
+      "endTime": "2019-07-12T12:00:00.000Z",
+      "sessions": [
+        {
+          "id": "59f9ec57-15a0-4ad0-9de4-e1f341270943",
+          "name": "Dojo",
+          "description": "Dojo Session",
+          "eventId": "b2a60543-6356-4ab5-b766-d66b96187b14",
+          "status": "active",
+          "tickets": [
+            {
+              "id": "b54f281a-beb4-43f5-aac0-bc670f0f2cd2",
+              "sessionId": "59f9ec57-15a0-4ad0-9de4-e1f341270943",
+              "name": "Youth",
+              "type": "ninja",
+              "quantity": 5,
+              "deleted": 0,
+              "totalApplications": 0,
+              "approvedApplications": 0
+            },
+            {
+              "id": "a83806d5-3a77-4617-9f08-b1becbb0279f",
+              "sessionId": "59f9ec57-15a0-4ad0-9de4-e1f341270943",
+              "name": "Mentor",
+              "type": "mentor",
+              "quantity": 6,
+              "deleted": 0,
+              "totalApplications": 0,
+              "approvedApplications": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "total": 7
+}

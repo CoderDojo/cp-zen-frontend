@@ -11,8 +11,8 @@
               <h3 class="text-danger">{{ $t('There was an error processing this request. Please try again or contact support') }}</h3>
             </div>
             <h4 class="cd-event__section-title">{{ $t('Event Title') }}</h4>
-            <p class="text-danger" v-show="errors.has('name:required')">{{ $t('Title is required') }}</p>
-            <input type="text" name="name" v-model="name" class="form-control" data-vv-name="name" v-validate="'required'" data-vv-validate-on="blur" :placeholder="$t('e.g. October Dojo')">
+            <p class="text-danger" data-cy="title-error" v-show="errors.has('name:required')">{{ $t('Title is required') }}</p>
+            <input type="text" data-cy="title" name="name" v-model="name" class="form-control" data-vv-name="name" v-validate="'required'" data-vv-validate-on="blur" :placeholder="$t('e.g. October Dojo')">
 
             <div class="cd-event-form__location">
               <!-- is the text relevant when it's been modified? -->
@@ -341,7 +341,7 @@
             related: 'sessions.tickets',
           },
         });
-
+//
       this.latestEvent = latestEvent.body.results[0];
       this.dojo = (await DojosService.getDojoById(dojoId)).body;
       this.populateForm();
