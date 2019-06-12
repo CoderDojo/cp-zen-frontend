@@ -256,14 +256,14 @@
               city: this.city,
               address: this.address,
               dates: [{ startTime: this.startTime, endTime: this.endTime }],
-              // type: 'one-off',
+              type: 'one-off',
               status: 'published',
               public: this.public,
               useDojoAddress: false,
               ticketApproval: false,
               notifyOnApplicant: false,
-              // country: this.dojo.country,
-              // sessions: this.sessions,
+              country: this.dojo.country,
+              sessions: this.sessions,
               dojoId: this.dojo.id,
             });
 
