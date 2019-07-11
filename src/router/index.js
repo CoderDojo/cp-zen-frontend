@@ -19,6 +19,7 @@ import ManageRequestToJoin from '@/dojos/manage-request-to-join';
 import loggedInNavGuard from './loggedInNavGuard';
 import loggedInCDFNavGuard from './loggedInCDFNavGuard';
 import orderExistsNavGuard from './orderExistsNavGuard';
+import ticketingAdminNavGuard from './ticketingAdminNavGuard';
 
 
 Vue.use(Router);
@@ -89,15 +90,13 @@ const router = new Router({
           path: '/dashboard/dojos/:dojoId/events/new',
           name: 'NewEventForm',
           component: EventForm,
-          // TODO: restrict access to ticketing-admin ?
-          beforeEnter: loggedInNavGuard,
+          beforeEnter: MultiGuard([loggedInNavGuard, ticketingAdminNavGuard]),
         },
         {
           path: '/dashboard/dojos/:dojoId/events/:eventId/edit',
           name: 'EditEventForm',
           component: EventForm,
-          // TODO: restrict access to ticketing-admin ?
-          beforeEnter: loggedInNavGuard,
+          beforeEnter: MultiGuard([loggedInNavGuard, ticketingAdminNavGuard]),
         },
         {
           path: '/dashboard/dojos/:dojoId/join-requests/:requestId/status/:status',

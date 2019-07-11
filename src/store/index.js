@@ -30,7 +30,12 @@ export default new Vuex.Store({
     },
   },
   getters: {
-    loggedInUser: state => state.loggedInUser.user,
+    loggedInUser: (state) => {
+      if (state.loggedInUser) {
+        return state.loggedInUser.user;
+      }
+      return null;
+    },
     // Three states:
     // * logged in => true
     // * not logged in => false

@@ -1,12 +1,13 @@
 import vueUnitHelper from 'vue-unit-helper';
 import eventForm from '!!vue-loader?inject!@/events/cd-event-form';
-import moment from 'moment';
 
 describe('Event Form component', () => {
   let EventFormWithMocks;
   let MockDojosService;
   let MockEventsService;
+  let MockEventStore;
   let clock;
+  let descriptionHtml;
 
   beforeEach(() => {
     // Tues Jun 04 2019 10AM
@@ -14,18 +15,34 @@ describe('Event Form component', () => {
       now: 1559638800000,
     });
 
+    descriptionHtml = '<p>Suggested Notes:<br /><br />Please:</p><ul><li>A thingy and stuff</li></ul>';
+
     MockDojosService = {
       getDojoById: sinon.stub(),
     };
+
     MockEventsService = {
       v3: {
         get: sinon.stub(),
+        load: sinon.stub(),
         create: sinon.stub(),
+        update: sinon.stub(),
       },
     };
+
+    MockEventStore = {
+      commit: sinon.stub(),
+      mutations: {
+      },
+      getters: {
+        address: sinon.stub().resolves('123 Fake Street'),
+      },
+    };
+
     EventFormWithMocks = eventForm({
       '@/dojos/service': MockDojosService,
       '@/events/service': MockEventsService,
+      '@/events/event-store': MockEventStore,
     });
   });
 
@@ -36,245 +53,252 @@ describe('Event Form component', () => {
 
   describe('lifecycle functions', () => {
     describe('created', () => {
-      it('should load dojo and last event data', async () => {
-        // ARRANGE
-        MockDojosService.getDojoById.resolves({
-          body: {
-            city: { name: 'Here' },
-            address1: 'There',
-          },
-        });
-        MockEventsService.v3.get.resolves({
-          body: {
-            results: [{
-              address: 'Address',
-            }],
-          },
-        });
-        const vm = vueUnitHelper(EventFormWithMocks);
-        vm.$route = {
-          params: {
-            dojoId: 'd1',
-          },
-        };
-        sinon.stub(vm, 'populateForm');
+      context('when creating an event', () => {
+        it('should load dojo and last event data', async () => {
+          // ARRANGE
+          MockDojosService.getDojoById.resolves({
+            body: {
+              city: { name: 'Here' },
+              address1: 'There',
+            },
+          });
+          MockEventsService.v3.get.resolves({
+            body: {
+              results: [{
+                address: 'Address',
+              }],
+            },
+          });
+          const vm = vueUnitHelper(EventFormWithMocks);
+          vm.$route = {
+            params: {
+              dojoId: 'd1',
+            },
+          };
+          sinon.stub(vm, 'initializeStore');
 
-        // ACT
-        await vm.$lifecycleMethods.created();
+          // ACT
+          await vm.$lifecycleMethods.created();
 
-        // ASSERT
-        expect(MockDojosService.getDojoById).to.have.been.calledOnce
-          .and.calledWith('d1');
-        expect(vm.populateForm).to.have.been.calledOnce;
-        expect(vm.latestEvent).to.eql({ address: 'Address' });
-        // expect(vm.city).to.equal('Here');
+          // ASSERT
+          expect(MockDojosService.getDojoById).to.have.been.calledOnce
+            .and.calledWith('d1');
+          expect(vm.initializeStore).to.have.been.calledOnce;
+          expect(vm.latestEvent).to.eql({ address: 'Address' });
+          expect(vm.editing).to.eql(false);
+        });
+      });
+      context('when editing an event', () => {
+        context('when event was created with new form', () => {
+          it('should load dojo and event data', async () => {
+            MockDojosService.getDojoById.resolves({
+              body: {
+                city: { name: 'Here' },
+                address1: 'There',
+              },
+            });
+            MockEventsService.v3.load.resolves({
+              body: {
+                address: 'Address',
+                newForm: true,
+              },
+            });
+            const vm = vueUnitHelper(EventFormWithMocks);
+            vm.$route = {
+              params: {
+                dojoId: 'd1',
+                eventId: 'e1',
+              },
+            };
+
+            MockEventStore.mutations = {
+              setEvent: sinon.stub(),
+            };
+
+            await vm.$lifecycleMethods.created();
+
+            expect(MockDojosService.getDojoById).to.have.been.calledOnce
+              .and.calledWith('d1');
+            expect(MockEventsService.v3.load).to.have.been.calledOnce
+              .and.calledWith('e1');
+            expect(vm.editing).to.eql(true);
+          });
+
+          it('should set event information in event store', async () => {
+            MockDojosService.getDojoById.resolves({
+              body: {
+                city: { name: 'Here' },
+                address1: 'There',
+              },
+            });
+            MockEventsService.v3.load.resolves({
+              body: {
+                address: 'Address',
+                newForm: true,
+              },
+            });
+            const vm = vueUnitHelper(EventFormWithMocks);
+            vm.$route = {
+              params: {
+                dojoId: 'd1',
+                eventId: 'e1',
+              },
+            };
+
+            await vm.$lifecycleMethods.created();
+
+            expect(MockEventStore.commit).to.have.been.calledOnce
+              .and.calledWith('setEvent', { address: 'Address', newForm: true });
+          });
+        });
+
+        context('when event was created with old form', () => {
+          it('should load dojo and event data', async () => {
+            // ARRANGE
+            MockDojosService.getDojoById.resolves({
+              body: {
+                city: { name: 'Here' },
+                address1: 'There',
+              },
+            });
+            MockEventsService.v3.load.resolves({
+              body: {
+                address: 'Address',
+                newForm: false,
+              },
+            });
+            const vm = vueUnitHelper(EventFormWithMocks);
+            vm.$route = {
+              params: {
+                dojoId: 'd1',
+                eventId: 'e1',
+              },
+            };
+            sinon.stub(vm, 'initializeStore');
+            vm.$router = {
+              push: sinon.stub(),
+            };
+
+            await vm.$lifecycleMethods.created();
+
+            expect(MockDojosService.getDojoById).to.have.been.calledOnce
+              .and.calledWith('d1');
+            expect(MockEventsService.v3.load).to.have.been.calledOnce
+              .and.calledWith('e1');
+            expect(vm.initializeStore).not.to.have.been.called;
+            expect(vm.$router.push).to.have.been.calledOnce
+              .and.calledWith('/dashboard/dojo/d1/event-form/e1');
+          });
+        });
       });
     });
   });
 
   describe('computed', () => {
-    describe('tickets', () => {
-      it('should reference dom elements', () => {
+    describe('truncatedDescription', () => {
+      context('when description is not null', () => {
+        it('formats the address correctly', () => {
+          const vm = vueUnitHelper(EventFormWithMocks);
+          MockEventStore.getters = {
+            description: descriptionHtml,
+          };
+          expect(vm.truncatedDescription).to.eql('Suggested Notes: Please: A thingy and... ');
+        });
+      });
+    });
+    describe('formattedAddress', () => {
+      it('formats the address correctly', () => {
         const vm = vueUnitHelper(EventFormWithMocks);
-        vm.$refs = {
-          youthTickets: 'one',
-          mentorTickets: 'two',
+        MockEventStore.getters = {
+          address: '<p>123 Fake Street</p>',
+          city: 'London',
         };
-        expect(vm.tickets).to.eql(['one', 'two']);
+        expect(vm.formattedAddress).to.eql('123 Fake Street... London');
+      });
+      it('truncates address to 5 words', () => {
+        const vm = vueUnitHelper(EventFormWithMocks);
+        MockEventStore.getters = {
+          address: '<p>123 Really Really Long Named Fake Street</p>',
+          city: 'London',
+        };
+        expect(vm.formattedAddress).to.eql('123 Really Really Long Named... London');
       });
     });
   });
 
   describe('methods', () => {
-    describe('populateForm', () => {
-      describe('when no latestEvent', () => {
-        it('should set values from dojo', async () => {
+    describe('initializeStore', () => {
+      it('sets country and dojoId in store', async () => {
+        const vm = vueUnitHelper(EventFormWithMocks);
+        vm.loggedInUser = {};
+        vm.dojo = {
+          id: 'd1',
+          address1: 'Address 1 from Dojo',
+          city: { name: 'Dojo City name' },
+          country: { alpha2: 'GB' },
+        };
+
+        await vm.initializeStore();
+        expect(MockEventStore.commit).to.have.callCount(6);
+        expect(MockEventStore.commit).to.have.been
+          .calledWith('setDojoId', 'd1');
+        expect(MockEventStore.commit).to.have.been
+          .calledWith('setCountry', { alpha2: 'GB' });
+      });
+
+      context('when no latestEvent', () => {
+        it('sets event values in store from dojo', async () => {
           const vm = vueUnitHelper(EventFormWithMocks);
+          vm.loggedInUser = { id: 'U1' };
           vm.dojo = {
+            id: 'd1',
             notes: 'The dojo description notes',
             address1: 'Address 1 from Dojo',
             city: { name: 'Dojo City name' },
+            country: { alpha2: 'GB' },
           };
 
-          await vm.populateForm();
-          expect(vm.description).to.eql('The dojo description notes');
-          expect(vm.address).to.eql('Address 1 from Dojo');
-          expect(vm.city).to.eql({ nameWithHierarchy: 'Dojo City name' });
+          await vm.initializeStore();
+          expect(MockEventStore.commit).to.have.callCount(6);
+          expect(MockEventStore.commit).to.have.been
+            .calledWith('setDescription', 'The dojo description notes');
+          expect(MockEventStore.commit).to.have.been
+            .calledWith('setAddress', 'Address 1 from Dojo');
+          expect(MockEventStore.commit).to.have.been
+            .calledWith('setCity', 'Dojo City name');
         });
       });
-      describe('when latestEvent is present', () => {
-        it('should set values from the latestEvent', async () => {
+      context('when latestEvent is present', () => {
+        it('should set event store values from the latestEvent', async () => {
           const vm = vueUnitHelper(EventFormWithMocks);
-          vm.latestEvent = {
+          vm.loggedInUser = { id: 'U1' };
+          const startTime = '2222-06-19 13:00';
+          const endTime = '2222-06-19 16:00';
+
+          const event = {
             description: 'The event description',
             address: 'Address from event',
+            city: { nameWithHierarchy: 'City' },
+            startTime,
+            endTime,
           };
-          sinon.stub(vm, 'populateCityFromLatestEvent');
-          sinon.stub(vm, 'populateDatesAndTimesFromLatestEvent');
-          sinon.stub(vm, 'populateTicketQuantitiesFromLatestEvent');
-          await vm.populateForm();
-          expect(vm.description).to.eql('The event description');
-          expect(vm.address).to.eql('Address from event');
-          expect(vm.populateCityFromLatestEvent).to.have.been.calledOnce;
-          expect(vm.populateDatesAndTimesFromLatestEvent).to.have.been.calledOnce;
-          expect(vm.populateTicketQuantitiesFromLatestEvent).to.have.been.calledOnce;
+          vm.latestEvent = event;
+
+          await vm.initializeStore();
+          expect(MockEventStore.commit).to.have.callCount(8);
+          expect(MockEventStore.commit).to.have.been
+            .calledWith('setCityFromObject', { nameWithHierarchy: 'City' });
+          expect(MockEventStore.commit).to.have.been
+            .calledWith('setAddress', 'Address from event');
+          expect(MockEventStore.commit).to.have.been
+            .calledWith('setDescription', 'The event description');
+          expect(MockEventStore.commit).to.have.been
+            .calledWith('generateNextEventDates', { lastStartTime: startTime, lastEndTime: endTime });
+          expect(MockEventStore.commit).to.have.been
+            .calledWith('setTicketQuantitiesFromEvent', event);
         });
       });
     });
-    describe('populateCityFromLatestEvent', () => {
-      describe('when event city has toponymName', () => {
-        it('sets city correctly', async () => {
-          const vm = vueUnitHelper(EventFormWithMocks);
-          vm.latestEvent = {
-            city: {
-              toponymName: 'City name',
-            },
-          };
-          await vm.populateCityFromLatestEvent();
-          expect(vm.city).to.eql({ nameWithHierarchy: 'City name' });
-        });
-      });
-      describe('when event city has nameWithHierarchy', () => {
-        it('sets city correctly', async () => {
-          const vm = vueUnitHelper(EventFormWithMocks);
-          vm.latestEvent = {
-            city: {
-              nameWithHierarchy: 'City name',
-            },
-          };
-          await vm.populateCityFromLatestEvent();
-          expect(vm.city).to.eql({ nameWithHierarchy: 'City name' });
-        });
-      });
-    });
-    describe('populateDatesAndTimesFromLatestEvent', () => {
-      it('sets the start time to match the previous event', async () => {
-        const vm = vueUnitHelper(EventFormWithMocks);
-        vm.latestEvent = {
-          startTime: '2019-06-14T11:00:00.000Z',
-        };
-        await vm.populateDatesAndTimesFromLatestEvent();
-        expect(vm.startingTime).to.equal('11:00');
-      });
-      it('sets the finish time to match the previous event', async () => {
-        const vm = vueUnitHelper(EventFormWithMocks);
-        vm.latestEvent = {
-          endTime: '2019-06-14T14:00:00.000Z',
-        };
-        await vm.populateDatesAndTimesFromLatestEvent();
-        expect(vm.finishTime).to.equal('14:00');
-      });
-      describe('when latest event is in the future', () => {
-        it('sets eventDate 1 week after latest event', async () => {
-          const vm = vueUnitHelper(EventFormWithMocks);
-          vm.latestEvent = {
-            startTime: '2019-06-14T11:00:00.000Z',
-          };
-          await vm.populateDatesAndTimesFromLatestEvent();
-          expect(vm.eventDate).to.equal('2019-06-21');
-        });
-      });
-      describe('when latest event was less than a week ago', () => {
-        it('sets eventDate to next occurence of same day', async () => {
-          // last event was on a Saturday
-          // we are creating new event on Tuesday
-          // eventDate should be the next Saturday
-          const vm = vueUnitHelper(EventFormWithMocks);
-          vm.latestEvent = {
-            startTime: '2019-06-01T11:00:00.000Z',
-          };
-          await vm.populateDatesAndTimesFromLatestEvent();
-          expect(vm.eventDate).to.equal('2019-06-08');
-        });
-      });
-      describe('when latest event was more than a week ago', () => {
-        it('sets eventDate to next occurence of same day', async () => {
-          // last event was on a Sunday a month ago
-          // eventDate should be the next Sunday
-          const vm = vueUnitHelper(EventFormWithMocks);
-          vm.latestEvent = {
-            startTime: '2019-05-19T11:00:00.000Z',
-          };
-          await vm.populateDatesAndTimesFromLatestEvent();
-          expect(vm.eventDate).to.equal('2019-06-09');
-        });
-      });
-    });
-
-    describe('populateTicketQuantitiesFromLatestEvent', () => {
-      describe('when previous event contains matching session', () => {
-        it('sets quantities for mentor and youth tickets', async () => {
-          const vm = vueUnitHelper(EventFormWithMocks);
-          vm.$refs = {
-            youthTickets: {
-              setQuantity: sinon.stub(),
-            },
-            mentorTickets: {
-              setQuantity: sinon.stub(),
-            },
-          };
-          vm.latestEvent = {
-            sessions: [{
-              tickets: [
-                { name: 'Youth', quantity: 77 },
-                { name: 'Mentor', quantity: 45 },
-              ],
-            }],
-          };
-          await vm.populateTicketQuantitiesFromLatestEvent();
-          expect(vm.$refs.youthTickets.setQuantity).to.have.been.calledOnce
-            .and.calledWith(77);
-          expect(vm.$refs.mentorTickets.setQuantity).to.have.been.calledOnce
-            .and.calledWith(45);
-        });
-      });
-
-      describe('when previous event does not contain matching session', () => {
-        it('does not set quantities for mentor and youth tickets', async () => {
-          const vm = vueUnitHelper(EventFormWithMocks);
-          vm.$refs = {
-            youthTickets: {
-              setQuantity: sinon.stub(),
-            },
-            mentorTickets: {
-              setQuantity: sinon.stub(),
-            },
-          };
-          vm.latestEvent = {
-            sessions: [{
-              tickets: [
-                { name: 'HTML', quantity: 77 },
-                { name: 'Scratch', quantity: 45 },
-              ],
-            }],
-          };
-          await vm.populateTicketQuantitiesFromLatestEvent();
-          expect(vm.$refs.youthTickets.setQuantity).to.have.callCount(0);
-          expect(vm.$refs.mentorTickets.setQuantity).to.have.callCount(0);
-        });
-      });
-
-      describe('when previous event has no session', () => {
-        it('does not set quantities for mentor and youth tickets', async () => {
-          const vm = vueUnitHelper(EventFormWithMocks);
-          vm.$refs = {
-            youthTickets: {
-              setQuantity: sinon.stub(),
-            },
-            mentorTickets: {
-              setQuantity: sinon.stub(),
-            },
-          };
-          vm.latestEvent = {
-            sessions: [],
-          };
-          await vm.populateTicketQuantitiesFromLatestEvent();
-          expect(vm.$refs.youthTickets.setQuantity).to.have.callCount(0);
-          expect(vm.$refs.mentorTickets.setQuantity).to.have.callCount(0);
-        });
-      });
-    });
-
     describe('validateForm()', () => {
       it('should return true when form is valid', async () => {
         // ARRANGE
@@ -306,124 +330,148 @@ describe('Event Form component', () => {
     });
 
     describe('save', () => {
-      describe('when succesful', () => {
-        it('should get ticket information from child components', async () => {
-          const vm = vueUnitHelper(EventFormWithMocks);
-          vm.$router = {
-            push: sinon.stub(),
-          };
-          vm.validateForm = sinon.stub().resolves(true);
+      context('when creating new event', () => {
+        context('when succesful', () => {
+          it('calls events service with event from store', async () => {
+            const vm = vueUnitHelper(EventFormWithMocks);
+            vm.$router = {
+              push: sinon.stub(),
+            };
+            const event = {
+              preventDefault: sinon.stub(),
+            };
+            vm.validateForm = sinon.stub().resolves(true);
 
-          const createTicket = sinon.stub();
-          const event = {
-            preventDefault: sinon.stub(),
-          };
+            const expected = {
+              address: '123 Fake Street',
+            };
 
-          vm.tickets = [
-            { createTicket },
-            { createTicket },
-          ];
-          await vm.save(event);
-          expect(event.preventDefault).to.have.been.calledOnce;
-          expect(createTicket).to.have.been.calledTwice;
+            MockEventStore.getters = {
+              event: expected,
+            };
+
+            await vm.save(event);
+
+            sinon.assert.calledWith(MockEventsService.v3.create, sinon.match(expected));
+          });
+
+          it('redirects to Dojo Details page', async () => {
+            const vm = vueUnitHelper(EventFormWithMocks);
+            vm.validateForm = sinon.stub().resolves(true);
+            vm.dojo = {
+              id: 'dojo-id-uuid',
+            };
+
+            const event = {
+              preventDefault: sinon.stub(),
+            };
+
+            vm.$router = {
+              push: sinon.stub(),
+            };
+
+            await vm.save(event);
+
+            expect(vm.$router.push).to.be
+              .calledWith({ name: 'DojoDetailsId', params: { id: 'dojo-id-uuid' } });
+          });
         });
 
-        it('should call events service correctly', async () => {
-          const vm = vueUnitHelper(EventFormWithMocks);
-          vm.$router = {
-            push: sinon.stub(),
-          };
-          const event = {
-            preventDefault: sinon.stub(),
-          };
-          vm.validateForm = sinon.stub().resolves(true);
-          vm.$refs = {
-            youthTickets: {
-              createTicket: sinon.stub().returns({ name: 'Youth', quantity: 11 }),
-            },
-            mentorTickets: {
-              createTicket: sinon.stub().returns({ name: 'Mentor', quantity: 6 }),
-            },
-          };
+        context('when unsuccessful', () => {
+          it('sets submit error to be true', async () => {
+            const vm = vueUnitHelper(EventFormWithMocks);
+            vm.validateForm = sinon.stub().resolves(true);
+            vm.dojo = {
+              id: 'dojo-id-uuid',
+            };
 
-          vm.address = '123 Fake Street';
-          vm.city = { nameWithHierarchy: 'Fake Town' };
-          vm.dojo = {
-            id: '46dae76e-4118-42fb-89cd-27a6080a8f3b',
-            country: {
-              countryName: 'Ireland',
-              countryNumber: 372,
-              continent: 'EU',
-              alpha2: 'IE',
-              alpha3: 'IRL',
-            },
-          };
-          vm.startTime = moment();
-          vm.endTime = moment();
-          vm.description = 'Event description';
-          vm.name = 'Event name';
+            vm.$router = {
+              push: sinon.stub(),
+            };
 
-          await vm.save(event);
+            const event = {
+              preventDefault: sinon.stub(),
+            };
 
-          const expected = {
-            address: '123 Fake Street',
-            city: { nameWithHierarchy: 'Fake Town' },
-            country: {
-              countryName: 'Ireland',
-              countryNumber: 372,
-              continent: 'EU',
-              alpha2: 'IE',
-              alpha3: 'IRL',
-            },
-            dates: [{
-              endTime: moment(),
-              startTime: moment(),
-            }],
-            description: 'Event description',
-            dojoId: '46dae76e-4118-42fb-89cd-27a6080a8f3b',
-            name: 'Event name',
-            notifyOnApplicant: false,
-            public: true,
-            sessions: [{
-              description: 'Dojo Session',
-              name: 'Dojo',
-              tickets: [
-                { name: 'Youth', quantity: 11 },
-                { name: 'Mentor', quantity: 6 },
-              ],
-            }],
-            status: 'published',
-            ticketApproval: false,
-            type: 'one-off',
-            useDojoAddress: false,
-          };
-          sinon.assert.calledWith(MockEventsService.v3.create, sinon.match(expected));
+            MockEventsService.v3.create.throws();
+            await vm.save(event);
+
+            expect(vm.submitError).to.eql(true);
+          });
+        });
+      });
+
+      context('when editing event', () => {
+        context('when succesful', () => {
+          it('calls events service with event from store', async () => {
+            const vm = vueUnitHelper(EventFormWithMocks);
+            vm.editing = true;
+            vm.$router = {
+              push: sinon.stub(),
+            };
+            const event = {
+              preventDefault: sinon.stub(),
+            };
+            vm.validateForm = sinon.stub().resolves(true);
+
+            const expected = {
+              address: '123 Fake Street',
+            };
+
+            MockEventStore.getters = {
+              event: expected,
+            };
+
+            await vm.save(event);
+
+            sinon.assert.calledWith(MockEventsService.v3.update, sinon.match(expected));
+          });
+
+          it('redirects to Dojo Details page', async () => {
+            const vm = vueUnitHelper(EventFormWithMocks);
+            vm.editing = true;
+            vm.validateForm = sinon.stub().resolves(true);
+            vm.dojo = {
+              id: 'dojo-id-uuid',
+            };
+
+            const event = {
+              preventDefault: sinon.stub(),
+            };
+
+            vm.$router = {
+              push: sinon.stub(),
+            };
+
+            await vm.save(event);
+
+            expect(vm.$router.push).to.be
+              .calledWith({ name: 'DojoDetailsId', params: { id: 'dojo-id-uuid' } });
+          });
         });
 
-        it('should redirect to Dojo Details page', async () => {
-          const vm = vueUnitHelper(EventFormWithMocks);
-          vm.validateForm = sinon.stub().resolves(true);
-          vm.dojo = {
-            id: 'dojo-id-uuid',
-          };
+        context('when unsuccessful', () => {
+          it('sets submit error to be true', async () => {
+            const vm = vueUnitHelper(EventFormWithMocks);
+            vm.editing = true;
+            vm.validateForm = sinon.stub().resolves(true);
+            vm.dojo = {
+              id: 'dojo-id-uuid',
+            };
 
-          const createTicket = sinon.stub();
-          const event = {
-            preventDefault: sinon.stub(),
-          };
+            vm.$router = {
+              push: sinon.stub(),
+            };
 
-          vm.$router = {
-            push: sinon.stub(),
-          };
+            const event = {
+              preventDefault: sinon.stub(),
+            };
 
-          vm.tickets = [
-            { createTicket },
-            { createTicket },
-          ];
-          await vm.save(event);
+            MockEventsService.v3.update.throws();
+            await vm.save(event);
 
-          expect(vm.$router.push).to.be
-            .calledWith({ name: 'DojoDetailsId', params: { id: 'dojo-id-uuid' } });
+            expect(vm.submitError).to.eql(true);
+          });
         });
       });
     });

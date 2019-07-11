@@ -4,26 +4,25 @@
       <div class="col-sm-8 col-sm-offset-2">
 
         <div class="cd-event-form">
-          <h3 class="cd-event-form__header">{{ `${$t('Create an event for')} ${dojo.name}` }}</h3>
+          <h3 v-show="!editing" class="cd-event-form__header">{{ `${$t('Create an event for')} ${dojo.name}` }}</h3>
+          <h3 v-show="editing" class="cd-event-form__header">{{ `${$t('Edit event:')} ${eventName}` }}</h3>
           <form @submit="save">
 
             <div v-if="submitError">
               <h3 class="text-danger">{{ $t('There was an error processing this request. Please try again or contact support') }}</h3>
             </div>
             <h4 class="cd-event__section-title">{{ $t('Event Title') }}</h4>
-            <p class="text-danger" data-cy="title-error" v-show="errors.has('name:required')">{{ $t('Title is required') }}</p>
-            <input type="text" data-cy="title" name="name" v-model="name" class="form-control" data-vv-name="name" v-validate="'required'" data-vv-validate-on="blur" :placeholder="$t('e.g. October Dojo')">
+            <p class="text-danger" data-cy="title-error" v-show="errors.has('eventName:required')">{{ $t('Title is required') }}</p>
+            <input type="text" data-cy="title" name="name" v-model="eventName" class="form-control" data-vv-name="eventName" v-validate="'required'" data-vv-validate-on="blur" :placeholder="$t('e.g. October Dojo')">
 
             <div class="cd-event-form__location">
-              <!-- is the text relevant when it's been modified? -->
-              <!-- what about previous event information, default back to Dojo's or previous event ? -->
-              {{ $t('This event uses the address.') }}:
+              {{ $t('This event uses the address') }}:
               <span v-show="!addressIsVisible">{{ formattedAddress }}</span>
               <i class="fa fa-pencil" @click="addressIsVisible = true" v-show="!addressIsVisible"></i>
               <i class="fa fa-times" @click="addressIsVisible = false" v-show="addressIsVisible"></i>
               <div v-if="addressIsVisible">
-                <input type="text" name="city" v-model="city.nameWithHierarchy" class="form-control">
-                <textarea name="address" v-model="address" rows="3" class="form-control"></textarea>
+                <input type="text" name="city" v-model="eventCity" class="form-control">
+                <textarea name="address" v-model="eventAddress" rows="3" class="form-control"></textarea>
               </div>
             </div>
 
@@ -33,18 +32,18 @@
               <i class="fa fa-pencil" @click="descriptionIsVisible = true" v-show="!descriptionIsVisible"></i>
               <i class="fa fa-times" @click="descriptionIsVisible = false" v-show="descriptionIsVisible"></i>
 
-              <p class="text-danger" v-show="errors.has('description:required')">{{ $t('Description is required') }}</p>
-              <input type="hidden" v-model="description" v-validate="'required'" name="description" />
+              <p class="text-danger" v-show="errors.has('eventDescription:required')">{{ $t('Description is required') }}</p>
+              <input type="hidden" v-model="eventDescription" v-validate="'required'" name="eventDescription" />
               <div v-if="descriptionIsVisible">
-                <VueTrix v-model="description" ref="trixEditor" />
+                <VueTrix v-model="eventDescription" ref="trixEditor" />
               </div>
             </div>
 
             <h4 class="cd-event__section-title">{{ $t('Date and Time') }}</h4>
             <div>
-              <p class="text-danger" v-show="errors.has('startingTime:required')">{{ $t('Start time is required') }}</p>
-              <p class="text-danger" v-show="errors.has('finishTime:required')">{{ $t('Finish time is required') }}</p>
-              <p class="text-danger" v-show="errors.has('finishTime:after')">{{ $t('Finish time must be after start time') }}</p>
+              <p class="text-danger" v-show="errors.has('startTime:required')">{{ $t('Start time is required') }}</p>
+              <p class="text-danger" v-show="errors.has('endTime:required')">{{ $t('Finish time is required') }}</p>
+              <p class="text-danger" v-show="errors.has('endTime:after')">{{ $t('Finish time must be after start time') }}</p>
             </div>
 
             <div class="cd-event-form__date form-group row">
@@ -62,8 +61,8 @@
               </div>
 
               <div class="col-sm-3 flow">
-                <VueCtkDateTimePicker v-model="startingTime"
-                                      name="startingTime"
+                <VueCtkDateTimePicker v-model="startTime"
+                                      name="startTime"
                                       v-validate="'required'"
                                       :only-time="true"
                                       :input-size="'sm'"
@@ -82,9 +81,9 @@
               </div>
 
               <div class="col-sm-3 flow">
-                <VueCtkDateTimePicker v-model="finishTime"
+                <VueCtkDateTimePicker v-model="endTime"
                                       v-validate="'date_format:HH:mm|after:startTimePicker'"
-                                      name="finishTime"
+                                      name="endTime"
                                       :only-time="true"
                                       :input-size="'sm'"
                                       :format="'HH:mm'"
@@ -98,21 +97,20 @@
 
             <h4 class="cd-event__section-title">{{ $t('Tickets') }}</h4>
             <div class="cd-event-form__tickets">
-              <p class="text-danger" v-show="errors.has('Youth tickets:required')">{{ $t('Number of Youth tickets is required') }}</p>
-              <p class="text-danger" v-show="errors.has('Youth tickets:min_value')">{{ $t('Must be greater than 0') }}</p>
+              <p class="text-danger" v-show="errors.has('Youth:required')">{{ $t('Number of Youth tickets is required') }}</p>
+              <p class="text-danger" v-show="errors.has('Youth:min_value')">{{ $t('Must be greater than 0') }}</p>
               <form-tickets label="Youth"
                             v-validate="'required|min_value:1'"
                             ref="youthTickets"
-                            :default-quantity="20"
                             type="ninja"
                             class="cd-event-form__youth-tickets">
               </form-tickets>
-              <p class="text-danger" v-show="errors.has('Mentor tickets:required')">{{ $t('Number of Mentor tickets is required') }}</p>
-              <p class="text-danger" v-show="errors.has('Mentor tickets:min_value')">{{ $t('Must be greater than 0') }}</p>
+
+              <p class="text-danger" v-show="errors.has('Mentor:required')">{{ $t('Number of Mentor tickets is required') }}</p>
+              <p class="text-danger" v-show="errors.has('Mentor:min_value')">{{ $t('Must be greater than 0') }}</p>
               <form-tickets label="Mentor"
                             v-validate="'required|min_value:1'"
                             ref="mentorTickets"
-                            :default-quantity="5"
                             type="mentor"
                             class="cd-event-form__mentor-tickets">
               </form-tickets>
@@ -130,7 +128,7 @@
           <div class="flow">
             <p>We simplified our events experience, read <a href="TODO">about it here</a>.
             <br/>
-            If you need to customise your event further you can still use the <a href="TODO">advanced events form</a></p>
+            If you need to customise your event further you can still use the <a :href="`/dashboard/dojo/${dojo.id}/event-form`">advanced events form</a></p>
           </div>
         </div>
       </div>
@@ -138,13 +136,14 @@
   </div>
 </template>
 <script>
-  import moment from 'moment';
   import VueTrix from 'vue-trix';
+  import { mapGetters } from 'vuex';
   import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
   import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
   import DojosService from '@/dojos/service';
   import Dropdown from '@/common/cd-dropdown';
   import EventsService from '@/events/service';
+  import EventStore from '@/events/event-store';
   import EventTile from './cd-event-tile';
   import FormTickets from './form/form-tickets';
 
@@ -159,82 +158,33 @@
     },
     data() {
       return {
-        name: '',
-        description: '',
-        city: {},
-        address: '',
-        dojo: {},
-        latestEvent: undefined,
-        // state
         addressIsVisible: false,
         descriptionIsVisible: false,
-        public: true,
-        startingTime: '09:00',
-        finishTime: '11:00',
-        // TODO: momentjs get month of current locale
-        eventDate: moment().format('YYYY-MM-DD'),
-        sendEmails: true,
+        dojo: {},
+        editing: false,
+        latestEvent: undefined,
         submitError: false,
       };
     },
     methods: {
-      async populateForm() {
+      async initializeStore() {
         if (this.latestEvent) {
-          await this.populateCityFromLatestEvent();
-          await this.populateDatesAndTimesFromLatestEvent();
-          await this.populateTicketQuantitiesFromLatestEvent();
-
-          this.description = this.latestEvent.description;
-          this.address = this.latestEvent.address;
+          EventStore.commit('setCityFromObject', this.latestEvent.city);
+          EventStore.commit('setAddress', this.latestEvent.address);
+          EventStore.commit('setDescription', this.latestEvent.description);
+          EventStore.commit('generateNextEventDates',
+            { lastStartTime: this.latestEvent.startTime,
+              lastEndTime: this.latestEvent.endTime,
+            });
+          EventStore.commit('setTicketQuantitiesFromEvent', this.latestEvent);
         } else {
-          this.description = this.dojo.notes;
-          this.address = this.dojo.address1;
-          this.city = { nameWithHierarchy: this.dojo.city.name };
+          EventStore.commit('setDescription', this.dojo.notes);
+          EventStore.commit('setAddress', this.dojo.address1);
+          EventStore.commit('setCity', this.dojo.city.name);
         }
-      },
-      async populateCityFromLatestEvent() {
-        // format the event city correctly :(
-        const city = this.latestEvent.city;
-        if (city && city.toponymName) {
-          city.nameWithHierarchy = city.toponymName;
-          delete city.toponymName;
-        }
-        this.city = city;
-      },
-      async populateDatesAndTimesFromLatestEvent() {
-        const startDate = moment.utc(this.latestEvent.startTime);
-        let newDate = startDate.add(7, 'days');
-        const inPast = moment().diff(newDate, 'days') > 0;
-
-        if (inPast) {
-          const neededDay = startDate.day();
-          newDate = (moment().isoWeekday() <= neededDay) ?
-            moment().isoWeekday(neededDay) :
-            moment().add(1, 'weeks').isoWeekday(neededDay);
-        }
-
-        this.eventDate = newDate.format('YYYY-MM-DD');
-
-        const endDate = moment.utc(this.latestEvent.endTime);
-        this.startingTime = startDate.format('HH:mm');
-        this.finishTime = endDate.format('HH:mm');
-      },
-      async populateTicketQuantitiesFromLatestEvent() {
-        if (this.latestEvent.sessions && this.latestEvent.sessions.length > 0) {
-          // If there are any sessions for the last event just take the first one.
-          // Any event that has more than one session was created using the old form
-          // and it is unlikely to map to the new form structure
-          const previousTickets = this.latestEvent.sessions[0].tickets;
-          const youthTickets = previousTickets.find(ticket => ticket.name === 'Youth');
-          const mentorTickets = previousTickets.find(ticket => ticket.name === 'Mentor');
-
-          if (youthTickets !== undefined) {
-            this.$refs.youthTickets.setQuantity(youthTickets.quantity);
-          }
-          if (mentorTickets !== undefined) {
-            this.$refs.mentorTickets.setQuantity(mentorTickets.quantity);
-          }
-        }
+        EventStore.commit('setCountry', this.dojo.country);
+        EventStore.commit('setDojoId', this.dojo.id);
+        EventStore.commit('setCreatedBy', this.loggedInUser.id);
       },
       async validateForm() {
         try {
@@ -250,101 +200,129 @@
         const valid = await this.validateForm();
         if (valid) {
           try {
-            const foo = await EventsService.v3.create({
-              name: this.name,
-              description: this.description,
-              city: this.city,
-              address: this.address,
-              dates: [{ startTime: this.startTime, endTime: this.endTime }],
-              type: 'one-off',
-              status: 'published',
-              public: this.public,
-              useDojoAddress: false,
-              ticketApproval: false,
-              notifyOnApplicant: false,
-              country: this.dojo.country,
-              sessions: this.sessions,
-              dojoId: this.dojo.id,
-            });
-
-            console.log(foo);
+            if (this.editing) {
+              await EventsService.v3.update(EventStore.getters.event);
+            } else {
+              await EventsService.v3.create(EventStore.getters.event);
+            }
             this.$router.push({ name: 'DojoDetailsId', params: { id: this.dojo.id } });
           } catch (err) {
             this.submitError = true;
           }
         }
-
-        // TODO: forward to event page
-      },
-
-      toggle(field) { // eslint-disable-line no-unused-vars
-        // eslint-disable-next-line no-param-reassign
-        field = !field;
       },
     },
     computed: {
+      ...mapGetters(['loggedInUser']),
+      eventName: {
+        get() {
+          return EventStore.getters.eventName;
+        },
+        set(value) {
+          EventStore.commit('setEventName', value);
+        },
+      },
+      eventAddress: {
+        get() {
+          return EventStore.getters.address;
+        },
+        set(value) {
+          EventStore.commit('setAddress', value);
+        },
+      },
+      eventCity: {
+        get() {
+          return EventStore.getters.city;
+        },
+        set(value) {
+          EventStore.commit('setCity', value);
+        },
+      },
+      eventDescription: {
+        get() {
+          return EventStore.getters.description;
+        },
+        set(value) {
+          EventStore.commit('setDescription', value);
+        },
+      },
+      eventDate: {
+        get() {
+          return EventStore.getters.eventDate;
+        },
+        set(value) {
+          EventStore.commit('updateEventDate', value);
+        },
+      },
+      startTime: {
+        get() {
+          return EventStore.getters.startTime;
+        },
+        set(value) {
+          EventStore.commit('updateStartTime', value);
+        },
+      },
+      endTime: {
+        get() {
+          return EventStore.getters.endTime;
+        },
+        set(value) {
+          EventStore.commit('updateEndTime', value);
+        },
+      },
+      sendEmails: {
+        get() {
+          return EventStore.getters.sendEmails;
+        },
+        set(value) {
+          EventStore.commit('setSendEmails', value);
+        },
+      },
       truncatedDescription() {
-        if (this.description) {
-          const str = this.description.replace(/<[^<|>]+?>/gi, ' ');
-          const words = str.split(' ').filter(word => word !== '');
-          return `${words.slice(0, 6).join('  ')}... `;
-        }
-        return '';
+        const str = EventStore.getters.description.replace(/(<[^<|>]+?>)|(&nbsp;)/gi, ' ');
+        const words = str.split(' ').filter(word => word !== '');
+        return `${words.slice(0, 6).join(' ')}... `;
       },
       formattedAddress() {
-        const str = this.address.replace(/<[^<|>]+?>/gi, ' ');
+        const str = EventStore.getters.address.replace(/(<[^<|>]+?>)|(&nbsp;)/gi, ' ');
         const words = str.split(' ').filter(word => word !== '');
-        return `${words.slice(0, 5).join('  ')}... ${this.city.nameWithHierarchy}`;
-      },
-      tickets() {
-        return [this.$refs.youthTickets, this.$refs.mentorTickets];
-      },
-      startTime() {
-        const startDay = moment.utc(this.eventDate, 'YYYY-MM-DD');
-        const startingTimeElements = this.startingTime.split(':');
-        startDay.hours(startingTimeElements[0]);
-        startDay.minutes(startingTimeElements[1]);
-        return startDay;
-      },
-      endTime() {
-        const endDay = moment.utc(this.eventDate);
-        const finishTimeElements = this.finishTime.split(':');
-        endDay.hours(finishTimeElements[0]);
-        endDay.minutes(finishTimeElements[1]);
-        return endDay;
-      },
-      sessions() {
-        const tickets = this.tickets.map(t => t.createTicket());
-        return [{
-          // TODO: this needs to be translated?
-          name: 'Dojo',
-          description: 'Dojo Session',
-          tickets,
-        }];
+        return `${words.slice(0, 5).join(' ')}... ${this.eventCity}`;
       },
     },
     async created() {
-      // TODO: if eventId in params load event, otherwise populate defaults
+      const { dojoId, eventId } = this.$route.params;
+      this.dojo = (await DojosService.getDojoById(dojoId)).body;
 
-      // TODO: get previous event, use that info to populate defaults
-      const { dojoId } = this.$route.params;
-
-      const latestEvent = await EventsService.v3.get(
-        dojoId,
-        {
-          params:
-          {
-            pageSize: 1,
-            page: 1,
-            orderBy: 'startTime',
-            direction: 'desc',
+      if (eventId) {
+        const event = (await EventsService.v3.load(
+        eventId, {
+          params: {
             related: 'sessions.tickets',
           },
-        });
-//
-      this.latestEvent = latestEvent.body.results[0];
-      this.dojo = (await DojosService.getDojoById(dojoId)).body;
-      this.populateForm();
+        })).body;
+
+        if (!event.newForm) {
+          this.$router.push(`/dashboard/dojo/${dojoId}/event-form/${eventId}`);
+          return;
+        }
+        EventStore.commit('setEvent', event);
+        this.editing = true;
+      } else {
+        const latestEvent = await EventsService.v3.get(
+          dojoId,
+          {
+            params:
+            {
+              pageSize: 1,
+              page: 1,
+              orderBy: 'startTime',
+              direction: 'desc',
+              related: 'sessions.tickets',
+            },
+          });
+        this.latestEvent = latestEvent.body.results[0];
+        this.initializeStore();
+      }
     },
   };
 </script>

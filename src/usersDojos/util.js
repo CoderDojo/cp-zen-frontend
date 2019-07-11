@@ -1,6 +1,9 @@
 export default {
   hasPermission(usersDojos, permission) {
-    return usersDojos.find(usersDojo =>
+    const dojosWithPermissions = usersDojos
+      .filter(usersDojo => usersDojo.userPermissions !== null);
+
+    return dojosWithPermissions.find(usersDojo =>
       usersDojo.userPermissions.find(perm => perm.name === permission));
   },
 };

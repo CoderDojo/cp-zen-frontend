@@ -1,53 +1,60 @@
 <template>
   <div class="row row-no-gutters cd-form-ticket">
     <div class="col-sm-2">
-      <label class="cd-form-ticket__label" for="quantity">{{ $t(label) }}</label>
+      <label class="cd-form-ticket__label" for="ticketQuantity">{{ $t(label) }}</label>
     </div>
     <div class="col-sm-2">
-      <input type="number" class="form-control" v-model="quantity" name="quantity" />
+      <input type="number" class="form-control" v-model="ticketQuantity" name="ticketQuantity" />
     </div>
   </div>
 </template>
 <script>
-export default {
-  $_veeValidate: {
-    name() {
-      return this.label;
-    },
-    value() {
-      return this.quantity;
-    },
-  },
-  name: 'form-ticket',
-  props: [
-    'label',
-    'default-quantity',
-    'type',
-  ],
-  data() {
-    return {
-      quantity: null,
-    };
-  },
+  // import { mutations, getters } from '@/events/event-store';
+  import EventStore from '@/events/event-store';
 
-  methods: {
-    createTicket() {
+  export default {
+    $_veeValidate: {
+      name() {
+        return this.label;
+      },
+      value() {
+        return this.ticketQuantity;
+      },
+    },
+    name: 'form-ticket',
+    props: [
+      'label',
+      'default-quantity',
+      'type',
+    ],
+    data() {
       return {
-        name: this.label,
-        type: this.type,
-        quantity: this.quantity,
+        quantity: null,
       };
     },
-    setQuantity(q) {
-      this.quantity = q;
-    },
-  },
-  created() {
-    this.quantity = this.defaultQuantity;
-  },
-};
 
+    methods: {
+      createTicket() {
+        return {
+          name: this.label,
+          type: this.type,
+          quantity: this.quantity,
+        };
+      },
+    },
+    computed: {
+      ticketQuantity: {
+        get() {
+          return EventStore.getters.ticketQuantity(this.type);
+        },
+        set(value) {
+          EventStore.commit('updateTicketQuantity', { type: this.type, quantity: value });
+        },
+      },
+    },
+  };
 </script>
+
 <style scoped lang="less">
   @import "../../common/variables";
 
