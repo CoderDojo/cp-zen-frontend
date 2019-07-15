@@ -9,7 +9,6 @@
   </div>
 </template>
 <script>
-  // import { mutations, getters } from '@/events/event-store';
   import EventStore from '@/events/event-store';
 
   export default {
@@ -33,15 +32,6 @@
       };
     },
 
-    methods: {
-      createTicket() {
-        return {
-          name: this.label,
-          type: this.type,
-          quantity: this.quantity,
-        };
-      },
-    },
     computed: {
       ticketQuantity: {
         get() {

@@ -32,8 +32,6 @@ describe('Event Form component', () => {
 
     MockEventStore = {
       commit: sinon.stub(),
-      mutations: {
-      },
       getters: {
         address: sinon.stub().resolves('123 Fake Street'),
       },
@@ -109,10 +107,6 @@ describe('Event Form component', () => {
                 dojoId: 'd1',
                 eventId: 'e1',
               },
-            };
-
-            MockEventStore.mutations = {
-              setEvent: sinon.stub(),
             };
 
             await vm.$lifecycleMethods.created();

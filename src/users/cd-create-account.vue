@@ -5,7 +5,7 @@
       <div class="cd-create-account__info">
         <p>
           <i class="fa fa-info-circle"></i>
-          {{ $t('If you are a parent/guardian and want to book tickets for a child under 13, please fill in your own details.') }} <br/> 
+          {{ $t('If you are a parent/guardian and want to book tickets for a child under 13, please fill in your own details.') }} <br/>
           {{ $t('We collect this information so we can contact you with updates about the events you\'re booking tickets for.') }}
         </p>
       </div>
@@ -42,7 +42,7 @@
             :proportions="[2, 2, 3]"></vue-dob-picker>
         </div>
         <p v-if="isUnderage" class="cd-create-account__dob-error text-danger">
-          {{ $t('Sorry :( Since you are under 13, you\'re not yet allowed to book event tickets yourself.') }} 
+          {{ $t('Sorry :( Since you are under 13, you\'re not yet allowed to book event tickets yourself.') }}
           {{ $t('Please ask your parent or guardian to book for you.') }}
         </p>
         <p class="cd-create-account__dob-error text-danger"
@@ -163,7 +163,9 @@
           return false;
         }
         if (!this.recaptchaResponse) {
+          /* eslint-disable no-alert */
           alert('Please complete the reCAPTCHA');
+          /* eslint-enable no-alert */
           return false;
         }
         try {
@@ -194,7 +196,9 @@
               this.errors.add('registration', 'Nick exists', 'nick-exists');
               return;
             }
+            /* eslint-disable no-alert */
             alert(err);
+            /* eslint-enable no-alert */
           }
         }
       },

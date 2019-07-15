@@ -57,7 +57,6 @@ describe('Event Store', () => {
         const event = { id: 1, name: 'Event name' };
         EventStore.commit('setEvent', event);
 
-        console.log(EventStore.state.event);
         expect(EventStore.state.event).to.deep.equal({
           id: 1,
           name: 'Event name',
