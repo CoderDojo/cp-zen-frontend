@@ -6,7 +6,7 @@
         <div class="cd-event-form">
           <h3 v-show="!editing" class="cd-event-form__header">{{ `${$t('Create an event for')} ${dojo.name}` }}</h3>
           <h3 v-show="editing" class="cd-event-form__header">{{ `${$t('Edit event:')} ${eventName}` }}</h3>
-          <form @submit="save">
+          <form v-on:submit.prevent="save">
 
             <div v-if="submitError">
               <h3 class="text-danger">{{ $t('There was an error processing this request. Please try again or contact support') }}</h3>
@@ -16,31 +16,32 @@
             <input type="text" data-cy="title" name="name" v-model="eventName" class="form-control" data-vv-name="eventName" v-validate="'required'" data-vv-validate-on="blur" :placeholder="$t('e.g. October Dojo')">
 
             <div class="cd-event-form__location">
-              {{ $t('This event uses the address') }}:
-              <span v-show="!addressIsVisible">{{ formattedAddress }}</span>
-              <i class="fa fa-pencil" @click="addressIsVisible = true" v-show="!addressIsVisible"></i>
-              <i class="fa fa-times" @click="addressIsVisible = false" v-show="addressIsVisible"></i>
-              <div v-if="addressIsVisible">
+              {{ $t('Event address:') }}
+              <span v-show="!customAddressFormIsVisible">{{ truncatedAddress }}</span>
+              <i class="fa fa-pencil pointer" @click="customAddressFormIsVisible = true" v-show="!customAddressFormIsVisible"></i>
+              <i class="fa fa-times pointer" @click="customAddressFormIsVisible = false" v-show="customAddressFormIsVisible"></i>
+              <div v-if="customAddressFormIsVisible">
                 <input type="text" name="city" v-model="eventCity" class="form-control">
                 <textarea name="address" v-model="eventAddress" rows="3" class="form-control"></textarea>
               </div>
             </div>
 
             <div class="cd-event-form__description">
-              {{ $t('This event uses the description') }}:
-              <span v-show="!descriptionIsVisible">{{ truncatedDescription }}</span>
-              <i class="fa fa-pencil" @click="descriptionIsVisible = true" v-show="!descriptionIsVisible"></i>
-              <i class="fa fa-times" @click="descriptionIsVisible = false" v-show="descriptionIsVisible"></i>
+              {{ $t('Event description:') }}
+              <span v-show="!customDescriptionFormIsVisible">{{ truncatedDescription }}</span>
+              <i class="fa fa-pencil pointer" @click="customDescriptionFormIsVisible = true" v-show="!customDescriptionFormIsVisible"></i>
+              <i class="fa fa-times pointer" @click="customDescriptionFormIsVisible = false" v-show="customDescriptionFormIsVisible"></i>
 
               <p class="text-danger" v-show="errors.has('eventDescription:required')">{{ $t('Description is required') }}</p>
               <input type="hidden" v-model="eventDescription" v-validate="'required'" name="eventDescription" />
-              <div v-if="descriptionIsVisible">
+              <div v-if="customDescriptionFormIsVisible">
                 <VueTrix v-model="eventDescription" ref="trixEditor" />
               </div>
             </div>
 
             <h4 class="cd-event__section-title">{{ $t('Date and Time') }}</h4>
             <div>
+              <p class="text-danger" v-show="errors.has('eventDate:required')">{{ $t('Event date is required') }}</p>
               <p class="text-danger" v-show="errors.has('startTime:required')">{{ $t('Start time is required') }}</p>
               <p class="text-danger" v-show="errors.has('endTime:required')">{{ $t('Finish time is required') }}</p>
               <p class="text-danger" v-show="errors.has('endTime:after')">{{ $t('Finish time must be after start time') }}</p>
@@ -51,27 +52,27 @@
                 <VueCtkDateTimePicker v-model="eventDate"
                                       name="eventDate"
                                       v-validate="'required'"
-                                      :only-date="true"
-                                      :input-size="'sm'"
-                                      :format="'YYYY-MM-DD'"
-                                      :formatted="'ll'"
-                                      :no-label=true
-                                      :color="'#73449B'"
+                                      only-date
+                                      input-size="sm"
+                                      format="YYYY-MM-DD"
+                                      formatted="ll"
+                                      no-label
+                                      color="#73449B"
                                       />
               </div>
 
               <div class="col-sm-3 flow">
                 <VueCtkDateTimePicker v-model="startTime"
                                       name="startTime"
-                                      v-validate="'required'"
-                                      :only-time="true"
-                                      :input-size="'sm'"
-                                      :format="'HH:mm'"
-                                      :formatted="'HH:mm'"
-                                      :minute-interval=10
-                                      :no-label=true
+                                      v-validate="'required|date_format:HH:mm'"
+                                      only-time
+                                      input-size="sm"
+                                      format="HH:mm"
+                                      formatted="HH:mm"
+                                      minute-interval=10
+                                      no-label
                                       ref="startTimePicker"
-                                      :color="'#73449B'"
+                                      color="#73449B"
                                       />
               </div>
               <div class="col-sm-1 flow">
@@ -82,15 +83,15 @@
 
               <div class="col-sm-3 flow">
                 <VueCtkDateTimePicker v-model="endTime"
-                                      v-validate="'date_format:HH:mm|after:startTimePicker'"
+                                      v-validate="'required|date_format:HH:mm|after:startTimePicker'"
                                       name="endTime"
-                                      :only-time="true"
-                                      :input-size="'sm'"
-                                      :format="'HH:mm'"
-                                      :formatted="'HH:mm'"
-                                      :minute-interval=10
-                                      :no-label=true
-                                      :color="'#73449B'"
+                                      only-time
+                                      input-size="sm"
+                                      format="HH:mm"
+                                      formatted="HH:mm"
+                                      minute-interval=10
+                                      no-label
+                                      color="#73449B"
                                       />
               </div>
             </div>
@@ -126,7 +127,7 @@
             </div>
           </form>
           <div class="flow">
-            <p>We simplified our events experience, read <a href="TODO">about it here</a>.
+            <p>We simplified our events experience, read <a href="https://coderdojo.com/?p=17691">about it here</a>.
             <br/>
             If you need to customise your event further you can still use the <a :href="`/dashboard/dojo/${dojo.id}/event-form`">advanced events form</a></p>
           </div>
@@ -158,8 +159,8 @@
     },
     data() {
       return {
-        addressIsVisible: false,
-        descriptionIsVisible: false,
+        customAddressFormIsVisible: false,
+        customDescriptionFormIsVisible: false,
         dojo: {},
         editing: false,
         latestEvent: undefined,
@@ -186,6 +187,10 @@
         EventStore.commit('setDojoId', this.dojo.id);
         EventStore.commit('setCreatedBy', this.loggedInUser.id);
       },
+      stripHtml(htmlString) {
+        // removes html tags and non breaking spaces
+        return htmlString.replace(/(<[^<|>]+?>)|(&nbsp;)/gi, ' ');
+      },
       async validateForm() {
         try {
           const res = await this.$validator.validateAll();
@@ -195,8 +200,7 @@
         }
       },
 
-      async save(e) {
-        e.preventDefault();
+      async save() {
         const valid = await this.validateForm();
         if (valid) {
           try {
@@ -279,12 +283,12 @@
         },
       },
       truncatedDescription() {
-        const str = EventStore.getters.description.replace(/(<[^<|>]+?>)|(&nbsp;)/gi, ' ');
+        const str = this.stripHtml(EventStore.getters.description);
         const words = str.split(' ').filter(word => word !== '');
         return `${words.slice(0, 6).join(' ')}... `;
       },
-      formattedAddress() {
-        const str = EventStore.getters.address.replace(/(<[^<|>]+?>)|(&nbsp;)/gi, ' ');
+      truncatedAddress() {
+        const str = this.stripHtml(EventStore.getters.address);
         const words = str.split(' ').filter(word => word !== '');
         return `${words.slice(0, 5).join(' ')}... ${this.eventCity}`;
       },
@@ -357,5 +361,9 @@
     &__button-default-submit {
       width: 100%;
     }
+  }
+
+  .pointer {
+    cursor: pointer;
   }
 </style>

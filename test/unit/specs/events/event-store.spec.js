@@ -1,6 +1,5 @@
 import moment from 'moment';
 import EventStore from '@/events/event-store';
-// import { mutations } from '@/events/event-store';
 
 describe('Event Store', () => {
   let clock;

@@ -200,14 +200,14 @@ describe('Event Form component', () => {
         });
       });
     });
-    describe('formattedAddress', () => {
+    describe('truncatedAddress', () => {
       it('formats the address correctly', () => {
         const vm = vueUnitHelper(EventFormWithMocks);
         MockEventStore.getters = {
           address: '<p>123 Fake Street</p>',
           city: 'London',
         };
-        expect(vm.formattedAddress).to.eql('123 Fake Street... London');
+        expect(vm.truncatedAddress).to.eql('123 Fake Street... London');
       });
       it('truncates address to 5 words', () => {
         const vm = vueUnitHelper(EventFormWithMocks);
@@ -215,7 +215,7 @@ describe('Event Form component', () => {
           address: '<p>123 Really Really Long Named Fake Street</p>',
           city: 'London',
         };
-        expect(vm.formattedAddress).to.eql('123 Really Really Long Named... London');
+        expect(vm.truncatedAddress).to.eql('123 Really Really Long Named... London');
       });
     });
   });
