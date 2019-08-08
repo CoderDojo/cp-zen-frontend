@@ -2,11 +2,9 @@ import vueUnitHelper from 'vue-unit-helper';
 import Dropdown from '@/common/cd-dropdown';
 
 describe('Dropdown component', () => {
-  let sandbox;
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     vm = vueUnitHelper(Dropdown);
   });
 
@@ -35,7 +33,7 @@ describe('Dropdown component', () => {
     let mockEvent;
 
     beforeEach(() => {
-      containsStub = sandbox.stub();
+      containsStub = sinon.stub();
       mockEvent = {
         relatedTarget: 'foo',
         srcElement: {

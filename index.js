@@ -82,6 +82,26 @@ exports.register = function (server, options, next) {
 
   server.route({
     method: 'GET',
+    path: '/dashboard/dojos/{dojoId}/events/new',
+    handler :{
+      file: {
+        path: 'index.html'
+      }
+    }
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/dashboard/dojos/{dojoId}/events/{eventId}/edit',
+    handler :{
+      file: {
+        path: 'index.html'
+      }
+    }
+  });
+
+  server.route({
+    method: 'GET',
     path: '/dashboard/dojos/{dojoId}/join-requests/{id}/status/{status}',
     handler :{
       file: {
@@ -108,7 +128,7 @@ exports.register = function (server, options, next) {
         path: 'index.html'
       }
     }
-  });  
+  });
 
   server.route({
     method: 'GET',
@@ -118,7 +138,7 @@ exports.register = function (server, options, next) {
         path: 'index.html'
       }
     }
-  });  
+  });
 
   server.route({
     method: 'GET',

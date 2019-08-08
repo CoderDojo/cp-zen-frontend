@@ -4,7 +4,6 @@ import cdDojoList from '!!vue-loader?inject!@/dojos/cd-dojo-list';
 
 describe('The Dojo List vue ', () => {
   let vm;
-  let sandbox;
   let DojoListWithMocks;
   let DojoPaginationStoreMock;
   let VuePaginationMock;
@@ -35,9 +34,8 @@ describe('The Dojo List vue ', () => {
   }];
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     DojoPaginationStoreMock = {
-      commit: sandbox.stub(),
+      commit: sinon.stub(),
       state: {
         dojosPerPage: 6,
       },
@@ -45,7 +43,7 @@ describe('The Dojo List vue ', () => {
     VuePaginationMock = {
       Pagination: {},
       PaginationEvent: {
-        $on: sandbox.stub(),
+        $on: sinon.stub(),
       },
     };
     DojoListWithMocks = cdDojoList({
@@ -109,7 +107,7 @@ describe('The Dojo List vue ', () => {
         };
 
         vm.$router = {
-          push: sandbox.spy(),
+          push: sinon.spy(),
         };
 
         // ACT
@@ -165,7 +163,7 @@ describe('The Dojo List vue ', () => {
             totalPages: 2,
           },
         };
-        sandbox.stub(vm, 'goToPage');
+        sinon.stub(vm, 'goToPage');
 
         // ACT
         vm.$watchers.dojos();
@@ -185,7 +183,7 @@ describe('The Dojo List vue ', () => {
 
         // ASSERT
         Vue.nextTick(() =>
-          expect(vm.goToPage).to.have.ben.calledWith(vm.$refs.pagination.totalPages));
+          expect(vm.goToPage).to.have.been.calledWith(vm.$refs.pagination.totalPages));
 
         // ARRANGE
         vm.$route = {
@@ -199,7 +197,7 @@ describe('The Dojo List vue ', () => {
 
         // ASSERT
         Vue.nextTick(() =>
-          expect(vm.goToPage).to.have.ben.calledWith(1));
+          expect(vm.goToPage).to.have.been.calledWith(1));
       });
     });
     describe('paginatedDojos', () => {
@@ -211,7 +209,7 @@ describe('The Dojo List vue ', () => {
             setPage: () => {},
           },
         };
-        sandbox.stub(vm.$refs.pagination, 'setPage');
+        sinon.stub(vm.$refs.pagination, 'setPage');
 
         // ACT
         vm.$watchers.paginatedDojos();

@@ -35,6 +35,15 @@ const EventsService = {
     getOrder(userId, options) {
       return Vue.http.get(`${Vue.config.apiServer}/api/3.0/users/${userId}/orders`, options);
     },
+    create(event) {
+      return Vue.http.post(`${Vue.config.apiServer}/api/3.0/events`, event);
+    },
+    load(eventId, options) {
+      return Vue.http.get(`${Vue.config.apiServer}/api/3.0/events/${eventId}`, options);
+    },
+    update(event) {
+      return Vue.http.put(`${Vue.config.apiServer}/api/3.0/events/${event.id}`, event);
+    },
   },
 };
 

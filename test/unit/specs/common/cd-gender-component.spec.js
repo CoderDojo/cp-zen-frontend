@@ -2,14 +2,8 @@ import vueUnitHelper from 'vue-unit-helper';
 import GenderComponent from '@/common/cd-gender-component';
 
 describe('Gender Component', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
-
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('methods', () => {
@@ -17,11 +11,11 @@ describe('Gender Component', () => {
       it('should emit a blur event after 50ms and assign the timeout to blurTimeout', () => {
         // ARRANGE
         const vm = vueUnitHelper(GenderComponent);
-        sandbox.stub(window, 'setTimeout').callsFake((cb) => {
+        sinon.stub(window, 'setTimeout').callsFake((cb) => {
           cb();
           return 'foo';
         });
-        const emitStub = sandbox.stub();
+        const emitStub = sinon.stub();
         vm.$emit = emitStub;
 
         // ACT
@@ -40,7 +34,7 @@ describe('Gender Component', () => {
       it('should clear any existing blur timeout', () => {
         // ARRANGE
         const vm = vueUnitHelper(GenderComponent);
-        sandbox.stub(window, 'clearTimeout');
+        sinon.stub(window, 'clearTimeout');
         vm.blurTimeout = 'foo';
 
         // ACT
@@ -110,7 +104,7 @@ describe('Gender Component', () => {
         // ARRANGE
         const vm = vueUnitHelper(GenderComponent);
         const mockGender = 'female';
-        const emitStub = sandbox.stub();
+        const emitStub = sinon.stub();
         vm.$emit = emitStub;
         vm.gender = mockGender;
 

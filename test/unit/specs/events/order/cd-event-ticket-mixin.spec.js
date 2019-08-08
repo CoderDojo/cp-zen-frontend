@@ -2,14 +2,8 @@ import vueUnitHelper from 'vue-unit-helper';
 import EventListItem from '@/events/order/cd-event-ticket-mixin';
 
 describe('Event ticket mixin component', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
-
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('computed', () => {

@@ -2,20 +2,18 @@ import vueUnitHelper from 'vue-unit-helper';
 import DashboardProjectsComponent from '!!vue-loader?inject!@/dashboard/cd-dashboard-stats';
 
 describe('Dashboard stats component', () => {
-  let sandbox;
   let DashboardProjectsComponentWithMocks;
   let MockDojoService;
   let MockEventService;
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockDojoService = {
-      getUsersDojos: sandbox.stub(),
-      getDojoUsers: sandbox.stub(),
+      getUsersDojos: sinon.stub(),
+      getDojoUsers: sinon.stub(),
     };
     MockEventService = {
-      searchApplicationsByDojo: sandbox.stub(),
+      searchApplicationsByDojo: sinon.stub(),
     };
     DashboardProjectsComponentWithMocks = DashboardProjectsComponent({
       '@/dojos/service': MockDojoService,
@@ -25,7 +23,7 @@ describe('Dashboard stats component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('computed', () => {
@@ -147,8 +145,8 @@ describe('Dashboard stats component', () => {
   describe('created', () => {
     it('should call getDojos && getBookedChildren && getDojoUsers', async () => {
       // ARRANGE
-      sandbox.stub(vm, 'getBookedChildren');
-      sandbox.stub(vm, 'getDojoUsers');
+      sinon.stub(vm, 'getBookedChildren');
+      sinon.stub(vm, 'getDojoUsers');
 
       // ACT
       await vm.$lifecycleMethods.created();

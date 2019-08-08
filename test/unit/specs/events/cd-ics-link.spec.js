@@ -3,10 +3,6 @@ import IcsLink from '@/events/cd-ics-link';
 import TimeShift from 'timeshift-js';
 
 describe('ICS link component', () => {
-  let sandbox;
-  before(() => {
-    sandbox = sinon.sandbox.create();
-  });
   describe('computed', () => {
     describe('url', () => {
       it('should return the url to recover the dojo events', () => {
@@ -40,12 +36,12 @@ describe('ICS link component', () => {
         const vm = vueUnitHelper(IcsLink);
         vm.$refs = {
           httpUrl: {
-            focus: sandbox.stub(),
-            select: sandbox.stub(),
+            focus: sinon.stub(),
+            select: sinon.stub(),
           },
         };
-        vm.toggleCopy = sandbox.stub();
-        const spy = sandbox.spy(document, 'execCommand');
+        vm.toggleCopy = sinon.stub();
+        const spy = sinon.spy(document, 'execCommand');
         vm.toClipboard();
         expect(vm.$refs.httpUrl.focus).to.have.been.calledOnce;
         expect(vm.$refs.httpUrl.select).to.have.been.calledOnce;

@@ -7,6 +7,7 @@ import UserTickets from '@/users/cd-tickets';
 import EventDetails from '@/events/order/cd-event-details';
 import LoginOrRegister from '@/users/cd-login-or-register';
 import EventSessions from '@/events/order/cd-event-sessions';
+import EventForm from '@/events/cd-event-form';
 import BookingConfirmation from '@/events/order/cd-booking-confirmation';
 import Login from '@/users/cd-login';
 import orderWrapper from '@/events/order/wrapper';
@@ -18,6 +19,7 @@ import ManageRequestToJoin from '@/dojos/manage-request-to-join';
 import loggedInNavGuard from './loggedInNavGuard';
 import loggedInCDFNavGuard from './loggedInCDFNavGuard';
 import orderExistsNavGuard from './orderExistsNavGuard';
+import ticketingAdminNavGuard from './ticketingAdminNavGuard';
 
 
 Vue.use(Router);
@@ -83,6 +85,18 @@ const router = new Router({
           name: 'MyTickets',
           component: UserTickets,
           beforeEnter: loggedInNavGuard,
+        },
+        {
+          path: '/dashboard/dojos/:dojoId/events/new',
+          name: 'NewEventForm',
+          component: EventForm,
+          beforeEnter: MultiGuard([loggedInNavGuard, ticketingAdminNavGuard]),
+        },
+        {
+          path: '/dashboard/dojos/:dojoId/events/:eventId/edit',
+          name: 'EditEventForm',
+          component: EventForm,
+          beforeEnter: MultiGuard([loggedInNavGuard, ticketingAdminNavGuard]),
         },
         {
           path: '/dashboard/dojos/:dojoId/join-requests/:requestId/status/:status',

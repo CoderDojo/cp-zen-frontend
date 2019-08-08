@@ -2,15 +2,13 @@ import DojosService from 'inject-loader!@/dojos/service';
 import Vue from 'vue';
 
 describe('Dojos Service', () => {
-  let sandbox;
   let MockGeolocationService;
   let DojosServiceWithMocks;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockGeolocationService = {
-      getIpCountryDetails: sandbox.stub(),
-      geocode: sandbox.stub(),
+      getIpCountryDetails: sinon.stub(),
+      geocode: sinon.stub(),
     };
     DojosServiceWithMocks = DojosService({
       '@/geolocation/service': MockGeolocationService,
@@ -18,7 +16,7 @@ describe('Dojos Service', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   const expectedResult = { name: 'Cool Dojo' };
@@ -88,7 +86,7 @@ describe('Dojos Service', () => {
   }];
 
   it('should call the api', (done) => {
-    const httpStub = sandbox.stub(Vue.http, 'post');
+    const httpStub = sinon.stub(Vue.http, 'post');
     httpStub.withArgs(
       `${Vue.config.apiServer}/api/2.0/dojos/find`,
       {
@@ -106,7 +104,7 @@ describe('Dojos Service', () => {
   describe('getDojos()', () => {
     it('should get dojos', (done) => {
       const query = { key: 'val' };
-      const postMock = sandbox.stub(Vue.http, 'post');
+      const postMock = sinon.stub(Vue.http, 'post');
       postMock.withArgs(`${Vue.config.apiServer}/api/2.0/dojos`, { query }).returns(Promise.resolve({ body: expectedDojos }));
       DojosServiceWithMocks.getDojos(query).then((res) => {
         expect(res.body).to.deep.equal(expectedDojos);
@@ -125,7 +123,7 @@ describe('Dojos Service', () => {
           radius: 50000,
         },
       };
-      const postMock = sandbox.stub(Vue.http, 'post');
+      const postMock = sinon.stub(Vue.http, 'post');
       postMock.withArgs(`${Vue.config.apiServer}/api/2.0/dojos/search-bounding-box`, expectedQuery).returns(Promise.resolve({ body: expectedDojosSnakeCase }));
 
       // ACT
@@ -144,7 +142,7 @@ describe('Dojos Service', () => {
         name: 'Dublin Ninja Kids',
       };
 
-      const getMock = sandbox.stub(Vue.http, 'get');
+      const getMock = sinon.stub(Vue.http, 'get');
       getMock.withArgs(`${Vue.config.apiServer}/api/2.0/dojos/${id}`).returns(Promise.resolve({ body: expectedDojo }));
 
       DojosServiceWithMocks.getDojoById(id).then((res) => {
@@ -169,7 +167,7 @@ describe('Dojos Service', () => {
         },
       };
 
-      const postMock = sandbox.stub(Vue.http, 'post');
+      const postMock = sinon.stub(Vue.http, 'post');
       postMock.withArgs(`${Vue.config.apiServer}/api/2.0/dojos/save-usersdojos`, expectedPayload).returns(Promise.resolve());
 
       // ACT
@@ -186,7 +184,7 @@ describe('Dojos Service', () => {
       const dojoId = 'd1';
       const userType = 'mentor';
 
-      const postMock = sandbox.stub(Vue.http, 'post');
+      const postMock = sinon.stub(Vue.http, 'post');
 
       // ACT
       await DojosServiceWithMocks.membership.request(dojoId, userType);
@@ -200,7 +198,7 @@ describe('Dojos Service', () => {
       const dojoId = 'd1';
       const requestId = 'rq1';
 
-      const postMock = sandbox.stub(Vue.http, 'get');
+      const postMock = sinon.stub(Vue.http, 'get');
 
       // ACT
       await DojosServiceWithMocks.membership.loadPending(requestId, dojoId);
@@ -214,7 +212,7 @@ describe('Dojos Service', () => {
       const dojoId = 'd1';
       const requestId = 'rq1';
 
-      const postMock = sandbox.stub(Vue.http, 'put');
+      const postMock = sinon.stub(Vue.http, 'put');
 
       // ACT
       await DojosServiceWithMocks.membership.accept(requestId, dojoId);
@@ -228,7 +226,7 @@ describe('Dojos Service', () => {
       const dojoId = 'd1';
       const requestId = 'rq1';
 
-      const postMock = sandbox.stub(Vue.http, 'delete');
+      const postMock = sinon.stub(Vue.http, 'delete');
 
       // ACT
       await DojosServiceWithMocks.membership.refuse(requestId, dojoId);

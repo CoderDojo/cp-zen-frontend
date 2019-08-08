@@ -2,7 +2,6 @@ import Vue from 'vue';
 import GeolocationService from 'inject-loader!@/geolocation/service';
 
 describe('Geolocation Service', () => {
-  let sandbox;
   let VueGoogleMapsMock;
   let GeolocationServiceWithMocks;
 
@@ -63,7 +62,6 @@ describe('Geolocation Service', () => {
   }];
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     VueGoogleMapsMock = {
       loaded: Promise.resolve(),
     };
@@ -73,12 +71,12 @@ describe('Geolocation Service', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('getIpCountryDetails()', () => {
     it('should get country data from users IP', (done) => {
-      const httpStub = sandbox.stub(Vue.http, 'get');
+      const httpStub = sinon.stub(Vue.http, 'get');
       httpStub.withArgs(`${Vue.config.apiServer}/api/2.0/ip-country-details`)
         .returns(Promise.resolve({ body: expectedIpCountryDetails }));
 
@@ -92,8 +90,8 @@ describe('Geolocation Service', () => {
   describe('getLatitudeLongitudeByAddress()', () => {
     it('should return coordinates for given address', (done) => {
       // ARRANGE
-      sandbox.stub(GeolocationServiceWithMocks, 'getIpCountryDetails').returns(Promise.resolve({ body: expectedIpCountryDetails }));
-      sandbox.stub(GeolocationServiceWithMocks, 'geocode').returns(Promise.resolve(mockGeocoderResults));
+      sinon.stub(GeolocationServiceWithMocks, 'getIpCountryDetails').returns(Promise.resolve({ body: expectedIpCountryDetails }));
+      sinon.stub(GeolocationServiceWithMocks, 'geocode').returns(Promise.resolve(mockGeocoderResults));
 
       // ACT
       GeolocationServiceWithMocks.getLatitudeLongitudeByAddress()
@@ -116,10 +114,10 @@ describe('Geolocation Service', () => {
     };
 
     beforeEach(() => {
-      sandbox.spy(mockGeocoder, 'geocode');
+      sinon.spy(mockGeocoder, 'geocode');
       window.google = {
         maps: {
-          Geocoder: sandbox.stub().returns(mockGeocoder),
+          Geocoder: sinon.stub().returns(mockGeocoder),
         },
       };
     });
@@ -158,7 +156,7 @@ describe('Geolocation Service', () => {
           cb([], 'OK');
         },
       };
-      sandbox.spy(existingMockGeocoder, 'geocode');
+      sinon.spy(existingMockGeocoder, 'geocode');
       GeolocationServiceWithMocks.geocoder = existingMockGeocoder;
 
       // ACT

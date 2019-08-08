@@ -2,9 +2,8 @@ import EventsService from '@/events/service';
 import Vue from 'vue';
 
 describe('Events Service', () => {
-  const sandbox = sinon.sandbox.create();
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
   it('should bookTickets through manageTickets', (done) => {
     // ARRANGE
@@ -21,7 +20,7 @@ describe('Events Service', () => {
       },
     ];
 
-    sandbox.stub(Vue.http, 'post').returns(Promise.resolve());
+    sinon.stub(Vue.http, 'post').returns(Promise.resolve());
 
     // ACT
     EventsService.manageTickets(applications)

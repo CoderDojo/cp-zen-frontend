@@ -2,16 +2,14 @@ import vueUnitHelper from 'vue-unit-helper';
 import DashboardChildrenComponent from '!!vue-loader?inject!@/dashboard/cd-dashboard-children';
 
 describe('Dashboard children component', () => {
-  let sandbox;
   let DashboardChildrenComponentWithMocks;
   let MockUsersService;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockUsersService = {
-      getCurrentUser: sandbox.stub(),
-      userProfileData: sandbox.stub(),
-      getChildren: sandbox.stub(),
+      getCurrentUser: sinon.stub(),
+      userProfileData: sinon.stub(),
+      getChildren: sinon.stub(),
     };
     DashboardChildrenComponentWithMocks = DashboardChildrenComponent({
       '@/users/service': MockUsersService,
@@ -19,7 +17,7 @@ describe('Dashboard children component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
 
@@ -104,7 +102,7 @@ describe('Dashboard children component', () => {
         };
         MockUsersService.userProfileData.resolves({ body: mockChild });
         const vm = vueUnitHelper(DashboardChildrenComponentWithMocks);
-        vm.orderedBadges = sandbox.stub().returns([]);
+        vm.orderedBadges = sinon.stub().returns([]);
         vm.loadedChildren = false;
         vm.userProfile = {
           id: '34',

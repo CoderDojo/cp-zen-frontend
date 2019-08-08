@@ -2,19 +2,17 @@ import vueUnitHelper from 'vue-unit-helper';
 import DashboardProjectsComponent from '!!vue-loader?inject!@/dashboard/cd-dashboard-projects';
 
 describe('Dashboard children component', () => {
-  let sandbox;
   let DashboardProjectsComponentWithMocks;
   let MockProjectsService;
   let MockLocaleService;
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockProjectsService = {
-      list: sandbox.stub(),
+      list: sinon.stub(),
     };
     MockLocaleService = {
-      getUserLocale: sandbox.stub(),
+      getUserLocale: sinon.stub(),
     };
     DashboardProjectsComponentWithMocks = DashboardProjectsComponent({
       '@/projects/service': MockProjectsService,
@@ -24,7 +22,7 @@ describe('Dashboard children component', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
 
@@ -116,7 +114,7 @@ describe('Dashboard children component', () => {
   describe('created', () => {
     it('should call loadProjects', async () => {
       // ARRANGE
-      sandbox.stub(vm, 'loadProjects');
+      sinon.stub(vm, 'loadProjects');
       vm.projects = [{}];
       vm.userLocale = 'fr-FR';
 
@@ -130,7 +128,7 @@ describe('Dashboard children component', () => {
     });
     it('should call loadProjects twice when the localized call returned nothing', async () => {
       // ARRANGE
-      sandbox.stub(vm, 'loadProjects').return;
+      sinon.stub(vm, 'loadProjects').return;
       vm.projects = undefined;
       vm.userLocale = 'fr-FR';
 

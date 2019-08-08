@@ -2,14 +2,8 @@ import vueUnitHelper from 'vue-unit-helper';
 import EventListItem from '@/events/cd-event-list-item';
 
 describe('Event list item component', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
-
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('computed', () => {

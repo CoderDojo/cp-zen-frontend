@@ -2,28 +2,26 @@ import vueUnitHelper from 'vue-unit-helper';
 import ManageUsersComponent from '!!vue-loader?inject!@/users/cdf-manage';
 
 describe('CDFManageUsers', () => {
-  let sandbox;
   let MockUserService;
   let MockDojoService;
   let MockForumService;
   let ManageUsersComponentWithMocks;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockUserService = {
-      getCurrentCDFUser: sandbox.stub(),
-      getChildren: sandbox.stub(),
-      search: sandbox.stub(),
-      load: sandbox.stub(),
-      delete: sandbox.stub(),
+      getCurrentCDFUser: sinon.stub(),
+      getChildren: sinon.stub(),
+      search: sinon.stub(),
+      load: sinon.stub(),
+      delete: sinon.stub(),
     };
     MockDojoService = {
-      getUsersDojos: sandbox.stub(),
-      getDojoById: sandbox.stub(),
+      getUsersDojos: sinon.stub(),
+      getDojoById: sinon.stub(),
     };
     MockForumService = {
       user: {
-        search: sandbox.stub(),
+        search: sinon.stub(),
       },
     };
 
@@ -35,7 +33,7 @@ describe('CDFManageUsers', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('getDojo()', () => {
@@ -84,7 +82,7 @@ describe('CDFManageUsers', () => {
       // ARRANGE
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
       vm.$router = {
-        push: sandbox.stub(),
+        push: sinon.stub(),
       };
       vm.email = 'test@test.com';
       // ACT
@@ -115,7 +113,7 @@ describe('CDFManageUsers', () => {
       // ARRANGE
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
       vm.errors = {
-        clear: sandbox.stub(),
+        clear: sinon.stub(),
       };
       vm.email = 'test@test.com';
       MockUserService.search.resolves({ body: { results: [{ id: '123', profile: { userId: '123' } }], total: 1 } });
@@ -130,8 +128,8 @@ describe('CDFManageUsers', () => {
       // ARRANGE
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
       vm.errors = {
-        clear: sandbox.stub(),
-        add: sandbox.stub(),
+        clear: sinon.stub(),
+        add: sinon.stub(),
       };
       vm.email = 'test@test.com';
       MockUserService.search.resolves({ body: { results: [], total: 0 } });
@@ -146,7 +144,7 @@ describe('CDFManageUsers', () => {
       // ARRANGE
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
       vm.errors = {
-        clear: sandbox.stub(),
+        clear: sinon.stub(),
       };
       vm.userId = '123';
       vm.email = '';
@@ -161,7 +159,7 @@ describe('CDFManageUsers', () => {
       // ARRANGE
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
       vm.errors = {
-        clear: sandbox.stub(),
+        clear: sinon.stub(),
       };
       MockUserService.load.resolves({ body: { id: 1, email: 'user@example.com' } });
       MockUserService.getChildren.resolves({ body: [{ id: 'c1' }] });
@@ -190,8 +188,8 @@ describe('CDFManageUsers', () => {
        // ARRANGE
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
       vm.errors = {
-        clear: sandbox.stub(),
-        add: sandbox.stub(),
+        clear: sinon.stub(),
+        add: sinon.stub(),
       };
       vm.userId = '123';
       const err = new Error('404 - "Invalid userId"');
@@ -214,9 +212,9 @@ describe('CDFManageUsers', () => {
         id: 'u1',
       };
       vm.errors = {
-        clear: sandbox.stub(),
+        clear: sinon.stub(),
       };
-      window.confirm = sandbox.stub().returns(true);
+      window.confirm = sinon.stub().returns(true);
       // ACT
       await vm.deleteUser();
       // ASSERT
@@ -230,9 +228,9 @@ describe('CDFManageUsers', () => {
         id: 'u1',
       };
       vm.errors = {
-        clear: sandbox.stub(),
+        clear: sinon.stub(),
       };
-      window.confirm = sandbox.stub().returns(true);
+      window.confirm = sinon.stub().returns(true);
       // ACT
       await vm.deleteUser(true);
       // ASSERT
@@ -243,13 +241,13 @@ describe('CDFManageUsers', () => {
        // ARRANGE
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
       vm.errors = {
-        clear: sandbox.stub(),
-        add: sandbox.stub(),
+        clear: sinon.stub(),
+        add: sinon.stub(),
       };
       vm.user = {
         id: 'u1',
       };
-      window.confirm = sandbox.stub().returns(true);
+      window.confirm = sinon.stub().returns(true);
       const err = new Error();
       err.status = 500;
       MockUserService.delete.throws(err);
@@ -263,9 +261,9 @@ describe('CDFManageUsers', () => {
   describe('created', () => {
     it('should set the email if the param exists', async () => {
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
-      vm.$router = { replace: sandbox.stub() };
-      vm.reset = sandbox.stub();
-      vm.getUserInfos = sandbox.stub();
+      vm.$router = { replace: sinon.stub() };
+      vm.reset = sinon.stub();
+      vm.getUserInfos = sinon.stub();
       vm.$route = {
         query: {
           email: 'test@test.com',
@@ -279,9 +277,9 @@ describe('CDFManageUsers', () => {
     });
     it('should set the userId if the param exists and email doesnt', async () => {
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
-      vm.$router = { replace: sandbox.stub() };
-      vm.reset = sandbox.stub();
-      vm.getUserInfos = sandbox.stub();
+      vm.$router = { replace: sinon.stub() };
+      vm.reset = sinon.stub();
+      vm.getUserInfos = sinon.stub();
       vm.$route = {
         query: {
           userId: '123',

@@ -2,24 +2,22 @@ import vueUnitHelper from 'vue-unit-helper';
 import BookingCreateAccountComponent from '!!vue-loader?inject!@/users/cd-create-account';
 
 describe('Booking Create Account Form', () => {
-  let sandbox;
   let MockUsersService;
   let MockUserUtils;
   let OrderStore;
   let BookingCreateAccountComponentWithMocks;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockUsersService = {
-      register: sandbox.stub(),
+      register: sinon.stub(),
     };
     MockUserUtils = {
-      isUnderAge: sandbox.stub(),
-      getAge: sandbox.stub(),
-      profileToJSON: sandbox.stub(),
+      isUnderAge: sinon.stub(),
+      getAge: sinon.stub(),
+      profileToJSON: sinon.stub(),
     };
     OrderStore = {
-      commit: sandbox.stub(),
+      commit: sinon.stub(),
     };
 
     BookingCreateAccountComponentWithMocks = BookingCreateAccountComponent({
@@ -30,7 +28,7 @@ describe('Booking Create Account Form', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('computed', () => {
@@ -71,7 +69,7 @@ describe('Booking Create Account Form', () => {
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.isUnderage = false;
       vm.$validator = {
-        validateAll: sandbox.stub().resolves(true),
+        validateAll: sinon.stub().resolves(true),
       };
       vm.recaptchaResponse = true;
       const res = await vm.validateForm();
@@ -83,7 +81,7 @@ describe('Booking Create Account Form', () => {
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       vm.isUnderage = false;
       vm.$validator = {
-        validateAll: sandbox.stub().resolves(false),
+        validateAll: sinon.stub().resolves(false),
       };
       vm.recaptchaResponse = true;
       const res = await vm.validateForm();
@@ -92,10 +90,10 @@ describe('Booking Create Account Form', () => {
     });
     it('should return false and alert on recaptcha failure', async () => {
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      const alerting = sandbox.stub(window, 'alert');
+      const alerting = sinon.stub(window, 'alert');
       vm.isUnderage = false;
       vm.$validator = {
-        validateAll: sandbox.stub().resolves(true),
+        validateAll: sinon.stub().resolves(true),
       };
       vm.recaptchaResponse = false;
       const res = await vm.validateForm();
@@ -106,8 +104,8 @@ describe('Booking Create Account Form', () => {
 
     it('register the user account', async () => {
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.validateForm = sandbox.stub().resolves(true);
-      MockUserUtils.profileToJSON = sandbox.stub().returnsArg(0);
+      vm.validateForm = sinon.stub().resolves(true);
+      MockUserUtils.profileToJSON = sinon.stub().returnsArg(0);
       vm.context = {
         country: {
           alpha2: 'FR',
@@ -117,12 +115,12 @@ describe('Booking Create Account Form', () => {
       vm.user = { lastName: 'blu' };
       vm.userData = { firstName: 'bla' };
       vm.$ga = {
-        event: sandbox.stub(),
+        event: sinon.stub(),
       };
       vm.$route = {
         name: 'Highway2L',
       };
-      vm.$emit = sandbox.stub();
+      vm.$emit = sinon.stub();
       MockUserUtils.getAge.returns(24);
 
       await vm.register();
@@ -136,8 +134,8 @@ describe('Booking Create Account Form', () => {
 
     it('shoud differenciate the ga code for o13 registration', async () => {
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
-      vm.validateForm = sandbox.stub().resolves(true);
-      MockUserUtils.profileToJSON = sandbox.stub().returnsArg(0);
+      vm.validateForm = sinon.stub().resolves(true);
+      MockUserUtils.profileToJSON = sinon.stub().returnsArg(0);
       vm.context = {
         country: {
           alpha2: 'FR',
@@ -147,12 +145,12 @@ describe('Booking Create Account Form', () => {
       vm.user = { lastName: 'blu' };
       vm.userData = { firstName: 'bla' };
       vm.$ga = {
-        event: sandbox.stub(),
+        event: sinon.stub(),
       };
       vm.$route = {
         name: 'Highway2L',
       };
-      vm.$emit = sandbox.stub();
+      vm.$emit = sinon.stub();
       MockUserUtils.getAge.returns(17);
 
       await vm.register();
@@ -166,9 +164,9 @@ describe('Booking Create Account Form', () => {
     it('register should display an error on registration failure', async () => {
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       const err = new Error('server crashed');
-      const alerting = sandbox.stub(window, 'alert');
-      vm.validateForm = sandbox.stub().resolves(true);
-      MockUserUtils.profileToJSON = sandbox.stub().returnsArg(0);
+      const alerting = sinon.stub(window, 'alert');
+      vm.validateForm = sinon.stub().resolves(true);
+      MockUserUtils.profileToJSON = sinon.stub().returnsArg(0);
       MockUsersService.register.throws(err);
       vm.context = {
         country: {
@@ -179,12 +177,12 @@ describe('Booking Create Account Form', () => {
       vm.user = { lastName: 'blu' };
       vm.userData = { firstName: 'bla' };
       vm.$ga = {
-        event: sandbox.stub(),
+        event: sinon.stub(),
       };
       vm.$route = {
         name: 'Highway2L',
       };
-      vm.$emit = sandbox.stub();
+      vm.$emit = sinon.stub();
       MockUserUtils.getAge.returns(17);
 
       await vm.register();
@@ -199,8 +197,8 @@ describe('Booking Create Account Form', () => {
     it('register should display nick-exists error on duplicate email', async () => {
       const vm = vueUnitHelper(BookingCreateAccountComponentWithMocks);
       const err = new Error('nick-exists');
-      vm.validateForm = sandbox.stub().resolves(true);
-      MockUserUtils.profileToJSON = sandbox.stub().returnsArg(0);
+      vm.validateForm = sinon.stub().resolves(true);
+      MockUserUtils.profileToJSON = sinon.stub().returnsArg(0);
       MockUsersService.register.throws(err);
       vm.context = {
         country: {
@@ -211,15 +209,15 @@ describe('Booking Create Account Form', () => {
       vm.user = { lastName: 'blu' };
       vm.userData = { firstName: 'bla' };
       vm.$ga = {
-        event: sandbox.stub(),
+        event: sinon.stub(),
       };
       vm.errors = {
-        add: sandbox.stub(),
+        add: sinon.stub(),
       };
       vm.$route = {
         name: 'Highway2L',
       };
-      vm.$emit = sandbox.stub();
+      vm.$emit = sinon.stub();
       MockUserUtils.getAge.returns(17);
 
       await vm.register();

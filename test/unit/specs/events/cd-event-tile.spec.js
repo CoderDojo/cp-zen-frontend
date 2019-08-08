@@ -5,14 +5,8 @@ import TimeShift from 'timeshift-js';
 import moment from 'moment';
 
 describe('Event list item component', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
-
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('computed', () => {
@@ -20,14 +14,14 @@ describe('Event list item component', () => {
       it('should return true for an event which is full', () => {
         const vm = vueUnitHelper(EventListItem);
         vm.tickets = [];
-        vm.ticketsAreFull = sandbox.stub().returns(true);
+        vm.ticketsAreFull = sinon.stub().returns(true);
         expect(vm.isFull).to.equal(true);
         expect(vm.ticketsAreFull).to.have.been.calledWith([]);
       });
       it('should return false for an event which still has room', () => {
         const vm = vueUnitHelper(EventListItem);
         vm.tickets = [];
-        vm.ticketsAreFull = sandbox.stub().returns(false);
+        vm.ticketsAreFull = sinon.stub().returns(false);
         expect(vm.isFull).to.equal(false);
         expect(vm.ticketsAreFull).to.have.been.calledWith([]);
       });

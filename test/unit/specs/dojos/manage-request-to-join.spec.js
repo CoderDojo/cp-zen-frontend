@@ -3,22 +3,19 @@ import cdManageRequestToJoin from '!!vue-loader?inject!@/dojos/manage-request-to
 
 describe('Manage request to join component', () => {
   let vm;
-  let sandbox;
   let DojosService;
   let UsersService;
-  before(() => {
-    sandbox = sinon.sandbox.create();
-  });
+
   beforeEach(() => {
     DojosService = {
       membership: {
-        loadPending: sandbox.stub(),
-        accept: sandbox.stub(),
-        refuse: sandbox.stub(),
+        loadPending: sinon.stub(),
+        accept: sinon.stub(),
+        refuse: sinon.stub(),
       },
     };
     UsersService = {
-      userProfileData: sandbox.stub(),
+      userProfileData: sinon.stub(),
     };
     vm = vueUnitHelper(cdManageRequestToJoin({
       '@/dojos/service': DojosService,
@@ -29,7 +26,7 @@ describe('Manage request to join component', () => {
     };
   });
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
   describe('computed', () => {
     describe('conflictUrl', () => {
@@ -116,7 +113,7 @@ describe('Manage request to join component', () => {
       });
       it('should call onError', async () => {
         DojosService.membership.loadPending.rejects();
-        vm.onError = sandbox.stub();
+        vm.onError = sinon.stub();
         await vm.loadMembershipRequest();
         expect(DojosService.membership.loadPending).to.have.been.calledOnce;
         expect(vm.onError).to.have.been.calledOnce;
@@ -145,7 +142,7 @@ describe('Manage request to join component', () => {
           .and.calledWith('rq1', 'd1');
       });
       it('should call onError if the status is invalid', async () => {
-        vm.onError = sandbox.stub();
+        vm.onError = sinon.stub();
         vm.status = 'banana';
         await vm.actOnMembershipRequest();
         expect(DojosService.membership.accept).to.not.have.been.called;
@@ -155,7 +152,7 @@ describe('Manage request to join component', () => {
       });
       it('should call onError if rejected', async () => {
         DojosService.membership.accept.rejects();
-        vm.onError = sandbox.stub();
+        vm.onError = sinon.stub();
         vm.membershipRequest = {};
         vm.status = 'accept';
         await vm.actOnMembershipRequest();
@@ -168,8 +165,8 @@ describe('Manage request to join component', () => {
         err.status = 400;
         DojosService.membership.accept.rejects(err);
         vm.membershipRequest = {};
-        vm.onError = sandbox.stub();
-        vm.loadConflictingUser = sandbox.stub().resolves();
+        vm.loadConflictingUser = sinon.stub().resolves();
+        vm.onError = sinon.stub();
         vm.status = 'accept';
         await vm.actOnMembershipRequest();
         expect(DojosService.membership.accept).to.have.been.calledOnce;
@@ -181,15 +178,15 @@ describe('Manage request to join component', () => {
   });
   describe('lifecycle', () => {
     it('should load the membership and act on it', async () => {
-      vm.loadMembershipRequest = sandbox.stub().resolves();
-      vm.actOnMembershipRequest = sandbox.stub().resolves();
+      vm.loadMembershipRequest = sinon.stub().resolves();
+      vm.actOnMembershipRequest = sinon.stub().resolves();
       vm.membershipRequest = { id: 'rq1' };
       await vm.$lifecycleMethods.created();
       expect(vm.loadMembershipRequest).to.have.been.calledOnce;
       expect(vm.actOnMembershipRequest).to.have.been.calledOnce;
     });
     it('should try to load the membership', async () => {
-      vm.loadMembershipRequest = sandbox.stub().resolves();
+      vm.loadMembershipRequest = sinon.stub().resolves();
       vm.membershipRequest = null;
       await vm.$lifecycleMethods.created();
       expect(vm.loadMembershipRequest).to.have.been.calledOnce;

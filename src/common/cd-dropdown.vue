@@ -1,5 +1,6 @@
 <template>
   <div :class="{ 'btn-group': true, 'open': open }">
+    <slot name="submit"></slot>
     <button type="button" :class="buttonClass" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="open = !open" @blur="onButtonBlur">
       <i v-if="icon" :class="iconClass"></i>{{ text }} <span class="caret"></span>
     </button>

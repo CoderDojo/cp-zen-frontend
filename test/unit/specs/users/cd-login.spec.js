@@ -2,15 +2,13 @@ import vueUnitHelper from 'vue-unit-helper';
 import LoginComponent from '!!vue-loader?inject!@/users/cd-login';
 
 describe('Login', () => {
-  let sandbox;
   let MockUserService;
   let LoginComponentWithMocks;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockUserService = {
-      login: sandbox.stub(),
-      getCurrentUser: sandbox.stub(),
+      login: sinon.stub(),
+      getCurrentUser: sinon.stub(),
     };
     LoginComponentWithMocks = LoginComponent({
       './service': MockUserService,
@@ -18,7 +16,7 @@ describe('Login', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('computed', () => {
@@ -115,16 +113,16 @@ describe('Login', () => {
 
     beforeEach(() => {
       vm = vueUnitHelper(LoginComponentWithMocks);
-      vm.$router = { push: sandbox.stub() };
+      vm.$router = { push: sinon.stub() };
       vm.$route = { query: {} };
       vm.errors = {
-        add: sandbox.stub(),
+        add: sinon.stub(),
       };
     });
 
     it('should do nothing if form is invalid', async () => {
       // ARRANGE
-      sandbox.stub(vm, 'validateForm').resolves(false);
+      sinon.stub(vm, 'validateForm').resolves(false);
 
       // ACT
       await vm.login();
@@ -137,7 +135,7 @@ describe('Login', () => {
 
     it('should add an error if login fails', async () => {
       // ARRANGE
-      sandbox.stub(vm, 'validateForm').resolves(true);
+      sinon.stub(vm, 'validateForm').resolves(true);
       MockUserService.login.resolves({ body: { ok: false } });
 
       // ACT
@@ -150,7 +148,7 @@ describe('Login', () => {
 
     it('should redirect to the redirectUrl when login succeeds', async () => {
       // ARRANGE
-      sandbox.stub(vm, 'validateForm').resolves(true);
+      sinon.stub(vm, 'validateForm').resolves(true);
       MockUserService.login.resolves({ body: {} });
       vm.redirectUrl = '/dojos';
 
@@ -164,7 +162,7 @@ describe('Login', () => {
     });
     it('should redirect to the referer when login succeeds and referer is set', async () => {
       // ARRANGE
-      sandbox.stub(vm, 'validateForm').resolves(true);
+      sinon.stub(vm, 'validateForm').resolves(true);
       MockUserService.login.resolves({ body: {} });
       vm.$route.query.referer = '/library';
 
@@ -178,7 +176,7 @@ describe('Login', () => {
     });
     it('should redirect to an allowed external referer when login succeeds and referer is set', async () => {
       // ARRANGE
-      sandbox.stub(vm, 'validateForm').resolves(true);
+      sinon.stub(vm, 'validateForm').resolves(true);
       MockUserService.login.resolves({ body: {} });
       vm.$route.query.referer = 'http://localhost:4567/auth/CoderDojo';
       vm.redirectTo = sinon.stub();
@@ -194,7 +192,7 @@ describe('Login', () => {
     });
     it('should not redirect to a disallowed external referer when login succeeds and referer is set', async () => {
       // ARRANGE
-      sandbox.stub(vm, 'validateForm').resolves(true);
+      sinon.stub(vm, 'validateForm').resolves(true);
       MockUserService.login.resolves({ body: {} });
       vm.$route.query.referer = 'https://mylittlepony.hasbro.com/worldwide';
 
@@ -210,7 +208,7 @@ describe('Login', () => {
   describe('created', () => {
     it('should redirect if the user is logged-in', async () => {
       const vm = vueUnitHelper(LoginComponentWithMocks);
-      vm.$router = { replace: sandbox.stub() };
+      vm.$router = { replace: sinon.stub() };
       vm.$route = {
         query: {
           referer: '/library',
@@ -224,4 +222,3 @@ describe('Login', () => {
     });
   });
 });
-

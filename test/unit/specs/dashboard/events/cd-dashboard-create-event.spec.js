@@ -3,16 +3,14 @@ import moment from 'moment';
 import DashboardCreateEventComponent from '!!vue-loader?inject!@/dashboard/events/cd-dashboard-create-event';
 
 describe('Dashboard create event component', () => {
-  let sandbox;
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     vm = vueUnitHelper(DashboardCreateEventComponent());
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
 
@@ -42,7 +40,7 @@ describe('Dashboard create event component', () => {
         vm.ticketingAdmins = [{ dojoId: 'd1' }];
 
         // ASSERT
-        expect(vm.getTicketingAdminUrl).to.equal('dashboard/dojo/d1/event-form');
+        expect(vm.getTicketingAdminUrl).to.equal('dashboard/dojos/d1/events/new');
       });
       it('should return the url to my-dojos if the user is not a ticketing-admin', () => {
         // ARRANGE

@@ -3,21 +3,19 @@ import EventStamp from '!!vue-loader?inject!@/events/cd-event-stamp';
 import moment from 'moment';
 
 describe('Event stamp component', () => {
-  let sandbox;
   let MockEventService;
   let EventStampWithMocks;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
     MockEventService = {
       v3: {
-        get: sandbox.stub(),
+        get: sinon.stub(),
       },
     };
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('computed', () => {

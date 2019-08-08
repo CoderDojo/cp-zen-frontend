@@ -2,14 +2,8 @@ import vueUnitHelper from 'vue-unit-helper';
 import SpecialReqComponent from '@/common/cd-special-req-component';
 
 describe('Special Requirement Component', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
-
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   describe('methods', () => {
@@ -57,7 +51,7 @@ describe('Special Requirement Component', () => {
         // ARRANGE
         const vm = vueUnitHelper(SpecialReqComponent);
         const mockSpecialReq = 'Need lots of desk space';
-        const emitStub = sandbox.stub();
+        const emitStub = sinon.stub();
         vm.$emit = emitStub;
         vm.specialRequirement = mockSpecialReq;
 
