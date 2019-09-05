@@ -45,7 +45,7 @@
     "vue-router": "^2.5.3",
     "vue-router-multiguard": "^1.0.3",
     "vue-static-map": "^2.0.0",
-    "vue-trix": "^0.8.1",
+    "vue-trix": "^1.1.0",
     "vue2-google-maps": "^0.7.9",
     "vuex": "^2.3.1"
   },
