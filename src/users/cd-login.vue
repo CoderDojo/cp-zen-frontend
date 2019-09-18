@@ -81,7 +81,9 @@
         if (valid) {
           const response = await UserService.login(this.email, this.password);
           if (response.body.ok === false) {
-            this.errors.add('loginFailed', response.body.why);
+            this.errors.add({
+              field: 'loginFailed',
+              msg: response.body.why });
           } else {
             const forumUrl = `^${Vue.config.forumsUrlBase}/auth/CoderDojo$`;
             if (this.redirectUrl.match(forumUrl)) {

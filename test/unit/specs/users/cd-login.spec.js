@@ -142,7 +142,7 @@ describe('Login', () => {
       await vm.login();
 
       // ASSERT
-      expect(vm.errors.add).to.have.been.calledWith('loginFailed');
+      expect(vm.errors.add).to.have.been.calledWith({ field: 'loginFailed', msg: undefined });
       expect(vm.$router.push).to.not.have.been.called;
     });
 
