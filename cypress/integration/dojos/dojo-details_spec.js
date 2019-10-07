@@ -1,10 +1,12 @@
 import page from '../../pages/dojo-details';
 
+const currentYear = (new Date()).getFullYear();
 describe('Dojos details', () => {
   beforeEach(() => {
     cy.server();
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
     cy.route('POST', '/api/2.0/dojos/find', 'fx:publicDojo').as('dojo');
+    cy.route('/api/3.0/dojos/b850b40e-1e10-4e3a-8a46-d076c94946c6/events?**', 'fx:events').as('events')
   });
 
   it('should show the dojo details', () => {
@@ -24,6 +26,17 @@ describe('Dojos details', () => {
     cy.get(page.details.content).should('contain.text', 'This is the Dojo details section');
     cy.get(page.sponsors.heading).should('contain.text', 'Dojo supported by');
     cy.get(page.sponsors.content).should('be.visible');
+  });
+
+  it('should show the dojos events', () => {
+    cy.visit('/dojos/ie/dublin/cd-rom');
+    cy.wait('@dojo');
+    cy.wait('@loggedIn');
+    cy.wait('@events');
+    cy.get(page.events(1).name).should('contain.text', 'My First Amazing Event');
+    cy.get(page.events(1).sessions).should('contain.text', 'Sessions: Dojo');
+    cy.get(page.events(1).date).should('contain.text', 'July 12, 2019');
+    cy.get(page.events(1).time).should('contain.text', '10am - 12pm');
   });
 
   it('should display the calendar', () => {

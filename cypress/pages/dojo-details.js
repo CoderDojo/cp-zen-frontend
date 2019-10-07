@@ -33,4 +33,13 @@ export default {
     heading: '.cd-dojo-details__section .cd-dojo-details__heading',
     content: '.cd-dojo-details__section .cd-dojo-details__sponsor-image',
   },
+  events: function (index) {
+    const prefix = `.cd-event-list__events > div:nth-child(${index})`; 
+    return {
+      name: `${prefix} .cd-event-list-item__name`,
+      sessions: `${prefix} .cd-event-list-item__sessions`,
+      date: `${prefix} .cd-event-list-item__date-timestamp`,
+      time: `${prefix} .cd-event-list-item__times-timestamp`,
+    };
+  },
 };
