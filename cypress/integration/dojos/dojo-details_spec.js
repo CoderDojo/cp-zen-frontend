@@ -6,7 +6,6 @@ describe('Dojos details', () => {
     cy.server();
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
     cy.route('POST', '/api/2.0/dojos/find', 'fx:publicDojo').as('dojo');
-    cy.route('/api/3.0/dojos/b850b40e-1e10-4e3a-8a46-d076c94946c6/events?**', 'fx:events').as('events')
   });
 
   it('should show the dojo details', () => {
@@ -29,6 +28,7 @@ describe('Dojos details', () => {
   });
 
   it('should show the dojos events', () => {
+    cy.route('/api/3.0/dojos/b850b40e-1e10-4e3a-8a46-d076c94946c6/events?**', 'fx:events').as('events')
     cy.visit('/dojos/ie/dublin/cd-rom');
     cy.wait('@dojo');
     cy.wait('@loggedIn');
@@ -37,6 +37,14 @@ describe('Dojos details', () => {
     cy.get(page.events(1).sessions).should('contain.text', 'Sessions: Dojo');
     cy.get(page.events(1).date).should('contain.text', 'July 12, 2019');
     cy.get(page.events(1).time).should('contain.text', '10am - 12pm');
+  });
+  it('should show message if no events are scheduled', () => {
+    cy.route('/api/3.0/dojos/b850b40e-1e10-4e3a-8a46-d076c94946c6/events?**', { results: [] }).as('events')
+    cy.visit('/dojos/ie/dublin/cd-rom');
+    cy.wait('@dojo');
+    cy.wait('@loggedIn');
+    cy.wait('@events');
+    cy.get(page.noEvents.label).should('contain.text', 'No Listed Events');
   });
 
   it('should display the calendar', () => {
