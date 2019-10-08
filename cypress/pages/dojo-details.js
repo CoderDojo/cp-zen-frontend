@@ -35,6 +35,7 @@ export default {
   },
   noEvents: {
     label:  '.cd-event-list__no-events-header',
+    content: '.cd-event-list__no-events-content',
   },
   events: function (index) {
     const prefix = `.cd-event-list__events > div:nth-child(${index})`; 
