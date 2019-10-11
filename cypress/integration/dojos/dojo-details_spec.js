@@ -47,9 +47,8 @@ describe('Dojos details', () => {
       cy.wait('@dojo');
       cy.wait('@loggedIn');
       cy.wait('@events');
-      cy.get(page.noEvents.label).should('contain.text', 'No Listed Events');
-      cy.get(page.noEvents.content).first().should('contain.text', 'This Dojo may list their events on another website or they may encourage people to attend without booking.');
-      cy.get(page.noEvents.content).last().should('contain.text', 'Please join this Dojo for updates and email the Dojo on dublinninjakids@gmail.com to find out about their upcoming events.');
+      cy.get(page.noEvents).first().should('contain.text', 'This Dojo may list their events on another website or they may encourage people to attend without booking.');
+      cy.get(page.noEvents).last().should('contain.text', 'Please join this Dojo for updates and email the Dojo on dublinninjakids@gmail.com to find out about their upcoming events.');
     });
 
     it('should show message if no events are scheduled and Dojo is private', () => {
@@ -59,9 +58,8 @@ describe('Dojos details', () => {
       cy.wait('@dojo');
       cy.wait('@loggedIn');
       cy.wait('@events');
-      cy.get(page.noEvents.label).should('contain.text', 'No Listed Events');
-      cy.get(page.noEvents.content).first().should('contain.text', 'This Dojo may list their events on another website or they may encourage people to attend without booking.');
-      cy.get(page.noEvents.content).last().should('contain.text', 'Please email the Dojo on dublinninjakids@gmail.com to find out about their upcoming events.');
+      cy.get(page.noEvents).first().should('contain.text', 'This Dojo may list their events on another website or they may encourage people to attend without booking.');
+      cy.get(page.noEvents).last().should('contain.text', 'Please email the Dojo on dublinninjakids@gmail.com to find out about their upcoming events.');
     });
   });
   it('should display the calendar', () => {

@@ -33,10 +33,7 @@ export default {
     heading: '.cd-dojo-details__section .cd-dojo-details__heading',
     content: '.cd-dojo-details__section .cd-dojo-details__sponsor-image',
   },
-  noEvents: {
-    label:  '.cd-event-list__no-events-header',
-    content: '.cd-event-list__no-events-content',
-  },
+  noEvents: '.cd-event-list__no-events-content',
   events: function (index) {
     const prefix = `.cd-event-list__events > div:nth-child(${index})`; 
     return {
