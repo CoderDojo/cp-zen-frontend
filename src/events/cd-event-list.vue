@@ -5,9 +5,6 @@
     </div>
     <div v-if="!hasFutureEvents" class="cd-event-list__event">
       <div class="cd-event-list__no-events">
-        <div class="cd-event-list__no-events-header" v-if="!hasPastEvents">
-          {{ $t('No Listed Events') }}
-        </div>
         <div v-if="!hasFutureEvents && !hasPastEvents">
           <p class="cd-event-list__no-events-content" v-html="$t('This Dojo may list their events on another website or they may encourage people to attend without booking.')"></p>
           <p class="cd-event-list__no-events-content" v-if="!isDojoMember" v-html="$t(`${dojo.private ? 'Please email the Dojo on {email} to find out about their upcoming events.' : 'Please join this Dojo for updates and email the Dojo on {email} to find out about their upcoming events.' }`, { email: '<a href=\'mailto:' + dojo.email + '\'>' + dojo.email + '</a>' })"></p>
