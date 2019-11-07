@@ -1,11 +1,67 @@
 import page from '../../pages/dojo-details';
 
+const currentYear = (new Date()).getFullYear();
 describe('Dojos details', () => {
   beforeEach(() => {
     cy.server();
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
+    cy.route('POST', '/api/2.0/dojos/find', 'fx:publicDojo').as('dojo');
+    cy.fixture('publicDojo.json').as('privateDojo').then((dojo) => {
+      dojo.private = 1;
+    }); 
   });
 
+  it('should show the dojo details', () => {
+    cy.visit('/dojos/ie/dublin/cd-rom');
+    cy.wait('@loggedIn');
+    cy.wait('@dojo');
+    cy.get(page.name).should('have.text', 'Dublin Ninja Kids');
+    cy.get(page.column.time.content).should('contain.text', 'Third Thursday of the month, 10am - 11:30am');
+    cy.get(page.column.location.content).should('contain.text', 'CHQ Building,1 Custom House Quay, North Dock');
+    cy.get(page.column.email.content).should('contain.text', 'dublinninjakids@gmail.com');
+    cy.get(page.column.website.content).should('contain.text', 'www.dublinninjakids.com');
+    cy.get(page.column.social.facebook).invoke('attr', 'href').should('equal', 'https://www.facebook.com/CoderDojo');
+    cy.get(page.column.social.twitter).invoke('attr', 'href').should('equal', 'https://twitter.com/CoderDojo');
+    cy.get(page.column.social.googleGroup).invoke('attr', 'href').should('equal', 'https://google.group.com/dublinninjakids');
+    cy.get(page.map).should('be.visible');
+    cy.get(page.details.heading).should('contain.text', 'Details');
+    cy.get(page.details.content).should('contain.text', 'This is the Dojo details section');
+    cy.get(page.sponsors.heading).should('contain.text', 'Dojo supported by');
+    cy.get(page.sponsors.content).should('be.visible');
+  });
+  describe('events', () => {
+    it('should show the dojos events', () => {
+      cy.route('/api/3.0/dojos/b850b40e-1e10-4e3a-8a46-d076c94946c6/events?**', 'fx:events').as('events')
+      cy.visit('/dojos/ie/dublin/cd-rom');
+      cy.wait('@dojo');
+      cy.wait('@loggedIn');
+      cy.wait('@events');
+      cy.get(page.events(1).name).should('contain.text', 'My First Amazing Event');
+      cy.get(page.events(1).sessions).should('contain.text', 'Sessions: Dojo');
+      cy.get(page.events(1).date).should('contain.text', 'July 12, 2019');
+      cy.get(page.events(1).time).should('contain.text', '10am - 12pm');
+    });
+    it('should show message if no events are scheduled and Dojo is public', () => {
+      cy.route('/api/3.0/dojos/b850b40e-1e10-4e3a-8a46-d076c94946c6/events?**', { results: [] }).as('events')
+      cy.visit('/dojos/ie/dublin/cd-rom');
+      cy.wait('@dojo');
+      cy.wait('@loggedIn');
+      cy.wait('@events');
+      cy.get(page.noEvents).first().should('contain.text', 'This Dojo may list their events on another website or they may encourage people to attend without booking.');
+      cy.get(page.noEvents).last().should('contain.text', 'Please join this Dojo for updates and email the Dojo on dublinninjakids@gmail.com to find out about their upcoming events.');
+    });
+
+    it('should show message if no events are scheduled and Dojo is private', () => {
+      cy.route('POST', '/api/2.0/dojos/find', '@privateDojo').as('dojo');
+      cy.route('/api/3.0/dojos/b850b40e-1e10-4e3a-8a46-d076c94946c6/events?**', { results: [] }).as('events')
+      cy.visit('/dojos/ie/dublin/cd-rom');
+      cy.wait('@dojo');
+      cy.wait('@loggedIn');
+      cy.wait('@events');
+      cy.get(page.noEvents).first().should('contain.text', 'This Dojo may list their events on another website or they may encourage people to attend without booking.');
+      cy.get(page.noEvents).last().should('contain.text', 'Please email the Dojo on dublinninjakids@gmail.com to find out about their upcoming events.');
+    });
+  });
   it('should display the calendar', () => {
     cy.visit('/dojos/ie/dublin/dublin-ninja-kids');
     cy.wait('@loggedIn');

@@ -1,0 +1,32 @@
+{
+  "entity$": "-/cd/dojos",
+  "name": "Dublin Ninja Kids",
+  "geoPoint": {
+    "lat": 53.349351,
+    "lon": -6.247585999999956
+  },
+  "stage": 0,
+  "urlSlug": "ie/dublin/dublinkids",
+  "private": 0,
+  "verified": 1,
+  "id": "b850b40e-1e10-4e3a-8a46-d076c94946c6",
+  "address1": "CHQ Building,1 Custom House Quay, North Dock",
+  "countryName": "Ireland",
+  "email": "dublinninjakids@gmail.com",
+  "facebook": "https://www.facebook.com/CoderDojo",
+  "googleGroup": "https://google.group.com/dublinninjakids",
+  "twitter": "https://twitter.com/CoderDojo",
+  "notes": "<p>This is the Dojo details section</p>\n",
+  "needMentors": 0,
+  "placeName": "Dublin",
+  "city": {
+    "name": "Dublin"
+  },
+  "frequency": "1/m",
+  "alternativeFrequency": "3rd",
+  "day": 4,
+  "startTime": "10:00:00",
+  "endTime": "11:30:00",
+  "website": "www.dublinninjakids.com",
+  "supporterImage": "http://www.xconomy.com/wordpress/wp-content/images/2013/01/dogpatch-labs-logo.png"
+}
