@@ -74,6 +74,7 @@
     "eslint-friendly-formatter": "^2.0.7",
     "eslint-import-resolver-webpack": "^0.8.1",
     "eslint-loader": "^1.7.1",
+    "eslint-plugin-cypress": "^2.7.0",
     "eslint-plugin-html": "^2.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eventsource-polyfill": "^0.9.6",
