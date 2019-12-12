@@ -30,11 +30,14 @@
       },
       hasAnniversary(dojo) {
         const now = moment();
-        const referenceDate = moment(dojo.created);
-        referenceDate.year(now.year());
-        const timeToAnniversary = now.diff(referenceDate, 'months');
+        const nextAnniversary = moment(dojo.created);
+        nextAnniversary.year(now.year());
+        if (now.isAfter(nextAnniversary)) {
+          nextAnniversary.add(1, 'year');
+        }
+        const timeToAnniversary = nextAnniversary.diff(now, 'months');
         // Note: this won't be exact due to the user's tz and the creation date being in IST
-        return timeToAnniversary >= -2 && timeToAnniversary <= 0 && now <= referenceDate;
+        return timeToAnniversary <= 2;
       },
       championOfDojos(dojos, dojoAdmins) {
         return dojoAdmins.reduce((acc, membership) => {
