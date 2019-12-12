@@ -27,6 +27,17 @@ To run the tests
 docker-compose run --rm cypress
 ```
 
+### E2E Tests
+The tests in the `/cypress/integration_e2e` folder that are not run as part of the main test in CI.
+
+They are designed to be run manually & locally with the full stack, no endpoints are stubbed.
+
+> NOTE: the register test includes a 5 second pause where you are required to click the recaptcha.
+
+```
+yarn cypress:e2e:open
+```
+
 ## wdio tests
 The selenium-based wdio tests are legacy tests, waiting to be migrated to cypress. They are not actively maintained and are there only for reference until migrated.
 To run the tests
