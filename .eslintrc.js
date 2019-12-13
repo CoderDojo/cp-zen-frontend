@@ -12,7 +12,10 @@ module.exports = {
   globals: {
     google: true,
   },
-  extends: 'airbnb-base',
+  extends: [
+    'airbnb-base',
+    "plugin:cypress/recommended"
+  ],
   // required to lint *.vue files
   plugins: [
     'html'

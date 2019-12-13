@@ -39,6 +39,12 @@ describe('Dashboard dojo anniversary component', () => {
         created.subtract(1, 'days');
         expect(vm.hasAnniversary({ created })).to.be.false;
       });
+      it('should return true if anniversary is within 2 months and next year', () => {
+        clock = sinon.useFakeTimers(new Date(2018, 11, 12, 0, 0, 0, 0));
+        const created = moment();
+        created.add(1, 'months');
+        expect(vm.hasAnniversary({ created })).to.be.true;
+      });
     });
     describe('isOld', () => {
       it('should return true if the dojo is at least 10 month old', () => {

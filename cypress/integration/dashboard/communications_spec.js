@@ -1,5 +1,4 @@
 import moment from 'moment';
-import eventPage from '../../pages/events';
 import homePage from '../../pages/home';
 
 describe('Homepage comms', () => {
