@@ -18,6 +18,7 @@ import CDFManageUsers from '@/users/cdf-manage';
 import ManageRequestToJoin from '@/dojos/manage-request-to-join';
 import loggedInNavGuard from './loggedInNavGuard';
 import loggedInCDFNavGuard from './loggedInCDFNavGuard';
+import profileAuthRedirect from './profileAuthRedirect';
 import orderExistsNavGuard from './orderExistsNavGuard';
 import ticketingAdminNavGuard from './ticketingAdminNavGuard';
 
@@ -108,6 +109,7 @@ const router = new Router({
           path: '/login',
           name: 'Login',
           component: Login,
+          beforeEnter: profileAuthRedirect,
         },
         {
           path: '/home',
