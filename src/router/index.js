@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import MultiGuard from 'vue-router-multiguard';
+import multiguard from 'vue-router-multiguard';
 import DojoDetails from '@/dojos/cd-dojo-details';
 import FindDojo from '@/dojos/cd-find-dojo';
 import UserTickets from '@/users/cd-tickets';
@@ -20,8 +20,8 @@ import loggedInNavGuard from './loggedInNavGuard';
 import loggedInCDFNavGuard from './loggedInCDFNavGuard';
 import profileAuthRedirect from './profileAuthRedirect';
 import orderExistsNavGuard from './orderExistsNavGuard';
+import errorDisplayGuard from './errorDisplayGuard';
 import ticketingAdminNavGuard from './ticketingAdminNavGuard';
-
 
 Vue.use(Router);
 
@@ -43,10 +43,12 @@ const router = new Router({
       component: {
         template: '<router-view :key="$route.fullPath"></router-view>',
       },
-      async beforeEnter(to, from, next) {
-        await store.dispatch('getLoggedInUser');
-        next();
-      },
+      beforeEnter: multiguard([
+        errorDisplayGuard,
+        (to, from, next) => {
+          store.dispatch('getLoggedInUser').then(() => next());
+        },
+      ]),
       children: [
         {
           path: '',
@@ -91,13 +93,13 @@ const router = new Router({
           path: '/dashboard/dojos/:dojoId/events/new',
           name: 'NewEventForm',
           component: EventForm,
-          beforeEnter: MultiGuard([loggedInNavGuard, ticketingAdminNavGuard]),
+          beforeEnter: multiguard([loggedInNavGuard, ticketingAdminNavGuard]),
         },
         {
           path: '/dashboard/dojos/:dojoId/events/:eventId/edit',
           name: 'EditEventForm',
           component: EventForm,
-          beforeEnter: MultiGuard([loggedInNavGuard, ticketingAdminNavGuard]),
+          beforeEnter: multiguard([loggedInNavGuard, ticketingAdminNavGuard]),
         },
         {
           path: '/dashboard/dojos/:dojoId/join-requests/:requestId/status/:status',
@@ -152,7 +154,7 @@ const router = new Router({
           path: 'events/:eventId/confirmation',
           name: 'EventBookingConfirmation',
           component: BookingConfirmation,
-          beforeEnter: MultiGuard([loggedInNavGuard, orderExistsNavGuard]),
+          beforeEnter: multiguard([loggedInNavGuard, orderExistsNavGuard]),
           props: true,
         },
         {
@@ -183,3 +185,4 @@ const router = new Router({
 });
 
 export default router;
+

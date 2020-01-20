@@ -5,6 +5,7 @@ import VueResource from 'vue-resource';
 import VeeValidate from 'vee-validate';
 import * as VueGoogleMaps from 'vue2-google-maps';
 import VueAnalytics from 'vue-analytics';
+import VueToasted from 'vue-toasted';
 import PasswordValidator from '@/common/directives/cd-password-validator';
 import titleDirective from '@/common/directives/title';
 import gaTrackClickDirective from '@/common/directives/cd-ga-track-click';
@@ -26,6 +27,7 @@ Vue.config.projectsUrlBase = process.env.PROJECTS_URL_BASE;
 
 Vue.use(VueResource);
 Vue.use(VeeValidate);
+Vue.use(VueToasted);
 Vue.use(VueGoogleMaps, {
   load: {
     key: Vue.config.googleMapsApiKey,
