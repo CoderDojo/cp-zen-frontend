@@ -79,7 +79,12 @@
       },
     },
     async created() {
-      this.loadProfile();
+      await this.loadProfile();
+
+      if (this.userProfile.requiredFieldsComplete === false) {
+        this.$router.push(`/dashboard/profile/${this.userProfile.userId}/edit`);
+      }
+
       await this.getUserDojos();
       this.setUserDimension();
     },
