@@ -81,7 +81,7 @@
     async created() {
       await this.loadProfile();
 
-      if (this.userProfile.requiredFieldsComplete === false) {
+      if (this.userProfile && this.userProfile.requiredFieldsComplete === false) {
         this.$router.push(`/dashboard/profile/${this.userProfile.userId}/edit`);
       }
 
