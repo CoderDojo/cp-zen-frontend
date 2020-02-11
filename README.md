@@ -10,7 +10,7 @@ We've begun moving e2e tests to [Cypress](https://www.cypress.io/) in order to i
 
 ### Running with UI
 
-To run Cypress tests with the Cypress UI (good for debugging issues), you will first need to run the front end by running `yarn start`, then simply run. You may need to run `yarn start-with-mocks` to stub out api end points the frontend requires.
+To run Cypress tests with the Cypress UI (good for debugging issues), you will first need to run the front end by running `yarn start`, then simply run.
 
 ```
 yarn cypress:open

@@ -102,7 +102,8 @@ const router = new Router({
           beforeEnter: multiguard([loggedInNavGuard, ticketingAdminNavGuard]),
         },
         {
-          path: '/dashboard/dojos/:dojoId/join-requests/:requestId/status/:status',
+          path:
+            '/dashboard/dojos/:dojoId/join-requests/:requestId/status/:status',
           name: 'ManageRequestToJoin',
           component: ManageRequestToJoin,
           beforeEnter: loggedInNavGuard,
@@ -135,8 +136,13 @@ const router = new Router({
                   component: LoginOrRegister,
                   props: true,
                   async beforeEnter(to, from, next) {
-                    const loggedInUser = (await UserService.getCurrentUser()).body;
-                    next(loggedInUser.login ? { name: 'EventSessions', params: to.params } : true);
+                    const loggedInUser = (await UserService.getCurrentUser())
+                      .body;
+                    next(
+                      loggedInUser.login
+                        ? { name: 'EventSessions', params: to.params }
+                        : true,
+                    );
                   },
                 },
                 {
@@ -185,4 +191,3 @@ const router = new Router({
 });
 
 export default router;
-
