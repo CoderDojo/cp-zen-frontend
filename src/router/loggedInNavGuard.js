@@ -15,6 +15,6 @@ export default async function (to, from, next) {
     return null;
   }
 
-  next();
+  next(undefined);
   return null;
 }

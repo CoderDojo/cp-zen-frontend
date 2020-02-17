@@ -17,7 +17,12 @@ describe('loggedInNavGuard', () => {
 
   it('should continue to the route if the user is logged in', async () => {
     // ARRANGE
-    MockUserService.getCurrentUser.resolves({ body: { login: { token: 'blah' } } });
+    MockUserService.getCurrentUser.resolves({
+      body: {
+        login: { token: 'blah' },
+        user: { termsConditionsAccepted: true },
+      },
+    });
 
     // ACT
     await loggedInNavGuardWithMock({}, {}, nextMock);
@@ -42,6 +47,28 @@ describe('loggedInNavGuard', () => {
     expect(nextMock).to.have.been.calledWith({
       name: 'Login',
       query: { referer: '/some/path' },
+    });
+  });
+
+  it('should redirect to profile page if user has not accepted terms and conditions', async () => {
+    // ARRANGE
+    MockUserService.getCurrentUser.resolves({
+      body: {
+        login: { token: 'blah' },
+        user: { id: 'userid', termsConditionsAccepted: false },
+      },
+    });
+    const toMock = {
+      fullPath: '/some/path',
+    };
+
+    // ACT
+    await loggedInNavGuardWithMock(toMock, {}, nextMock);
+
+    // ASSERT
+    expect(nextMock).to.have.been.calledOnce;
+    expect(nextMock).to.have.been.calledWith({
+      path: '/dashboard/profile/userid/edit',
     });
   });
 });
