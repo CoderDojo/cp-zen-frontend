@@ -10,6 +10,7 @@ export default {
   emailFormatError: '.cd-login__email-format-err',
   passwordReqError: '.cd-login__password-req-err',
   loginFailed: '.cd-login__login-failed',
+  loginRaspberryFailed: '.cd-login__login-raspberry-failed',
   registerLink: '.cd-login__register a',
   forgotPasswordLink: '.cd-login__forgot-password a',
 };

@@ -28,6 +28,7 @@
         </form>
         <p v-show="errors.has('invalid-password')" class="cd-login__login-failed text-danger">{{ $t('There was a problem logging in: {msg}', {msg: $t('Invalid email or password') }) }}</p>
         <p v-show="errors.has('raspberry-linked')" class="cd-login__login-failed text-danger">{{ $t('There was a problem logging in: {msg}', {msg: $t('Account linked to a My Raspberry Pi account.') }) }}<a href='/rpi/login'>{{$t('Click here to login through My Raspberry Pi')}}</a>{{$t('Remember to use the same email address!')}}</p>
+        <p v-show="errors.has('raspberry-linked')" class="cd-login__login-raspberry-failed text-danger">{{ $t('There was a problem logging in: {msg}', {msg: $t('Account linked to a My Raspberry Pi account.') }) }}<a href='/rpi/login'>{{$t('Click here to login through My Raspberry Pi')}}</a>{{$t('Remember to use the same email address!')}}</p>
         <p class="cd-login__forgot-password"><a href="/reset">{{ $t('Forgot password?') }}</a></p>
         <p class="cd-login__register">{{ $t("Don't have an account?") }} <a :href="registerUrl">{{ $t('Register here') }}</a></p>
       </div>
