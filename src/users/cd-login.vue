@@ -26,7 +26,8 @@
            <p class="cd-login__password-req-err text-danger" v-show="errors.has('password:required')">{{ $t('Password is required') }}</p>
           <input class="cd-login__button btn btn-primary" type="submit" value="Login" />
         </form>
-        <p v-show="errors.has('loginFailed')" class="cd-login__login-failed text-danger">{{ $t('There was a problem logging in: {msg}', {msg: $t('Invalid email or password') }) }}</p>
+        <p v-show="errors.has('invalid-password')" class="cd-login__login-failed text-danger">{{ $t('There was a problem logging in: {msg}', {msg: $t('Invalid email or password') }) }}</p>
+        <p v-show="errors.has('raspberry-linked')" class="cd-login__login-failed text-danger">{{ $t('There was a problem logging in: {msg}', {msg: $t('Account linked to a My Raspberry Pi account.') }) }}<a href='/rpi/login'>{{$t('Click here to login through My Raspberry Pi')}}</a>{{$t('Remember to use the same email address!')}}</p>
         <p class="cd-login__forgot-password"><a href="/reset">{{ $t('Forgot password?') }}</a></p>
         <p class="cd-login__register">{{ $t("Don't have an account?") }} <a :href="registerUrl">{{ $t('Register here') }}</a></p>
       </div>
@@ -81,9 +82,7 @@
         if (valid) {
           const response = await UserService.login(this.email, this.password);
           if (response.body.ok === false) {
-            this.errors.add({
-              field: 'loginFailed',
-              msg: response.body.why });
+            this.errors.add({ field: response.body.why });
           } else {
             const forumUrl = `^${Vue.config.forumsUrlBase}/auth/CoderDojo$`;
             if (this.redirectUrl.match(forumUrl)) {
