@@ -2,14 +2,20 @@ import page from '../../pages/login';
 
 const setupLoggedInServer = () => {
   cy.server();
+
   cy.route('POST', '/api/2.0/users/login', 'fx:loginSuccess').as('login');
   cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('instance');
-  cy.route('POST', '/api/2.0/dojos/users', 'fx:userDojosChampion').as('userDojosChampion');
+  cy.route('POST', '/api/2.0/dojos/users', 'fx:userDojosChampion').as(
+    'userDojosChampion',
+  );
 };
 
 describe('Login Page', () => {
   describe('Form Validation', () => {
     beforeEach(() => {
+      cy.server();
+      cy.route('/api/2.0/users/instance', 'fx:loggedOutUser');
+      cy.route('/locale/languages', [{ name: 'en', code: 'en_US' }]);
       cy.visit('/login');
     });
 
@@ -28,7 +34,9 @@ describe('Login Page', () => {
     it('should show an error when no email is provided on a blur event', () => {
       cy.get(page.emailFormatError).should('not.be.visible'); // TODO: Should be emailReqError?
       cy.get(page.email).click();
-      cy.get(page.email).invoke('text').should('eq', '');
+      cy.get(page.email)
+        .invoke('text')
+        .should('eq', '');
       cy.get(page.password).click();
       cy.get(page.emailFormatError).should('be.visible');
     });
@@ -36,7 +44,9 @@ describe('Login Page', () => {
     it('should show an error when no password is provided on a blur event', () => {
       cy.get(page.passwordReqError).should('not.be.visible');
       cy.get(page.password).click();
-      cy.get(page.password).invoke('text').should('eq', '');
+      cy.get(page.password)
+        .invoke('text')
+        .should('eq', '');
       cy.get(page.loginBox).click();
       cy.get(page.passwordReqError).should('be.visible');
     });
@@ -93,6 +103,9 @@ describe('Login Page', () => {
 
   describe('Successful Login', () => {
     it('should login successfully without a referrer query param', () => {
+      cy.server();
+      cy.route('/api/2.0/users/instance', 'fx:loggedOutUser');
+      cy.route('/locale/languages', [{ name: 'en', code: 'en_US' }]);
       cy.visit('/login');
       setupLoggedInServer();
       cy.get(page.email).type('parent1@example.com');
@@ -102,6 +115,9 @@ describe('Login Page', () => {
     });
 
     it('should login successfully with a referrer query param', () => {
+      cy.server();
+      cy.route('/api/2.0/users/instance', 'fx:loggedOutUser');
+      cy.route('/locale/languages', [{ name: 'en', code: 'en_US' }]);
       cy.visit('/login?referrer=%2Fdashboard%2Ftickets');
       setupLoggedInServer();
       cy.get(page.email).type('parent1@example.com');

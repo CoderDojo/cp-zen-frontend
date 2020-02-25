@@ -79,7 +79,8 @@
       },
     },
     async created() {
-      this.loadProfile();
+      await this.loadProfile();
+
       await this.getUserDojos();
       this.setUserDimension();
     },
