@@ -70,7 +70,7 @@ describe('Login Page', () => {
       cy.get(page.password).type('rightpassword');
       cy.get(page.login).click();
       cy.wait('@loginRaspberryFail');
-      cy.get(page.loginFailed).should('be.visible');
+      cy.get(page.loginRaspberryFailed).should('be.visible');
     });
 
     it('should show both requirement errors when a login is attempted if no email and no password is provided', () => {
