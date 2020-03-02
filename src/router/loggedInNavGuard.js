@@ -7,13 +7,14 @@ export default async function (to, from, next) {
     return null;
   }
 
-  if (
-    loggedInUser.user &&
-    loggedInUser.user.termsConditionsAccepted === false
-  ) {
-    next({ path: `/dashboard/profile/${loggedInUser.user.id}/edit` });
-    return null;
-  }
+  // Temporarily disabled - 2/3/2020
+  // if (
+  //   loggedInUser.user &&
+  //   loggedInUser.user.termsConditionsAccepted === false
+  // ) {
+  //   next({ path: `/dashboard/profile/${loggedInUser.user.id}/edit` });
+  //   return null;
+  // }
 
   next(undefined);
   return null;
