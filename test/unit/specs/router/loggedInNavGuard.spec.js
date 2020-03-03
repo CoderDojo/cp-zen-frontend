@@ -50,7 +50,7 @@ describe('loggedInNavGuard', () => {
     });
   });
 
-  it('should redirect to profile page if user has not accepted terms and conditions', async () => {
+  it.skip('should redirect to profile page if user has not accepted terms and conditions', async () => {
     // ARRANGE
     MockUserService.getCurrentUser.resolves({
       body: {
