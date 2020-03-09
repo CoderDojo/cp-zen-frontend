@@ -59,7 +59,7 @@ describe('Login Page', () => {
       cy.get(page.emailFormatError).should('be.visible');
     });
 
-    it('should show an error when the login fails (on mock server this is only when the incorrect email is provided)', () => {
+    it('should show an error when the login fails (on mock server this is only when failure@example.com email is provided)', () => {
       cy.server();
       cy.route('POST', '/api/2.0/users/login', 'fx:loginFail').as('loginFail');
       cy.get(page.loginFailed).should('not.be.visible');
@@ -69,6 +69,18 @@ describe('Login Page', () => {
       cy.get(page.login).click();
       cy.wait('@loginFail');
       cy.get(page.loginFailed).should('be.visible');
+    });
+
+    it('should show an raspberry linked error when login fails because linked (on mock server this is only when raspberry@example.com email is provided)', () => {
+      cy.server();
+      cy.route('POST', '/api/2.0/users/login', 'fx:loginRaspberryFail').as('loginRaspberryFail');
+      cy.get(page.loginFailed).should('not.be.visible');
+      cy.get(page.email).click();
+      cy.get(page.email).type('janedoe@test.com');
+      cy.get(page.password).type('rightpassword');
+      cy.get(page.login).click();
+      cy.wait('@loginRaspberryFail');
+      cy.get(page.loginRaspberryFailed).should('be.visible');
     });
 
     it('should show both requirement errors when a login is attempted if no email and no password is provided', () => {

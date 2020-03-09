@@ -160,6 +160,8 @@ server.post('/api/2.0/users/login', (req, res) => {
     res.send();
   } else if (req.body.email === 'failure@example.com') {
     res.send({ ok: false, why: 'invalid-password' });
+  } else if (req.body.email === 'raspberry@example.com') {
+    res.send({ ok: false, why: 'raspberry-linked' });
   } else {
     res.send({ ok: false, why: 'user-not-found' });
   }
