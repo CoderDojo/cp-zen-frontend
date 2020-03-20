@@ -53,12 +53,26 @@ describe('Event Store', () => {
   describe('mutations', () => {
     describe('mutations.setEvent', () => {
       it('sets event values correctly with default sendEmails', () => {
-        const event = { id: 1, name: 'Event name' };
+        const event = { id: 1, name: 'Event name', city: {} };
         EventStore.commit('setEvent', event);
 
         expect(EventStore.state.event).to.deep.equal({
           id: 1,
           name: 'Event name',
+          sendEmails: false,
+          city: {},
+        });
+      });
+
+
+      it('removes $$hashKey entries in city', () => {
+        const event = { id: 1, name: 'Event name', city: { nameWithHierarchy: 'Newcastle upon Tyne', $$hashKey: 'object:1301' } };
+        EventStore.commit('setEvent', event);
+
+        expect(EventStore.state.event).to.deep.equal({
+          id: 1,
+          name: 'Event name',
+          city: { nameWithHierarchy: 'Newcastle upon Tyne' },
           sendEmails: false,
         });
       });
@@ -71,16 +85,16 @@ describe('Event Store', () => {
       });
     });
 
-    describe('mutations.setCityFromObject', () => {
+    describe('mutations.setCityFromEventObject', () => {
       context('when city object has nameWithHierarcy', () => {
         it('sets city correctly', () => {
-          EventStore.commit('setCityFromObject', { nameWithHierarchy: 'Sheffield' });
+          EventStore.commit('setCityFromEventObject', { nameWithHierarchy: 'Sheffield' });
           expect(EventStore.state.event.city).to.eql({ nameWithHierarchy: 'Sheffield' });
         });
       });
       context('when city object has toponymName', () => {
         it('sets city correctly', () => {
-          EventStore.commit('setCityFromObject', { toponymName: 'Sheffield' });
+          EventStore.commit('setCityFromEventObject', { toponymName: 'Sheffield' });
           expect(EventStore.state.event.city).to.eql({ nameWithHierarchy: 'Sheffield' });
         });
       });
@@ -102,8 +116,18 @@ describe('Event Store', () => {
 
     describe('mutations.setCity', () => {
       it('sets city correctly', () => {
-        EventStore.commit('setCity', 'Sheffield');
+        EventStore.commit('setCity', { city: { nameWithHierarchy: 'Sheffield' } });
         expect(EventStore.state.event.city).to.eql({ nameWithHierarchy: 'Sheffield' });
+      });
+
+      it('handles dojo city being null', () => {
+        EventStore.commit('setCity', { city: null });
+        expect(EventStore.state.event.city).to.eql({});
+      });
+
+      it('handles dojo city being empty', () => {
+        EventStore.commit('setCity', { city: {} });
+        expect(EventStore.state.event.city).to.eql({});
       });
     });
 

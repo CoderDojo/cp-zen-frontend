@@ -21,8 +21,10 @@
               <i class="fa fa-pencil pointer" @click="customAddressFormIsVisible = true" v-show="!customAddressFormIsVisible"></i>
               <i class="fa fa-times pointer" @click="customAddressFormIsVisible = false" v-show="customAddressFormIsVisible"></i>
               <div v-if="customAddressFormIsVisible">
-                <input type="text" name="city" v-model="eventCity" class="form-control">
-                <textarea name="address" v-model="eventAddress" rows="3" class="form-control"></textarea>
+                <label for="city">City</label>
+                <input id="city" type="text" name="city" v-model="eventCity" class="form-control">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" v-model="eventAddress" rows="3" class="form-control"></textarea>
               </div>
             </div>
 
@@ -170,7 +172,7 @@
     methods: {
       async initializeStore() {
         if (this.latestEvent) {
-          EventStore.commit('setCityFromObject', this.latestEvent.city);
+          EventStore.commit('setCityFromEventObject', this.latestEvent.city);
           EventStore.commit('setAddress', this.latestEvent.address);
           EventStore.commit('setDescription', this.latestEvent.description);
           EventStore.commit('generateNextEventDates',
@@ -181,7 +183,7 @@
         } else {
           EventStore.commit('setDescription', this.dojo.notes);
           EventStore.commit('setAddress', this.dojo.address1);
-          EventStore.commit('setCity', this.dojo.city.name);
+          EventStore.commit('setCity', this.dojo);
         }
         EventStore.commit('setCountry', this.dojo.country);
         EventStore.commit('setDojoId', this.dojo.id);
@@ -236,10 +238,10 @@
       },
       eventCity: {
         get() {
-          return EventStore.getters.city;
+          return EventStore.getters.city || '';
         },
         set(value) {
-          EventStore.commit('setCity', value);
+          EventStore.commit('setCity', { city: { nameWithHierarchy: value } });
         },
       },
       eventDescription: {
