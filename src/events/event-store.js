@@ -75,10 +75,8 @@ const store = new Vuex.Store({
 
       // This is a workaround for '$$hashKey': 'value' in the json objects of some events.
       // This is something from angular tracking its props being persisted somehow.
-      let city = {};
       if (event.city.nameWithHierarchy) {
-        city = { nameWithHierarchy: event.city.nameWithHierarchy };
-        delete event.city;
+        event.city = { nameWithHierarchy: event.city.nameWithHierarchy };
       }
 
       if (event.sessions) {
@@ -86,7 +84,7 @@ const store = new Vuex.Store({
       }
 
       // default is to not send emails when editing
-      state.event = { ...event, city, sendEmails: false };
+      state.event = { ...event, sendEmails: false };
     },
 
     setEventName(state, name) {
