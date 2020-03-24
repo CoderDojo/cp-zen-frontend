@@ -73,6 +73,10 @@ const store = new Vuex.Store({
       delete event.startTime;
       delete event.endTime;
 
+      if (event.city == null) {
+        event.city = {};
+      }
+
       // This is a workaround for '$$hashKey': 'value' in the json objects of some events.
       // This is something from angular tracking its props being persisted somehow.
       if (event.city.nameWithHierarchy) {

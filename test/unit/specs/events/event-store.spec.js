@@ -76,6 +76,18 @@ describe('Event Store', () => {
           sendEmails: false,
         });
       });
+
+      it('handles city being null', () => {
+        const event = { id: 1, name: 'Event name', city: null };
+        EventStore.commit('setEvent', event);
+
+        expect(EventStore.state.event).to.deep.equal({
+          id: 1,
+          name: 'Event name',
+          city: {},
+          sendEmails: false,
+        });
+      });
     });
 
     describe('mutations.setEventName', () => {
