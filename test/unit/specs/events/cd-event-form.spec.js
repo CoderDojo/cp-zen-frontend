@@ -244,13 +244,15 @@ describe('Event Form component', () => {
         it('sets event values in store from dojo', async () => {
           const vm = vueUnitHelper(EventFormWithMocks);
           vm.loggedInUser = { id: 'U1' };
-          vm.dojo = {
+          const dojoObject = {
             id: 'd1',
             notes: 'The dojo description notes',
             address1: 'Address 1 from Dojo',
             city: { name: 'Dojo City name' },
             country: { alpha2: 'GB' },
           };
+
+          vm.dojo = dojoObject;
 
           await vm.initializeStore();
           expect(MockEventStore.commit).to.have.callCount(6);
@@ -259,7 +261,7 @@ describe('Event Form component', () => {
           expect(MockEventStore.commit).to.have.been
             .calledWith('setAddress', 'Address 1 from Dojo');
           expect(MockEventStore.commit).to.have.been
-            .calledWith('setCity', 'Dojo City name');
+            .calledWith('setCity', dojoObject);
         });
       });
       context('when latestEvent is present', () => {
@@ -281,7 +283,7 @@ describe('Event Form component', () => {
           await vm.initializeStore();
           expect(MockEventStore.commit).to.have.callCount(8);
           expect(MockEventStore.commit).to.have.been
-            .calledWith('setCityFromObject', { nameWithHierarchy: 'City' });
+            .calledWith('setCityFromEventObject', { nameWithHierarchy: 'City' });
           expect(MockEventStore.commit).to.have.been
             .calledWith('setAddress', 'Address from event');
           expect(MockEventStore.commit).to.have.been
