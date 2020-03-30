@@ -10,6 +10,7 @@ import EventSessions from '@/events/order/cd-event-sessions';
 import EventForm from '@/events/cd-event-form';
 import BookingConfirmation from '@/events/order/cd-booking-confirmation';
 import Login from '@/users/cd-login';
+import AccountType from '@/users/cd-account-type';
 import orderWrapper from '@/events/order/wrapper';
 import UserService from '@/users/service';
 import store from '@/store';
@@ -106,6 +107,11 @@ const router = new Router({
           name: 'ManageRequestToJoin',
           component: ManageRequestToJoin,
           beforeEnter: loggedInNavGuard,
+        },
+        {
+          path: '/account-type',
+          name: 'AccountType',
+          component: AccountType,
         },
         {
           path: '/login',
