@@ -10,7 +10,7 @@
           <div class="form-group">
             <div>
               <input name="accountType" id="type-attendee" value="attendee" type="radio" v-model="accountType" v-validate.initial="'required'"/>
-              <label for="type-attendee">{{ $t('Attendee') }}</label>
+              <label for="type-attendee">{{ $t('Attendee (under 18)') }}</label>
             </div>
             <div>
               <input name="accountType" id="type-guardian" value="guardian" type="radio" v-model="accountType"/>
