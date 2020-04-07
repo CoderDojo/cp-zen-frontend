@@ -63,7 +63,7 @@ exports.register = function (server, options, next) {
   server.route({
     method: 'GET',
     path: '/dashboard/tickets',
-    handler :{
+    handler: {
       file: {
         path: 'index.html'
       }
@@ -73,7 +73,7 @@ exports.register = function (server, options, next) {
   server.route({
     method: 'GET',
     path: '/dashboard/dojos/events/user-events',
-    handler :{
+    handler: {
       file: {
         path: 'index.html'
       }
@@ -83,7 +83,7 @@ exports.register = function (server, options, next) {
   server.route({
     method: 'GET',
     path: '/dashboard/dojos/{dojoId}/events/new',
-    handler :{
+    handler: {
       file: {
         path: 'index.html'
       }
@@ -93,7 +93,7 @@ exports.register = function (server, options, next) {
   server.route({
     method: 'GET',
     path: '/dashboard/dojos/{dojoId}/events/{eventId}/edit',
-    handler :{
+    handler: {
       file: {
         path: 'index.html'
       }
@@ -103,7 +103,17 @@ exports.register = function (server, options, next) {
   server.route({
     method: 'GET',
     path: '/dashboard/dojos/{dojoId}/join-requests/{id}/status/{status}',
-    handler :{
+    handler: {
+      file: {
+        path: 'index.html'
+      }
+    }
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/account-type',
+    handler: {
       file: {
         path: 'index.html'
       }
