@@ -29,10 +29,10 @@
       <p class="gender-why" v-show="genderExplaination && errors.has(`gender-${id}:required`)">{{ $t(`We want to provide activities that appeal to people regardless of their gender.`) }}<br/>{{ $t(`To check how well we are succeeding, we'd like to find out whether people of different genders are equally likely to attend.`) }}</p>
 
       <label class="cd-child-ticket__label">{{ $t('Ticket') }}</label>
-      <div class="cd-child-ticket__ticket-selector"> 
+      <div class="cd-child-ticket__ticket-selector">
         <multiselect v-model="selectedTickets" :options="childTickets" group-label="name" group-values="tickets" :multiple="true" :searchable="false" :group-select="false" :placeholder="$t('Select Event Tickets')" track-by="id" label="name" @close="onBlur" @open="onFocus" :data-vv-name="`tickets-${id}`" v-validate="'required'"></multiselect>
       </div>
-      <p class="cd-child-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${id}:required`)">{{ $t('Ticket selection is required') }}</p>  
+      <p class="cd-child-ticket__ticket-select-err text-danger" v-show="errors.has(`tickets-${id}:required`)">{{ $t('Ticket selection is required') }}</p>
 
       <special-req-component class="cd-child-ticket__special-req-selector" v-model="notes"></special-req-component>
     </form>
@@ -96,9 +96,9 @@
       },
       async createChild() {
         return UserService.addChild(this.child)
-        .then((response) => {
-          this.userId = response.body.userId;
-        });
+          .then((response) => {
+            this.userId = response.body.userId;
+          });
       },
     },
     watch: {

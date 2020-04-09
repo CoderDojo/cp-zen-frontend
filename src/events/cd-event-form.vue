@@ -301,11 +301,11 @@
 
       if (eventId) {
         const event = (await EventsService.v3.load(
-        eventId, {
-          params: {
-            related: 'sessions.tickets',
-          },
-        })).body;
+          eventId, {
+            params: {
+              related: 'sessions.tickets',
+            },
+          })).body;
 
         if (!event.newForm) {
           this.$router.push(`/dashboard/dojo/${dojoId}/event-form/${eventId}`);
