@@ -194,7 +194,7 @@ describe('Dojos Service', () => {
   });
   describe('membership:loadPending', () => {
     it('should transform a request to join into a membership', async () => {
-       // ARRANGE
+      // ARRANGE
       const dojoId = 'd1';
       const requestId = 'rq1';
 

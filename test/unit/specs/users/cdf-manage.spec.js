@@ -185,7 +185,7 @@ describe('CDFManageUsers', () => {
     });
 
     it('should register an error on retrieval of data', async () => {
-       // ARRANGE
+      // ARRANGE
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
       vm.errors = {
         clear: sinon.stub(),
@@ -206,7 +206,7 @@ describe('CDFManageUsers', () => {
   });
   describe('deleteUser()', () => {
     it('should hardDelete', async () => {
-       // ARRANGE
+      // ARRANGE
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
       vm.user = {
         id: 'u1',
@@ -238,7 +238,7 @@ describe('CDFManageUsers', () => {
       expect(vm.deleted).to.be.true;
     });
     it('should register an error on retrieval of data', async () => {
-       // ARRANGE
+      // ARRANGE
       const vm = vueUnitHelper(ManageUsersComponentWithMocks);
       vm.errors = {
         clear: sinon.stub(),

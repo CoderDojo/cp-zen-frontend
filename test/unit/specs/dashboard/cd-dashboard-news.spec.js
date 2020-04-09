@@ -27,13 +27,13 @@ describe('Dashboard children component', () => {
         // ARRANGE
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
         vm.news = [
-        { date: '2018-08-09T10:00:00.000Z', link: 'blah1', title: { rendered: 'blah1' } },
-        { date: '2018-08-10T10:00:00.000Z', link: 'blah2', title: { rendered: 'blah2' } },
-        { date: '2018-08-11T10:00:00.000Z', link: 'blah3', title: { rendered: 'blah3' } },
-        { date: '2018-08-12T10:00:00.000Z', link: 'blah4', title: { rendered: 'blah4' } },
-        { date: '2018-08-13T10:00:00.000Z', link: 'blah5', title: { rendered: 'blah5' } },
-        { date: '2018-08-14T10:00:00.000Z', link: 'blah6', title: { rendered: 'blah6' } },
-        { date: '2018-08-15T10:00:00.000Z', link: 'blah7', title: { rendered: 'blah7' } }];
+          { date: '2018-08-09T10:00:00.000Z', link: 'blah1', title: { rendered: 'blah1' } },
+          { date: '2018-08-10T10:00:00.000Z', link: 'blah2', title: { rendered: 'blah2' } },
+          { date: '2018-08-11T10:00:00.000Z', link: 'blah3', title: { rendered: 'blah3' } },
+          { date: '2018-08-12T10:00:00.000Z', link: 'blah4', title: { rendered: 'blah4' } },
+          { date: '2018-08-13T10:00:00.000Z', link: 'blah5', title: { rendered: 'blah5' } },
+          { date: '2018-08-14T10:00:00.000Z', link: 'blah6', title: { rendered: 'blah6' } },
+          { date: '2018-08-15T10:00:00.000Z', link: 'blah7', title: { rendered: 'blah7' } }];
 
         vm.sortPostsByDate = sinon.stub().returns([
           { type: 'News', date: moment('2018-08-15T10:00:00.000Z'), formattedDate: '15/08/2018', link: 'blah7', title: 'blah7' },
@@ -67,23 +67,23 @@ describe('Dashboard children component', () => {
       it('should return a formatted array of news posts', () => {
         // ARRANGE
         const mockFormattedNews = [
-        { type: 'News', date: moment('2018-08-09T10:00:00.000Z'), link: 'blah1', title: 'blah1' },
-        { type: 'News', date: moment('2018-08-10T10:00:00.000Z'), link: 'blah2', title: 'blah2' },
-        { type: 'News', date: moment('2018-08-11T10:00:00.000Z'), link: 'blah3', title: 'blah3' },
-        { type: 'News', date: moment('2018-08-12T10:00:00.000Z'), link: 'blah4', title: 'blah4' },
-        { type: 'News', date: moment('2018-08-13T10:00:00.000Z'), link: 'blah5', title: 'blah5' },
-        { type: 'News', date: moment('2018-08-14T10:00:00.000Z'), link: 'blah6', title: 'blah6' },
-        { type: 'News', date: moment('2018-08-15T10:00:00.000Z'), link: 'blah7', title: 'blah7' }];
+          { type: 'News', date: moment('2018-08-09T10:00:00.000Z'), link: 'blah1', title: 'blah1' },
+          { type: 'News', date: moment('2018-08-10T10:00:00.000Z'), link: 'blah2', title: 'blah2' },
+          { type: 'News', date: moment('2018-08-11T10:00:00.000Z'), link: 'blah3', title: 'blah3' },
+          { type: 'News', date: moment('2018-08-12T10:00:00.000Z'), link: 'blah4', title: 'blah4' },
+          { type: 'News', date: moment('2018-08-13T10:00:00.000Z'), link: 'blah5', title: 'blah5' },
+          { type: 'News', date: moment('2018-08-14T10:00:00.000Z'), link: 'blah6', title: 'blah6' },
+          { type: 'News', date: moment('2018-08-15T10:00:00.000Z'), link: 'blah7', title: 'blah7' }];
 
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
         vm.news = [
-        { date: '2018-08-09T10:00:00.000Z', link: 'blah1', title: { rendered: 'blah1' } },
-        { date: '2018-08-10T10:00:00.000Z', link: 'blah2', title: { rendered: 'blah2' } },
-        { date: '2018-08-11T10:00:00.000Z', link: 'blah3', title: { rendered: 'blah3' } },
-        { date: '2018-08-12T10:00:00.000Z', link: 'blah4', title: { rendered: 'blah4' } },
-        { date: '2018-08-13T10:00:00.000Z', link: 'blah5', title: { rendered: 'blah5' } },
-        { date: '2018-08-14T10:00:00.000Z', link: 'blah6', title: { rendered: 'blah6' } },
-        { date: '2018-08-15T10:00:00.000Z', link: 'blah7', title: { rendered: 'blah7' } }];
+          { date: '2018-08-09T10:00:00.000Z', link: 'blah1', title: { rendered: 'blah1' } },
+          { date: '2018-08-10T10:00:00.000Z', link: 'blah2', title: { rendered: 'blah2' } },
+          { date: '2018-08-11T10:00:00.000Z', link: 'blah3', title: { rendered: 'blah3' } },
+          { date: '2018-08-12T10:00:00.000Z', link: 'blah4', title: { rendered: 'blah4' } },
+          { date: '2018-08-13T10:00:00.000Z', link: 'blah5', title: { rendered: 'blah5' } },
+          { date: '2018-08-14T10:00:00.000Z', link: 'blah6', title: { rendered: 'blah6' } },
+          { date: '2018-08-15T10:00:00.000Z', link: 'blah7', title: { rendered: 'blah7' } }];
 
         // ASSERT
         expect(vm.formattedNews).to.deep.equal(mockFormattedNews);
@@ -117,9 +117,9 @@ describe('Dashboard children component', () => {
       it('should load the latest news', async () => {
         // ARRANGE
         const mockNews = [
-        { date: '2018-08-09T', link: 'blah1', title: { rendered: 'blah1' } },
-        { date: '2018-08-10T', link: 'blah2', title: { rendered: 'blah2' } },
-        { date: '2018-08-11T', link: 'blah3', title: { rendered: 'blah3' } }];
+          { date: '2018-08-09T', link: 'blah1', title: { rendered: 'blah1' } },
+          { date: '2018-08-10T', link: 'blah2', title: { rendered: 'blah2' } },
+          { date: '2018-08-11T', link: 'blah3', title: { rendered: 'blah3' } }];
         MockUpdatesService.loadNews.resolves({ body: mockNews });
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
 
@@ -135,13 +135,13 @@ describe('Dashboard children component', () => {
       it('should sort the list of posts by date', async () => {
         // ARRANGE
         const posts = [
-        { type: 'News', date: moment('2018-08-10T10:00:00.000Z'), link: 'blah2', title: 'blah2' },
-        { type: 'News', date: moment('2018-08-12T10:00:00.000Z'), link: 'blah1', title: 'blah1' },
-        { type: 'News', date: moment('2018-08-15T10:00:00.000Z'), link: 'blah3', title: 'blah3' }];
+          { type: 'News', date: moment('2018-08-10T10:00:00.000Z'), link: 'blah2', title: 'blah2' },
+          { type: 'News', date: moment('2018-08-12T10:00:00.000Z'), link: 'blah1', title: 'blah1' },
+          { type: 'News', date: moment('2018-08-15T10:00:00.000Z'), link: 'blah3', title: 'blah3' }];
         const sortedPosts = [
-        { formattedDate: '15/08/2018', type: 'News', date: moment('2018-08-15T10:00:00.000Z').utc(), link: 'blah3', title: 'blah3' },
-        { formattedDate: '12/08/2018', type: 'News', date: moment('2018-08-12T10:00:00.000Z').utc(), link: 'blah1', title: 'blah1' },
-        { formattedDate: '10/08/2018', type: 'News', date: moment('2018-08-10T10:00:00.000Z').utc(), link: 'blah2', title: 'blah2' }];
+          { formattedDate: '15/08/2018', type: 'News', date: moment('2018-08-15T10:00:00.000Z').utc(), link: 'blah3', title: 'blah3' },
+          { formattedDate: '12/08/2018', type: 'News', date: moment('2018-08-12T10:00:00.000Z').utc(), link: 'blah1', title: 'blah1' },
+          { formattedDate: '10/08/2018', type: 'News', date: moment('2018-08-10T10:00:00.000Z').utc(), link: 'blah2', title: 'blah2' }];
 
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
 
