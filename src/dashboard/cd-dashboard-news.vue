@@ -78,7 +78,7 @@
       // },
       sortPostsByDate(posts) {
         const sortedPosts = posts.sort((a, b) =>
-         b.date - a.date);
+          b.date - a.date);
         return sortedPosts.map(post => Object.assign({
           formattedDate: post.date.utc().format('DD/MM/YYYY'),
         }, post));

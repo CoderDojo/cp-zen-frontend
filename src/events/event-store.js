@@ -137,8 +137,8 @@ const store = new Vuex.Store({
           moment().isoWeekday() <= neededDay
             ? moment().isoWeekday(neededDay)
             : moment()
-                .add(1, 'weeks')
-                .isoWeekday(neededDay);
+              .add(1, 'weeks')
+              .isoWeekday(neededDay);
       }
 
       state.eventDate = newDate.format('YYYY-MM-DD');

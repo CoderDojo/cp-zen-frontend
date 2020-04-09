@@ -33,9 +33,9 @@
         /* eslint-disable no-nested-ternary */
         return this.status === 'accept' && this.loaderIsVisible ?
           (this.ready ? this.userTypeString : 'Accepting the user...') :
-            (this.status === 'refuse' && this.loaderIsVisible ?
-              (this.ready ? 'The request to join your Dojo has been refused.' : 'Refusing this user from joining your Dojo...') :
-                'Invalid action, try again or contact support.');
+          (this.status === 'refuse' && this.loaderIsVisible ?
+            (this.ready ? 'The request to join your Dojo has been refused.' : 'Refusing this user from joining your Dojo...') :
+            'Invalid action, try again or contact support.');
         /* eslint-enable no-nested-ternary */
       },
       conflictUrl() {
@@ -102,7 +102,7 @@
   @brand-success: #5cb85c;
   @loader-size: 7em;
   @check-thickness: 0.5em;
-  @loader-thickness: @check-thickness/2; 
+  @loader-thickness: @check-thickness/2;
   @check-height: @loader-size/2;
   @check-width: @check-height/2;
   @check-left: (@loader-size/6 + @loader-size/12 - @check-thickness/2);
@@ -133,14 +133,14 @@
     display: none;
     &--visible {
       display: block;
-    } 
+    }
     &.draw:after {
       animation-duration: 800ms;
       animation-timing-function: ease;
       animation-name: checkmark;
       transform: scaleX(-1) rotate(135deg);
     }
-    
+
     &:after {
       opacity: 1;
       height: @check-height;

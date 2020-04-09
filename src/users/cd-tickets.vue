@@ -54,7 +54,7 @@
         ));
         this.events = (events.reduce((acc, dojoEvents) =>
           acc.concat(dojoEvents.body.results), []))
-            .sort(EventUtils.orderByStartTime);
+          .sort(EventUtils.orderByStartTime);
       },
       async loadUserDojos() {
         const res = await DojosService.getUsersDojos(this.currentUser.id);

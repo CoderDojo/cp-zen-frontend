@@ -436,7 +436,7 @@ describe('Event sessions component', () => {
         vm.validPhone = true;
         vm.profile = { id: 'user1' };
         MockUserService.userProfileData.withArgs(vm.user.id)
-        .returns(Promise.resolve({ id: 'user1', phone: '' }));
+          .returns(Promise.resolve({ id: 'user1', phone: '' }));
         vm.phone = '+353123456789';
 
         // ACT

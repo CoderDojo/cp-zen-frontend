@@ -143,18 +143,18 @@
             this.dojos = res[1].map(resp => resp.body);
           })
           // Split this function from the promise.all : CORS errors are hard to catch
-          .then((async () => {
-            if (this.user.email) {
-              // TODO : once the forum integration is done back-end wise
-              // we can fully automate from there
-              try {
-                this.forumUser = (await ForumService.user.search(this.user.email)).body;
-              } catch (e) {
-                // You might not have the forums running in development; and that's fine
-                this.errors.add('forumUserNotFound', 'User not found');
+            .then((async () => {
+              if (this.user.email) {
+                // TODO : once the forum integration is done back-end wise
+                // we can fully automate from there
+                try {
+                  this.forumUser = (await ForumService.user.search(this.user.email)).body;
+                } catch (e) {
+                  // You might not have the forums running in development; and that's fine
+                  this.errors.add('forumUserNotFound', 'User not found');
+                }
               }
-            }
-          })());
+            })());
         } catch (e) {
           if ((e.status === 404 && e.body.message === '404 - "Invalid userId"') ||
             e.message === 'Invalid email') {
