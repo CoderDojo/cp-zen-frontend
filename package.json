@@ -101,7 +101,6 @@
     "less": "^2.7.2",
     "less-loader": "^4.0.3",
     "lolex": "^1.5.2",
-    "mocha": "^3.2.0",
     "nodemon": "^1.17.5",
     "opn": "^4.0.2",
     "optimize-css-assets-webpack-plugin": "^2.0.0",
