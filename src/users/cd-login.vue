@@ -107,9 +107,6 @@
             this.errors.clear();
           }
           if (response.body.ok === false) {
-            if (response.body.why === 'raspberry-linked') {
-              window.localStorage.setItem('rpiAuth', true);
-            }
             this.errors.add({
               field: 'loginFailed',
               msg: response.body.why });
