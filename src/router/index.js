@@ -11,6 +11,7 @@ import EventForm from '@/events/cd-event-form';
 import BookingConfirmation from '@/events/order/cd-booking-confirmation';
 import Login from '@/users/cd-login';
 import AccountType from '@/users/cd-account-type';
+import RaspberryOpt from '@/users/cd-raspberry-opt';
 import orderWrapper from '@/events/order/wrapper';
 import UserService from '@/users/service';
 import store from '@/store';
@@ -112,6 +113,11 @@ const router = new Router({
           path: '/account-type',
           name: 'AccountType',
           component: AccountType,
+        },
+        {
+          path: '/raspberry-opt',
+          name: 'RaspberryOpt',
+          component: RaspberryOpt,
         },
         {
           path: '/login',

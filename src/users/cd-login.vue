@@ -36,6 +36,9 @@
             {{ $t('The account for email {msg} is linked to a My Raspberry Pi account.', { msg: email }) }}
           </p>
           <p>
+            <a :href="`/raspberry-opt?optIn=true`">{{$t('Opt this browser in to My Raspberry Pi authentication.')}}</a>
+          </p>
+          <p>
             <a :href="`/rpi/login?user=${email}`">{{$t('Login through My Raspberry Pi.')}}</a>
           </p>
           <p>
@@ -104,10 +107,14 @@
             this.errors.clear();
           }
           if (response.body.ok === false) {
+            if (response.body.why === 'raspberry-linked') {
+              window.localStorage.setItem('rpiAuth', true);
+            }
             this.errors.add({
               field: 'loginFailed',
               msg: response.body.why });
           } else {
+            window.localStorage.clear('rpiAuth');
             const forumUrl = `^${Vue.config.forumsUrlBase}/auth/CoderDojo$`;
             if (this.redirectUrl.match(forumUrl)) {
               this.redirectTo(this.redirectUrl);
