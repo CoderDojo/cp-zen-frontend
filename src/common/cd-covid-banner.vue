@@ -3,7 +3,7 @@
       <p>{{ $t('Thank you for your interest in joining the CoderDojo community!') }}</p>
       <p>{{ $t('Due to the coronavirus pandemic, we have paused the Dojo verification process.') }}</p>
       <p>{{ $t('In the meantime, we’re providing exciting opportunities for young people, parents, volunteers, and educators to get creative with tech through') }}
-        <a class="cd-banner-link" href="https://www.raspberrypi.org/at-home/">{{ $t('Digital Making at Home') }}</a> {{ $t('from the Raspberry Pi Foundation.') }}
+        <a class="cd-banner-link" href="https://www.raspberrypi.org/at-home/?utm_source=coderdojo&utm_medium=covid-banner&utm_campaign=dmah">{{ $t('Digital Making at Home') }}</a> {{ $t('from the Raspberry Pi Foundation.') }}
       </p>
     </div>
 </template>
