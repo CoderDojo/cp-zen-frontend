@@ -9,8 +9,8 @@
         <div class="cd-menu__nav-right">
             <a class="emphasis" href="https://help.coderdojo.com">{{ $t('Help') }}</a>
           <div class="cd-menu__account">
-            <a href="/register/user">{{ $t('Register') }}</a>
-            <a href="/login">{{ $t('Login') }}</a>
+            <a :href="registerPath">{{ $t('Register') }}</a>
+            <a :href="loginPath">{{ $t('Login') }}</a>
          </div>
          <div class="cd-menu__profile">
             <div class="cd-menu__profile-pic"></div>
@@ -25,7 +25,7 @@
               <li class="cd-menu__cdf-admin-link"><a href="/dashboard/manage-dojos">{{ $t('Manage Dojos') }}</a></li>
               <li class="cd-menu__cdf-admin-link"><a href="http://badgekit.coderdojo.com/">Badgekit</a></li>
               <li class="cd-menu__cdf-admin-link"><a href="/dashboard/stats">{{ $t('Stats') }}</a></li>
-              <li><a class="cd-menu__referer-link" href="/logout">{{ $t('Logout') }}</a></li>
+              <li><a class="cd-menu__referer-link" :href="logoutPath">{{ $t('Logout') }}</a></li>
             </ul>
           </div>
         </div>
@@ -63,8 +63,8 @@
         <div class="cd-menu__content-pre">
           <a class="emphasis" href="https://help.coderdojo.com">{{ $t('Help') }}</a>
           <div class="cd-menu__account">
-            <a href="/register/user">{{ $t('Register') }}</a>
-            <a href="/login">{{ $t('Login') }}</a>
+            <a :href="registerPath">{{ $t('Register') }}</a>
+            <a :href="loginPath">{{ $t('Login') }}</a>
           </div>
           <ul class="cd-menu__content-block">
             <li class="cd-menu__profile">
@@ -92,7 +92,7 @@
                     <li class="cd-menu__cdf-admin-link"><a href="/dashboard/manage-dojos">{{ $t('Manage Dojos') }}</a></li>
                     <li class="cd-menu__cdf-admin-link"><a href="http://badgekit.coderdojo.com/">Badgekit</a></li>
                     <li class="cd-menu__cdf-admin-link"><a href="/dashboard/stats">{{ $t('Stats') }}</a></li>
-                    <li><a class="cd-menu__referer-link" href="/logout">{{ $t('Logout') }}</a></li>
+                    <li><a class="cd-menu__referer-link" :href="logoutPath">{{ $t('Logout') }}</a></li>
                   </ul>
                 </div>
               </div>
@@ -133,7 +133,11 @@ import '@coderdojo/cd-common/dist/cd-common.min';
 export default {
   name: 'cd-header',
   data() {
+    const rpiAuthFlag = window.localStorage.getItem('rpiAuth') === 'true';
     return {
+      loginPath: rpiAuthFlag ? '/rpi/login' : '/login',
+      logoutPath: rpiAuthFlag ? '/rpi/logout' : '/logout',
+      registerPath: rpiAuthFlag ? '/rpi/register' : '/register/user',
       navigationLinks: [
         {
           href: 'https://coderdojo.com/about/',
