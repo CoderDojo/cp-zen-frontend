@@ -5,22 +5,18 @@ import DojoDetails from '@/dojos/cd-dojo-details';
 import FindDojo from '@/dojos/cd-find-dojo';
 import UserTickets from '@/users/cd-tickets';
 import EventDetails from '@/events/order/cd-event-details';
-import LoginOrRegister from '@/users/cd-login-or-register';
 import EventSessions from '@/events/order/cd-event-sessions';
 import EventForm from '@/events/cd-event-form';
 import BookingConfirmation from '@/events/order/cd-booking-confirmation';
-import Login from '@/users/cd-login';
 import AccountType from '@/users/cd-account-type';
-import RaspberryOpt from '@/users/cd-raspberry-opt';
+
 import orderWrapper from '@/events/order/wrapper';
-import UserService from '@/users/service';
 import store from '@/store';
 import Home from '@/dashboard/cd-dashboard';
 import CDFManageUsers from '@/users/cdf-manage';
 import ManageRequestToJoin from '@/dojos/manage-request-to-join';
 import loggedInNavGuard from './loggedInNavGuard';
 import loggedInCDFNavGuard from './loggedInCDFNavGuard';
-import profileAuthRedirect from './profileAuthRedirect';
 import orderExistsNavGuard from './orderExistsNavGuard';
 import errorDisplayGuard from './errorDisplayGuard';
 import ticketingAdminNavGuard from './ticketingAdminNavGuard';
@@ -115,18 +111,7 @@ const router = new Router({
           component: AccountType,
         },
         {
-          path: '/raspberry-opt',
-          name: 'RaspberryOpt',
-          component: RaspberryOpt,
-        },
-        {
-          path: '/login',
-          name: 'Login',
-          component: Login,
-          beforeEnter: profileAuthRedirect,
-        },
-        {
-          path: '/home',
+                    path: '/home',
           name: 'Home',
           component: Home,
           beforeEnter: loggedInNavGuard,
@@ -141,16 +126,6 @@ const router = new Router({
               component: EventDetails,
               props: true,
               children: [
-                {
-                  path: '',
-                  name: 'LoginOrRegister',
-                  component: LoginOrRegister,
-                  props: true,
-                  async beforeEnter(to, from, next) {
-                    const loggedInUser = (await UserService.getCurrentUser()).body;
-                    next(loggedInUser.login ? { name: 'EventSessions', params: to.params } : true);
-                  },
-                },
                 {
                   path: 'sessions',
                   name: 'EventSessions',
@@ -183,6 +158,16 @@ const router = new Router({
           },
         },
       ],
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: {
+        template: '<div></div>',
+        created() {
+          window.location.reload(true);
+        },
+      },
     },
     {
       path: '/:path+',

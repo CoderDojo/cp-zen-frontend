@@ -7,8 +7,8 @@ const app = express();
 // serve static assets normally
 app.use(express.static(path.resolve(__dirname, 'dist')));
 
-// block known api route causing looping redirect
-app.get('/rpi/*', (request, response) => {
+// block known api routes causing looping redirect
+app.get(['/rpi/*', '/login', '/logout', '/register'], (request, response) => {
   response.send('fin.');
 });
 
