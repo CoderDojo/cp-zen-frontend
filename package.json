@@ -11,7 +11,7 @@
     "karma": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js",
     "test": "yarn unit && yarn cypress",
     "lint": "eslint --ext .js,.vue src test/unit/specs",
-    "cypress": "yarn build && concurrently --kill-others --success first \"node cypress-spa-server.js > /dev/null\" \"cypress open --browser chrome\"",
+    "cypress": "yarn build && concurrently --kill-others --success first \"node cypress-spa-server.js > /dev/null\" \"cypress run --browser chrome\"",
     "cypress:open": "cypress open",
     "cypress:install": "cypress install"
   },

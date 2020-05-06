@@ -111,7 +111,7 @@ const router = new Router({
           component: AccountType,
         },
         {
-                    path: '/home',
+          path: '/home',
           name: 'Home',
           component: Home,
           beforeEnter: loggedInNavGuard,
