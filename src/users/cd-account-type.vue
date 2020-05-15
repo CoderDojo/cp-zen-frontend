@@ -5,16 +5,16 @@
     </div>
     <div class="row">
       <div class="cd-account-type__box">
-        <h4 class="cd-account-type__sub-header">{{ $t('Please select an account type to complete registration.') }}</h4>
+        <h4 class="cd-account-type__sub-header">{{ $t('To complete your account, please let us know which age category you fit into.') }}</h4>
         <form @submit.prevent="submit">
           <div class="form-group">
             <div>
               <input name="accountType" id="type-attendee" value="attendee" type="radio" v-model="accountType" v-validate.initial="'required'"/>
-              <label for="type-attendee">{{ $t('Attendee (under 18)') }}</label>
+              <label for="type-attendee">{{ $t('Child (under 18 years of age)') }}</label>
             </div>
             <div>
               <input name="accountType" id="type-guardian" value="guardian" type="radio" v-model="accountType"/>
-              <label for="type-guardian">{{ $t('Parent/Guardian') }}</label>
+              <label for="type-guardian">{{ $t('Adult (over 18 years of age)') }}</label>
             </div>
           </div>
           <input :disabled="errors.any()" class="cd-account-type__submit btn btn-primary" type="submit" value="Submit" />
