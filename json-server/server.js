@@ -145,28 +145,6 @@ server.get('/api/2.0/profiles/children-for-user/:parentId', (req, res) => {
   res.send(Object.values(children));
 });
 
-server.post('/api/2.0/users/register', (req, res) => {
-  users[req.body.user.email] = req.body.user;
-  users[req.body.user.email].id = uuidv1();
-  users[req.body.user.email].name = `${req.body.user.firstName} ${req.body.user.lastName}`;
-  users[req.body.user.email].roles = ['basic-user'];
-  users[req.body.user.email].initUserType = JSON.stringify(users[req.body.user.email].initUserType);
-  res.send({ ok: true });
-});
-
-server.post('/api/2.0/users/login', (req, res) => {
-  if (users[req.body.email]) {
-    res.cookie('loggedIn', req.body.email, { maxAge: 12 * 60 * 60 * 1000, httpOnly: true });
-    res.send();
-  } else if (req.body.email === 'failure@example.com') {
-    res.send({ ok: false, why: 'invalid-password' });
-  } else if (req.body.email === 'raspberry@example.com') {
-    res.send({ ok: false, why: 'raspberry-linked' });
-  } else {
-    res.send({ ok: false, why: 'user-not-found' });
-  }
-});
-
 server.get('/api/2.0/user/events/:id/applications', (req, res) => {
   if (req.cookies.loggedIn) {
     res.send(applications[req.cookies.loggedIn][req.params.id]);
