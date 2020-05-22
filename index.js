@@ -122,6 +122,26 @@ exports.register = function (server, options, next) {
 
   server.route({
     method: 'GET',
+    path: '/raspberry-opt',
+    handler: {
+      file: {
+        path: 'index.html'
+      }
+    }
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/login',
+    handler: {
+      file: {
+        path: 'index.html'
+      }
+    }
+  });
+
+  server.route({
+    method: 'GET',
     path: '/home',
     handler: {
       file: {
