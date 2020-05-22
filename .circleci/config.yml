@@ -140,18 +140,17 @@ jobs:
             git config --global user.name "CoderDojo Foundation"
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
             yarn config set version-git-message "[skip ci] Update to %s" # Skip CI or infinite loop
-            yarn config set version-commit-hooks false # We're after the tests
+            yarn config set version-commit-hooks false # We're after the tests 
       - run:
           name: publish to git and npm
           command: |
-            yarn version --patch
+            yarn version --patch 
             git push
             yarn publish --non-interactive
-      # disable this for now. 18/05/2020
-      # - run: {
-      #   "name": "update_platform",
-      #   "command": "sh .circleci/update_platform.sh $(node build/get-version.js) master"
-      # }
+      - run: {
+        "name": "update_platform",
+        "command": "sh .circleci/update_platform.sh $(node build/get-version.js) master"
+      }
 workflows:
   version: 2
   build-test-and-deploy:

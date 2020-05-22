@@ -116,7 +116,7 @@
           /* eslint-enable no-alert */
           this.loadUserDojoRole();
         } else {
-          location.href = `/register?referer=${this.$route.path}`;
+          location.href = `/register/account?referer=${this.$route.path}`;
         }
       },
     },
