@@ -18,54 +18,6 @@ describe('UserService', () => {
     sinon.restore();
   });
 
-  describe('login()', () => {
-    it('should login with the given email address and password', async () => {
-      // ARRANGE
-      window.cdMenu = {
-        fns: {
-          loadProfileMenu: sinon.stub(),
-        },
-      };
-      const email = 'email';
-      const password = 'password';
-      sinon.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/users/login`, {
-        email,
-        password,
-      }).returns(Promise.resolve('foo'));
-
-      // ACT
-      const resp = await UserServiceWithMocks.login(email, password);
-
-      // ASSERT
-      expect(resp).to.equal('foo');
-      expect(window.cdMenu.fns.loadProfileMenu).to.have.been.calledOnce;
-    });
-  });
-
-  describe('register()', () => {
-    it('should register an account', async () => {
-      // ARRANGE
-      const profile = {
-        id: 'bar',
-      };
-
-      const user = {
-        id: 'foo',
-      };
-
-      sinon.stub(Vue.http, 'post').withArgs(`${Vue.config.apiServer}/api/2.0/users/register`, {
-        profile,
-        user,
-      }).returns(Promise.resolve({ body: { user, profile, ok: true } }));
-      sinon.stub(UserServiceWithMocks, 'login').returns(Promise.resolve());
-
-      // ACT
-      await UserServiceWithMocks.register(user, profile);
-      expect(UserServiceWithMocks.login).to.have.been.calledOnce;
-      expect(UserServiceWithMocks.login).to.have.been.calledWith(user.email, user.password);
-    });
-  });
-
   describe('userProfileData', () => {
     it('should return a promise that resolves with the current user\'s profile', (done) => {
       // ARRANGE

@@ -5,8 +5,7 @@ const fn = {
     if (user && user.login) {
       return next();
     }
-    const rpiAuthFlag = window.localStorage.getItem('rpiAuth') === 'true';
-    return window.location.replace(`/${rpiAuthFlag ? 'rpi' : 'cdf'}/login?referer=${from}`);
+    return window.location.replace(`/login?referer=${from}`);
   },
 };
 export default async function (to, from, next) {

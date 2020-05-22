@@ -133,11 +133,10 @@ import '@coderdojo/cd-common/dist/cd-common.min';
 export default {
   name: 'cd-header',
   data() {
-    const rpiAuthFlag = window.localStorage.getItem('rpiAuth') === 'true';
     return {
-      loginPath: rpiAuthFlag ? '/rpi/login' : '/login',
-      logoutPath: rpiAuthFlag ? '/rpi/logout' : '/logout',
-      registerPath: rpiAuthFlag ? '/rpi/register' : '/register/user',
+      loginPath: '/login',
+      logoutPath: '/logout',
+      registerPath: '/register',
       navigationLinks: [
         {
           href: 'https://coderdojo.com/about/',
