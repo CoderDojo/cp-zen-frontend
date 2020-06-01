@@ -70,7 +70,7 @@
         return this.event.sessions.map(session => session.name).join(', ');
       },
       bookLink() {
-        return { name: 'LoginOrRegister', params: { eventId: this.event.id } };
+        return { name: 'EventSessions', params: { eventId: this.event.id } };
       },
     },
     filters: {
@@ -86,7 +86,7 @@
   .cd-event-list-item {
     .cd-event-tile;
     &--past {
-      border-color: #bdc3c6; 
+      border-color: #bdc3c6;
     }
   }
 </style>
