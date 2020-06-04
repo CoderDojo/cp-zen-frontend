@@ -125,6 +125,7 @@ const router = new Router({
               path: '',
               component: EventDetails,
               props: true,
+              redirect: { name: 'EventSessions' },
               children: [
                 {
                   path: 'sessions',
