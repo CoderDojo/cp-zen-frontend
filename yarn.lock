@@ -655,7 +655,7 @@ async@^2.4.1:
   dependencies:
     lodash "^4.17.14"
 
-async@^2.5.0, async@^2.6.2:
+async@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/async/-/async-2.6.2.tgz#18330ea7e6e313887f5d2f2a904bac6fe4dd5381"
   dependencies:
@@ -2386,10 +2386,10 @@ cosmiconfig@^2.1.0, cosmiconfig@^2.1.1:
     parse-json "^2.2.0"
     require-from-string "^1.1.0"
 
-cp-translations@^1.0.144:
-  version "1.0.144"
-  resolved "https://registry.yarnpkg.com/cp-translations/-/cp-translations-1.0.144.tgz#919ecfb784eff841077f377e2d467bbcd26fd959"
-  integrity sha512-sxnUHSzovHHWXDZzcadIm+uDAdqIUaOziYRAbJ3YxRoMw5CtUxQp3w04LCZ0nghWYmmFGP3z0Qffn69ioc560A==
+cp-translations@^1.0.149:
+  version "1.0.149"
+  resolved "https://registry.yarnpkg.com/cp-translations/-/cp-translations-1.0.149.tgz#e09845115a80380cf19c49dfd003d8ed75578690"
+  integrity sha512-AQa/d/MDNAM8y70gWbE6a65R9ZUYP11WWOF056Eq8Ttngdzg6j1WsmkV4VuZQB5NSIYrZIuM2UoCWIOfC20kmw==
 
 crc32-stream@^2.0.0:
   version "2.0.0"
@@ -4375,10 +4375,11 @@ handlebars@^4.0.1:
     uglify-js "^3.1.4"
 
 handlebars@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.1.0.tgz#0d6a6f34ff1f63cecec8423aa4169827bf787c3a"
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.3.0.tgz#427391b584626c9c9c6ffb7d1fb90aa9789221cc"
+  integrity sha512-7XlnO8yBXOdi7AzowjZssQr47Ctidqm7GbgARapOaqSN9HQhlClnOkR9HieGauIT3A8MBC6u9wPCXs97PCYpWg==
   dependencies:
-    async "^2.5.0"
+    neo-async "^2.6.0"
     optimist "^0.6.1"
     source-map "^0.6.1"
   optionalDependencies:
