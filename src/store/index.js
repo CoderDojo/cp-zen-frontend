@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     loggedInUser: null,
     dojo: null,
+    chosenLanguageConfig: null,
   },
   mutations: {
     setLoggedInUser(state, user) {
@@ -15,6 +16,9 @@ export default new Vuex.Store({
     },
     setDojo(state, dojo) {
       Vue.set(state, 'dojo', dojo);
+    },
+    setChosenLanguageConfig(state, chosenLanguageConfig) {
+      Vue.set(state, 'chosenLanguageConfig', chosenLanguageConfig);
     },
   },
   actions: {
@@ -27,6 +31,9 @@ export default new Vuex.Store({
       commit('setDojo', null);
       const dojo = (await Vue.http.get(`${Vue.config.apiServer}/api/2.0/dojos/${dojoId}`)).body;
       commit('setDojo', dojo);
+    },
+    updateChosenLanguageConfig({ commit }, chosenLanguageConfig) {
+      commit('setChosenLanguageConfig', chosenLanguageConfig);
     },
   },
   getters: {
@@ -45,6 +52,7 @@ export default new Vuex.Store({
       state.loggedInUser.login !== null &&
       state.loggedInUser.login.id !== undefined,
     dojo: state => state.dojo,
+    chosenLanguageConfig: state => state.chosenLanguageConfig,
     // User properties
     hasRequests: (state, getters) => getters.isLoggedIn &&
       getters.loggedInUser.joinRequests &&
