@@ -1,7 +1,7 @@
 import vueUnitHelper from 'vue-unit-helper';
 import TextDirectionWrapper from '@/common/cd-text-direction-wrapper';
 
-describe.only('Text Direction Wrapper', () => {
+describe('Text Direction Wrapper', () => {
 
   describe('computed.textDirection', () => {
     context('when chosen language specifies a direction', () => {
@@ -41,5 +41,4 @@ describe.only('Text Direction Wrapper', () => {
       });
     });
   });
-
 });

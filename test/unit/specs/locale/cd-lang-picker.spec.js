@@ -1,11 +1,13 @@
 import vueUnitHelper from 'vue-unit-helper';
 import LangPicker from '!!vue-loader?inject!@/locale/cd-lang-picker';
+import { expect } from 'chai';
 
 describe('Lang Picker', () => {
   let CookieMock;
   let LocaleServiceMock;
   let MomentMock;
   let LangPickerWithMocks;
+  let StoreMock;
 
   beforeEach(() => {
     CookieMock = {
@@ -23,6 +25,10 @@ describe('Lang Picker', () => {
       './service': LocaleServiceMock,
       moment: MomentMock,
     });
+
+    StoreMock = {
+      dispatch: sinon.stub(),
+    };
   });
 
   afterEach(() => {
@@ -74,6 +80,7 @@ describe('Lang Picker', () => {
         };
         LocaleServiceMock.getStrings.withArgs('es_ES').returns(Promise.resolve({ body: stringsMock }));
         sinon.stub(vm, 'setMomentLocale');
+        vm.$store = StoreMock;
 
         // ACT
         vm.$watchers.lang('es_ES');
@@ -89,6 +96,7 @@ describe('Lang Picker', () => {
             foo: 'foo',
           });
           expect(vm.$i18n.locale).to.equal('es_ES');
+          expect(StoreMock.dispatch.calledOnce).to.eq(true);
           done();
         });
       });
@@ -99,6 +107,7 @@ describe('Lang Picker', () => {
     it('should recover languages from the API', async () => {
       // ARRANGE
       const vm = vueUnitHelper(LangPickerWithMocks);
+      vm.$store = StoreMock;
       CookieMock.get.withArgs('NG_TRANSLATE_LANG_KEY').returns('"es_ES"');
       vm.getAvailableLanguages = sinon.stub().resolves({ body: ['a'] });
       // ACT
@@ -115,16 +124,19 @@ describe('Lang Picker', () => {
       CookieMock.get.withArgs('NG_TRANSLATE_LANG_KEY').returns('"es_ES"');
       vm.getAvailableLanguages = sinon.stub().resolves({ body: [{ code: 'es_ES' }] });
 
+      vm.$store = StoreMock;
       // ACT
       await vm.$lifecycleMethods.created();
 
       // ASSERT
       expect(vm.lang).to.equal('es_ES');
+      expect(StoreMock.dispatch.calledOnce).to.eq(true);
     });
 
     it('should set lang to the browser locale if no cookie, and locale matches an available one', async () => {
       // ARRANGE
       const vm = vueUnitHelper(LangPickerWithMocks);
+      vm.$store = StoreMock;
       CookieMock.get.withArgs('NG_TRANSLATE_LANG_KEY').returns(undefined);
       vm.getAvailableLanguages = sinon.stub().resolves({ body: [{ code: 'it_IT' }] });
       Object.defineProperty(window.navigator, 'language', { value: 'it-IT', configurable: true });
@@ -134,11 +146,13 @@ describe('Lang Picker', () => {
 
       // ASSERT
       expect(vm.lang).to.equal('it_IT');
+      expect(StoreMock.dispatch.calledOnce).to.eq(true);
     });
 
     it('should set lang to en_US if no cookie and browser locale doesnt match available lang', async () => {
       // ARRANGE
       const vm = vueUnitHelper(LangPickerWithMocks);
+      vm.$store = StoreMock;
       vm.getAvailableLanguages = sinon.stub().resolves({ body: [{ code: 'en_US' }] });
       CookieMock.get.withArgs('NG_TRANSLATE_LANG_KEY').returns(undefined);
       Object.defineProperty(window.navigator, 'language', { value: 'zh-CN', configurable: true });
@@ -148,6 +162,7 @@ describe('Lang Picker', () => {
 
       // ASSERT
       expect(vm.lang).to.equal('en_US');
+      expect(StoreMock.dispatch.calledOnce).to.eq(true);
     });
   });
 });
