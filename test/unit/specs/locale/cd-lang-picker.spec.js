@@ -1,13 +1,14 @@
 import vueUnitHelper from 'vue-unit-helper';
 import LangPicker from '!!vue-loader?inject!@/locale/cd-lang-picker';
 import { expect } from 'chai';
+import Vuex from 'vuex';
 
 describe('Lang Picker', () => {
   let CookieMock;
   let LocaleServiceMock;
   let MomentMock;
   let LangPickerWithMocks;
-  let StoreMock;
+  const StoreMock = new Vuex.Store()
 
   beforeEach(() => {
     CookieMock = {
@@ -26,9 +27,7 @@ describe('Lang Picker', () => {
       moment: MomentMock,
     });
 
-    StoreMock = {
-      dispatch: sinon.stub(),
-    };
+    StoreMock.dispatch = sinon.stub();
   });
 
   afterEach(() => {
@@ -96,7 +95,7 @@ describe('Lang Picker', () => {
             foo: 'foo',
           });
           expect(vm.$i18n.locale).to.equal('es_ES');
-          expect(StoreMock.dispatch.calledOnce).to.eq(true);
+          expect(StoreMock.dispatch).to.have.been.calledWith('updateChosenLanguageConfig');
           done();
         });
       });
@@ -130,7 +129,7 @@ describe('Lang Picker', () => {
 
       // ASSERT
       expect(vm.lang).to.equal('es_ES');
-      expect(StoreMock.dispatch.calledOnce).to.eq(true);
+      expect(StoreMock.dispatch).to.have.been.calledWith('updateChosenLanguageConfig');
     });
 
     it('should set lang to the browser locale if no cookie, and locale matches an available one', async () => {
@@ -146,7 +145,7 @@ describe('Lang Picker', () => {
 
       // ASSERT
       expect(vm.lang).to.equal('it_IT');
-      expect(StoreMock.dispatch.calledOnce).to.eq(true);
+      expect(StoreMock.dispatch).to.have.been.calledWith('updateChosenLanguageConfig');
     });
 
     it('should set lang to en_US if no cookie and browser locale doesnt match available lang', async () => {
@@ -162,7 +161,7 @@ describe('Lang Picker', () => {
 
       // ASSERT
       expect(vm.lang).to.equal('en_US');
-      expect(StoreMock.dispatch.calledOnce).to.eq(true);
+      expect(StoreMock.dispatch).to.have.been.calledWith('updateChosenLanguageConfig');
     });
   });
 });
