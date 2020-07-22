@@ -6,7 +6,10 @@
 
 <script>
 export default {
-  props: ['direction'],
+  name: 'TextDirectionWrapper',
+  props: {
+    direction: String,
+  },
   computed: {
     textDirection() {
       if (this.direction) {
