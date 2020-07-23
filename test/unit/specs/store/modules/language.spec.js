@@ -3,7 +3,7 @@ import { expect } from 'chai';
 
 describe('Language Store', () => {
   describe('mutations', () => {
-    const { setChosenLanguageConfig } = mutations
+    const { setChosenLanguageConfig } = mutations;
     it('setChosenLanguageConfig', () => {
       const state = { chosenLanguageConfig: null };
       const newLanguageConfig = { dir: 'test' };
@@ -16,7 +16,7 @@ describe('Language Store', () => {
 
   describe('actions', () => {
     it('updateChosenLanguageConfig', () => {
-      const commit = sinon.spy()
+      const commit = sinon.spy();
       const state = {};
 
       const chosenLanguageConfig = { dir: 'down' };

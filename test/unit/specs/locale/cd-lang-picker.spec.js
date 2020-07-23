@@ -8,7 +8,7 @@ describe('Lang Picker', () => {
   let LocaleServiceMock;
   let MomentMock;
   let LangPickerWithMocks;
-  const StoreMock = new Vuex.Store()
+  const StoreMock = new Vuex.Store();
 
   beforeEach(() => {
     CookieMock = {
