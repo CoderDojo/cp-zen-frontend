@@ -1,6 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueResource from 'vue-resource';
+import chai from 'chai';
+import sinonChai from 'sinon-chai';
+
+chai.use(sinonChai);
 
 /* eslint-disable no-extend-native, no-param-reassign, func-names */
 if (!String.prototype.endsWith) {

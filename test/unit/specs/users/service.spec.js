@@ -2,16 +2,10 @@ import Vue from 'vue';
 import UserService from 'inject-loader!@/users/service';
 
 describe('UserService', () => {
-  let storeMock;
   let UserServiceWithMocks;
 
   beforeEach(() => {
-    storeMock = {
-      dispatch: sinon.stub(),
-    };
-    UserServiceWithMocks = UserService({
-      '@/store': storeMock,
-    }).default;
+    UserServiceWithMocks = UserService().default;
   });
 
   afterEach(() => {

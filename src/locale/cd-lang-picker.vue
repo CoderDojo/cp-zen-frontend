@@ -3,7 +3,7 @@
     <div class="col-md-4 col-sm-6">
       <span class="fa fa-language fa-2x cd-lang-picker__icon"></span>
       <select class="cd-lang-picker__select" v-model="lang">
-        <option v-for="availableLanguage in availableLanguages" :value="availableLanguage.code">{{ availableLanguage.name }} ({{ availableLanguage.country }})</option>
+        <option v-for="availableLanguage in availableLanguages" :value="availableLanguage.code" v-bind:key="availableLanguage.code">{{ availableLanguage.name }} ({{ availableLanguage.country }})</option>
       </select>
     </div>
     <div class="col-md-8 col-sm-6">
@@ -52,22 +52,26 @@
             this.setMomentLocale(val);
             this.$i18n.setLocaleMessage(val, strings);
             this.$i18n.locale = val;
+            const matchingLanguageConfig = find(this.availableLanguages,
+              language => language.code === val);
+            this.$store.dispatch('updateChosenLanguageConfig', matchingLanguageConfig);
           });
       },
     },
     async created() {
       this.availableLanguages = (await this.getAvailableLanguages()).body;
       const browserLocale = navigator.language.replace('-', '_');
-      const matchingLocale = find(this.availableLanguages,
+      const matchingLanguageConfig = find(this.availableLanguages,
         language => language.code === browserLocale);
       const langCookie = Cookie.get('NG_TRANSLATE_LANG_KEY');
       if (langCookie) {
         this.lang = langCookie.substring(1, langCookie.length - 1);
-      } else if (matchingLocale) {
+      } else if (matchingLanguageConfig) {
         this.lang = browserLocale;
       } else {
         this.lang = 'en_US';
       }
+      this.$store.dispatch('updateChosenLanguageConfig', matchingLanguageConfig);
     },
   };
 </script>
