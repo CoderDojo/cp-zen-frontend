@@ -1,6 +1,6 @@
 <template>
   <div v-show="!confirmed" class="cd-cookie-notice">
-    <span v-html="$t('By using this website you agree to the use of cookies. You can read about our cookie policy <a href=\'/privacy-statement#cookies\'>here</a>.')"></span>
+    <span v-html="$t('By using this website you agree to the use of cookies. You can read about our cookie policy <a href=\'https://www.raspberrypi.org/cookies\'>here</a>.')"></span>
     <i class="fa fa-times-circle cd-cookie-notice__dismiss" aria-label="Dismiss" @click="dismissNotice"></i>
   </div>
 </template>
