@@ -52,7 +52,7 @@ export default {
           text: 'Charter',
         },
         {
-          href: '/privacy-statement',
+          href: 'https://www.raspberrypi.org/privacy/',
           text: 'Privacy Statement',
         },
         {
