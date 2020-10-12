@@ -19,6 +19,8 @@
           {{ address }}
           <a class="cd-dojo-details__google-maps-link" target="_blank" rel="noopener noreferrer" v-if="dojoDetails.geoPoint" :href="googleMapsLink">{{ $t('Open in Google Maps') }} <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
         </info-column-section>
+        <info-column-section v-if="dojoDetails.onlineSessions" class="cd-dojo-details__left-column-section" icon="laptop" :header="$t('Running Online')">
+        </info-column-section>
         <info-column-section class="hidden-xs" icon="envelope-o" :header="$t('Email')">
           <a :href="'mailto:' + dojoDetails.email">{{ dojoDetails.email }}</a>
         </info-column-section>
