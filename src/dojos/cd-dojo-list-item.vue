@@ -13,6 +13,7 @@
       </h4>
       <p class="cd-dojo-list-item__meta">{{dojo.address1}}</p>
       <p class="cd-dojo-list-item__meta">{{buildDojoFrequency(dojo)}}</p>
+      <p v-if="dojo.onlineSessions" class="cd-dojo-list-item__meta"><i class="fa fa-laptop" aria-hidden="true"></i>{{ $t('Running Online') }}</p>
       <event-stamp :dojo="dojo"></event-stamp>
     </div>
   </div>
@@ -66,6 +67,10 @@
     &__meta {
       font-size: 16px;
       margin-bottom: 0;
+    }
+
+    &__meta .fa {
+      margin-right: 8px;
     }
   }
 
