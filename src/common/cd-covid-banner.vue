@@ -2,9 +2,10 @@
     <div class="cd-banner">
       <cd-text-direction-wrapper direction="ltr">
         <p>
-          {{ $t('Thank you for your interest in joining the CoderDojo community!') }}
-          {{ $t('Due to the coronavirus pandemic, there are different restrictions in place across the world.') }}
-          {{ $t('Please follow the appropriate public health advice for your country or region before planning in-person club events.') }}
+          {{ $t('Thank you for your interest in CoderDojo!') }}
+          {{ $t('The coronavirus pandemic continues to impact all our lives, including how Dojos can run.') }}
+          {{ $t('See') }}
+          <a class="cd-banner-link" href="https://coderdojo.com/ways-to-run/">{{ $t('our resources and guidance on the creative ways Dojos are running.') }}</a>
         </p>
         <p>
           {{ $t('If you are ready to hold in-person club events soon, please') }}
