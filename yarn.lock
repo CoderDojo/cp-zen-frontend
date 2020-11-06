@@ -2386,10 +2386,10 @@ cosmiconfig@^2.1.0, cosmiconfig@^2.1.1:
     parse-json "^2.2.0"
     require-from-string "^1.1.0"
 
-cp-translations@^1.0.144:
-  version "1.0.144"
-  resolved "https://registry.yarnpkg.com/cp-translations/-/cp-translations-1.0.144.tgz#919ecfb784eff841077f377e2d467bbcd26fd959"
-  integrity sha512-sxnUHSzovHHWXDZzcadIm+uDAdqIUaOziYRAbJ3YxRoMw5CtUxQp3w04LCZ0nghWYmmFGP3z0Qffn69ioc560A==
+cp-translations@~1.0.150:
+  version "1.0.152"
+  resolved "https://registry.yarnpkg.com/cp-translations/-/cp-translations-1.0.152.tgz#adadb407829bac9b555bb3287951b46bf5d0f75b"
+  integrity sha512-oDc8gdeMXqjwnN4cWgIy0OQk0/0WRcuksTvJ3z2URHeRc7AYfNYZMm6bZ/S6eMxgr+Almhm9BPQ70LranLdKzQ==
 
 crc32-stream@^2.0.0:
   version "2.0.0"
