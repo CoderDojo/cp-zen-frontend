@@ -45,6 +45,14 @@ module.exports = merge(baseWebpackConfig, {
       template: 'index.ejs',
       inject: true,
     }),
+    // generate dist opengraph.hbs with correct asset hash for caching.
+    // Used when requesting pages which should have OpenGraph meta tags on request
+    new HtmlWebpackPlugin({
+      filename: 'opengraph.hbs',
+      template: 'index.ejs',
+      openGraph: true,
+      inject: true,
+    }),
     new FriendlyErrorsPlugin(),
   ],
 });
