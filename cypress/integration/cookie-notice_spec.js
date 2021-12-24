@@ -18,7 +18,6 @@ describe('Cookie Notice', () => {
     cy.get(basePage.cookieNoticeDismiss).should('be.visible');
     cy.get(findDojoPage.addressSearchInput).type('dublin');
     cy.get(findDojoPage.addressSearchButton).click();
-    cy.get(findDojoPage.dojoLinks).scrollIntoView();
     cy.get(findDojoPage.dojoLinks).eq(0).click();
     cy.get(dojoDetailsPage.name).should('be.visible');
     cy.get(basePage.cookieNoticeDismiss).should('not.be.visible');
