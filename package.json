@@ -18,7 +18,7 @@
   "dependencies": {
     "@coderdojo/cd-common": "1.1.11",
     "bootstrap": "^3.4.1",
-    "cp-translations": "~1.0.156",
+    "cp-translations": "~1.0.162",
     "font-awesome": "^4.7.0",
     "handlebars": "^4.1.0",
     "js-cookie": "^2.1.4",

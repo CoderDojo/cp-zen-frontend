@@ -44,7 +44,7 @@ export default {
     return {
       links: [
         {
-          href: 'https://hwf.zendesk.com/hc/',
+          href: 'https://help.coderdojo.com/',
           text: 'Help Center',
         },
         {
