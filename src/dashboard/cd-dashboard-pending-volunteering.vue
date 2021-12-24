@@ -9,7 +9,7 @@
       {{ $t('In the meantime, we recommend that you complete some of the following.') }}
       <ul class="cd-dashboard-pending-requests__info-recommendations">
         <li><a href="https://www.raspberrypi.org/safeguarding/e-learning-module/">{{ $t('Do our safeguarding module') }}</a></li>
-        <li><a href="https://help.coderdojo.com/hc/en-us/articles/360000674903-Setting-up-and-running-a-Dojo-a-CoderDojo-guide">{{ $t('Look at our guide to mentoring') }}</a></li>
+        <li><a href="https://help.coderdojo.com/cdkb/s/article/The-CoderDojo-Champions-Handbook">{{ $t('Look at our guide to mentoring') }}</a></li>
         <li><a href="https://projects.raspberrypi.org/org/coderdojo">{{ $t('Check out some projects you might like') }}</a></li>
       </ul>
     </div>
