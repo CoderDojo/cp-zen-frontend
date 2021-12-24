@@ -2387,9 +2387,9 @@ cosmiconfig@^2.1.0, cosmiconfig@^2.1.1:
     require-from-string "^1.1.0"
 
 cp-translations@~1.0.162:
-  version "1.0.162"
-  resolved "https://registry.yarnpkg.com/cp-translations/-/cp-translations-1.0.162.tgz#9867a5a4ad5884a58cce1b5a15d9d091b29997a8"
-  integrity sha512-Z5DDsCTOf5QkoFXaZ3MZnD6IU97ScfV8i08EMXR7sZoT1NXo1IMMdGJ/jUwrsBjP+Ps6zqzfPP6zPlGM4JEygA==
+  version "1.0.163"
+  resolved "https://registry.yarnpkg.com/cp-translations/-/cp-translations-1.0.163.tgz#ba207b2a0df5b341d3604dbf2f6bcda0767a9b59"
+  integrity sha512-qoVhaWk/Fzp8R4jAJ2VvnHB+7jdz2bUJ/Dgb5QWor/dRgXGUB1Cv8Bix3LynkBAeUzPQYusd+EDGrcUqGC12CQ==
 
 crc32-stream@^2.0.0:
   version "2.0.0"
