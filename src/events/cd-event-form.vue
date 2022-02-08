@@ -128,6 +128,11 @@
               </button>
             </div>
           </form>
+          <div class="flow">
+            <p>We simplified our events experience, read <a href="https://coderdojo.com/?p=17691">about it here</a>.
+            <br/>
+            If you need to customise your event further you can still use the <a :href="`/dashboard/dojo/${dojo.id}/event-form`">advanced events form</a></p>
+          </div>
         </div>
       </div>
     </div>
