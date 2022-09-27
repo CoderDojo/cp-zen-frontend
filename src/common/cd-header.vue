@@ -166,18 +166,6 @@ export default {
           text: 'Community',
           subLinks: [
             {
-              href: '/badges',
-              text: 'Badges',
-            },
-            {
-              href: 'https://forums.coderdojo.com/',
-              text: 'Forums',
-            },
-            {
-              href: 'https://ninjaforums.coderdojo.com/',
-              text: 'Ninja Forums',
-            },
-            {
               href: 'http://coolestprojects.org/',
               text: 'Coolest Projects',
             },
