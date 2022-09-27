@@ -143,7 +143,7 @@ export default {
           text: 'About',
         },
         {
-          href: 'https://coderdojo.com/attend-a-dojo/',
+          href: 'https://coderdojo.com/find/',
           text: 'Attend a Dojo',
         },
         {
@@ -155,7 +155,7 @@ export default {
           text: 'Start a Dojo',
         },
         {
-          href: 'https://coderdojo.com/resources/',
+          href: 'https://coderdojo.com/session-resources/',
           text: 'Resources',
         },
         {
