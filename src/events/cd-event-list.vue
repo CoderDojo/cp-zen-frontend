@@ -1,5 +1,5 @@
 <template>
-  <div class="cd-event-list" >
+  <div class="cd-event-list">
     <div class="cd-event-list__heading" >
       <h4>{{ $t('Upcoming Events') }}</h4>
     </div>
@@ -36,8 +36,7 @@
   import DojosService from '@/dojos/service';
   import EventListItem from '@/events/cd-event-list-item';
   import service from './service';
-
-
+  
   export default {
     name: 'event-list',
     props: {
@@ -116,7 +115,7 @@
           /* eslint-enable no-alert */
           this.loadUserDojoRole();
         } else {
-          location.href = `/register?referer=${this.$route.path}`;
+          location.href = `/login`;
         }
       },
     },
