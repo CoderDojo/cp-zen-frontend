@@ -115,7 +115,7 @@
           /* eslint-enable no-alert */
           this.loadUserDojoRole();
         } else {
-          location.href = `/login`;
+          location.href = '/login';
         }
       },
     },
