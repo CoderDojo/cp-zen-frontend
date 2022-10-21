@@ -1,5 +1,5 @@
 <template>
-  <div class="cd-event-list">
+  <div class="cd-event-list" >
     <div class="cd-event-list__heading" >
       <h4>{{ $t('Upcoming Events') }}</h4>
     </div>
@@ -115,7 +115,7 @@
           /* eslint-enable no-alert */
           this.loadUserDojoRole();
         } else {
-          location.href = `/login?referer=${this.$route.path}`;
+          location.href = `/register?referer=${this.$route.path}`;
         }
       },
     },
