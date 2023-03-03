@@ -1,6 +1,5 @@
 <template>
   <div v-title="title" class="cd-find-dojo">
-    <cd-covid-banner></cd-covid-banner>
     <div class="cd-find-dojo__panel" :class="{ 'cd-find-dojo__panel--reduced': searchExecuted }">
       <form class="cd-find-dojo__panel-form" :class="{ 'cd-find-dojo__panel-form--reduced': searchExecuted }" @submit.prevent="$router.push({ query: { q: searchCriteria, p: 1 } });">
         <h1 v-if="!searchExecuted" class="cd-find-dojo__panel-form-header">{{ $t('Find a Dojo to attend') }}</h1>
@@ -79,7 +78,6 @@
   import Vue from 'vue';
   import DojoList from '@/dojos/cd-dojo-list';
   import DojoMap from '@/dojos/cd-dojo-map';
-  import cdCovidBanner from '@/common/cd-covid-banner';
   import GeolocationService from '@/geolocation/service';
   import translationComponentGenerator from '@/common/cd-translation-component-generator';
   import DojosService from './service';
@@ -186,7 +184,6 @@
       DojoMap,
       NoResultsDesktop,
       NoResultsMobile,
-      cdCovidBanner,
     },
     watch: {
       $route(newRoute) {
