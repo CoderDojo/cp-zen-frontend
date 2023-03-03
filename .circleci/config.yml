@@ -178,3 +178,5 @@ workflows:
             branches:
               only:
                 - master
+          context:
+            - npm
