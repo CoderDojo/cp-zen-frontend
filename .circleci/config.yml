@@ -126,7 +126,7 @@ jobs:
     steps:
       - add-ssh-keys:
           fingerprints:
-            - "c5:a2:f8:c3:ad:66:f3:c8:a2:f1:2c:99:63:d8:63:b6"
+            - "43:e4:71:0c:e8:cf:e7:50:a3:a0:40:14:33:e6:a6:83"
       - checkout
       - restore_cache:
           keys:
