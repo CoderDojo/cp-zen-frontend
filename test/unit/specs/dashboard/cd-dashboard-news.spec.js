@@ -31,7 +31,7 @@ describe('Dashboard children component', () => {
           {title: "blah3", date: "2018-08-11T10:00:00", uri: "blah3"},
           {title: "blah4", date: "2018-08-12T10:00:00", uri: "blah4"},
           {title: "blah5", date: "2018-08-13T10:00:00", uri: "blah5"},
-          {title: "blah6", date: "2018-08-14T10:00:00", uri: "blah6"}
+          {title: "blah6", date: "2018-08-14T10:00:00", uri: "blah6"},
           {title: "blah7", date: "2018-08-15T10:00:00", uri: "blah7"}];
 
         vm.sortPostsByDate = sinon.stub().returns([
