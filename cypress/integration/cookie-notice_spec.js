@@ -11,7 +11,8 @@ describe('Cookie Notice', () => {
       cy.route('POST', '/api/2.0/dojos/search-bounding-box', dojos);
       cy.route('POST', '/api/2.0/dojos', dojos[0]);
     }));
-    // cy.route('POST', '/api/2.0/dojos', 'fx:dojos').as('findDojos');
+    cy.route('POST', '/api/2.0/dojos', 'fx:dojos').as('findDojos');
+    cy.route('/maps/api/js/*', 'fx:googlemaps');
   });
 
   it('should disappear after navigating from first page, and persist', () => {
@@ -20,7 +21,7 @@ describe('Cookie Notice', () => {
     cy.get(findDojoPage.addressSearchInput).type('dublin');
     cy.get(findDojoPage.addressSearchButton).click();
     cy.get(findDojoPage.dojoLinks).eq(0).click();
-    // cy.wait('@findDojos');
+    cy.wait('@findDojos');
     cy.get(dojoDetailsPage.name, {
       timeout: 5000
     }).should('be.visible');
