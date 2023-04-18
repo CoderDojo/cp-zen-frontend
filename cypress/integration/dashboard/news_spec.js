@@ -4,13 +4,13 @@ describe('Dashboard news', () => {
   beforeEach(() => {
     cy.server();
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-    cy.route('http://fakeurl/graphql', 'fx:newsBlogs').as('news');
+    cy.route('/graphql', 'fx:newsBlogs').as('news');
   });
 
   it('should display the news area', () => {
     cy.visit('/home');
     cy.wait('@loggedIn');
-    // cy.wait('@news');
+    cy.wait('@news');
     cy.get(homePage.newsTitle).invoke('text').should('eq', 'News');
   });
 

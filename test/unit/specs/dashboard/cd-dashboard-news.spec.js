@@ -142,15 +142,17 @@ describe('Dashboard children component', () => {
 
     describe('computed.formattedNews', () => {
       it('should return a formatted array of news posts', () => {
+
+        const newsUrl = 'http://news/';
         // ARRANGE
         const mockFormattedNews = [
-          { type: 'News', date: moment('2018-08-09T10:00:00'), link: 'blah1', title: 'blah1' },
-          { type: 'News', date: moment('2018-08-10T10:00:00'), link: 'blah2', title: 'blah2' },
-          { type: 'News', date: moment('2018-08-11T10:00:00'), link: 'blah3', title: 'blah3' },
-          { type: 'News', date: moment('2018-08-12T10:00:00'), link: 'blah4', title: 'blah4' },
-          { type: 'News', date: moment('2018-08-13T10:00:00'), link: 'blah5', title: 'blah5' },
-          { type: 'News', date: moment('2018-08-14T10:00:00'), link: 'blah6', title: 'blah6' },
-          { type: 'News', date: moment('2018-08-15T10:00:00'), link: 'blah7', title: 'blah7' }];
+          { type: 'News', date: moment('2018-08-09T10:00:00'), link: `${newsUrl}blah1`, title: 'blah1' },
+          { type: 'News', date: moment('2018-08-10T10:00:00'), link: `${newsUrl}blah1`, title: 'blah2' },
+          { type: 'News', date: moment('2018-08-11T10:00:00'), link: `${newsUrl}blah3`, title: 'blah3' },
+          { type: 'News', date: moment('2018-08-12T10:00:00'), link: `${newsUrl}blah4`, title: 'blah4' },
+          { type: 'News', date: moment('2018-08-13T10:00:00'), link: `${newsUrl}blah5`, title: 'blah5' },
+          { type: 'News', date: moment('2018-08-14T10:00:00'), link: `${newsUrl}blah6`, title: 'blah6' },
+          { type: 'News', date: moment('2018-08-15T10:00:00'), link: `${newsUrl}blah7`, title: 'blah7' }];
 
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
         vm.news = [
