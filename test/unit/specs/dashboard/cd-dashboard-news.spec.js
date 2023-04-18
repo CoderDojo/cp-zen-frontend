@@ -215,13 +215,17 @@ describe('Dashboard children component', () => {
           },
         };
 
+        const mockResult = {json: sinon.stub()};
+
+        mockResult.json.resolves(mockResponse);
+
         const mockNews = [
           { date: '2023-02-31T', link: 'blah1', title: { rendered: 'blah1' } },
           { date: '2023-01-31T', link: 'blah2', title: { rendered: 'blah2' } },
           { date: '2023-01-25T', link: 'blah3', title: { rendered: 'blah3' } },
         ];
 
-        MockUpdatesService.loadNews.resolves(mockResponse);
+        MockUpdatesService.loadNews.resolves(mockResult);
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
 
         // ACT
