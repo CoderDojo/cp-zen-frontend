@@ -7,4 +7,5 @@ module.exports = merge(devEnv, {
   GOOGLE_ANALYTICS_PROPERTY_ID: '"UA-25136319-8"',
   FORUMS_URL_BASE: '"http://localhost:4567"',
   NEWS_URL_BASE: '""',
+  CODERDOJO_WP_GRAPHQL_URL: '"http://fakeurl/graphql"',
 });

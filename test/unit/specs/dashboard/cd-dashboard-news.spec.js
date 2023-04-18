@@ -144,13 +144,13 @@ describe('Dashboard children component', () => {
       it('should return a formatted array of news posts', () => {
         // ARRANGE
         const mockFormattedNews = [
-          { type: 'News', date: moment('2018-08-09T10:00:00.000Z'), link: 'blah1', title: 'blah1' },
-          { type: 'News', date: moment('2018-08-10T10:00:00.000Z'), link: 'blah2', title: 'blah2' },
-          { type: 'News', date: moment('2018-08-11T10:00:00.000Z'), link: 'blah3', title: 'blah3' },
-          { type: 'News', date: moment('2018-08-12T10:00:00.000Z'), link: 'blah4', title: 'blah4' },
-          { type: 'News', date: moment('2018-08-13T10:00:00.000Z'), link: 'blah5', title: 'blah5' },
-          { type: 'News', date: moment('2018-08-14T10:00:00.000Z'), link: 'blah6', title: 'blah6' },
-          { type: 'News', date: moment('2018-08-15T10:00:00.000Z'), link: 'blah7', title: 'blah7' }];
+          { type: 'News', date: moment('2018-08-09T10:00:00'), link: 'blah1', title: 'blah1' },
+          { type: 'News', date: moment('2018-08-10T10:00:00'), link: 'blah2', title: 'blah2' },
+          { type: 'News', date: moment('2018-08-11T10:00:00'), link: 'blah3', title: 'blah3' },
+          { type: 'News', date: moment('2018-08-12T10:00:00'), link: 'blah4', title: 'blah4' },
+          { type: 'News', date: moment('2018-08-13T10:00:00'), link: 'blah5', title: 'blah5' },
+          { type: 'News', date: moment('2018-08-14T10:00:00'), link: 'blah6', title: 'blah6' },
+          { type: 'News', date: moment('2018-08-15T10:00:00'), link: 'blah7', title: 'blah7' }];
 
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
         vm.news = [
@@ -207,7 +207,7 @@ describe('Dashboard children component', () => {
             debug: [{
               type: 'DEBUG_LOGS_INACTIVE',
               message: 'GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled.',
-            }, ]
+            }],
           },
         };
 
