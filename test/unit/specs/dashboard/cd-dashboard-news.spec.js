@@ -214,7 +214,6 @@ describe('Dashboard children component', () => {
             }],
           },
         };
-
         const mockResult = {json: sinon.stub()};
 
         mockResult.json.resolves(mockResponse);
@@ -230,6 +229,8 @@ describe('Dashboard children component', () => {
 
         // ACT
         await vm.loadNews(3);
+        console.log("MOCK NEWS: ", mockNews);
+        console.log("VM NEWS: ", vm.news);
 
         // ASSERT
         expect(vm.news).to.equal(mockNews);

@@ -21,6 +21,7 @@ describe('Cookie Notice', () => {
     cy.get(findDojoPage.addressSearchButton).click();
     cy.get(findDojoPage.dojoLinks).eq(0).click();
     cy.wait('@findDojos');
+    cy.wait(1000);
     cy.get(dojoDetailsPage.name).should('be.visible');
     cy.get(basePage.cookieNoticeDismiss).should('not.be.visible');
     cy.reload();
