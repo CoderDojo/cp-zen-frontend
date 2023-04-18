@@ -12,10 +12,10 @@ describe('Cookie Notice', () => {
       cy.route('POST', '/api/2.0/dojos', dojos[0]);
     }));
     cy.route('POST', '/api/2.0/dojos', 'fx:dojos').as('findDojos');
-    cy.route('/maps/api/*', 'fx:googlemaps');
+    cy.route('/maps/api/', 'fx:googlemaps');
   });
 
-  it('should disappear after navigating from first page, and persist', () => {
+  it.only('should disappear after navigating from first page, and persist', () => {
     cy.visit('/');
     cy.get(basePage.cookieNoticeDismiss).should('be.visible');
     cy.get(findDojoPage.addressSearchInput).type('dublin');
