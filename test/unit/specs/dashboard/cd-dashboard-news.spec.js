@@ -164,9 +164,8 @@ describe('Dashboard children component', () => {
           { title: 'blah5', date: '2018-08-13T10:00:00', uri: 'blah5' },
           { title: 'blah6', date: '2018-08-14T10:00:00', uri: 'blah6' },
           { title: 'blah7', date: '2018-08-15T10:00:00', uri: 'blah7' }];
+
         // ASSERT
-        console.log("MOCK: ", JSON.stringify(mockFormattedNews));
-        console.log("FORMATTED: ", JSON.stringify(vm.formattedNews));
         expect(vm.formattedNews).to.deep.equal(mockFormattedNews);
       });
     });
