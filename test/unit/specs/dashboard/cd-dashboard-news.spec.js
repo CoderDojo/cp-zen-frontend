@@ -142,7 +142,6 @@ describe('Dashboard children component', () => {
 
     describe('computed.formattedNews', () => {
       it('should return a formatted array of news posts', () => {
-
         const newsUrl = 'undefined';
 
         // ARRANGE
@@ -196,7 +195,6 @@ describe('Dashboard children component', () => {
     describe('methods.loadNews', () => {
       it('should load the latest news', async () => {
         // ARRANGE
-
         const mockResponse = {
           data: {
             posts: {
@@ -214,14 +212,13 @@ describe('Dashboard children component', () => {
             }],
           },
         };
-        const mockResult = {json: sinon.stub()};
-
+        const mockResult = { json: sinon.stub() };
         mockResult.json.resolves(mockResponse);
 
-        const mockNews = [
-          { date: '2023-02-31T', link: 'blah1', title: { rendered: 'blah1' } },
-          { date: '2023-01-31T', link: 'blah2', title: { rendered: 'blah2' } },
-          { date: '2023-01-25T', link: 'blah3', title: { rendered: 'blah3' } },
+        const expectedNews = [
+          { title: 'blah1', date: '2023-02-31T14:27:09', uri: 'blah1' },
+          { title: 'blah2', date: '2023-01-31T15:24:27', uri: 'blah2' },
+          { title: 'blah3', date: '2023-01-25T10:17:37', uri: 'blah3' },
         ];
 
         MockUpdatesService.loadNews.resolves(mockResult);
@@ -229,11 +226,11 @@ describe('Dashboard children component', () => {
 
         // ACT
         await vm.loadNews(3);
-        console.log("MOCK NEWS: ", mockNews);
-        console.log("VM NEWS: ", vm.news);
+        console.log('MOCK NEWS: ', expectedNews);
+        console.log('VM NEWS: ', vm.news);
 
         // ASSERT
-        expect(vm.news).to.equal(mockNews);
+        expect(vm.news).to.equal(expectedNews);
       });
     });
 
