@@ -7,7 +7,8 @@ module.exports = merge(prodEnv, {
   RECAPTCHA_SITE_KEY: '"6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"',
   GOOGLE_ANALYTICS_PROPERTY_ID: '"UA-25136319-8"',
   GOOGLE_MAPS_API_KEY: '"AIzaSyA4lRJMDmdT_60aUSsih78adO2A9Gzv5UM"',
-  NEWS_URL_BASE: '""',
+  NEWS_URL_BASE: '"https://coderdojo.com"',
+  CODERDOJO_WP_GRAPHQL_URL: '"https://rpfcoderdojo.wpengine.com/graphql"',
   FORUMS_URL_BASE: '"http://localhost:4567"',
   PROJECTS_URL_BASE: '""',
 })

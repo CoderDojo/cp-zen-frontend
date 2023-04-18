@@ -28,6 +28,7 @@
 <script>
   import moment from 'moment';
   import UpdatesService from './service';
+  import Vue from 'vue';
 
   export default {
     name: 'cd-dashboard-news',
@@ -51,8 +52,8 @@
         return (this.news).map(post => ({
           type: 'News',
           date: moment(post.date),
-          link: post.link,
-          title: post.title.rendered,
+          link: `${Vue.config.newsUrlBase}${post.uri}`,
+          title: post.title,
         }));
       },
       // formattedForums() {
@@ -69,8 +70,9 @@
     },
     methods: {
       async loadNews() {
-        const res = await UpdatesService.loadNews({ per_page: 6 });
-        this.news = res.body;
+        const res = await UpdatesService.loadNews();
+        const resultJson = await res.json();
+        this.news = resultJson.data.posts.nodes;
       },
       // async loadForums() {
       //   const res = await UpdatesService.loadForums();
