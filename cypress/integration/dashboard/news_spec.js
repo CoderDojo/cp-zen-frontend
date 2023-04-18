@@ -4,7 +4,7 @@ describe('Dashboard news', () => {
   beforeEach(() => {
     cy.server();
     cy.route('/api/2.0/users/instance', 'fx:parentLoggedIn').as('loggedIn');
-    cy.route('/graphql/', 'fx:newsBlogs').as('news');
+    cy.route('/graphql', 'fx:newsBlogs').as('news');
   });
 
   it('should display the news area', () => {
