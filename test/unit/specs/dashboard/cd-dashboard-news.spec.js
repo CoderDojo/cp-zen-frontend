@@ -20,20 +20,19 @@ describe('Dashboard children component', () => {
     sinon.restore();
   });
 
-
   describe('computed', () => {
     describe('computed.allPosts', () => {
       it('should return a list containing news posts', () => {
         // ARRANGE
         const vm = vueUnitHelper(DashboardNewsComponentWithMocks);
         vm.news = [
-          { date: '2018-08-09T10:00:00.000Z', link: 'blah1', title: { rendered: 'blah1' } },
-          { date: '2018-08-10T10:00:00.000Z', link: 'blah2', title: { rendered: 'blah2' } },
-          { date: '2018-08-11T10:00:00.000Z', link: 'blah3', title: { rendered: 'blah3' } },
-          { date: '2018-08-12T10:00:00.000Z', link: 'blah4', title: { rendered: 'blah4' } },
-          { date: '2018-08-13T10:00:00.000Z', link: 'blah5', title: { rendered: 'blah5' } },
-          { date: '2018-08-14T10:00:00.000Z', link: 'blah6', title: { rendered: 'blah6' } },
-          { date: '2018-08-15T10:00:00.000Z', link: 'blah7', title: { rendered: 'blah7' } }];
+          {title:"blah1",date:"2018-08-09T10:00:00",uri:"blah1"},
+          {title:"blah2",date:"2018-08-10T10:00:00",uri:"blah2"},
+          {title:"blah3",date:"2018-08-11T10:00:00",uri:"blah3"},
+          {title:"blah4",date:"2018-08-12T10:00:00",uri:"blah4"},
+          {title:"blah5",date:"2018-08-13T10:00:00",uri:"blah5"},
+          {title:"blah6",date:"2018-08-14T10:00:00",uri:"blah6"}
+          {title:"blah7",date:"2018-08-15T10:00:00",uri:"blah7"}];
 
         vm.sortPostsByDate = sinon.stub().returns([
           { type: 'News', date: moment('2018-08-15T10:00:00.000Z'), formattedDate: '15/08/2018', link: 'blah7', title: 'blah7' },
