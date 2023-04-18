@@ -27,8 +27,8 @@
 
 <script>
   import moment from 'moment';
-  import UpdatesService from './service';
   import Vue from 'vue';
+  import UpdatesService from './service';
 
   export default {
     name: 'cd-dashboard-news',

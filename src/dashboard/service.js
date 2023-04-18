@@ -7,7 +7,7 @@ const UpdatesService = {
   },
   // load news
   loadNews() {
-    var params = JSON.stringify({query:"{posts (first: 6){nodes {title date uri}}}"});
+    const params = JSON.stringify({ query: '{posts (first: 6){nodes {title date uri}}}' });
     return Vue.http.post(`${Vue.config.cdWpGraphQlUrl}`, params);
   },
 };
