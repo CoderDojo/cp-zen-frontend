@@ -9,7 +9,7 @@ describe('Cookie Notice', () => {
     cy.route('/api/2.0/ip-country-details', 'fx:ip-country-details/ie');
     cy.fixture('dojos').then(((dojos) => {
       cy.route('POST', '/api/2.0/dojos/search-bounding-box', dojos);
-      cy.route('POST', '/api/2.0/dojos/find', dojos[0]);
+      cy.route('POST', '/api/2.0/dojos/', dojos[0]);
     }));
   });
 
@@ -26,7 +26,7 @@ describe('Cookie Notice', () => {
     cy.get(basePage.cookieNoticeDismiss).should('not.be.visible');
   });
 
-  it('should disappear after navigating from first page, and persist', () => {
+  it('should disappear after navigating from first page , and persist', () => {
     cy.visit('/');
     cy.get(basePage.cookieNoticeDismiss).should('be.visible').click();
     cy.get(basePage.cookieNoticeDismiss).should('not.be.visible');

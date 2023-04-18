@@ -148,7 +148,7 @@ describe('Dashboard children component', () => {
         // ARRANGE
         const mockFormattedNews = [
           { type: 'News', date: moment('2018-08-09T10:00:00'), link: `${newsUrl}blah1`, title: 'blah1' },
-          { type: 'News', date: moment('2018-08-10T10:00:00'), link: `${newsUrl}blah1`, title: 'blah2' },
+          { type: 'News', date: moment('2018-08-10T10:00:00'), link: `${newsUrl}blah2`, title: 'blah2' },
           { type: 'News', date: moment('2018-08-11T10:00:00'), link: `${newsUrl}blah3`, title: 'blah3' },
           { type: 'News', date: moment('2018-08-12T10:00:00'), link: `${newsUrl}blah4`, title: 'blah4' },
           { type: 'News', date: moment('2018-08-13T10:00:00'), link: `${newsUrl}blah5`, title: 'blah5' },
