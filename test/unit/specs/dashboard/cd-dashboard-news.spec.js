@@ -226,11 +226,9 @@ describe('Dashboard children component', () => {
 
         // ACT
         await vm.loadNews(3);
-        console.log('MOCK NEWS: ', expectedNews);
-        console.log('VM NEWS: ', vm.news);
 
         // ASSERT
-        expect(vm.news).to.equal(expectedNews);
+        expect(vm.news).to.deep.equal(expectedNews);
       });
     });
 
