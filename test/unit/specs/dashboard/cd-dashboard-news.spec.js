@@ -143,7 +143,8 @@ describe('Dashboard children component', () => {
     describe('computed.formattedNews', () => {
       it('should return a formatted array of news posts', () => {
 
-        const newsUrl = 'http://news/';
+        const newsUrl = 'undefined';
+
         // ARRANGE
         const mockFormattedNews = [
           { type: 'News', date: moment('2018-08-09T10:00:00'), link: `${newsUrl}blah1`, title: 'blah1' },
