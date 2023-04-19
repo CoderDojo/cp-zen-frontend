@@ -1,0 +1,46 @@
+{
+  "data": {
+    "posts": {
+      "nodes": [
+        {
+          "title": "5 things we learned at #ClubsCon23",
+          "date": "2023-04-03T15:57:22",
+          "uri": "\/2023\/04\/03\/5-things-we-learned-at-clubscon23\/"
+        },
+        {
+          "title": "Helping young people find a Dojo",
+          "date": "2023-01-31T15:24:27",
+          "uri": "\/2023\/01\/31\/helping-young-people-find-a-dojo\/"
+        },
+        {
+          "title": "What is the Clubs Conference?",
+          "date": "2023-01-25T10:17:37",
+          "uri": "\/2023\/01\/25\/what-is-the-clubs-conference\/"
+        },
+        {
+          "title": "Reassuring our community about the recent CircleCI security alert",
+          "date": "2023-01-24T14:58:52",
+          "uri": "\/2023\/01\/24\/reassuring-our-community-about-the-recent-circleci-security-alert\/"
+        },
+        {
+          "title": "New resources released in 2022",
+          "date": "2022-12-19T17:21:20",
+          "uri": "\/2022\/12\/19\/new-resources-released-in-2022\/"
+        },
+        {
+          "title": "Celebrate with Certificates in your Dojo",
+          "date": "2022-12-13T14:10:42",
+          "uri": "\/2022\/12\/13\/celebrate-with-certificates-in-your-dojo\/"
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

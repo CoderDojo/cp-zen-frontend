@@ -6,6 +6,7 @@ module.exports = {
   GOOGLE_MAPS_API_KEY: '"AIzaSyCLtwLgQX5wXFJ9bK3hYid5YaW6Qo4bGpc"',
   GIT_BRANCH: `"${process.env.GIT_BRANCH}"`,
   NEWS_URL_BASE: '"https://coderdojo.com"',
+  CODERDOJO_WP_GRAPHQL_URL: '"https://rpfcoderdojo.wpengine.com/graphql"',
   FORUMS_URL_BASE: '"https://forums.coderdojo.com"',
   PROJECTS_URL_BASE: '"https://learning-admin.raspberrypi.org"',
 }

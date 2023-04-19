@@ -6,8 +6,9 @@ const UpdatesService = {
     return Vue.http.get(`${Vue.config.forumsUrlBase}/api/recent/new`);
   },
   // load news
-  loadNews(params) {
-    return Vue.http.get(`${Vue.config.newsUrlBase}/wp-json/wp/v2/posts`, { params });
+  loadNews() {
+    const params = JSON.stringify({ query: '{posts (first: 6){nodes {title date uri}}}' });
+    return Vue.http.post(`${Vue.config.cdWpGraphQlUrl}`, params);
   },
 };
 
